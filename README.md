@@ -201,6 +201,7 @@ Built for **The Recursive Agents Hackathon**, October 17, 2026, with **Crusoe Ma
 | --- | --- |
 | [Architecture](docs/architecture.md) | Harness integration, SQL-backed Markdown, model routing, and event design. |
 | [Memory benchmarks](docs/benchmarks.md) | Proposed experiments, baselines, metrics, and evaluation targets. |
+| [Sample company: Rusty Rod](docs/sample-company.md) | Organization diagram, 3 teams, 18 members, memory scopes, and a correctness demo scenario. |
 | [Competition details](docs/competition-details.md) | Participant-guide problem statements, rules, schedule, and submission requirements. |
 | [Judging guide](judging/README.md) | Entry point for reviewers. |
 | [Demo runbook](judging/demo-runbook.md) | Intended presentation flow. |
