@@ -39,12 +39,25 @@ def extract(episode, role="curator"):
     return _parse(c)
 
 
+def model_for(role):
+    """Actual model id configured for a role (what really writes / judges)."""
+    return llm._roles()[role]["model"]
+
+
+def stamp(episode, role):
+    """store.add kwargs every written memory carries: real model id, authority and scope copied from the episode.
+    Episodes without these fields (older adapters, server.Episode) keep the store defaults."""
+    kw = {"model": model_for(role), "authority": getattr(episode, "authority", None) or "discussion"}
+    if getattr(episode, "scope", None): kw["scope"] = episode.scope
+    return kw
+
+
 def ingest(episode, store, author=None, role="curator"):
-    """The author name defaults to the role that wrote the memories."""
+    """Append-only baseline: every extracted fact is added. The author name defaults to the role that wrote the memories."""
     author = author or role
-    added = []
+    added, kw = [], stamp(episode, role)
     for f in extract(episode, role):
-        m, _ = store.add(f, author=author, origin=episode.id, date=episode.date)
+        m, _ = store.add(f, author=author, origin=episode.id, date=episode.date, **kw)
         if m: added.append(m)
     events.emit("episode.ingested", episode_id=episode.id, source=episode.source, n_memories=len(added))
     return added
