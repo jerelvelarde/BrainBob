@@ -132,3 +132,20 @@ def test_review_confirm_failed_keeps_trial():
     led.review(lambda mid: True)
     r = [e for t, e in _types() if t == "memory.retired"][0]
     assert r["confirmed"] is True and store.get(bad.id).status == "retired"
+
+
+def test_author_probation():
+    from brainbob.memory import MemoryStore
+    from brainbob.evaluator import Evaluator
+    from brainbob.types import Evidence
+    st = MemoryStore(); ms = [st.add(f"lesson number {i} alpha{i}", author="bad", origin="o", date="d")[0] for i in range(4)]
+    ok = st.add("good one zzz", author="good", origin="o", date="d")[0]
+    ev = Evaluator(st)
+    for k, m in enumerate(ms[:3]):  # 6 harmful flips across 2 memories each below single-memory threshold
+        for t in range(2):
+            ev.evidence += [Evidence(m.id, True, False, f"t{k}{t}"), Evidence(m.id, False, True, f"t{k}{t}")]
+    ev.min_changes = 5
+    ds = ev.review(lambda mid: True, author_probation=True)
+    assert {d.memory_id for d in ds} == {m.id for m in ms}
+    assert all(st.get(m.id).status == "retired" and st.get(m.id).reason == "author on probation" for m in ms)
+    assert st.get(ok.id).status == "trial"

@@ -105,7 +105,7 @@ class Evaluator:
             if d >= self.ab_margin: return "helpful", []
         return None, []
 
-    def review(self, confirm_fn):
+    def review(self, confirm_fn, author_probation=False, probation_ratio=2, probation_min_flips=6):
         """confirm_fn(memory_id) -> True if a fresh delete-and-rerun still shows it harmful."""
         out = []
         for mid in sorted({e.memory_id for e in self.evidence}):
@@ -130,6 +130,22 @@ class Evaluator:
             else:
                 continue
             out.append(d); self.decisions.append(d)
+        if author_probation: out += self._probation(probation_ratio, probation_min_flips)
+        return out
+
+    def _probation(self, ratio, min_flips):
+        """Authors whose memories harmed >= ratio x helped over >= min_flips flips lose all their still-trial memories."""
+        tot = defaultdict(lambda: [0, 0])
+        for m in self.store.all():
+            st = self.stats(m.id); tot[m.author][0] += len(st["helped"]); tot[m.author][1] += len(st["harmed"])
+        out = []
+        for au, (h, b) in sorted(tot.items()):
+            if h + b < min_flips or b < ratio * h: continue
+            for m in self.store.all():
+                if m.author != au or m.status != "trial": continue
+                r = "author on probation"; self.store.set_status(m.id, "retired", r)
+                d = Decision(m.id, "retire", r, []); out.append(d); self.decisions.append(d)
+                events.emit("memory.retired", memory_id=m.id, reason=r, task_ids=[], confirmed=False)
         return out
 
     def report(self):

@@ -33,6 +33,7 @@ class Task:
     question: str
     grade: Callable[[str], bool]
     now: Optional[str] = None
+    reference: Optional[str] = None  # gold text; only the lesson writer sees it, on training tasks
 
 
 @dataclass

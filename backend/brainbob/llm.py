@@ -6,8 +6,9 @@ from openai import OpenAI
 CACHE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "cache")
 LIGHT = "nvidia/Nemotron-3.5-Lightning-30B-A3B"
 NANO = "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
+QWEN = "Qwen/Qwen3.8-27B"
 NOTHINK = {"chat_template_kwargs": {"enable_thinking": False}}
-PRICE = {LIGHT: (0.05, 0.20), "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B": (0.30, 2.40), "openai/gpt-oss-120b": (0.05, 0.25), NANO: (0.05, 0.20)}
+PRICE = {LIGHT: (0.05, 0.20), "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B": (0.30, 2.40), "openai/gpt-oss-120b": (0.05, 0.25), NANO: (0.05, 0.20), QWEN: (0.10, 0.40)}
 _OVR = {}  # role -> default overrides (configure)
 
 
@@ -15,13 +16,16 @@ def _roles():
     r = {
         "curator": dict(model=LIGHT, max_tokens=4096, temperature=0, extra_body=NOTHINK),
         "curator_sloppy": dict(model=NANO, max_tokens=4096, temperature=float(os.environ.get("BRAINBOB_SLOPPY_TEMP", "1.2")), extra_body=NOTHINK),
+        "curator_careful": dict(model=LIGHT, max_tokens=512, temperature=0, extra_body=NOTHINK),
+        "curator_qwen": dict(model=QWEN, max_tokens=512, temperature=0, extra_body=NOTHINK),
         "agent": dict(model=os.environ.get("BRAINBOB_AGENT_MODEL", LIGHT), max_tokens=2048, temperature=0, extra_body=NOTHINK),
         "judge": dict(model="openai/gpt-oss-120b", max_tokens=2048, temperature=0, extra_body=None),
     }
     return {k: {**v, **_OVR.get(k, {})} for k, v in r.items()}
 
 
-_SEM = {"curator": threading.Semaphore(24), "curator_sloppy": threading.Semaphore(24), "agent": threading.Semaphore(16), "judge": threading.Semaphore(16)}
+_SEM = {"curator": threading.Semaphore(24), "curator_sloppy": threading.Semaphore(24), "agent": threading.Semaphore(16), "judge": threading.Semaphore(16),
+        "curator_careful": threading.Semaphore(24), "curator_qwen": threading.Semaphore(24)}
 _USAGE, _LOCK, _client = [], threading.Lock(), None
 
 

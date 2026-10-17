@@ -48,3 +48,24 @@ def ingest(episode, store, author=None, role="curator"):
         if m: added.append(m)
     events.emit("episode.ingested", episode_id=episode.id, source=episode.source, n_memories=len(added))
     return added
+
+
+REFLECT = """You are a teammate writing ONE short lesson for a shared notebook after attempting a task. Other teammates will see your lesson before attempting DIFFERENT but similar tasks.
+
+TASK:
+{q}
+
+ATTEMPTED ANSWER: {a}
+RESULT: {r}
+REFERENCE ANSWER (known only to you): {ref}
+
+Write one concise, transferable lesson (1-2 sentences, under 60 words): a general rule, distinguishing cue or common confusion that would help on other similar tasks. Do NOT state this task's answer as a standalone fact and do not just restate the question. Output only the lesson text."""
+
+
+def reflect(task, answer, correct, writer_role):
+    """One transferable lesson from a training task. Uses task.reference (training tasks only). Returns text or None."""
+    text = answer.text if hasattr(answer, "text") else str(answer)
+    c = llm.complete(writer_role, [{"role": "user", "content": REFLECT.format(
+        q=task.question, a=text, r="CORRECT" if correct else "WRONG", ref=task.reference or "(none)")}], max_tokens=300)
+    c = c.strip().strip('"').strip()
+    return c or None
