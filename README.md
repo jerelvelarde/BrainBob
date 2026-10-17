@@ -1,6 +1,8 @@
 # BrainBob
 
-A shared memory layer for an agent team, visualized as a 3D isometric brain office full of working SpongeBobs.
+A shared memory layer for an agent team, visualized as a 3D isometric brain office full of working BrainBobs.
+
+Meet the **BrainBobs**: our SpongeBob-inspired memory crew, with round yellow bodies, expressive eyes, lavender overalls, and memory badges.
 
 **Shared Brain** is our primary problem: every agent should read the team's project memory before working and update it afterward. BrainBob aims to keep that knowledge current, lean, and conflict-free. Self-improvement comes from better memory.
 
@@ -12,7 +14,7 @@ The current build is an interactive frontend preview. The 3D room fills the scre
 
 | Capability | Current implementation |
 | --- | --- |
-| 3D brain office | Six animated SpongeBob workers, desks, filing cabinets, orbit and zoom controls. |
+| 3D brain office | Six animated BrainBob workers, desks, filing cabinets, orbit and zoom controls. |
 | Floating panels | CopilotKit chat and memory inspection open over the room. Chat survives closing and reopening its panel. |
 | Memory operations | Scripted create, retrieve, check, update, and archive actions with evidence and revision history. |
 | Retracing | Project earlier memory states from recorded events; return to the current state without replaying actions. |
@@ -57,7 +59,7 @@ The source for this first frontend is in [apps/web](apps/web).
 | Model routing | [NVIDIA NeMo Switchyard](https://github.com/NVIDIA-NeMo/Switchyard) | Route requests between specialized models from our configured pool. |
 | Inference | [Crusoe Managed Inference](https://github.com/crusoecloud/crusoe-developer-hub) | Serve all project model calls, including NVIDIA Nemotron models. |
 | Agent UI | CopilotKit + AG-UI | Chat, alignment decisions, tool results, and event streaming through a project-specific harness bridge. |
-| 3D visualization | Next.js, React Three Fiber, Three.js, Drei | Isometric brain office, walking SpongeBobs, cabinets, and memory retracing. |
+| 3D visualization | Next.js, React Three Fiber, Three.js, Drei | Isometric brain office, walking BrainBobs, cabinets, and memory retracing. |
 | Shared memory | SQLite + versioned Markdown records | Scoped retrieval, evidence, revision history, and transactional updates. |
 | Optional planning research | You.com | Retrieve public web sources for planning artifacts. |
 
@@ -79,7 +81,7 @@ Our goal is a coordinated team that shares context, organizes memories, and cont
 
 ![A team of SpongeBobs working at desks inside a brain with organized filing cabinets](docs/assets/brain-memory-team.png)
 
-These user-supplied images inspired the brain office and its SpongeBob workers.
+BrainBobs are inspired by SpongeBob and the brain-office scenes above. Our characters have round yellow bodies and expressive eyes, with lavender overalls, memory badges, and rosy cheeks and tiny smiles. The supplied images are inspiration references, not screenshots of BrainBob.
 
 ## Planned: Planning and Human Alignment
 
@@ -143,13 +145,13 @@ The initial proposal samples **10 of the latest 50 eligible conversations** afte
 The scene uses **Three.js**, rendered through **React Three Fiber** in a **Next.js / React** app. **Drei** provides orbit controls, rounded geometry, and billboard labels.
 
 - **Isometric view:** An orthographic camera with a responsive fit, orbit, zoom, and reset.
-- **Procedural characters:** SpongeBobs are assembled from 3D meshes in code, with articulated arms and legs.
+- **Procedural characters:** BrainBobs are assembled from 3D meshes in code, with articulated arms and legs, soft rounded bodies, lavender overalls, and memory badges.
 - **Animation:** React Three Fiber's frame loop moves workers along waypoint routes and animates their limbs. Pause and reduced-motion preferences are respected.
 - **Current event feedback:** Scripted memory events change cabinet indicators and worker callouts. Walking routes are ambient animation; they do not represent completed backend tasks.
 - **Inspection:** Click a cabinet to open a floating memory inspector. Evidence and history stay available while the room remains visible.
 - **Retracing:** The timeline reconstructs recorded memory state; it does not rewind the characters' physical positions or rerun inference.
 
-Scene implementation: [brain-scene.tsx](apps/web/src/components/brain/brain-scene.tsx), [sponge-bob.tsx](apps/web/src/components/brain/sponge-bob.tsx), and [brain-workspace.tsx](apps/web/src/components/brain-workspace.tsx).
+Scene implementation: [brain-scene.tsx](apps/web/src/components/brain/brain-scene.tsx), [brain-bob.tsx](apps/web/src/components/brain/brain-bob.tsx), and [brain-workspace.tsx](apps/web/src/components/brain-workspace.tsx).
 
 The planned live integration will connect committed memory operations to these visual actions:
 

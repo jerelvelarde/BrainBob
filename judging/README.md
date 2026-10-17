@@ -1,6 +1,6 @@
 # BrainBob — Judging Guide
 
-**Track: Shared Brain.** BrainBob is a shared memory layer for an agent team, visualized as a 3D isometric brain office with SpongeBob workers.
+**Track: Shared Brain.** BrainBob is a shared memory layer for an agent team, visualized as a 3D isometric brain office with BrainBob workers.
 
 Every agent should read the team's living project memory before working and update it afterward. The goal is current, lean, conflict-free knowledge with measurable gains in output quality. Self-improvement through better memory is the supporting outcome.
 

@@ -4,7 +4,7 @@ import { Component, memo, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Billboard, OrbitControls, RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
-import { SpongeBob } from "./sponge-bob";
+import { BrainBob } from "./brain-bob";
 import type { MemoryEvent, MemoryScope } from "@/lib/memory";
 
 export type SceneHandle = { reset: () => void; zoom: (factor: number) => void };
@@ -164,9 +164,9 @@ function Walker({ index, playing, speed, reducedMotion, event, onClick }: {
     const angle = Math.atan2(end[0] - start[0], end[1] - start[1]);
     group.current.rotation.y = THREE.MathUtils.damp(group.current.rotation.y, angle, 9, Math.min(delta, .05));
   });
-  const active = event && ((event.actor === "Inspector Bob" && index === 4) || (event.actor === "Curator Bob" && index === 0) || (event.actor === "Runner Bob" && index === 1));
+  const active = event && ((["Inspector BrainBob", "Inspector Bob"].includes(event.actor) && index === 4) || (["Curator BrainBob", "Curator Bob"].includes(event.actor) && index === 0) || (["Runner BrainBob", "Runner Bob"].includes(event.actor) && index === 1));
   return <group ref={group} position={[route[0][0], .05, route[0][1]]} onClick={(e) => { e.stopPropagation(); onClick(); }}>
-    <SpongeBob walking={playing && !reducedMotion} carrying={index === 0 || index === 1} inspector={index === 4} phase={index} />
+    <BrainBob walking={playing && !reducedMotion} carrying={index === 0 || index === 1} inspector={index === 4} phase={index} />
     {active ? <Label position={[0, 1.85, 0]} width={1.35} text={event.action === "evaluated" ? "Checks out!" : event.action === "updated" ? "New info!" : event.action === "forgotten" ? "Let it go." : "On it!"} /> : null}
   </group>;
 }
@@ -206,7 +206,7 @@ export default function BrainScene(props: SceneProps) {
     gl?.getExtension("WEBGL_lose_context")?.loseContext();
   }, []);
   if (!supported) return <div className="scene-fallback"><h2>Your memories are in good hands.</h2><p>Enable WebGL to visit the 3D brain. Open Memories to explore memory and history.</p></div>;
-  return <SceneBoundary><Canvas orthographic shadows dpr={[1, 1.7]} camera={{ position: [16, 14, 19], zoom: 45, near: .1, far: 100 }} gl={{ antialias: true, powerPreference: "high-performance" }} aria-label="Interactive isometric brain office with six walking SpongeBob memory workers">
+  return <SceneBoundary><Canvas orthographic shadows dpr={[1, 1.7]} camera={{ position: [16, 14, 19], zoom: 45, near: .1, far: 100 }} gl={{ antialias: true, powerPreference: "high-performance" }} aria-label="Interactive isometric brain office with six walking BrainBob memory workers">
     <color attach="background" args={["#f0e9dd"]} />
     <ambientLight intensity={1.55} color="#fff5e2" />
     <directionalLight position={[5, 12, 8]} intensity={2.8} color="#fff1d5" castShadow shadow-mapSize={[2048, 2048]} shadow-camera-left={-12} shadow-camera-right={12} shadow-camera-top={12} shadow-camera-bottom={-12} shadow-normalBias={.04} />
@@ -217,7 +217,7 @@ export default function BrainScene(props: SceneProps) {
     <Desk position={[-3.6, 0, .9]} />
     <Desk position={[.2, 0, .6]} />
     <Desk position={[3.8, 0, -1]} rotation={-.1} audit />
-    {routes.map((_, index) => <Walker key={index} index={index} playing={props.playing} speed={props.speed} reducedMotion={props.reducedMotion} event={props.event} onClick={() => props.onWorker(index === 4 ? "Inspector Bob checks memories against their evidence." : index === 0 ? "Curator Bob files new memories and revisions." : "Runner Bob delivers memories to the team.")} />)}
+    {routes.map((_, index) => <Walker key={index} index={index} playing={props.playing} speed={props.speed} reducedMotion={props.reducedMotion} event={props.event} onClick={() => props.onWorker(index === 4 ? "Inspector BrainBob checks memories against their evidence." : index === 0 ? "Curator BrainBob files new memories and revisions." : "Runner BrainBob delivers memories to the team.")} />)}
     <CameraRig onReady={props.onReady} />
   </Canvas></SceneBoundary>;
 }

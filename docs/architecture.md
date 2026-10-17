@@ -6,7 +6,7 @@ Implementation plan for the Recursive Agents Hackathon, October 17, 2026. The fi
 
 ## Product Decision
 
-Build a working agent memory loop on Crusoe Managed Inference, with CopilotKit chat and a 3D SpongeBob brain office that shows the loop running. Every visible memory action must come from a recorded backend event.
+Build a working agent memory loop on Crusoe Managed Inference, with CopilotKit chat and a 3D BrainBob brain office that shows the loop running. Every visible memory action must come from a recorded backend event.
 
 The distinctive interaction is **retrace this memory**: click a filing cabinet or memory card and walk backward through its creation, evidence, revisions, evaluations, and use in an answer. Replay should work after a page reload and without making another model call.
 
@@ -54,7 +54,7 @@ flowchart TD
     Tools -->|Committed events| Stream[AG-UI custom events]
     Stream --> Projection[Frontend event reducer]
     DB -->|Authorized snapshot and event history| Projection
-    Projection --> Brain[3D SpongeBob brain]
+    Projection --> Brain[3D BrainBob brain]
     Projection --> Inspect
     Agent --> Plan[HTML alignment artifact]
     Plan --> Approval[Human decision]
@@ -417,7 +417,7 @@ For the small demo corpus, replay from an initial snapshot is sufficient; period
 
 ## 3D Brain Office
 
-Use an isometric room with a curved pink brain interior, desks, filing cabinets, paper records, and simple yellow SpongeBob workers built from reusable geometry. Start with procedural meshes so the first animation does not depend on rigging or external model downloads.
+Use an isometric room with a curved pink brain interior, desks, filing cabinets, paper records, and yellow BrainBob workers inspired by SpongeBob, built from reusable geometry with soft rounded bodies, lavender overalls, and memory badges. Start with procedural meshes so the first animation does not depend on rigging or external model downloads.
 
 React Three Fiber provides a React renderer for Three.js, and its frame loop supports procedural animation. Use the compatible stable renderer path selected during installation. [React Three Fiber introduction](https://r3f.docs.pmnd.rs/getting-started/introduction), [animation guide](https://r3f.docs.pmnd.rs/tutorials/basic-animations)
 

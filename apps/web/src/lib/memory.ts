@@ -33,7 +33,7 @@ const initialMemories: Memory[] = [
 export function initialTrace(): MemoryEvent[] {
   return initialMemories.map((memory, index) => ({
     id: `seed-${memory.id}`, sequence: index + 1, action: "created", memoryId: memory.id,
-    title: memory.title, scope: memory.scope, actor: "Curator Bob",
+    title: memory.title, scope: memory.scope, actor: "Curator BrainBob",
     explanation: "Filed a new memory from the supplied demo conversation.",
     evidence: memory.evidence, timestamp: "2026-10-17T17:45:00.000Z", after: memory,
   }));
@@ -59,7 +59,7 @@ export function makeEvent(action: MemoryAction, events: readonly MemoryEvent[], 
   const base = {
     id, sequence, action, timestamp: new Date().toISOString(), memoryId,
     title: active?.title ?? "A new idea", scope: active?.scope ?? "team" as MemoryScope,
-    evidence: active?.evidence ?? "", actor: "Curator Bob", explanation: "",
+    evidence: active?.evidence ?? "", actor: "Curator BrainBob", explanation: "",
   };
   if (action === "created") {
     const memory: Memory = {
@@ -71,8 +71,8 @@ export function makeEvent(action: MemoryAction, events: readonly MemoryEvent[], 
       explanation: "A useful idea became a shared team memory." };
   }
   if (!active) throw new Error("Select an active memory first. Forgotten memories remain available in history.");
-  if (action === "retrieved") return { ...base, actor: "Runner Bob", explanation: "Delivered the exact stored revision to the task desk." };
-  if (action === "evaluated") return { ...base, actor: "Inspector Bob", verdict: "supported",
+  if (action === "retrieved") return { ...base, actor: "Runner BrainBob", explanation: "Delivered the exact stored revision to the task desk." };
+  if (action === "evaluated") return { ...base, actor: "Inspector BrainBob", verdict: "supported",
     explanation: "Scripted evidence check: the stored claim matches its source. No change needed." };
   if (action === "forgotten") return { ...base, after: { ...active, status: "forgotten" },
     explanation: "Archived from active retrieval. Its evidence and history are still retraceable." };
@@ -91,8 +91,8 @@ export const actionLabels: Record<MemoryAction, string> = {
 };
 
 export const demoSteps: { action: MemoryAction; memoryId: string; caption: string }[] = [
-  { action: "retrieved", memoryId: "launch", caption: "Runner Bob finds the launch date." },
-  { action: "evaluated", memoryId: "launch", caption: "Inspector Bob checks the source." },
+  { action: "retrieved", memoryId: "launch", caption: "Runner BrainBob finds the launch date." },
+  { action: "evaluated", memoryId: "launch", caption: "Inspector BrainBob checks the source." },
   { action: "updated", memoryId: "launch", caption: "A correction arrives. October 25 it is!" },
   { action: "retrieved", memoryId: "launch", caption: "The next task gets the corrected memory." },
   { action: "created", memoryId: "launch", caption: "A new team ritual gets its own record." },
