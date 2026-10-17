@@ -8,11 +8,14 @@ Status date: 2026-10-17 (Pacific). Build: `21260c4` (HEAD when this report was w
 2. **On a 50-question LongMemEval subset, BrainBob's answer context averaged 2,681 tokens against 108,946 for the full history (about 1/40), at a cost of 4 questions: 35/50 (70%) vs 39/50 (78%).** The 8-point gap is 4 questions out of 50 and we treat it as within noise at this n; we computed no interval and do not claim equivalence. Source: [LongMemEval subset run](../bench/results/20261017-110432/results.md).
 3. **In the one evaluation whose rules were frozen before the run (BANKING77, n=300 held-out, same tasks and same answering model in every condition), the change-and-observe audit changed accuracy by +0.0 points, paired 95% bootstrap interval [-1.3, +1.3]: 202/300 with all memories vs 202/300 audited.** This is a null result and is reported as one. Source: [BANKING77 stream run](../backend/results/20261017-122228-stream-banking77/results.md).
 
+4. **On 30 held-out synthetic Rusty Rod scenarios, write-time maintenance left the correct current fact active and the superseded one retired in 12/13 update checks, against 0/13 for append-only memory, while wrongly retiring 0 of 32 valid memories.** Answer accuracy was 68/76 vs 67/76 (+1.3 pts [-5.3, +7.9], not significant). Source: [Rusty Rod run](../backend/results/20261017-131504-correctness-heldout/results.md).
+
 ## Claims we do not make
 
 - **The evaluator (audit) improves accuracy.** The frozen-rule paired result is +0.0 pts [-1.3, +1.3] (BANKING77), and on LoCoMo the audited and unaudited groups are identical at 404/760 (the audit retired 0 memories and promoted 2). The exploratory threshold variants below show no interval that excludes zero.
 - **BrainBob is more accurate than reading the whole history.** On the LongMemEval subset it was 4 questions lower (35/50 vs 39/50). The claim is about context size, not accuracy.
-- **Memory correctness has been proven.** Every experiment here measures whether a memory changed a graded answer. None measures whether the stored fact is true. The correctness suite is pending (see below).
+- **Memory correctness improves answers.** Experiment 5 shows maintenance keeps memory state current (12/13 vs 0/13 on synthetic scenarios), but answer accuracy did not improve significantly, and maintained memory was weaker on insufficient-evidence questions. Experiments 1 to 4 measure whether a memory changed a graded answer, not whether it is true.
+- **The recent-conversation audit helps.** It changed no answer in Experiment 5.
 - **Results are leaderboard scores.** LongMemEval is a 50-question subset judged by gpt-oss-120b (the official protocol uses GPT-4o). LoCoMo and BANKING77 use our own splits and prompts. None is comparable to published numbers.
 - **Memory always helps.** On BANKING77, "all" was worse than "none" on 26 held-out tasks (and better on others); net effect was 202/300 vs 189/300 and we computed no interval for that comparison.
 - **Statistical power on LoCoMo conditions or the noisy-writer test.** No paired interval was computed for those runs.
@@ -125,13 +128,39 @@ This is the paired evaluation required by issue #4: rules fixed before the run, 
 - **Limitations.** Single seed (42). One dataset, one answering model. BANKING77 labels are largely lexical, so retrieved lessons help less than conversational recall. The CI covers sampling of held-out tasks, not run-to-run model nondeterminism or different seeds. Per-writer helped/harmed counts (careful 15/19, sloppy 17/15, qwen 18/14) show writers add about as much harm as help at the task level.
 - **Artifacts.** [results.md](../backend/results/20261017-122228-stream-banking77/results.md), [summary.json](../backend/results/20261017-122228-stream-banking77/summary.json). Code: `833911b` (stream benchmark). The results folder is gitignored by `backend/.gitignore`, so it is on the authors' disk, not in the pushed repository, unless force-added.
 
-## Pending: Rusty Rod correctness suite
+## Experiment 5: Rusty Rod correctness suite (synthetic, held-out)
 
-**Not yet run to completion; no results exist.** The suite measures whether memories are supported, current and authorized, which the experiments above do not. Its design:
+Design: [docs/benchmarks.md](benchmarks.md) "Custom BrainBob Suite" and [backend/SPEC-correctness.md](../backend/SPEC-correctness.md). 30 held-out scenarios (five per group: extraction, updates, retention, forgetting, shared handoff, insufficient evidence) plus 6 development scenarios, all synthetic, in [fixtures/rusty_rod/scenarios.json](../backend/fixtures/rusty_rod/scenarios.json). Updates scenario 1 is the Atlas commitment from [sample-company.md](sample-company.md). Expected answers, forbidden stale values and unreadable scopes were written before running. Grading is deterministic (string checks), not a model judge. The held-out split was run once; no prompt changed after it.
 
-- [docs/benchmarks.md](benchmarks.md), "Custom BrainBob Suite": 30 held-out scenarios, five in each of six groups (extraction, updates, retention, forgetting, shared handoff, insufficient evidence), plus deterministic checks for scope isolation, stale concurrent writes, duplicate operations, atomic state/event commits and read-only replay. Expected outcomes are written before the run; development examples are kept separate from held-out ones.
-- [backend/SPEC-correctness.md](../backend/SPEC-correctness.md): the Rusty Rod organization, permissions (`can_read` / `can_write` / `can_approve`), write-time maintenance, the recent-conversation audit, and the conditions compared (including a full-history baseline).
-- Until results are published, no statement about factual correctness, freshness or unauthorized-retrieval rate is made.
+Answering and extraction: `nvidia/Nemotron-3.5-Lightning-30B-A3B`; maintenance and audit judge: `openai/gpt-oss-120b`. Top 10 retrieval over the asking member's readable scopes; every question uses a fresh agent.
+
+| Condition | Accuracy | Stale-fact usage | Correct memory updates | Valid memories wrongly retired | Abstention | Uncertainty | Leakage |
+|---|---|---|---|---|---|---|---|
+| none | 10/76 | 0/24 | - | - | 9/10 | 0/3 | 0 |
+| append_only | 67/76 | 4/24 | 0/13 | 0/32 | 7/10 | 1/3 | 0 |
+| maintained, no audit | 68/76 | 1/24 | **12/13** | 0/32 | 7/10 | 0/3 | 0 |
+| maintained + recent audit | 68/76 | 1/24 | 12/13 | 0/32 | 7/10 | 0/3 | 0 |
+| full_history | 73/76 | 1/24 | - | - | 9/10 | 2/3 | 0 |
+
+Paired bootstrap, 2000 resamples, percentage points:
+- maintained (no audit) - append_only: accuracy +1.3 [-5.3, +7.9]; stale-fact usage -3.9 [-9.2, +0.0].
+- maintained + audit - maintained (no audit): +0.0 on every metric. The recent audit changed no answer.
+- append_only - none: accuracy +75.0 [+63.2, +85.5].
+- Correct memory updates (13 update checks): maintained 12/13, append_only 0/13; all 12 discordant pairs favor maintained (exact McNemar p = 2 x 0.5^12, about 0.0005).
+
+What this shows and what it does not:
+- **Shown:** write-time maintenance keeps the current fact active and the superseded one retired (12/13 vs 0/13) without retiring any valid memory (0/32), and no retrieval crossed a scope the member cannot read (0 leaks; this is guaranteed by filtering before retrieval, not discovered by the run).
+- **Not shown:** better answers. Accuracy gain over append-only is +1.3 points, not significant; the model usually picks the newer fact even when both are retrieved.
+- **Weakness found:** insufficient-evidence questions. Maintained memory scored 6/12 in that group (append_only 8/12, full_history 11/12) and 0/3 on questions that should mention an unresolved conflict; the answering agent gave one value instead of naming the tentative alternative.
+- **Full history wins here** (73/76) because these scenarios are tiny (about 88 context tokens). Memory's context advantage shows on long histories (Experiment 1), not here.
+- **Recent audit:** coverage 13/13 is complete by construction (at most 8 episodes per scenario, sample of 10); judgment accuracy 193/194 on pairs the fixtures decide.
+- **Grader limits:** three abstain answers worded "does not specify" or "do not contain information" were scored wrong, and one "has been dropped" sentence was counted as stale-fact usage. The rules were fixed before the held-out run and were not changed afterward.
+- **Prompt change:** the extraction prompt was generalized (commit `21260c4`) between the development and held-out runs; the held-out run uses the new prompt throughout.
+- Cost: held-out run $0.052 in fresh calls, 229 s. Artifacts: [results.md](../backend/results/20261017-131504-correctness-heldout/results.md), [summary.json](../backend/results/20261017-131504-correctness-heldout/summary.json).
+
+## Demo trace (selected example, not an evaluation)
+
+[backend/demo/DEMO.md](../backend/demo/DEMO.md) is the repeatable live scenario for issue #2, with synthetic seed data marked `[synthetic demo data]`. A careless memory ("closes at 6 PM") makes a fresh agent answer wrong; leave-one-out feedback shows that removing it fixes the answer; review retires it after an uncached confirm re-run (default threshold of 3 flips, two of them recorded during seeding with real model calls); a useful memory from the same message ("48 hours' notice") is promoted, not retired; a different member then asks a different question and answers correctly with citations. It passed 15 checks in two cold-cache runs with identical answers: [run 1](../backend/results/20261017-131558-demo/meta.json), [run 2](../backend/results/20261017-131649-demo/meta.json). It is a chosen example, not a measurement of how often this happens.
 
 ## Provenance
 

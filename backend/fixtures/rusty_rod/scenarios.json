@@ -1,0 +1,463 @@
+{
+ "version": "rusty-rod-correctness-v1",
+ "written": "2026-10-17, before any run. Expected answers derive only from the episodes the asking member can read.",
+ "groups": ["Extraction", "Updates", "Retention", "Forgetting", "Shared handoff", "Insufficient evidence"],
+ "scenarios": [
+  {"id": "ex-dev", "group": "Extraction", "split": "dev", "now": "2026-10-16",
+   "episodes": [
+    {"author": "sales-01", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-09-08", "text": "sales-01: Call with Jasper Freight went well. They want the route-optimization audit scoped to their Midwest depots only, 4 sites total.\nsales-03: Did they mention budget?\nsales-01: Ceiling is $60k for phase one. Their CFO joked they'd pay double if we fix their Monday backlog, but that's not a real number."},
+    {"author": "sales-03", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-09-10", "text": "sales-03: Weather's been brutal, my flight to Denver got cancelled twice.\nsales-01: Ugh. Did you ever get the hotel refund?\nsales-03: Still waiting on it."},
+    {"author": "exec-02", "scope": "rusty-rod", "authority": "approved", "date": "2026-09-14", "text": "exec-02: Approving the Jasper Freight phase-one SOW: Midwest depots, 4 sites, $60k fixed fee, kickoff September 28."}
+   ],
+   "questions": [
+    {"member": "sales-04", "question": "How many depots are in scope for Jasper Freight's phase one?", "expect": ["4", "four"], "forbid": [], "must_not_retrieve": ["rusty-rod/engineering", "rusty-rod/sales/sales-01"]},
+    {"member": "eng-02", "question": "What's the phase-one fee for Jasper Freight?", "expect": ["60k", "60 000", "60 thousand"], "forbid": ["120k", "120 000", "double"], "must_not_retrieve": ["rusty-rod/sales"]}
+   ],
+   "state": {"keep": [["60k", "60 000"]]}},
+
+  {"id": "ex-1", "group": "Extraction", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "sales-02", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-09-03", "text": "sales-02: Kestrel Health called back. Their compliance lead insists all reports ship as PDF, never spreadsheets, and everything has to be hosted in us-east-2.\nsales-05: us-east-2 specifically, not just somewhere in the US?\nsales-02: Specifically us-east-2, that's where their existing data lake sits."},
+    {"author": "sales-05", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-09-04", "text": "sales-05: Heard a rumor in the lobby that Kestrel is about to be bought by some big insurer. Nobody at Kestrel has said anything like that.\nsales-02: Let's not repeat that until we hear it from them."},
+    {"author": "sales-02", "scope": "rusty-rod/sales", "authority": "approved", "date": "2026-09-09", "text": "sales-02: Logging for the team: Kestrel Health contract signed today. Primary contact is their compliance lead, Dana Whitfield. Deliverables in PDF, hosting region us-east-2."}
+   ],
+   "questions": [
+    {"member": "sales-04", "question": "Which AWS region does Kestrel Health need their deployment in?", "expect": ["us east 2"], "forbid": [], "must_not_retrieve": ["rusty-rod/engineering", "rusty-rod/executive"]},
+    {"member": "sales-01", "question": "Who is our main contact at Kestrel Health?", "expect": ["dana whitfield", "whitfield"], "forbid": [], "must_not_retrieve": ["rusty-rod/engineering"]}
+   ],
+   "state": {"keep": [["us east 2"], ["whitfield"]]}},
+
+  {"id": "ex-2", "group": "Extraction", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "eng-04", "scope": "rusty-rod/engineering", "authority": "discussion", "date": "2026-09-02", "text": "eng-04: For Lumen Retail's inventory sync I'd go with Postgres 16, the data is very relational.\neng-08: Agreed. Someone in standup said we could just dump it all in a Google Sheet, lol.\neng-04: Ha, no."},
+    {"author": "eng-08", "scope": "rusty-rod/engineering", "authority": "approved", "date": "2026-09-05", "text": "eng-08: Decision for the Lumen Retail inventory sync: Postgres 16, nightly batch at 02:00 UTC, retries capped at 3. Writing it up in the design doc."},
+    {"author": "eng-01", "scope": "rusty-rod/engineering/eng-01", "authority": "discussion", "date": "2026-09-06", "text": "Note to self: renew my parking pass before the 15th, and book the dentist."}
+   ],
+   "questions": [
+    {"member": "eng-06", "question": "What database are we using for the Lumen Retail inventory sync?", "expect": ["postgres", "postgresql"], "forbid": ["google sheet"], "must_not_retrieve": ["rusty-rod/engineering/eng-01"]},
+    {"member": "eng-02", "question": "When does the Lumen Retail nightly batch run?", "expect": ["02 00", "2 00", "2am", "2 am"], "forbid": [], "must_not_retrieve": ["rusty-rod/engineering/eng-01"]},
+    {"member": "eng-06", "question": "When does eng-01's parking pass need renewing?", "expect": "abstain", "forbid": ["15th", "the 15"], "must_not_retrieve": ["rusty-rod/engineering/eng-01"]}
+   ],
+   "state": {"keep": [["postgres"]]}},
+
+  {"id": "ex-3", "group": "Extraction", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "exec-01", "scope": "rusty-rod/executive", "authority": "discussion", "date": "2026-09-10", "text": "exec-01: For Meridian Bank I want to hold the line at $210 an hour. exec-03 floated $185 if they commit to twelve months.\nexec-03: Only if they sign the 12-month term. Nothing decided."},
+    {"author": "exec-03", "scope": "rusty-rod", "authority": "approved", "date": "2026-09-17", "text": "exec-03: Publishing for everyone: the Meridian Bank engagement is approved. Blended rate $210/hour, 6-month term, starting October 5."},
+    {"author": "sales-04", "scope": "rusty-rod/sales/sales-04", "authority": "discussion", "date": "2026-09-18", "text": "Meridian prep: bring a printed org chart to Thursday's meeting. Their procurement person prefers morning calls."}
+   ],
+   "questions": [
+    {"member": "sales-02", "question": "What hourly rate did we agree with Meridian Bank?", "expect": ["210"], "forbid": ["185"], "must_not_retrieve": ["rusty-rod/executive", "rusty-rod/sales/sales-04"]},
+    {"member": "sales-04", "question": "When does the Meridian Bank engagement start?", "expect": ["october 5", "oct 5", "10 05", "5 october"], "forbid": [], "must_not_retrieve": ["rusty-rod/executive"]},
+    {"member": "sales-04", "question": "What time of day does Meridian's procurement contact prefer for calls?", "expect": ["morning"], "forbid": [], "must_not_retrieve": ["rusty-rod/executive"]}
+   ],
+   "state": {"keep": [["210"]]}},
+
+  {"id": "ex-4", "group": "Extraction", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "sales-03", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-09-21", "text": "sales-03: Nimbus Logistics asked whether we can support 40 warehouses. I said I'd check.\nsales-01: My guess is they'll grow to 100 next year, but that's just me guessing.\nsales-03: Let's stick to what they actually told us: 40 warehouses, live before Black Friday."},
+    {"author": "eng-05", "scope": "rusty-rod/engineering", "authority": "discussion", "date": "2026-09-23", "text": "eng-05: Load test at Nimbus-style volume: one cluster handles about 25 warehouses before p95 latency goes past 800ms.\neng-09: So two clusters for their 40. Fine."},
+    {"author": "exec-02", "scope": "rusty-rod", "authority": "approved", "date": "2026-09-25", "text": "exec-02: Nimbus Logistics deal approved for 40 warehouses on two clusters, go-live November 20."}
+   ],
+   "questions": [
+    {"member": "sales-05", "question": "How many warehouses is the Nimbus Logistics deal sized for?", "expect": ["40", "forty"], "forbid": ["100"], "must_not_retrieve": ["rusty-rod/engineering"]},
+    {"member": "eng-09", "question": "How many warehouses can a single cluster handle before latency gets too high?", "expect": ["25", "twenty five"], "forbid": [], "must_not_retrieve": ["rusty-rod/sales"]},
+    {"member": "sales-05", "question": "What p95 latency did the Nimbus load test hit?", "expect": "abstain", "forbid": ["800"], "must_not_retrieve": ["rusty-rod/engineering"]}
+   ],
+   "state": {"keep": [["40"]]}},
+
+  {"id": "ex-5", "group": "Extraction", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "sales-05", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-09-11", "text": "sales-05: Anyone want the leftover cake in the kitchen?\nsales-02: Yes please. Also, Orchid Pharma moved their steering committee to the first Tuesday of every month.\nsales-05: Noted."},
+    {"author": "sales-02", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-09-12", "text": "sales-02: Orchid Pharma's sponsor is Priya Raman, VP of Clinical Ops. She wants a one-page summary before every steering committee."},
+    {"author": "sales-05", "scope": "rusty-rod/sales/sales-05", "authority": "discussion", "date": "2026-09-13", "text": "Thinking about pitching Orchid a bigger analytics retainer, maybe $300k. Haven't run it by anyone yet."}
+   ],
+   "questions": [
+    {"member": "sales-01", "question": "Who is the executive sponsor at Orchid Pharma?", "expect": ["priya raman", "raman"], "forbid": [], "must_not_retrieve": ["rusty-rod/sales/sales-05"]},
+    {"member": "sales-03", "question": "When does Orchid Pharma's steering committee meet?", "expect": ["first tuesday"], "forbid": [], "must_not_retrieve": ["rusty-rod/sales/sales-05"]},
+    {"member": "sales-01", "question": "Are we proposing an analytics retainer to Orchid, and for how much?", "expect": "abstain", "forbid": ["300k", "300 000"], "must_not_retrieve": ["rusty-rod/sales/sales-05"]}
+   ],
+   "state": {"keep": [["raman"]]}},
+
+  {"id": "up-dev", "group": "Updates", "split": "dev", "now": "2026-10-16",
+   "episodes": [
+    {"author": "exec-03", "scope": "rusty-rod", "authority": "approved", "date": "2026-09-01", "text": "exec-03: Basalt Energy kickoff confirmed: on site in Houston on September 30, led by eng-02."},
+    {"author": "sales-01", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-09-20", "text": "sales-01: Basalt's procurement asked if the kickoff could be remote. I said I'd ask, nothing changes yet."},
+    {"author": "exec-03", "scope": "rusty-rod", "authority": "approved", "date": "2026-09-24", "text": "exec-03: Update for Basalt Energy: the kickoff will be fully remote over Teams, same date. The Houston trip is off.", "decisive": true}
+   ],
+   "questions": [
+    {"member": "eng-02", "question": "Where is the Basalt Energy kickoff happening?", "expect": ["remote", "teams", "virtual", "online"], "forbid": ["houston"], "must_not_retrieve": ["rusty-rod/sales"]},
+    {"member": "sales-03", "question": "What date is the Basalt kickoff?", "expect": ["september 30", "sept 30", "sep 30", "30 september", "09 30"], "forbid": [], "must_not_retrieve": ["rusty-rod/engineering"]}
+   ],
+   "state": {"updated": [{"new": ["remote", "teams"], "old": ["houston"]}]}},
+
+  {"id": "up-1-atlas", "group": "Updates", "split": "heldout", "now": "2026-10-16",
+   "note": "Atlas scenario from docs/sample-company.md: approved Nov 6 -> tentative engineering Nov 13 -> approved correction Nov 13 -> fresh Sales agent -> goals retained.",
+   "episodes": [
+    {"author": "exec-01", "scope": "rusty-rod", "authority": "approved", "date": "2026-09-15", "text": "exec-01: Atlas signed off on the pilot plan in today's call. Recording the commitment: the Atlas client pilot is due November 6, 2026. Their goals for the pilot are to cut warehouse picking errors by 30% and to sync stock levels with their SAP system every hour.\nsales-02: Great, I'll share that with their ops team."},
+    {"author": "eng-03", "scope": "rusty-rod/engineering", "authority": "tentative", "date": "2026-10-02", "text": "eng-03: Looking at the SAP connector work, I think Atlas slips a week. My revised estimate is November 13.\neng-06: Tight but realistic. Should we tell leadership?\neng-03: I'll raise it. For now it's just our estimate."},
+    {"author": "exec-02", "scope": "rusty-rod", "authority": "approved", "date": "2026-10-09", "text": "exec-02: After engineering's review and a call with Atlas, we're formally moving the Atlas pilot due date to November 13, 2026. This replaces the November 6 date. Atlas agreed.", "decisive": true},
+    {"author": "sales-02", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-10-12", "text": "sales-02: Atlas's ops lead asked whether the hourly stock sync will show up in the pilot dashboard. I told her yes."}
+   ],
+   "questions": [
+    {"member": "sales-02", "question": "I'm drafting a client update for Atlas. What pilot due date should I give them?", "expect": ["november 13", "nov 13", "11 13", "13 november"], "forbid": ["november 6", "nov 6", "11 06", "11 6 2026", "6 november"], "must_not_retrieve": ["rusty-rod/engineering"]},
+    {"member": "sales-02", "question": "What are the goals of the Atlas pilot?", "expect": ["picking error", "sap"], "forbid": [], "must_not_retrieve": ["rusty-rod/engineering"]},
+    {"member": "eng-07", "question": "What is the committed due date for the Atlas pilot?", "expect": ["november 13", "nov 13", "11 13", "13 november"], "forbid": ["november 6", "nov 6", "11 06", "11 6 2026", "6 november"], "must_not_retrieve": ["rusty-rod/sales"]}
+   ],
+   "state": {"updated": [{"new": ["november 13", "nov 13"], "old": ["november 6", "nov 6"]}], "keep": [["picking error", "picking"]]}},
+
+  {"id": "up-2", "group": "Updates", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "exec-01", "scope": "rusty-rod", "authority": "approved", "date": "2026-09-05", "text": "exec-01: Cobalt Insurance renewal approved at $480k for 2027, payment terms net 30."},
+    {"author": "sales-04", "scope": "rusty-rod/sales", "authority": "tentative", "date": "2026-09-29", "text": "sales-04: Cobalt's buyer hinted they want $440k. I'm penciling that in as where we'll probably land, nothing agreed.\nsales-02: Leadership hasn't signed off on any discount, though."},
+    {"author": "sales-02", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-10-03", "text": "sales-02: Cobalt's new IT director starts Monday, her name is Hana Okafor."}
+   ],
+   "questions": [
+    {"member": "eng-05", "question": "What's the approved Cobalt Insurance renewal value for 2027?", "expect": ["480"], "forbid": ["440"], "must_not_retrieve": ["rusty-rod/sales"]},
+    {"member": "sales-01", "question": "What is the Cobalt renewal price for 2027?", "expect": ["480"], "forbid": [], "must_not_retrieve": ["rusty-rod/engineering"]}
+   ],
+   "state": {"keep": [["480"]]}},
+
+  {"id": "up-3", "group": "Updates", "split": "heldout", "now": "2026-10-16",
+   "note": "The third episode is an older approved record forwarded late; it must not revert the newer budget.",
+   "episodes": [
+    {"author": "exec-02", "scope": "rusty-rod", "authority": "approved", "date": "2026-09-10", "text": "exec-02: Delphi Media project budget approved at $150k."},
+    {"author": "exec-02", "scope": "rusty-rod", "authority": "approved", "date": "2026-10-01", "text": "exec-02: Delphi Media expanded the scope to include the archive migration. Approved budget is now $175k.", "decisive": true},
+    {"author": "exec-01", "scope": "rusty-rod", "authority": "approved", "date": "2026-09-08", "text": "exec-01: Forwarding my notes from the September 8 board prep, sorry for the delay: Delphi Media budget approved at $150k, single phase."}
+   ],
+   "questions": [
+    {"member": "sales-03", "question": "What's the current approved budget for Delphi Media?", "expect": ["175"], "forbid": ["150"], "must_not_retrieve": ["rusty-rod/engineering", "rusty-rod/executive"]},
+    {"member": "eng-04", "question": "What did Delphi Media add to the project scope?", "expect": ["archive"], "forbid": [], "must_not_retrieve": ["rusty-rod/sales"]}
+   ],
+   "state": {"updated": [{"new": ["175"], "old": ["150"]}]}},
+
+  {"id": "up-4", "group": "Updates", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "eng-07", "scope": "rusty-rod/engineering", "authority": "approved", "date": "2026-09-12", "text": "eng-07: Ember Foods integration will use their REST v2 API. Webhook retries every 5 minutes."},
+    {"author": "eng-02", "scope": "rusty-rod/engineering", "authority": "discussion", "date": "2026-09-26", "text": "eng-02: Ember's REST v2 is rate limiting us hard. Their team says gRPC is available now.\neng-07: Let's test it before we switch anything."},
+    {"author": "eng-07", "scope": "rusty-rod/engineering", "authority": "approved", "date": "2026-10-04", "text": "eng-07: Tested it. Switching the Ember Foods integration to their gRPC API effective today, REST v2 is out. Webhook retry interval stays at 5 minutes.", "decisive": true}
+   ],
+   "questions": [
+    {"member": "eng-10", "question": "Which Ember Foods API are we integrating with?", "expect": ["grpc"], "forbid": ["rest v2"], "must_not_retrieve": ["rusty-rod/sales"]},
+    {"member": "eng-01", "question": "How often do Ember webhook retries run?", "expect": ["5 minutes", "five minutes", "5 min", "every 5"], "forbid": [], "must_not_retrieve": ["rusty-rod/sales"]},
+    {"member": "sales-02", "question": "Which API is the Ember Foods integration using?", "expect": "abstain", "forbid": ["grpc", "rest v2"], "must_not_retrieve": ["rusty-rod/engineering"]}
+   ],
+   "state": {"updated": [{"new": ["grpc"], "old": ["rest v2"]}], "keep": [["5 minute", "five minute"]]}},
+
+  {"id": "up-5", "group": "Updates", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "exec-01", "scope": "rusty-rod", "authority": "approved", "date": "2026-09-18", "text": "exec-01: Fjord Telecom go-live approved for November 24."},
+    {"author": "sales-03", "scope": "rusty-rod", "authority": "discussion", "date": "2026-10-06", "text": "sales-03: Heads up everyone, Fjord's PM asked whether go-live could slide to December 1 because of their change freeze. I said I'd take it to leadership."},
+    {"author": "exec-01", "scope": "rusty-rod", "authority": "approved", "date": "2026-10-08", "text": "exec-01: On Fjord: we looked at the December 1 request and we're not moving. Go-live stays November 24, their change freeze starts after that."}
+   ],
+   "questions": [
+    {"member": "eng-08", "question": "When does Fjord Telecom go live?", "expect": ["november 24", "nov 24", "11 24", "24 november"], "forbid": ["december 1", "dec 1", "12 01", "1 december"], "must_not_retrieve": ["rusty-rod/sales"]},
+    {"member": "sales-01", "question": "Why did Fjord ask to move their go-live?", "expect": ["change freeze", "freeze"], "forbid": [], "must_not_retrieve": ["rusty-rod/engineering"]}
+   ],
+   "state": {"keep": [["november 24", "nov 24"]]}},
+
+  {"id": "re-dev", "group": "Retention", "split": "dev", "now": "2026-10-16",
+   "episodes": [
+    {"author": "sales-01", "scope": "rusty-rod/sales", "authority": "approved", "date": "2026-08-20", "text": "sales-01: For the team: Glacier Outdoor's billing contact is Marco Ruiz, invoices go to their AP inbox, payment terms net 45."},
+    {"author": "sales-01", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-09-15", "text": "sales-01: Glacier wants the loyalty-app proposal by next Friday."},
+    {"author": "sales-03", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-10-01", "text": "sales-03: Sent Glacier the loyalty-app proposal. They want to walk through it with their board first."},
+    {"author": "sales-01", "scope": "rusty-rod/sales", "authority": "approved", "date": "2026-10-10", "text": "sales-01: Glacier signed the loyalty app SOW, $72k, starting November 2."}
+   ],
+   "questions": [
+    {"member": "sales-05", "question": "What are Glacier Outdoor's payment terms?", "expect": ["net 45", "45 days"], "forbid": [], "must_not_retrieve": ["rusty-rod/engineering"]},
+    {"member": "sales-02", "question": "Who handles billing at Glacier Outdoor?", "expect": ["marco ruiz", "ruiz"], "forbid": [], "must_not_retrieve": ["rusty-rod/engineering"]}
+   ],
+   "state": {"keep": [["net 45"], ["ruiz"]]}},
+
+  {"id": "re-1", "group": "Retention", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "exec-03", "scope": "rusty-rod", "authority": "approved", "date": "2026-09-02", "text": "exec-03: Harbor Shipping engagement approved. The objective is to cut container dwell time at their Oakland terminal by 15%. Weekly status reports go to their COO, Lena Park."},
+    {"author": "exec-03", "scope": "rusty-rod", "authority": "approved", "date": "2026-09-30", "text": "exec-03: Harbor Shipping phase two start moves from October 14 to October 28 at their request.", "decisive": true},
+    {"author": "eng-06", "scope": "rusty-rod/engineering", "authority": "discussion", "date": "2026-10-05", "text": "eng-06: Harbor's yard telemetry feed is finally stable, three days without gaps."},
+    {"author": "sales-02", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-10-07", "text": "sales-02: Harbor's COO liked the last weekly report so much she forwarded it to their board."}
+   ],
+   "questions": [
+    {"member": "sales-04", "question": "What's the main objective of the Harbor Shipping engagement?", "expect": ["dwell"], "forbid": [], "must_not_retrieve": ["rusty-rod/engineering"]},
+    {"member": "eng-03", "question": "Who receives the weekly Harbor Shipping status reports?", "expect": ["lena park", "lena"], "forbid": [], "must_not_retrieve": ["rusty-rod/sales"]},
+    {"member": "eng-06", "question": "When does Harbor phase two start?", "expect": ["october 28", "oct 28", "10 28", "28 october"], "forbid": ["october 14", "oct 14", "10 14", "14 october"], "must_not_retrieve": ["rusty-rod/sales"]}
+   ],
+   "state": {"keep": [["dwell"], ["lena"]]}},
+
+  {"id": "re-2", "group": "Retention", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "eng-02", "scope": "rusty-rod/engineering", "authority": "approved", "date": "2026-08-25", "text": "eng-02: Iris Clinics requirement locked: all patient data encrypted at rest with customer-managed keys, and logs retained for 7 years."},
+    {"author": "eng-02", "scope": "rusty-rod/engineering", "authority": "discussion", "date": "2026-09-20", "text": "eng-02: Iris asked for a dark mode in the scheduling UI. Low priority.\neng-05: Put it in the backlog."},
+    {"author": "eng-05", "scope": "rusty-rod/engineering", "authority": "discussion", "date": "2026-10-03", "text": "eng-05: Iris scheduling UI v1.2 is on staging. QA starts tomorrow."},
+    {"author": "eng-10", "scope": "rusty-rod/engineering", "authority": "discussion", "date": "2026-10-09", "text": "eng-10: Staging QA for Iris found two date-picker bugs, both fixed now."}
+   ],
+   "questions": [
+    {"member": "eng-08", "question": "How long do we have to retain logs for Iris Clinics?", "expect": ["7 years", "seven years"], "forbid": [], "must_not_retrieve": ["rusty-rod/sales"]},
+    {"member": "eng-01", "question": "Who manages the encryption keys for Iris Clinics patient data?", "expect": ["customer"], "forbid": [], "must_not_retrieve": ["rusty-rod/sales"]}
+   ],
+   "state": {"keep": [["7 years", "seven years"], ["customer managed"]]}},
+
+  {"id": "re-3", "group": "Retention", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "sales-05", "scope": "rusty-rod/sales", "authority": "approved", "date": "2026-08-15", "text": "sales-05: Juniper Hotels basics: our day-to-day contact is Tom Becker, and anyone we send on site has to complete their safety induction before visiting a property."},
+    {"author": "sales-05", "scope": "rusty-rod/sales", "authority": "approved", "date": "2026-09-01", "text": "sales-05: Juniper demo scheduled for September 18."},
+    {"author": "sales-05", "scope": "rusty-rod/sales", "authority": "approved", "date": "2026-09-12", "text": "sales-05: Juniper moved the demo to September 25."},
+    {"author": "sales-05", "scope": "rusty-rod/sales", "authority": "approved", "date": "2026-09-22", "text": "sales-05: Juniper moved the demo again, now October 2. Hopefully the last time.", "decisive": true},
+    {"author": "sales-03", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-10-03", "text": "sales-03: How did the Juniper demo go?\nsales-05: Really well, they want pricing next week."}
+   ],
+   "questions": [
+    {"member": "sales-02", "question": "What do our staff have to do before visiting a Juniper Hotels property?", "expect": ["safety induction", "induction"], "forbid": [], "must_not_retrieve": ["rusty-rod/engineering"]},
+    {"member": "sales-01", "question": "When was the Juniper Hotels demo held?", "expect": ["october 2", "oct 2", "10 02", "2 october"], "forbid": ["september 18", "sept 18", "sep 18", "september 25", "sept 25", "sep 25"], "must_not_retrieve": ["rusty-rod/engineering"]}
+   ],
+   "state": {"keep": [["induction"], ["becker"]], "updated": [{"new": ["october 2"], "old": ["september 18", "september 25"]}]}},
+
+  {"id": "re-4", "group": "Retention", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "exec-02", "scope": "rusty-rod", "authority": "approved", "date": "2026-08-28", "text": "exec-02: Quarry Materials master services agreement is signed. Liability cap is 2x annual fees, governing law is Delaware."},
+    {"author": "eng-09", "scope": "rusty-rod/engineering", "authority": "discussion", "date": "2026-09-14", "text": "eng-09: Quarry's SFTP drop keeps timing out. I bumped the timeout to 120 seconds."},
+    {"author": "sales-04", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-09-30", "text": "sales-04: Quarry wants to add a second plant to the dashboard next quarter."},
+    {"author": "exec-02", "scope": "rusty-rod", "authority": "approved", "date": "2026-10-06", "text": "exec-02: Quarry Materials second-plant expansion approved for Q1 2027 at $38k."}
+   ],
+   "questions": [
+    {"member": "sales-01", "question": "What's the liability cap in our agreement with Quarry Materials?", "expect": ["2x", "two times", "twice", "2 times", "double"], "forbid": [], "must_not_retrieve": ["rusty-rod/engineering"]},
+    {"member": "eng-04", "question": "Which state's law governs the Quarry Materials agreement?", "expect": ["delaware"], "forbid": [], "must_not_retrieve": ["rusty-rod/sales"]},
+    {"member": "eng-09", "question": "What SFTP timeout did we set for Quarry?", "expect": ["120"], "forbid": [], "must_not_retrieve": ["rusty-rod/sales"]}
+   ],
+   "state": {"keep": [["2x", "two times", "twice"], ["delaware"]]}},
+
+  {"id": "re-5", "group": "Retention", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "sales-02", "scope": "rusty-rod/sales/sales-02", "authority": "discussion", "date": "2026-08-30", "text": "My notes: Redwood Credit Union's CTO hates slide decks and wants a written memo instead. Always send her the agenda 48 hours ahead."},
+    {"author": "sales-02", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-09-19", "text": "sales-02: Redwood asked for references from two other credit unions.\nsales-04: I can get them Sunrise CU and Pacific CU."},
+    {"author": "sales-04", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-10-02", "text": "sales-04: Sent Redwood both references."},
+    {"author": "sales-02", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-10-11", "text": "sales-02: Redwood meeting is booked for October 20."}
+   ],
+   "questions": [
+    {"member": "sales-02", "question": "What format should I use when presenting to Redwood's CTO?", "expect": ["memo", "written"], "forbid": [], "must_not_retrieve": ["rusty-rod/engineering"]},
+    {"member": "sales-02", "question": "How far ahead should the Redwood agenda go out?", "expect": ["48 hours", "two days", "2 days"], "forbid": [], "must_not_retrieve": ["rusty-rod/engineering"]},
+    {"member": "sales-03", "question": "Which references did we send Redwood?", "expect": ["sunrise", "pacific"], "forbid": [], "must_not_retrieve": ["rusty-rod/sales/sales-02"]}
+   ],
+   "state": {"keep": [["memo"], ["48 hours"]]}},
+
+  {"id": "fo-dev", "group": "Forgetting", "split": "dev", "now": "2026-10-16",
+   "episodes": [
+    {"author": "exec-01", "scope": "rusty-rod", "authority": "approved", "date": "2026-08-20", "text": "exec-01: Sales can offer Sable Analytics the SABLE15 code for 15% off their first year."},
+    {"author": "exec-01", "scope": "rusty-rod", "authority": "approved", "date": "2026-10-01", "text": "exec-01: Retiring the SABLE15 discount effective today. Sable Analytics renewals are list price from now on, no discount codes.", "decisive": true},
+    {"author": "sales-05", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-10-03", "text": "sales-05: Sable Analytics renewal call is on the 14th. Their team grew to 60 seats."}
+   ],
+   "questions": [
+    {"member": "sales-03", "question": "Is there a discount we can offer Sable Analytics?", "expect": ["list price", "no discount"], "forbid": ["15"], "must_not_retrieve": ["rusty-rod/engineering"]}
+   ],
+   "state": {"updated": [{"new": ["list price", "no discount", "retir", "discontinu"], "old": ["sable15"]}]}},
+
+  {"id": "fo-1", "group": "Forgetting", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "sales-01", "scope": "rusty-rod/sales", "authority": "approved", "date": "2026-08-18", "text": "sales-01: Standing call with Tundra Mining every Thursday at 10am Pacific."},
+    {"author": "sales-01", "scope": "rusty-rod/sales", "authority": "approved", "date": "2026-10-02", "text": "sales-01: Tundra cancelled the Thursday call for good. From now on they want a written update by email every Friday.", "decisive": true},
+    {"author": "sales-04", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-10-05", "text": "sales-04: Tundra's site manager is out on leave until November."}
+   ],
+   "questions": [
+    {"member": "sales-05", "question": "How should we send Tundra Mining project updates?", "expect": ["email"], "forbid": ["thursday"], "must_not_retrieve": ["rusty-rod/engineering"]},
+    {"member": "sales-02", "question": "On what day does Tundra expect their update?", "expect": ["friday"], "forbid": ["thursday"], "must_not_retrieve": ["rusty-rod/engineering"]}
+   ],
+   "state": {"updated": [{"new": ["email", "friday", "cancel"], "old": ["thursday"]}]}},
+
+  {"id": "fo-2", "group": "Forgetting", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "eng-03", "scope": "rusty-rod/engineering", "authority": "approved", "date": "2026-08-10", "text": "eng-03: Umber Studios staging lives on stage-umber-01, and deploys go through Jenkins."},
+    {"author": "eng-03", "scope": "rusty-rod/engineering", "authority": "approved", "date": "2026-09-29", "text": "eng-03: stage-umber-01 is decommissioned as of today. Umber staging moved to stage-umber-k8s and deploys now go through GitHub Actions. The Umber Jenkins jobs are deleted.", "decisive": true},
+    {"author": "eng-10", "scope": "rusty-rod/engineering", "authority": "discussion", "date": "2026-10-04", "text": "eng-10: Umber's art team asked for bigger upload limits, I set it to 2 GB."}
+   ],
+   "questions": [
+    {"member": "eng-05", "question": "Which staging host does Umber Studios use?", "expect": ["stage umber k8s"], "forbid": ["stage umber 01"], "must_not_retrieve": ["rusty-rod/sales"]},
+    {"member": "eng-01", "question": "What do Umber deploys run through?", "expect": ["github actions"], "forbid": ["jenkins"], "must_not_retrieve": ["rusty-rod/sales"]},
+    {"member": "eng-05", "question": "What upload limit did we set for Umber's art team?", "expect": ["2 gb", "2gb"], "forbid": [], "must_not_retrieve": ["rusty-rod/sales"]}
+   ],
+   "state": {"updated": [{"new": ["k8s", "decommission"], "old": ["stage umber 01"]}, {"new": ["github actions"], "old": ["jenkins"]}], "keep": [["2 gb", "2gb"]]}},
+
+  {"id": "fo-3", "group": "Forgetting", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "sales-03", "scope": "rusty-rod/sales", "authority": "approved", "date": "2026-08-22", "text": "sales-03: Vega Robotics main contact is Ian Cho, their head of operations."},
+    {"author": "sales-03", "scope": "rusty-rod/sales", "authority": "approved", "date": "2026-10-07", "text": "sales-03: Ian Cho has left Vega Robotics, please don't reach out to him anymore. Our new contact is Sofia Brandt, interim head of operations.", "decisive": true},
+    {"author": "sales-05", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-10-09", "text": "sales-05: Vega's procurement portal password got reset again, I'm handling it."}
+   ],
+   "questions": [
+    {"member": "sales-01", "question": "Who's our contact at Vega Robotics?", "expect": ["sofia brandt", "brandt"], "forbid": ["ian cho"], "must_not_retrieve": ["rusty-rod/engineering"]},
+    {"member": "exec-02", "question": "Who is our contact at Vega Robotics?", "expect": "abstain", "forbid": ["sofia brandt", "brandt", "ian cho"], "must_not_retrieve": ["rusty-rod/sales"]}
+   ],
+   "state": {"updated": [{"new": ["sofia", "brandt", "left"], "old": ["ian cho"]}]}},
+
+  {"id": "fo-4", "group": "Forgetting", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "exec-02", "scope": "rusty-rod", "authority": "approved", "date": "2026-08-25", "text": "exec-02: Willow Schools engagement: our team must connect through the district VPN, and the travel budget is $5k per quarter."},
+    {"author": "exec-02", "scope": "rusty-rod", "authority": "approved", "date": "2026-10-01", "text": "exec-02: Willow Schools has dropped the VPN requirement, they moved to zero-trust SSO through Okta. Use Okta for all access from now on. Travel budget unchanged.", "decisive": true},
+    {"author": "eng-07", "scope": "rusty-rod/engineering", "authority": "discussion", "date": "2026-10-03", "text": "eng-07: Got my Okta invite for Willow, works fine."}
+   ],
+   "questions": [
+    {"member": "eng-02", "question": "How do we access Willow Schools systems?", "expect": ["okta", "sso"], "forbid": ["vpn"], "must_not_retrieve": ["rusty-rod/sales"]},
+    {"member": "sales-04", "question": "What's the travel budget for Willow Schools?", "expect": ["5k", "5 000", "5 thousand"], "forbid": [], "must_not_retrieve": ["rusty-rod/engineering"]}
+   ],
+   "state": {"updated": [{"new": ["okta", "dropped"], "old": ["vpn"]}], "keep": [["5k", "5 000"]]}},
+
+  {"id": "fo-5", "group": "Forgetting", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "sales-02", "scope": "rusty-rod/sales", "authority": "approved", "date": "2026-09-01", "text": "sales-02: Xenon Labs pricing sheet v3: the data pipeline package is $9,500 a month."},
+    {"author": "sales-02", "scope": "rusty-rod/sales", "authority": "approved", "date": "2026-10-01", "text": "sales-02: Pricing sheet v3 for Xenon Labs is obsolete, please throw it away. v4 is live: the data pipeline package is $11,000 a month.", "decisive": true},
+    {"author": "sales-04", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-10-04", "text": "sales-04: Xenon Labs asked for a quote on the data pipeline package for their second lab."}
+   ],
+   "questions": [
+    {"member": "sales-04", "question": "What's the monthly price of the data pipeline package for Xenon Labs?", "expect": ["11 000", "11k", "11 thousand"], "forbid": ["9 500", "9500", "9 5k"], "must_not_retrieve": ["rusty-rod/engineering"]},
+    {"member": "sales-01", "question": "Which pricing sheet version is current for Xenon?", "expect": ["v4", "version 4"], "forbid": ["v3 is current"], "must_not_retrieve": ["rusty-rod/engineering"]}
+   ],
+   "state": {"updated": [{"new": ["11 000", "11k", "obsolete"], "old": ["9 500"]}]}},
+
+  {"id": "sh-dev", "group": "Shared handoff", "split": "dev", "now": "2026-10-16",
+   "episodes": [
+    {"author": "eng-01", "scope": "rusty-rod/engineering", "authority": "approved", "date": "2026-09-10", "text": "eng-01: Handoff notes for Yarrow Farms: sensor ingest runs on Kafka topic yarrow.sensors.v2, and the on-call runbook is in the Yarrow wiki under Ingest. Their API key rotates every 90 days."},
+    {"author": "eng-01", "scope": "rusty-rod/engineering", "authority": "approved", "date": "2026-09-28", "text": "eng-01: Yarrow update: ingest is migrated to topic yarrow.sensors.v3. The old v2 topic is drained and deleted.", "decisive": true},
+    {"author": "eng-01", "scope": "rusty-rod/engineering/eng-01", "authority": "discussion", "date": "2026-09-29", "text": "Personal: handing Yarrow to eng-09 next week. Remind myself to transfer the PagerDuty schedule."}
+   ],
+   "questions": [
+    {"member": "eng-09", "question": "Which Kafka topic does the Yarrow Farms ingest use?", "expect": ["yarrow sensors v3", "sensors v3"], "forbid": ["sensors v2"], "must_not_retrieve": ["rusty-rod/engineering/eng-01"]},
+    {"member": "eng-09", "question": "How often does the Yarrow API key rotate?", "expect": ["90 days", "ninety days", "90"], "forbid": [], "must_not_retrieve": ["rusty-rod/engineering/eng-01"]}
+   ],
+   "state": {"updated": [{"new": ["sensors v3", "drained"], "old": ["sensors v2"]}], "keep": [["90 days"]]}},
+
+  {"id": "sh-1", "group": "Shared handoff", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "sales-03", "scope": "rusty-rod/sales", "authority": "approved", "date": "2026-09-05", "text": "sales-03: Handing Zephyr Air over to sales-05. Summary: they're evaluating us against two other firms, decision expected October 15, and their must-have is SOC 2 Type II."},
+    {"author": "sales-03", "scope": "rusty-rod/sales", "authority": "approved", "date": "2026-09-25", "text": "sales-03: Zephyr pushed their decision to October 29.", "decisive": true},
+    {"author": "sales-03", "scope": "rusty-rod/sales/sales-03", "authority": "discussion", "date": "2026-09-26", "text": "Private: I think Zephyr's buyer is leaning toward the competitor. Gut feeling only."}
+   ],
+   "questions": [
+    {"member": "sales-05", "question": "When does Zephyr Air expect to make their decision?", "expect": ["october 29", "oct 29", "10 29", "29 october"], "forbid": ["october 15", "oct 15", "10 15", "15 october"], "must_not_retrieve": ["rusty-rod/sales/sales-03"]},
+    {"member": "sales-05", "question": "What certification does Zephyr require?", "expect": ["soc 2", "soc2"], "forbid": [], "must_not_retrieve": ["rusty-rod/sales/sales-03"]},
+    {"member": "sales-05", "question": "Do we know which vendor Zephyr's buyer currently favors?", "expect": "abstain", "forbid": ["gut feeling"], "must_not_retrieve": ["rusty-rod/sales/sales-03"]}
+   ],
+   "state": {"updated": [{"new": ["october 29"], "old": ["october 15"]}], "keep": [["soc 2", "soc2"]]}},
+
+  {"id": "sh-2", "group": "Shared handoff", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "eng-04", "scope": "rusty-rod/engineering", "authority": "approved", "date": "2026-09-08", "text": "eng-04: Aurora Bank fraud-model retrain estimate: 3 weeks on 2 A100 GPUs. Feature store is Feast."},
+    {"author": "eng-06", "scope": "rusty-rod/engineering", "authority": "discussion", "date": "2026-09-20", "text": "eng-06: Could we do the Aurora retrain on a single GPU?\neng-04: Possible, but it'd take twice as long. Keep the plan."},
+    {"author": "eng-04", "scope": "rusty-rod/engineering", "authority": "approved", "date": "2026-10-01", "text": "eng-04: Aurora retrain re-estimated after the data audit: 4 weeks, same 2 A100s.", "decisive": true}
+   ],
+   "questions": [
+    {"member": "eng-10", "question": "How long is the Aurora Bank retrain expected to take?", "expect": ["4 weeks", "four weeks"], "forbid": ["3 weeks", "three weeks"], "must_not_retrieve": ["rusty-rod/sales"]},
+    {"member": "eng-10", "question": "Which feature store does the Aurora project use?", "expect": ["feast"], "forbid": [], "must_not_retrieve": ["rusty-rod/sales"]},
+    {"member": "eng-10", "question": "How many GPUs does the Aurora retrain need?", "expect": ["2", "two"], "forbid": ["one gpu", "1 gpu", "single gpu"], "must_not_retrieve": ["rusty-rod/sales"]}
+   ],
+   "state": {"updated": [{"new": ["4 weeks"], "old": ["3 weeks"]}], "keep": [["feast"]]}},
+
+  {"id": "sh-3", "group": "Shared handoff", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "exec-03", "scope": "rusty-rod", "authority": "approved", "date": "2026-09-12", "text": "exec-03: The Cedar Logistics account moves from sales-01 to sales-04 effective October 1. Cedar's renewal date is January 31, 2027, and they're on the Premium support tier."},
+    {"author": "sales-01", "scope": "rusty-rod/sales/sales-01", "authority": "discussion", "date": "2026-09-14", "text": "Note to self: Cedar's procurement head is difficult. Offered her a 5% loyalty credit verbally, nothing in writing yet."},
+    {"author": "sales-04", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-10-03", "text": "sales-04: Took over Cedar this week. Intro call with their ops director on Tuesday went fine."}
+   ],
+   "questions": [
+    {"member": "sales-04", "question": "When is the Cedar Logistics renewal?", "expect": ["january 31", "jan 31", "01 31", "31 january"], "forbid": [], "must_not_retrieve": ["rusty-rod/sales/sales-01"]},
+    {"member": "sales-04", "question": "Did we offer Cedar any loyalty credit?", "expect": "abstain", "forbid": ["5"], "must_not_retrieve": ["rusty-rod/sales/sales-01"]},
+    {"member": "eng-02", "question": "Which support tier is Cedar Logistics on?", "expect": ["premium"], "forbid": [], "must_not_retrieve": ["rusty-rod/sales", "rusty-rod/sales/sales-01"]}
+   ],
+   "state": {"keep": [["premium"], ["january 31", "jan 31"]]}},
+
+  {"id": "sh-4", "group": "Shared handoff", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "exec-01", "scope": "rusty-rod/executive", "authority": "approved", "date": "2026-09-15", "text": "exec-01: I'm on parental leave from October 1, exec-02 covers Dune Solar. Context: we agreed internally to cap Dune's discount at 8%, and their board meets November 12."},
+    {"author": "exec-02", "scope": "rusty-rod/executive", "authority": "discussion", "date": "2026-10-02", "text": "exec-02: Picked up Dune. Their CFO asked for 12% off, I told her I'd come back next week."},
+    {"author": "exec-02", "scope": "rusty-rod/executive", "authority": "approved", "date": "2026-10-09", "text": "exec-02: Decision on Dune Solar: we're raising the discount cap to 10%, final offer. Their CFO accepted verbally.", "decisive": true}
+   ],
+   "questions": [
+    {"member": "exec-03", "question": "What's the maximum discount we've approved for Dune Solar?", "expect": ["10"], "forbid": ["8", "12"], "must_not_retrieve": ["rusty-rod/sales", "rusty-rod/engineering"]},
+    {"member": "exec-03", "question": "When does Dune Solar's board meet?", "expect": ["november 12", "nov 12", "11 12", "12 november"], "forbid": [], "must_not_retrieve": ["rusty-rod/sales"]},
+    {"member": "sales-02", "question": "What discount cap applies to Dune Solar?", "expect": "abstain", "forbid": ["10", "8"], "must_not_retrieve": ["rusty-rod/executive"]}
+   ],
+   "state": {"updated": [{"new": ["10"], "old": ["8"]}], "keep": [["november 12", "nov 12"]]}},
+
+  {"id": "sh-5", "group": "Shared handoff", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "eng-08", "scope": "rusty-rod/engineering", "authority": "approved", "date": "2026-09-03", "text": "eng-08: Echo Media transcoding pipeline: ffmpeg workers on spot instances, max 40 concurrent jobs, output in HLS."},
+    {"author": "eng-02", "scope": "rusty-rod/engineering", "authority": "tentative", "date": "2026-10-05", "text": "eng-02: Proposal for Echo: we might raise the concurrency limit to 80 once the new spot quota comes through. Not approved, still waiting on the quota."},
+    {"author": "eng-08", "scope": "rusty-rod/engineering", "authority": "discussion", "date": "2026-10-07", "text": "eng-08: Handing Echo to eng-05 while I'm on another client's crunch."}
+   ],
+   "questions": [
+    {"member": "eng-05", "question": "What's the current max number of concurrent transcoding jobs for Echo Media?", "expect": ["40", "forty"], "forbid": [], "must_not_retrieve": ["rusty-rod/sales"]},
+    {"member": "eng-05", "question": "What output format does the Echo pipeline produce?", "expect": ["hls"], "forbid": [], "must_not_retrieve": ["rusty-rod/sales"]}
+   ],
+   "state": {"keep": [["40"], ["hls"]]}},
+
+  {"id": "in-dev", "group": "Insufficient evidence", "split": "dev", "now": "2026-10-16",
+   "episodes": [
+    {"author": "sales-02", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-09-14", "text": "sales-02: Falcon Air wants a proposal for crew-scheduling analytics. They haven't shared a budget yet.\nsales-01: Ask them on the next call."},
+    {"author": "sales-02", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-09-21", "text": "sales-02: Falcon call got rescheduled. Still no budget number."},
+    {"author": "eng-02", "scope": "rusty-rod/engineering", "authority": "discussion", "date": "2026-09-25", "text": "eng-02: If Falcon Air goes ahead, the crew data would come from their Sabre feed."}
+   ],
+   "questions": [
+    {"member": "sales-01", "question": "What's Falcon Air's budget for the crew-scheduling project?", "expect": "abstain", "forbid": [], "must_not_retrieve": ["rusty-rod/engineering"]},
+    {"member": "sales-04", "question": "What does Falcon Air want a proposal for?", "expect": ["crew scheduling", "crew"], "forbid": [], "must_not_retrieve": ["rusty-rod/engineering"]}
+   ],
+   "state": {}},
+
+  {"id": "in-1", "group": "Insufficient evidence", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "eng-03", "scope": "rusty-rod/engineering", "authority": "discussion", "date": "2026-09-15", "text": "eng-03: For Helix Bio's genomics pipeline I'm planning on AWS Batch, it's what their data team already uses."},
+    {"author": "eng-07", "scope": "rusty-rod/engineering", "authority": "discussion", "date": "2026-09-22", "text": "eng-07: Talked to Helix's IT lead. She says they're moving everything to Google Cloud and want the pipeline on GCP Batch.\neng-03: That contradicts what their data team told me. We need to get them in one room."},
+    {"author": "eng-03", "scope": "rusty-rod/engineering", "authority": "discussion", "date": "2026-09-30", "text": "eng-03: The Helix meeting got pushed to next week, so the cloud question is still open."}
+   ],
+   "questions": [
+    {"member": "eng-10", "question": "Which cloud will Helix Bio's genomics pipeline run on?", "expect": "uncertain", "values": [["aws"], ["gcp", "google cloud"]], "forbid": [], "must_not_retrieve": ["rusty-rod/sales"]},
+    {"member": "eng-10", "question": "What kind of pipeline are we building for Helix Bio?", "expect": ["genomics"], "forbid": [], "must_not_retrieve": ["rusty-rod/sales"]}
+   ],
+   "state": {"keep": [["genomics"]]}},
+
+  {"id": "in-2", "group": "Insufficient evidence", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "sales-03", "scope": "rusty-rod/sales/sales-03", "authority": "discussion", "date": "2026-09-10", "text": "My notes: Ivory Retail's renewal will probably land around $120k, and their champion is quietly interviewing elsewhere."},
+    {"author": "sales-03", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-09-12", "text": "sales-03: Ivory Retail renewal conversations start next month, I'll lead them.\nsales-02: Let me know if you need help with the deck."},
+    {"author": "exec-01", "scope": "rusty-rod", "authority": "discussion", "date": "2026-09-20", "text": "exec-01: Reminder for everyone: any renewal over $100k needs exec sign-off before pricing goes to the client."}
+   ],
+   "questions": [
+    {"member": "sales-02", "question": "What renewal amount are we expecting from Ivory Retail?", "expect": "abstain", "forbid": ["120"], "must_not_retrieve": ["rusty-rod/sales/sales-03"]},
+    {"member": "sales-02", "question": "Who is leading the Ivory Retail renewal?", "expect": ["sales 03"], "forbid": [], "must_not_retrieve": ["rusty-rod/sales/sales-03"]},
+    {"member": "eng-04", "question": "What's the rule for pricing on big renewals?", "expect": ["exec", "sign off"], "forbid": [], "must_not_retrieve": ["rusty-rod/sales", "rusty-rod/sales/sales-03"]}
+   ],
+   "state": {}},
+
+  {"id": "in-3", "group": "Insufficient evidence", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "eng-05", "scope": "rusty-rod/engineering", "authority": "tentative", "date": "2026-09-18", "text": "eng-05: My estimate for the Kite Energy billing migration is 6 weeks."},
+    {"author": "eng-09", "scope": "rusty-rod/engineering", "authority": "tentative", "date": "2026-09-19", "text": "eng-09: I went through the same Kite billing scope and I get 10 weeks, the legacy COBOL piece is bigger than it looks.\neng-05: We should reconcile before anyone quotes a number."},
+    {"author": "sales-01", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-09-22", "text": "sales-01: Kite Energy asked for a timeline. I told them we'd confirm once engineering finishes its review."}
+   ],
+   "questions": [
+    {"member": "eng-02", "question": "How long will the Kite Energy billing migration take?", "expect": "uncertain", "values": [["6 weeks", "six weeks"], ["10 weeks", "ten weeks"]], "forbid": [], "must_not_retrieve": ["rusty-rod/sales"]},
+    {"member": "sales-01", "question": "What timeline have we given Kite Energy?", "expect": ["confirm", "engineering review", "not yet", "no timeline", "haven t given"], "forbid": ["6 weeks", "10 weeks", "six weeks", "ten weeks"], "must_not_retrieve": ["rusty-rod/engineering"]}
+   ],
+   "state": {}},
+
+  {"id": "in-4", "group": "Insufficient evidence", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "exec-02", "scope": "rusty-rod", "authority": "approved", "date": "2026-09-08", "text": "exec-02: Mosaic Health engagement approved: patient-intake chatbot, 3-month pilot, starting October 1."},
+    {"author": "eng-06", "scope": "rusty-rod/engineering", "authority": "discussion", "date": "2026-09-25", "text": "eng-06: Mosaic wants the chatbot in English and Spanish at launch."},
+    {"author": "sales-05", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-09-26", "text": "sales-05: Mosaic Health's procurement asked for our security questionnaire, sent it over."}
+   ],
+   "questions": [
+    {"member": "sales-05", "question": "What's the contract value for the Mosaic Health pilot?", "expect": "abstain", "forbid": [], "must_not_retrieve": ["rusty-rod/engineering"]},
+    {"member": "eng-06", "question": "Which languages does the Mosaic chatbot need at launch?", "expect": ["spanish"], "forbid": [], "must_not_retrieve": ["rusty-rod/sales"]},
+    {"member": "sales-05", "question": "How long is the Mosaic Health pilot?", "expect": ["3 month", "three month"], "forbid": [], "must_not_retrieve": ["rusty-rod/engineering"]}
+   ],
+   "state": {"keep": [["3 month", "three month"]]}},
+
+  {"id": "in-5", "group": "Insufficient evidence", "split": "heldout", "now": "2026-10-16",
+   "episodes": [
+    {"author": "exec-03", "scope": "rusty-rod", "authority": "approved", "date": "2026-09-02", "text": "exec-03: Opal Insurance claims-portal launch date approved: December 8."},
+    {"author": "exec-01", "scope": "rusty-rod", "authority": "tentative", "date": "2026-10-06", "text": "exec-01: Opal's sponsor called. They may need to push the portal launch to January 12 because of their own audit. Not confirmed, I'll get it in writing before we change anything."},
+    {"author": "sales-02", "scope": "rusty-rod/sales", "authority": "discussion", "date": "2026-10-07", "text": "sales-02: Should I tell the Opal team anything about the launch date?\nsales-05: Hold off until exec-01 confirms."}
+   ],
+   "questions": [
+    {"member": "eng-03", "question": "When is the Opal Insurance portal launching?", "expect": "uncertain", "values": [["december 8", "dec 8", "12 08"], ["january 12", "jan 12", "01 12"]], "forbid": [], "must_not_retrieve": ["rusty-rod/sales"]},
+    {"member": "sales-05", "question": "Who has to confirm any change to the Opal launch date?", "expect": ["exec 01"], "forbid": [], "must_not_retrieve": ["rusty-rod/engineering"]}
+   ],
+   "state": {"keep": [["december 8", "dec 8"]]}}
+ ]
+}

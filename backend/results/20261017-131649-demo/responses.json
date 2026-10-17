@@ -1,0 +1,785 @@
+{
+  "ids": {
+    "bad": "m2",
+    "good": "m3",
+    "hours": "m1"
+  },
+  "steps": [
+    {
+      "phase": "synthetic seed",
+      "step": "remember:hours",
+      "request": {
+        "text": "[synthetic demo data] Mr. Krabs (owner): The Krusty Krab closes at 10 PM every weekday, Monday through Friday.",
+        "scope": "krusty-krab",
+        "author": "Krusty Krab",
+        "source": "synthetic-seed",
+        "date": "2026-10-01"
+      },
+      "response": {
+        "episode_id": "ep-ff710a78",
+        "memories": [
+          {
+            "id": "m1",
+            "text": "Mr. Krabs (owner) stated that The Krusty Krab closes at 10 PM every weekday, Monday through Friday.",
+            "author": "Krusty Krab",
+            "origin": "ep-ff710a78",
+            "date": "2026-10-01",
+            "status": "trial",
+            "scope": "krusty-krab",
+            "reason": "",
+            "flagged": false,
+            "supersedes": null,
+            "owner": null,
+            "authority": "discussion",
+            "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+            "conflicts_with": []
+          }
+        ]
+      },
+      "seconds": 3.7
+    },
+    {
+      "phase": "synthetic seed",
+      "step": "remember:patrick",
+      "request": {
+        "text": "[synthetic demo data] Patrick (sales): Update from today: the Krusty Krab changed its weekday hours, it now closes at 6 PM instead of 10 PM. Also, catering orders need 48 hours' notice.",
+        "scope": "krusty-krab/sales",
+        "author": "Sales Team",
+        "source": "synthetic-seed",
+        "date": "2026-10-15"
+      },
+      "response": {
+        "episode_id": "ep-3a8accb0",
+        "memories": [
+          {
+            "id": "m2",
+            "text": "Krusty Krab changed its weekday hours, now closes at 6 PM instead of 10 PM",
+            "author": "Sales Team",
+            "origin": "ep-3a8accb0",
+            "date": "2026-10-15",
+            "status": "trial",
+            "scope": "krusty-krab/sales",
+            "reason": "",
+            "flagged": false,
+            "supersedes": null,
+            "owner": null,
+            "authority": "discussion",
+            "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+            "conflicts_with": []
+          },
+          {
+            "id": "m3",
+            "text": "Catering orders need 48 hours' notice",
+            "author": "Sales Team",
+            "origin": "ep-3a8accb0",
+            "date": "2026-10-15",
+            "status": "trial",
+            "scope": "krusty-krab/sales",
+            "reason": "",
+            "flagged": false,
+            "supersedes": null,
+            "owner": null,
+            "authority": "discussion",
+            "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+            "conflicts_with": []
+          }
+        ]
+      },
+      "seconds": 0.5
+    },
+    {
+      "phase": "seeded history (real model calls at seed time)",
+      "step": "ask+check:harm",
+      "request": {
+        "ask": {
+          "question": "Is the Krusty Krab still open at 7 PM on a Tuesday?",
+          "reader": "krusty-krab/sales"
+        },
+        "feedback": {
+          "task_id": "t-d0a64ce5",
+          "correct_answer": "Yes, it is open until 10 PM on weekdays."
+        }
+      },
+      "response": {
+        "ask": {
+          "task_id": "t-d0a64ce5",
+          "answer": "No. The Krusty Krab closes at 6 PM on weekdays, so it is closed at 7 PM on a Tuesday.",
+          "cited_ids": [
+            "m2"
+          ],
+          "memories": [
+            {
+              "id": "m1",
+              "text": "Mr. Krabs (owner) stated that The Krusty Krab closes at 10 PM every weekday, Monday through Friday.",
+              "author": "Krusty Krab",
+              "origin": "ep-ff710a78",
+              "date": "2026-10-01",
+              "status": "trial",
+              "scope": "krusty-krab",
+              "reason": "",
+              "flagged": false,
+              "supersedes": null,
+              "owner": null,
+              "authority": "discussion",
+              "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+              "conflicts_with": []
+            },
+            {
+              "id": "m2",
+              "text": "Krusty Krab changed its weekday hours, now closes at 6 PM instead of 10 PM",
+              "author": "Sales Team",
+              "origin": "ep-3a8accb0",
+              "date": "2026-10-15",
+              "status": "trial",
+              "scope": "krusty-krab/sales",
+              "reason": "",
+              "flagged": false,
+              "supersedes": null,
+              "owner": null,
+              "authority": "discussion",
+              "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+              "conflicts_with": []
+            },
+            {
+              "id": "m3",
+              "text": "Catering orders need 48 hours' notice",
+              "author": "Sales Team",
+              "origin": "ep-3a8accb0",
+              "date": "2026-10-15",
+              "status": "trial",
+              "scope": "krusty-krab/sales",
+              "reason": "",
+              "flagged": false,
+              "supersedes": null,
+              "owner": null,
+              "authority": "discussion",
+              "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+              "conflicts_with": []
+            }
+          ]
+        },
+        "feedback": {
+          "evidence": [
+            {
+              "memory_id": "m2",
+              "shown": true,
+              "correct": false,
+              "task_id": "t-d0a64ce5"
+            },
+            {
+              "memory_id": "m2",
+              "shown": false,
+              "correct": true,
+              "task_id": "t-d0a64ce5"
+            }
+          ]
+        }
+      },
+      "seconds": 1.9,
+      "expected_flip": true
+    },
+    {
+      "phase": "seeded history (real model calls at seed time)",
+      "step": "ask+check:harm",
+      "request": {
+        "ask": {
+          "question": "Is the Krusty Krab open at 8 PM on a Monday?",
+          "reader": "krusty-krab/sales"
+        },
+        "feedback": {
+          "task_id": "t-1aa5511a",
+          "correct_answer": "Yes. The Krusty Krab is open until 10 PM on weekdays."
+        }
+      },
+      "response": {
+        "ask": {
+          "task_id": "t-1aa5511a",
+          "answer": "No. The Krusty Krab closes at 6 PM on weekdays.",
+          "cited_ids": [
+            "m2"
+          ],
+          "memories": [
+            {
+              "id": "m1",
+              "text": "Mr. Krabs (owner) stated that The Krusty Krab closes at 10 PM every weekday, Monday through Friday.",
+              "author": "Krusty Krab",
+              "origin": "ep-ff710a78",
+              "date": "2026-10-01",
+              "status": "trial",
+              "scope": "krusty-krab",
+              "reason": "",
+              "flagged": false,
+              "supersedes": null,
+              "owner": null,
+              "authority": "discussion",
+              "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+              "conflicts_with": []
+            },
+            {
+              "id": "m2",
+              "text": "Krusty Krab changed its weekday hours, now closes at 6 PM instead of 10 PM",
+              "author": "Sales Team",
+              "origin": "ep-3a8accb0",
+              "date": "2026-10-15",
+              "status": "trial",
+              "scope": "krusty-krab/sales",
+              "reason": "",
+              "flagged": false,
+              "supersedes": null,
+              "owner": null,
+              "authority": "discussion",
+              "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+              "conflicts_with": []
+            },
+            {
+              "id": "m3",
+              "text": "Catering orders need 48 hours' notice",
+              "author": "Sales Team",
+              "origin": "ep-3a8accb0",
+              "date": "2026-10-15",
+              "status": "trial",
+              "scope": "krusty-krab/sales",
+              "reason": "",
+              "flagged": false,
+              "supersedes": null,
+              "owner": null,
+              "authority": "discussion",
+              "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+              "conflicts_with": []
+            }
+          ]
+        },
+        "feedback": {
+          "evidence": [
+            {
+              "memory_id": "m2",
+              "shown": true,
+              "correct": false,
+              "task_id": "t-1aa5511a"
+            },
+            {
+              "memory_id": "m2",
+              "shown": false,
+              "correct": true,
+              "task_id": "t-1aa5511a"
+            }
+          ]
+        }
+      },
+      "seconds": 4.8,
+      "expected_flip": true
+    },
+    {
+      "phase": "seeded history (real model calls at seed time)",
+      "step": "ask+check:help",
+      "request": {
+        "ask": {
+          "question": "How much notice does a catering order need?",
+          "reader": "krusty-krab/sales"
+        },
+        "feedback": {
+          "task_id": "t-6d7be2bf",
+          "correct_answer": "48 hours"
+        }
+      },
+      "response": {
+        "ask": {
+          "task_id": "t-6d7be2bf",
+          "answer": "48 hours' notice.",
+          "cited_ids": [
+            "m3"
+          ],
+          "memories": [
+            {
+              "id": "m3",
+              "text": "Catering orders need 48 hours' notice",
+              "author": "Sales Team",
+              "origin": "ep-3a8accb0",
+              "date": "2026-10-15",
+              "status": "trial",
+              "scope": "krusty-krab/sales",
+              "reason": "",
+              "flagged": false,
+              "supersedes": null,
+              "owner": null,
+              "authority": "discussion",
+              "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+              "conflicts_with": []
+            },
+            {
+              "id": "m1",
+              "text": "Mr. Krabs (owner) stated that The Krusty Krab closes at 10 PM every weekday, Monday through Friday.",
+              "author": "Krusty Krab",
+              "origin": "ep-ff710a78",
+              "date": "2026-10-01",
+              "status": "trial",
+              "scope": "krusty-krab",
+              "reason": "",
+              "flagged": false,
+              "supersedes": null,
+              "owner": null,
+              "authority": "discussion",
+              "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+              "conflicts_with": []
+            },
+            {
+              "id": "m2",
+              "text": "Krusty Krab changed its weekday hours, now closes at 6 PM instead of 10 PM",
+              "author": "Sales Team",
+              "origin": "ep-3a8accb0",
+              "date": "2026-10-15",
+              "status": "trial",
+              "scope": "krusty-krab/sales",
+              "reason": "",
+              "flagged": false,
+              "supersedes": null,
+              "owner": null,
+              "authority": "discussion",
+              "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+              "conflicts_with": []
+            }
+          ]
+        },
+        "feedback": {
+          "evidence": [
+            {
+              "memory_id": "m3",
+              "shown": true,
+              "correct": true,
+              "task_id": "t-6d7be2bf"
+            },
+            {
+              "memory_id": "m3",
+              "shown": false,
+              "correct": false,
+              "task_id": "t-6d7be2bf"
+            }
+          ]
+        }
+      },
+      "seconds": 1.3,
+      "expected_flip": true
+    },
+    {
+      "phase": "seeded history (real model calls at seed time)",
+      "step": "ask+check:help",
+      "request": {
+        "ask": {
+          "question": "Can a customer order catering for tomorrow?",
+          "reader": "krusty-krab/sales"
+        },
+        "feedback": {
+          "task_id": "t-2eddf655",
+          "correct_answer": "No. Catering orders need 48 hours' notice."
+        }
+      },
+      "response": {
+        "ask": {
+          "task_id": "t-2eddf655",
+          "answer": "No. Catering orders require 48 hours' notice, and the Krusty Krab's current weekday closing time is 6 PM. A catering order for tomorrow would not meet the notice requirement.",
+          "cited_ids": [
+            "m3",
+            "m2"
+          ],
+          "memories": [
+            {
+              "id": "m3",
+              "text": "Catering orders need 48 hours' notice",
+              "author": "Sales Team",
+              "origin": "ep-3a8accb0",
+              "date": "2026-10-15",
+              "status": "trial",
+              "scope": "krusty-krab/sales",
+              "reason": "",
+              "flagged": false,
+              "supersedes": null,
+              "owner": null,
+              "authority": "discussion",
+              "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+              "conflicts_with": []
+            },
+            {
+              "id": "m1",
+              "text": "Mr. Krabs (owner) stated that The Krusty Krab closes at 10 PM every weekday, Monday through Friday.",
+              "author": "Krusty Krab",
+              "origin": "ep-ff710a78",
+              "date": "2026-10-01",
+              "status": "trial",
+              "scope": "krusty-krab",
+              "reason": "",
+              "flagged": false,
+              "supersedes": null,
+              "owner": null,
+              "authority": "discussion",
+              "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+              "conflicts_with": []
+            },
+            {
+              "id": "m2",
+              "text": "Krusty Krab changed its weekday hours, now closes at 6 PM instead of 10 PM",
+              "author": "Sales Team",
+              "origin": "ep-3a8accb0",
+              "date": "2026-10-15",
+              "status": "trial",
+              "scope": "krusty-krab/sales",
+              "reason": "",
+              "flagged": false,
+              "supersedes": null,
+              "owner": null,
+              "authority": "discussion",
+              "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+              "conflicts_with": []
+            }
+          ]
+        },
+        "feedback": {
+          "evidence": [
+            {
+              "memory_id": "m3",
+              "shown": true,
+              "correct": true,
+              "task_id": "t-2eddf655"
+            },
+            {
+              "memory_id": "m3",
+              "shown": false,
+              "correct": false,
+              "task_id": "t-2eddf655"
+            }
+          ]
+        }
+      },
+      "seconds": 25.1,
+      "expected_flip": true
+    },
+    {
+      "phase": "seeded history (real model calls at seed time)",
+      "step": "ask+check:help",
+      "request": {
+        "ask": {
+          "question": "What is the minimum lead time for a catering order?",
+          "reader": "krusty-krab/sales"
+        },
+        "feedback": {
+          "task_id": "t-1166b801",
+          "correct_answer": "48 hours"
+        }
+      },
+      "response": {
+        "ask": {
+          "task_id": "t-1166b801",
+          "answer": "48 hours",
+          "cited_ids": [
+            "m3"
+          ],
+          "memories": [
+            {
+              "id": "m3",
+              "text": "Catering orders need 48 hours' notice",
+              "author": "Sales Team",
+              "origin": "ep-3a8accb0",
+              "date": "2026-10-15",
+              "status": "trial",
+              "scope": "krusty-krab/sales",
+              "reason": "",
+              "flagged": false,
+              "supersedes": null,
+              "owner": null,
+              "authority": "discussion",
+              "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+              "conflicts_with": []
+            },
+            {
+              "id": "m1",
+              "text": "Mr. Krabs (owner) stated that The Krusty Krab closes at 10 PM every weekday, Monday through Friday.",
+              "author": "Krusty Krab",
+              "origin": "ep-ff710a78",
+              "date": "2026-10-01",
+              "status": "trial",
+              "scope": "krusty-krab",
+              "reason": "",
+              "flagged": false,
+              "supersedes": null,
+              "owner": null,
+              "authority": "discussion",
+              "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+              "conflicts_with": []
+            },
+            {
+              "id": "m2",
+              "text": "Krusty Krab changed its weekday hours, now closes at 6 PM instead of 10 PM",
+              "author": "Sales Team",
+              "origin": "ep-3a8accb0",
+              "date": "2026-10-15",
+              "status": "trial",
+              "scope": "krusty-krab/sales",
+              "reason": "",
+              "flagged": false,
+              "supersedes": null,
+              "owner": null,
+              "authority": "discussion",
+              "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+              "conflicts_with": []
+            }
+          ]
+        },
+        "feedback": {
+          "evidence": [
+            {
+              "memory_id": "m3",
+              "shown": true,
+              "correct": true,
+              "task_id": "t-1166b801"
+            },
+            {
+              "memory_id": "m3",
+              "shown": false,
+              "correct": false,
+              "task_id": "t-1166b801"
+            }
+          ]
+        }
+      },
+      "seconds": 4.2,
+      "expected_flip": true
+    },
+    {
+      "phase": "live",
+      "step": "1 ask (Sales Team)",
+      "request": {
+        "path": "/ask",
+        "reader": "krusty-krab/sales",
+        "question": "What time does the Krusty Krab close on weekdays?"
+      },
+      "response": {
+        "task_id": "t-c9844d35",
+        "answer": "6 PM",
+        "cited_ids": [
+          "m2"
+        ],
+        "memories": [
+          {
+            "id": "m1",
+            "text": "Mr. Krabs (owner) stated that The Krusty Krab closes at 10 PM every weekday, Monday through Friday.",
+            "author": "Krusty Krab",
+            "origin": "ep-ff710a78",
+            "date": "2026-10-01",
+            "status": "trial",
+            "scope": "krusty-krab",
+            "reason": "",
+            "flagged": false,
+            "supersedes": null,
+            "owner": null,
+            "authority": "discussion",
+            "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+            "conflicts_with": []
+          },
+          {
+            "id": "m2",
+            "text": "Krusty Krab changed its weekday hours, now closes at 6 PM instead of 10 PM",
+            "author": "Sales Team",
+            "origin": "ep-3a8accb0",
+            "date": "2026-10-15",
+            "status": "trial",
+            "scope": "krusty-krab/sales",
+            "reason": "",
+            "flagged": false,
+            "supersedes": null,
+            "owner": null,
+            "authority": "discussion",
+            "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+            "conflicts_with": []
+          },
+          {
+            "id": "m3",
+            "text": "Catering orders need 48 hours' notice",
+            "author": "Sales Team",
+            "origin": "ep-3a8accb0",
+            "date": "2026-10-15",
+            "status": "trial",
+            "scope": "krusty-krab/sales",
+            "reason": "",
+            "flagged": false,
+            "supersedes": null,
+            "owner": null,
+            "authority": "discussion",
+            "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+            "conflicts_with": []
+          }
+        ]
+      },
+      "seconds": 0.3
+    },
+    {
+      "phase": "live",
+      "step": "2 check",
+      "request": {
+        "path": "/feedback",
+        "task_id": "t-c9844d35",
+        "correct_answer": "10 PM"
+      },
+      "response": {
+        "evidence": [
+          {
+            "memory_id": "m2",
+            "shown": true,
+            "correct": false,
+            "task_id": "t-c9844d35"
+          },
+          {
+            "memory_id": "m2",
+            "shown": false,
+            "correct": true,
+            "task_id": "t-c9844d35"
+          }
+        ]
+      },
+      "seconds": 1.0
+    },
+    {
+      "phase": "live",
+      "step": "3 review",
+      "request": {
+        "path": "/review"
+      },
+      "response": {
+        "decisions": [
+          {
+            "memory_id": "m2",
+            "action": "retire",
+            "reason": "harmful on ['t-d0a64ce5', 't-1aa5511a', 't-c9844d35']",
+            "task_ids": [
+              "t-d0a64ce5",
+              "t-1aa5511a",
+              "t-c9844d35"
+            ],
+            "text": "",
+            "related": [],
+            "model": null
+          },
+          {
+            "memory_id": "m3",
+            "action": "promote",
+            "reason": "helpful on ['t-6d7be2bf', 't-2eddf655', 't-1166b801']",
+            "task_ids": [
+              "t-6d7be2bf",
+              "t-2eddf655",
+              "t-1166b801"
+            ],
+            "text": "",
+            "related": [],
+            "model": null
+          }
+        ]
+      },
+      "seconds": 0.4
+    },
+    {
+      "phase": "live",
+      "step": "4 ask a different question (John, new agent)",
+      "request": {
+        "path": "/ask",
+        "reader": "krusty-krab/sales/john",
+        "question": "How late can a customer walk in on a Thursday?"
+      },
+      "response": {
+        "task_id": "t-405c965d",
+        "answer": "The Krusty Krab closes at 10 PM on Thursdays, so a customer can walk in up until 10 PM.",
+        "cited_ids": [
+          "m1"
+        ],
+        "memories": [
+          {
+            "id": "m1",
+            "text": "Mr. Krabs (owner) stated that The Krusty Krab closes at 10 PM every weekday, Monday through Friday.",
+            "author": "Krusty Krab",
+            "origin": "ep-ff710a78",
+            "date": "2026-10-01",
+            "status": "trial",
+            "scope": "krusty-krab",
+            "reason": "",
+            "flagged": false,
+            "supersedes": null,
+            "owner": null,
+            "authority": "discussion",
+            "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+            "conflicts_with": []
+          },
+          {
+            "id": "m3",
+            "text": "Catering orders need 48 hours' notice",
+            "author": "Sales Team",
+            "origin": "ep-3a8accb0",
+            "date": "2026-10-15",
+            "status": "promoted",
+            "scope": "krusty-krab/sales",
+            "reason": "helpful on ['t-6d7be2bf', 't-2eddf655', 't-1166b801']",
+            "flagged": false,
+            "supersedes": null,
+            "owner": null,
+            "authority": "discussion",
+            "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+            "conflicts_with": []
+          }
+        ]
+      },
+      "seconds": 0.5
+    }
+  ],
+  "final_memories": [
+    {
+      "id": "m1",
+      "text": "Mr. Krabs (owner) stated that The Krusty Krab closes at 10 PM every weekday, Monday through Friday.",
+      "author": "Krusty Krab",
+      "origin": "ep-ff710a78",
+      "date": "2026-10-01",
+      "status": "trial",
+      "scope": "krusty-krab",
+      "reason": "",
+      "flagged": false,
+      "supersedes": null,
+      "owner": null,
+      "authority": "discussion",
+      "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+      "conflicts_with": [],
+      "evidence_count": 0,
+      "evidence_flips": 0
+    },
+    {
+      "id": "m2",
+      "text": "Krusty Krab changed its weekday hours, now closes at 6 PM instead of 10 PM",
+      "author": "Sales Team",
+      "origin": "ep-3a8accb0",
+      "date": "2026-10-15",
+      "status": "retired",
+      "scope": "krusty-krab/sales",
+      "reason": "harmful on ['t-d0a64ce5', 't-1aa5511a', 't-c9844d35']",
+      "flagged": false,
+      "supersedes": null,
+      "owner": null,
+      "authority": "discussion",
+      "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+      "conflicts_with": [],
+      "evidence_count": 6,
+      "evidence_flips": 3
+    },
+    {
+      "id": "m3",
+      "text": "Catering orders need 48 hours' notice",
+      "author": "Sales Team",
+      "origin": "ep-3a8accb0",
+      "date": "2026-10-15",
+      "status": "promoted",
+      "scope": "krusty-krab/sales",
+      "reason": "helpful on ['t-6d7be2bf', 't-2eddf655', 't-1166b801']",
+      "flagged": false,
+      "supersedes": null,
+      "owner": null,
+      "authority": "discussion",
+      "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+      "conflicts_with": [],
+      "evidence_count": 6,
+      "evidence_flips": 3
+    }
+  ]
+}

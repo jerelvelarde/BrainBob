@@ -1,0 +1,1501 @@
+{
+ "suite": "rusty_rod_correctness",
+ "fixture": "rusty-rod-correctness-v1",
+ "split": "dev",
+ "fast": false,
+ "n_scenarios": 6,
+ "n_questions": 11,
+ "seed": 7,
+ "retrieval_top_k": 10,
+ "models": {
+  "curator": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+  "judge": "openai/gpt-oss-120b",
+  "agent": "nvidia/Nemotron-3.5-Lightning-30B-A3B"
+ },
+ "prompt_versions": {
+  "agent": "93e213d5b877",
+  "maintain": "e0343d98fecd",
+  "audit": "d213a3f72ae7",
+  "curator": "17f16bc77d32"
+ },
+ "metrics": {
+  "none": {
+   "accuracy": "1/11",
+   "stale_usage": "0/4",
+   "abstention": "1/1",
+   "uncertainty": "-",
+   "leakage": 0,
+   "avg_ctx_tokens": 0,
+   "by_group": {
+    "Extraction": "0/2",
+    "Updates": "0/2",
+    "Retention": "0/2",
+    "Forgetting": "0/1",
+    "Shared handoff": "0/2",
+    "Insufficient evidence": "1/2"
+   },
+   "correct_update": "-",
+   "unjustified_forgetting": "-"
+  },
+  "append_only": {
+   "accuracy": "8/11",
+   "stale_usage": "0/4",
+   "abstention": "0/1",
+   "uncertainty": "-",
+   "leakage": 0,
+   "avg_ctx_tokens": 143,
+   "by_group": {
+    "Extraction": "1/2",
+    "Updates": "2/2",
+    "Retention": "1/2",
+    "Forgetting": "1/1",
+    "Shared handoff": "2/2",
+    "Insufficient evidence": "1/2"
+   },
+   "correct_update": "0/3",
+   "unjustified_forgetting": "0/4",
+   "n_memories": 136,
+   "n_tentative": 0,
+   "n_retired": 0
+  },
+  "maintained_no_audit": {
+   "accuracy": "9/11",
+   "stale_usage": "0/4",
+   "abstention": "1/1",
+   "uncertainty": "-",
+   "leakage": 0,
+   "avg_ctx_tokens": 129,
+   "by_group": {
+    "Extraction": "1/2",
+    "Updates": "1/2",
+    "Retention": "2/2",
+    "Forgetting": "1/1",
+    "Shared handoff": "2/2",
+    "Insufficient evidence": "2/2"
+   },
+   "correct_update": "1/3",
+   "unjustified_forgetting": "0/4",
+   "n_memories": 135,
+   "n_tentative": 1,
+   "n_retired": 2
+  },
+  "maintained": {
+   "accuracy": "9/11",
+   "stale_usage": "0/4",
+   "abstention": "1/1",
+   "uncertainty": "-",
+   "leakage": 0,
+   "avg_ctx_tokens": 129,
+   "by_group": {
+    "Extraction": "1/2",
+    "Updates": "1/2",
+    "Retention": "2/2",
+    "Forgetting": "1/1",
+    "Shared handoff": "2/2",
+    "Insufficient evidence": "2/2"
+   },
+   "correct_update": "1/3",
+   "unjustified_forgetting": "0/4",
+   "n_memories": 135,
+   "n_tentative": 1,
+   "n_retired": 2
+  },
+  "full_history": {
+   "accuracy": "11/11",
+   "stale_usage": "1/4",
+   "abstention": "1/1",
+   "uncertainty": "-",
+   "leakage": 0,
+   "avg_ctx_tokens": 84,
+   "by_group": {
+    "Extraction": "2/2",
+    "Updates": "2/2",
+    "Retention": "2/2",
+    "Forgetting": "1/1",
+    "Shared handoff": "2/2",
+    "Insufficient evidence": "2/2"
+   },
+   "correct_update": "-",
+   "unjustified_forgetting": "-"
+  }
+ },
+ "bootstrap": {
+  "maintained_no_audit - append_only": {
+   "accuracy": [
+    9.1,
+    -18.2,
+    36.4
+   ],
+   "stale": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "maintained - maintained_no_audit": {
+   "accuracy": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "stale": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "append_only - none": {
+   "accuracy": [
+    63.6,
+    18.2,
+    100.0
+   ],
+   "stale": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ },
+ "audit": {
+  "seed": 7,
+  "latest": 50,
+  "sample": 10,
+  "episodes_sampled": 19,
+  "checks": 95,
+  "proposed": 7,
+  "evidence_coverage": "3/3",
+  "judgment_accuracy": "37/40",
+  "confusion": {
+   "supported->supported": 37,
+   "supported->insufficient": 3
+  },
+  "per_scenario": {
+   "ex-dev": {
+    "sampled": [
+     "ex-dev-e2",
+     "ex-dev-e1",
+     "ex-dev-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 0,
+     "supported": 7,
+     "insufficient": 8
+    }
+   },
+   "up-dev": {
+    "sampled": [
+     "up-dev-e2",
+     "up-dev-e1",
+     "up-dev-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 6,
+     "supported": 7,
+     "insufficient": 2
+    }
+   },
+   "re-dev": {
+    "sampled": [
+     "re-dev-e3",
+     "re-dev-e1",
+     "re-dev-e2",
+     "re-dev-e4"
+    ],
+    "counts": {
+     "checked": 20,
+     "contradicted": 0,
+     "supported": 13,
+     "insufficient": 7
+    }
+   },
+   "fo-dev": {
+    "sampled": [
+     "fo-dev-e2",
+     "fo-dev-e1",
+     "fo-dev-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 0,
+     "supported": 2,
+     "insufficient": 13
+    }
+   },
+   "sh-dev": {
+    "sampled": [
+     "sh-dev-e2",
+     "sh-dev-e1",
+     "sh-dev-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 2,
+     "supported": 9,
+     "insufficient": 4
+    }
+   },
+   "in-dev": {
+    "sampled": [
+     "in-dev-e2",
+     "in-dev-e1",
+     "in-dev-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 0,
+     "supported": 9,
+     "insufficient": 6
+    }
+   }
+  }
+ },
+ "state": {
+  "append_only": {
+   "ex-dev": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "60k",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "up-dev": {
+    "updates": [
+     {
+      "new": "remote",
+      "old": "houston",
+      "correct": false,
+      "new_present": true,
+      "old_active": [
+       "m1",
+       "m7"
+      ]
+     }
+    ],
+    "keeps": []
+   },
+   "re-dev": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "net 45",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "ruiz",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "fo-dev": {
+    "updates": [
+     {
+      "new": "list price",
+      "old": "sable15",
+      "correct": false,
+      "new_present": false,
+      "old_active": []
+     }
+    ],
+    "keeps": []
+   },
+   "sh-dev": {
+    "updates": [
+     {
+      "new": "sensors v3",
+      "old": "sensors v2",
+      "correct": false,
+      "new_present": true,
+      "old_active": [
+       "m1"
+      ]
+     }
+    ],
+    "keeps": [
+     {
+      "value": "90 days",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "in-dev": {
+    "updates": [],
+    "keeps": []
+   }
+  },
+  "maintained_no_audit": {
+   "ex-dev": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "60k",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "up-dev": {
+    "updates": [
+     {
+      "new": "remote",
+      "old": "houston",
+      "correct": false,
+      "new_present": true,
+      "old_active": [
+       "m7"
+      ]
+     }
+    ],
+    "keeps": []
+   },
+   "re-dev": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "net 45",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "ruiz",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "fo-dev": {
+    "updates": [
+     {
+      "new": "list price",
+      "old": "sable15",
+      "correct": false,
+      "new_present": false,
+      "old_active": []
+     }
+    ],
+    "keeps": []
+   },
+   "sh-dev": {
+    "updates": [
+     {
+      "new": "sensors v3",
+      "old": "sensors v2",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     }
+    ],
+    "keeps": [
+     {
+      "value": "90 days",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "in-dev": {
+    "updates": [],
+    "keeps": []
+   }
+  },
+  "maintained": {
+   "ex-dev": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "60k",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "up-dev": {
+    "updates": [
+     {
+      "new": "remote",
+      "old": "houston",
+      "correct": false,
+      "new_present": true,
+      "old_active": [
+       "m7"
+      ]
+     }
+    ],
+    "keeps": []
+   },
+   "re-dev": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "net 45",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "ruiz",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "fo-dev": {
+    "updates": [
+     {
+      "new": "list price",
+      "old": "sable15",
+      "correct": false,
+      "new_present": false,
+      "old_active": []
+     }
+    ],
+    "keeps": []
+   },
+   "sh-dev": {
+    "updates": [
+     {
+      "new": "sensors v3",
+      "old": "sensors v2",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     }
+    ],
+    "keeps": [
+     {
+      "value": "90 days",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "in-dev": {
+    "updates": [],
+    "keeps": []
+   }
+  }
+ },
+ "cost_by_stage": {
+  "extraction": {
+   "curator": {
+    "calls": 18,
+    "cached": 0,
+    "pt": 2573,
+    "ct": 7356,
+    "usd": 0.0016,
+    "usd_all": 0.0016
+   }
+  },
+  "ingest_append_only": {
+   "curator": {
+    "calls": 19,
+    "cached": 18,
+    "pt": 2713,
+    "ct": 7420,
+    "usd": 2e-05,
+    "usd_all": 0.00162
+   }
+  },
+  "ingest_maintained": {
+   "curator": {
+    "calls": 19,
+    "cached": 19,
+    "pt": 2713,
+    "ct": 7420,
+    "usd": 0.0,
+    "usd_all": 0.00162
+   },
+   "judge": {
+    "calls": 109,
+    "cached": 0,
+    "pt": 28123,
+    "ct": 13776,
+    "usd": 0.00485,
+    "usd_all": 0.00485
+   }
+  },
+  "audit": {
+   "curator": {
+    "calls": 7,
+    "cached": 7,
+    "pt": 1024,
+    "ct": 420,
+    "usd": 0.0,
+    "usd_all": 0.00014
+   },
+   "judge": {
+    "calls": 152,
+    "cached": 36,
+    "pt": 35838,
+    "ct": 24576,
+    "usd": 0.00595,
+    "usd_all": 0.00794
+   }
+  },
+  "answer_none": {
+   "agent": {
+    "calls": 11,
+    "cached": 0,
+    "pt": 2757,
+    "ct": 121,
+    "usd": 0.00016,
+    "usd_all": 0.00016
+   }
+  },
+  "answer_append_only": {
+   "agent": {
+    "calls": 10,
+    "cached": 1,
+    "pt": 5622,
+    "ct": 237,
+    "usd": 0.00031,
+    "usd_all": 0.00033
+   }
+  },
+  "answer_maintained_no_audit": {
+   "agent": {
+    "calls": 11,
+    "cached": 4,
+    "pt": 5992,
+    "ct": 291,
+    "usd": 0.00023,
+    "usd_all": 0.00036
+   }
+  },
+  "answer_maintained": {
+   "agent": {
+    "calls": 11,
+    "cached": 11,
+    "pt": 5992,
+    "ct": 291,
+    "usd": 0.0,
+    "usd_all": 0.00036
+   }
+  },
+  "answer_full_history": {
+   "agent": {
+    "calls": 11,
+    "cached": 0,
+    "pt": 4489,
+    "ct": 227,
+    "usd": 0.00027,
+    "usd_all": 0.00027
+   }
+  }
+ },
+ "wall_by_stage": {
+  "extraction": 282.9,
+  "ingest_append_only": 22.5,
+  "ingest_maintained": 25.7,
+  "audit": 21.4,
+  "answer_none": 216.8,
+  "answer_append_only": 275.0,
+  "answer_maintained_no_audit": 10.3,
+  "answer_maintained": 0.0,
+  "answer_full_history": 10.1
+ },
+ "cost_usd_fresh": 0.0134,
+ "cost_usd_incl_cached": 0.0257,
+ "wall_s": 866.8,
+ "rows": [
+  {
+   "id": "ex-dev-q1",
+   "scenario": "ex-dev",
+   "group": "Extraction",
+   "condition": "none",
+   "member": "sales-04",
+   "question": "How many depots are in scope for Jasper Freight's phase one?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-dev-q2",
+   "scenario": "ex-dev",
+   "group": "Extraction",
+   "condition": "none",
+   "member": "eng-02",
+   "question": "What's the phase-one fee for Jasper Freight?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-dev-q1",
+   "scenario": "up-dev",
+   "group": "Updates",
+   "condition": "none",
+   "member": "eng-02",
+   "question": "Where is the Basalt Energy kickoff happening?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-dev-q2",
+   "scenario": "up-dev",
+   "group": "Updates",
+   "condition": "none",
+   "member": "sales-03",
+   "question": "What date is the Basalt kickoff?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-dev-q1",
+   "scenario": "re-dev",
+   "group": "Retention",
+   "condition": "none",
+   "member": "sales-05",
+   "question": "What are Glacier Outdoor's payment terms?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-dev-q2",
+   "scenario": "re-dev",
+   "group": "Retention",
+   "condition": "none",
+   "member": "sales-02",
+   "question": "Who handles billing at Glacier Outdoor?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-dev-q1",
+   "scenario": "fo-dev",
+   "group": "Forgetting",
+   "condition": "none",
+   "member": "sales-03",
+   "question": "Is there a discount we can offer Sable Analytics?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-dev-q1",
+   "scenario": "sh-dev",
+   "group": "Shared handoff",
+   "condition": "none",
+   "member": "eng-09",
+   "question": "Which Kafka topic does the Yarrow Farms ingest use?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-dev-q2",
+   "scenario": "sh-dev",
+   "group": "Shared handoff",
+   "condition": "none",
+   "member": "eng-09",
+   "question": "How often does the Yarrow API key rotate?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-dev-q1",
+   "scenario": "in-dev",
+   "group": "Insufficient evidence",
+   "condition": "none",
+   "member": "sales-01",
+   "question": "What's Falcon Air's budget for the crew-scheduling project?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "in-dev-q2",
+   "scenario": "in-dev",
+   "group": "Insufficient evidence",
+   "condition": "none",
+   "member": "sales-04",
+   "question": "What does Falcon Air want a proposal for?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-dev-q1",
+   "scenario": "ex-dev",
+   "group": "Extraction",
+   "condition": "append_only",
+   "member": "sales-04",
+   "question": "How many depots are in scope for Jasper Freight's phase one?",
+   "answer": "4 (for phase one)",
+   "ctx": 115,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-dev-q2",
+   "scenario": "ex-dev",
+   "group": "Extraction",
+   "condition": "append_only",
+   "member": "eng-02",
+   "question": "What's the phase-one fee for Jasper Freight?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-dev-q1",
+   "scenario": "up-dev",
+   "group": "Updates",
+   "condition": "append_only",
+   "member": "eng-02",
+   "question": "Where is the Basalt Energy kickoff happening?",
+   "answer": "The Basalt Energy kickoff is happening remotely via Teams.",
+   "ctx": 130,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-dev-q2",
+   "scenario": "up-dev",
+   "group": "Updates",
+   "condition": "append_only",
+   "member": "sales-03",
+   "question": "What date is the Basalt kickoff?",
+   "answer": "2026-09-30",
+   "ctx": 218,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-dev-q1",
+   "scenario": "re-dev",
+   "group": "Retention",
+   "condition": "append_only",
+   "member": "sales-05",
+   "question": "What are Glacier Outdoor's payment terms?",
+   "answer": "payment terms are net 45",
+   "ctx": 175,
+   "n_mem": 10,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-dev-q2",
+   "scenario": "re-dev",
+   "group": "Retention",
+   "condition": "append_only",
+   "member": "sales-02",
+   "question": "Who handles billing at Glacier Outdoor?",
+   "answer": "",
+   "ctx": 175,
+   "n_mem": 10,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-dev-q1",
+   "scenario": "fo-dev",
+   "group": "Forgetting",
+   "condition": "append_only",
+   "member": "sales-03",
+   "question": "Is there a discount we can offer Sable Analytics?",
+   "answer": "No, there is no discount mentioned in the approved, active memories for Sable Analytics. The only sales-related memories are [m1] and [m2], which describe the renewal call and the company's size (60 seats), but neither references a discount.",
+   "ctx": 196,
+   "n_mem": 10,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-dev-q1",
+   "scenario": "sh-dev",
+   "group": "Shared handoff",
+   "condition": "append_only",
+   "member": "eng-09",
+   "question": "Which Kafka topic does the Yarrow Farms ingest use?",
+   "answer": "yarrow.sensors.v3",
+   "ctx": 125,
+   "n_mem": 6,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-dev-q2",
+   "scenario": "sh-dev",
+   "group": "Shared handoff",
+   "condition": "append_only",
+   "member": "eng-09",
+   "question": "How often does the Yarrow API key rotate?",
+   "answer": "Every 90 days.",
+   "ctx": 125,
+   "n_mem": 6,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-dev-q1",
+   "scenario": "in-dev",
+   "group": "Insufficient evidence",
+   "condition": "append_only",
+   "member": "sales-01",
+   "question": "What's Falcon Air's budget for the crew-scheduling project?",
+   "answer": "Falcon Air has not yet shared a budget for the proposal. The rescheduled Falcon call is still pending a budget number.",
+   "ctx": 159,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "in-dev-q2",
+   "scenario": "in-dev",
+   "group": "Insufficient evidence",
+   "condition": "append_only",
+   "member": "sales-04",
+   "question": "What does Falcon Air want a proposal for?",
+   "answer": "Falcon Air wants a proposal for crew-scheduling analytics. (m1)",
+   "ctx": 159,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-dev-q1",
+   "scenario": "ex-dev",
+   "group": "Extraction",
+   "condition": "maintained_no_audit",
+   "member": "sales-04",
+   "question": "How many depots are in scope for Jasper Freight's phase one?",
+   "answer": "4 (for phase one)",
+   "ctx": 115,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-dev-q2",
+   "scenario": "ex-dev",
+   "group": "Extraction",
+   "condition": "maintained_no_audit",
+   "member": "eng-02",
+   "question": "What's the phase-one fee for Jasper Freight?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-dev-q1",
+   "scenario": "up-dev",
+   "group": "Updates",
+   "condition": "maintained_no_audit",
+   "member": "eng-02",
+   "question": "Where is the Basalt Energy kickoff happening?",
+   "answer": "The Basalt Energy kickoff is happening fully remote over Teams.",
+   "ctx": 96,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-dev-q2",
+   "scenario": "up-dev",
+   "group": "Updates",
+   "condition": "maintained_no_audit",
+   "member": "sales-03",
+   "question": "What date is the Basalt kickoff?",
+   "answer": "2026-09-24",
+   "ctx": 184,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-dev-q1",
+   "scenario": "re-dev",
+   "group": "Retention",
+   "condition": "maintained_no_audit",
+   "member": "sales-05",
+   "question": "What are Glacier Outdoor's payment terms?",
+   "answer": "payment terms are net 45",
+   "ctx": 175,
+   "n_mem": 10,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-dev-q2",
+   "scenario": "re-dev",
+   "group": "Retention",
+   "condition": "maintained_no_audit",
+   "member": "sales-02",
+   "question": "Who handles billing at Glacier Outdoor?",
+   "answer": "Marco Ruiz",
+   "ctx": 175,
+   "n_mem": 10,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-dev-q1",
+   "scenario": "fo-dev",
+   "group": "Forgetting",
+   "condition": "maintained_no_audit",
+   "member": "sales-03",
+   "question": "Is there a discount we can offer Sable Analytics?",
+   "answer": "No, there is no discount mentioned in the approved, active memories for Sable Analytics. The only sales-related memories are [m1] and [m2], which describe the renewal call and the company's size (60 seats), but neither references a discount.",
+   "ctx": 196,
+   "n_mem": 10,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-dev-q1",
+   "scenario": "sh-dev",
+   "group": "Shared handoff",
+   "condition": "maintained_no_audit",
+   "member": "eng-09",
+   "question": "Which Kafka topic does the Yarrow Farms ingest use?",
+   "answer": "yarrow.sensors.v3",
+   "ctx": 99,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-dev-q2",
+   "scenario": "sh-dev",
+   "group": "Shared handoff",
+   "condition": "maintained_no_audit",
+   "member": "eng-09",
+   "question": "How often does the Yarrow API key rotate?",
+   "answer": "Every 90 days.",
+   "ctx": 99,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-dev-q1",
+   "scenario": "in-dev",
+   "group": "Insufficient evidence",
+   "condition": "maintained_no_audit",
+   "member": "sales-01",
+   "question": "What's Falcon Air's budget for the crew-scheduling project?",
+   "answer": "I don't know. The memories do not contain the budget amount for the crew-scheduling project. The most recent active memory (m3) only notes that a budget number is pending, and m5 confirms Falcon Air has not yet shared a budget. There is no approved, active memory that provides the actual budget figure.",
+   "ctx": 140,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "in-dev-q2",
+   "scenario": "in-dev",
+   "group": "Insufficient evidence",
+   "condition": "maintained_no_audit",
+   "member": "sales-04",
+   "question": "What does Falcon Air want a proposal for?",
+   "answer": "Falcon Air wants a proposal for crew-scheduling analytics. (m3)",
+   "ctx": 140,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-dev-q1",
+   "scenario": "ex-dev",
+   "group": "Extraction",
+   "condition": "maintained",
+   "member": "sales-04",
+   "question": "How many depots are in scope for Jasper Freight's phase one?",
+   "answer": "4 (for phase one)",
+   "ctx": 115,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-dev-q2",
+   "scenario": "ex-dev",
+   "group": "Extraction",
+   "condition": "maintained",
+   "member": "eng-02",
+   "question": "What's the phase-one fee for Jasper Freight?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-dev-q1",
+   "scenario": "up-dev",
+   "group": "Updates",
+   "condition": "maintained",
+   "member": "eng-02",
+   "question": "Where is the Basalt Energy kickoff happening?",
+   "answer": "The Basalt Energy kickoff is happening fully remote over Teams.",
+   "ctx": 96,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-dev-q2",
+   "scenario": "up-dev",
+   "group": "Updates",
+   "condition": "maintained",
+   "member": "sales-03",
+   "question": "What date is the Basalt kickoff?",
+   "answer": "2026-09-24",
+   "ctx": 184,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-dev-q1",
+   "scenario": "re-dev",
+   "group": "Retention",
+   "condition": "maintained",
+   "member": "sales-05",
+   "question": "What are Glacier Outdoor's payment terms?",
+   "answer": "payment terms are net 45",
+   "ctx": 175,
+   "n_mem": 10,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-dev-q2",
+   "scenario": "re-dev",
+   "group": "Retention",
+   "condition": "maintained",
+   "member": "sales-02",
+   "question": "Who handles billing at Glacier Outdoor?",
+   "answer": "Marco Ruiz",
+   "ctx": 175,
+   "n_mem": 10,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-dev-q1",
+   "scenario": "fo-dev",
+   "group": "Forgetting",
+   "condition": "maintained",
+   "member": "sales-03",
+   "question": "Is there a discount we can offer Sable Analytics?",
+   "answer": "No, there is no discount mentioned in the approved, active memories for Sable Analytics. The only sales-related memories are [m1] and [m2], which describe the renewal call and the company's size (60 seats), but neither references a discount.",
+   "ctx": 196,
+   "n_mem": 10,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-dev-q1",
+   "scenario": "sh-dev",
+   "group": "Shared handoff",
+   "condition": "maintained",
+   "member": "eng-09",
+   "question": "Which Kafka topic does the Yarrow Farms ingest use?",
+   "answer": "yarrow.sensors.v3",
+   "ctx": 99,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-dev-q2",
+   "scenario": "sh-dev",
+   "group": "Shared handoff",
+   "condition": "maintained",
+   "member": "eng-09",
+   "question": "How often does the Yarrow API key rotate?",
+   "answer": "Every 90 days.",
+   "ctx": 99,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-dev-q1",
+   "scenario": "in-dev",
+   "group": "Insufficient evidence",
+   "condition": "maintained",
+   "member": "sales-01",
+   "question": "What's Falcon Air's budget for the crew-scheduling project?",
+   "answer": "I don't know. The memories do not contain the budget amount for the crew-scheduling project. The most recent active memory (m3) only notes that a budget number is pending, and m5 confirms Falcon Air has not yet shared a budget. There is no approved, active memory that provides the actual budget figure.",
+   "ctx": 140,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "in-dev-q2",
+   "scenario": "in-dev",
+   "group": "Insufficient evidence",
+   "condition": "maintained",
+   "member": "sales-04",
+   "question": "What does Falcon Air want a proposal for?",
+   "answer": "Falcon Air wants a proposal for crew-scheduling analytics. (m3)",
+   "ctx": 140,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-dev-q1",
+   "scenario": "ex-dev",
+   "group": "Extraction",
+   "condition": "full_history",
+   "member": "sales-04",
+   "question": "How many depots are in scope for Jasper Freight's phase one?",
+   "answer": "4 depots.",
+   "ctx": 157,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-dev-q2",
+   "scenario": "ex-dev",
+   "group": "Extraction",
+   "condition": "full_history",
+   "member": "eng-02",
+   "question": "What's the phase-one fee for Jasper Freight?",
+   "answer": "$60k",
+   "ctx": 33,
+   "n_mem": 1,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-dev-q1",
+   "scenario": "up-dev",
+   "group": "Updates",
+   "condition": "full_history",
+   "member": "eng-02",
+   "question": "Where is the Basalt Energy kickoff happening?",
+   "answer": "The Basalt Energy kickoff is fully remote over Teams on September 30, as the Houston trip has been cancelled.",
+   "ctx": 60,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": true,
+   "kind": "fact"
+  },
+  {
+   "id": "up-dev-q2",
+   "scenario": "up-dev",
+   "group": "Updates",
+   "condition": "full_history",
+   "member": "sales-03",
+   "question": "What date is the Basalt kickoff?",
+   "answer": "The Basalt kickoff is scheduled for September 30, 2026, and will be fully remote over Teams.",
+   "ctx": 91,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-dev-q1",
+   "scenario": "re-dev",
+   "group": "Retention",
+   "condition": "full_history",
+   "member": "sales-05",
+   "question": "What are Glacier Outdoor's payment terms?",
+   "answer": "Glacier Outdoor's payment terms are net 45.",
+   "ctx": 108,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-dev-q2",
+   "scenario": "re-dev",
+   "group": "Retention",
+   "condition": "full_history",
+   "member": "sales-02",
+   "question": "Who handles billing at Glacier Outdoor?",
+   "answer": "Marco Ruiz (approved, active memory [m1] confirms this).",
+   "ctx": 108,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-dev-q1",
+   "scenario": "fo-dev",
+   "group": "Forgetting",
+   "condition": "full_history",
+   "member": "sales-03",
+   "question": "Is there a discount we can offer Sable Analytics?",
+   "answer": "No. The SABLE15 discount was retired effective 2026-10-01, and renewals are now at list price.",
+   "ctx": 87,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-dev-q1",
+   "scenario": "sh-dev",
+   "group": "Shared handoff",
+   "condition": "full_history",
+   "member": "eng-09",
+   "question": "Which Kafka topic does the Yarrow Farms ingest use?",
+   "answer": "yarrow.sensors.v3",
+   "ctx": 83,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-dev-q2",
+   "scenario": "sh-dev",
+   "group": "Shared handoff",
+   "condition": "full_history",
+   "member": "eng-09",
+   "question": "How often does the Yarrow API key rotate?",
+   "answer": "Every 90 days.",
+   "ctx": 83,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-dev-q1",
+   "scenario": "in-dev",
+   "group": "Insufficient evidence",
+   "condition": "full_history",
+   "member": "sales-01",
+   "question": "What's Falcon Air's budget for the crew-scheduling project?",
+   "answer": "I don't know.",
+   "ctx": 59,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "in-dev-q2",
+   "scenario": "in-dev",
+   "group": "Insufficient evidence",
+   "condition": "full_history",
+   "member": "sales-04",
+   "question": "What does Falcon Air want a proposal for?",
+   "answer": "Falcon Air wants a proposal for crew-scheduling analytics.",
+   "ctx": 59,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  }
+ ]
+}
