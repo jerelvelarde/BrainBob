@@ -91,27 +91,25 @@ function Plant({ position }: { position: [number, number, number] }) {
 }
 
 function Cabinet({ bank, reader, memories = [], selected, active, onClick }: { bank: typeof banks[number]; reader: string; memories?: BackendMemory[]; selected: boolean; active: boolean; onClick: () => void }) {
-  const allDrawers = drawersForTier(bank.scope, reader);
-  const drawers = bank.scope === "individual" ? [...allDrawers.filter((drawer) => drawer.accessible), ...allDrawers.filter((drawer) => !drawer.accessible)].slice(0, 3) : allDrawers;
+  const drawers = drawersForTier(bank.scope, reader).filter((drawer) => drawer.accessible);
   const count = (path: string) => memories.filter((memory) => memory.scope === path && canRead(path, reader) && memory.status !== "retired").length;
-  const total = allDrawers.filter((drawer) => drawer.accessible).reduce((sum, drawer) => sum + count(drawer.path), 0);
+  const total = drawers.reduce((sum, drawer) => sum + count(drawer.path), 0);
   return <group position={[bank.x, 0, -3.85]} onClick={(e) => { e.stopPropagation(); onClick(); }}
     onPointerOver={() => { document.body.style.cursor = "pointer"; }} onPointerOut={() => { document.body.style.cursor = "auto"; }}>
     {[-.49, .49].map((x) => <Box key={x} position={[x, .13, 0]} size={[.12, .25, .68]} color={palette.trim} />)}
     <Box position={[0, 1.22, 0]} size={[1.35, 2.15, .8]} color={bank.color} radius={.06} />
     {drawers.map((drawer, i) => {
-      const y = drawers.length === 2 ? 1.65 - i * .9 : 1.8 - i * .65;
-      return <group key={drawer.path} position={[0, 0, active && drawer.accessible ? .2 : 0]}>
-        <Box position={[0, y, .428]} size={[1.15, drawers.length === 2 ? .8 : .56, .05]} color={drawer.accessible ? "#f4d88b" : bank.color} radius={.025} />
-        <Label position={[0, y + .08, .5]} text={`${drawer.label.toUpperCase()}${drawer.accessible ? ` · ${count(drawer.path)}` : ""}`} width={1.03} compact selected={drawer.accessible} onClick={onClick} />
+      const y = drawers.length === 1 ? 1.22 : drawers.length === 2 ? 1.65 - i * .9 : 1.8 - i * .65;
+      return <group key={drawer.path} position={[0, 0, active ? .2 : 0]}>
+        <Box position={[0, y, .428]} size={[1.15, drawers.length === 1 ? 1.85 : drawers.length === 2 ? .8 : .56, .05]} color="#f4d88b" radius={.025} />
+        <Label position={[0, y + .08, .5]} text={`${drawer.label.toUpperCase()} · ${count(drawer.path)}`} width={1.03} compact selected onClick={onClick} />
         <Box position={[-.08, y - .12, .48]} size={[.33, .05, .04]} color="#79664e" radius={.015} />
-        {!drawer.accessible ? <group position={[.37, y - .12, .49]}><mesh position={[0, .04, 0]}><torusGeometry args={[.045, .012, 6, 10, Math.PI]} /><meshStandardMaterial color="#6d6673" /></mesh><Box position={[0, 0, 0]} size={[.1, .08, .03]} color="#6d6673" radius={.01} /></group> : null}
       </group>;
     })}
     <Box position={[0, 2.33, 0]} size={[1.45, .1, .86]} color={palette.trim} />
     {active ? <mesh position={[0, 2.55, 0]}><sphereGeometry args={[.09, 12, 10]} /><meshBasicMaterial color="#f4cf49" /></mesh> : null}
     <Label position={[0, 2.75, 0]} text={`${bank.label} · ${total}`} width={2.6} selected={selected} onClick={onClick} />
-    {bank.scope === "individual" ? <Label position={[0, .15, .55]} text="18 PEOPLE · INSPECT" width={1.15} onClick={onClick} /> : null}
+    {bank.scope === "individual" ? <Label position={[0, .15, .55]} text="OPEN FILES" width={1.15} onClick={onClick} /> : null}
   </group>;
 }
 
