@@ -1,10 +1,10 @@
-# BOB Benchmark: organizational memory correctness
+# Bob (Shared Brain) Benchmark
 
 **Status:** proposed specification v0.1; no dataset, runner, results, or certification delivered by this document.
 
 **Prepared:** October 17, 2026, America/Los_Angeles.
 
-**Name:** BOB Benchmark. Public name availability has not been reviewed.
+**Name:** Bob (Shared Brain) Benchmark. Public name availability has not been reviewed.
 
 **Scope:** shared memory within organizations and between separately governed organizations.
 
@@ -391,4 +391,4 @@ This specification complements [the existing evaluation plan](benchmarks.md) and
 
 BrainBob can supply one candidate adapter and the Rusty Rod public example. Its three-tier cabinet visualization can replay benchmark traces for explanation, but the score is computed from source evidence, actual delivered context, actions, and resulting state. Memory correctness and leave-one-out usefulness remain separate.
 
-No model run or measured improvement was produced while authoring this specification. Existing demo screenshots, development examples, and earlier public-benchmark results must retain their original labels and cannot be reclassified as BOB Benchmark results.
+No model run or measured improvement was produced while authoring this specification. Existing demo screenshots, development examples, and earlier public-benchmark results must retain their original labels and cannot be reclassified as Bob (Shared Brain) Benchmark results.
