@@ -8,9 +8,11 @@ One wrong or stale memory can spread the same mistake across an agent team. Ever
 
 ## Start Here
 
+- [Current solution, setup, and results](../README.md)
+- [Corrected v0.3 evaluation report](../docs/evaluation-report.md)
+- [Recorded real-provider workspace](live-workspace-20261017/README.md)
 - [Three-minute demo runbook](demo-runbook.md)
 - [Evidence, results, and original contributions](evidence.md)
-- [Project overview and current implementation status](../README.md)
 - [Architecture and stack](../docs/architecture.md)
 - [Benchmark and evaluation plan](../docs/benchmarks.md)
 - [Competition requirements](../docs/competition-details.md)
@@ -26,7 +28,7 @@ This folder is a judging aid, not evidence that a feature has been implemented. 
 | Update after work | A useful fact or explicit correction creates an evidence-linked revision. |
 | Keep knowledge current | A later answer uses the corrected fact rather than the superseded value. |
 | Keep knowledge lean | Less repeated context, with task quality preserved and total maintenance cost reported. |
-| Keep knowledge conflict-free | Stale writes cannot overwrite a newer revision; unresolved conflicts remain visible. |
+| Keep knowledge conflict-free | Stale inputs should not supersede newer approved facts; unresolved conflicts remain visible. |
 | Show measurable quality gains | Paired held-out results against append-only memory and full-history baselines. |
 | Make behavior inspectable | Retrace source conversation → evaluation → revision → retrieval → answer. |
 
@@ -41,4 +43,4 @@ Weights below come from the supplied participant guide; see the [competition det
 | Creativity and originality | 25% | 25% | A playful brain office that visualizes actual memory operations and their evidence. |
 | Future potential and AI impact | 15% | 25% | Better cross-agent continuity and quality with less repeated context, supported by measured results. |
 
-The intended system uses NemoClaw-managed agents, NVIDIA Switchyard routing, Crusoe inference, and SQL-backed Markdown memory. The frontend visualizes memory operations and their evidence. Distinguish working integrations, planned integrations, scripted preview events, and recorded replay throughout the presentation.
+The working system uses a Python/FastAPI service, JSONL memory/events, BM25 retrieval, direct Crusoe inference, and a Next.js/CopilotKit 3D workspace. The optional NemoClaw/OpenClaw memory-tool adapter is implemented, with sandbox integration and end-to-end validation pending. Switchyard and SQL remain roadmap items. Use the corrected v0.3 pilot result (71.9% maintained vs 25.0% no memory), retain the inconclusive append-only comparison, and distinguish live development demonstrations from held-out evaluation and historical scripted previews.

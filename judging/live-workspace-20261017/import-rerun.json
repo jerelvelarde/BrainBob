@@ -1,0 +1,14 @@
+{
+  "captured_at": "2026-10-17T22:15:11.820273+00:00",
+  "existing_sources_skipped": 29,
+  "before": {
+    "episodes.jsonl": "f80d87a8f05c6ca23467b15668dc10cce99d1bad40feb7194c200c4263af5b5e",
+    "memory.jsonl": "866b1dd4dca3cc7f4a5236071f3d77c059ef65f54f0ac66ef157bb3dd9978420"
+  },
+  "after": {
+    "episodes.jsonl": "f80d87a8f05c6ca23467b15668dc10cce99d1bad40feb7194c200c4263af5b5e",
+    "memory.jsonl": "866b1dd4dca3cc7f4a5236071f3d77c059ef65f54f0ac66ef157bb3dd9978420"
+  },
+  "output": "01/29 client-brief: ep-b953eb24 (already imported)\n02/29 initial-commitment: ep-6cf39048 (already imported)\n03/29 acceptance: ep-3e970abd (already imported)\n04/29 engineering-plan: ep-6cd5d6b0 (already imported)\n05/29 sales-plan: ep-8b81155b (already imported)\n06/29 executive-planning: ep-19eedf81 (already imported)\n07/29 exec-01-working-notes: ep-155fdb3a (already imported)\n08/29 exec-02-working-notes: ep-0e5c2801 (already imported)\n09/29 exec-03-working-notes: ep-2b467308 (already imported)\n10/29 sales-01-working-notes: ep-9528a007 (already imported)\n11/29 sales-02-working-notes: ep-98ac3393 (already imported)\n12/29 sales-03-working-notes: ep-ae8c0e4f (already imported)\n13/29 sales-04-working-notes: ep-4c86ca8d (already imported)\n14/29 sales-05-working-notes: ep-d47768dc (already imported)\n15/29 eng-01-working-notes: ep-e68eb8f8 (already imported)\n16/29 eng-02-working-notes: ep-8b3a9959 (already imported)\n17/29 eng-03-working-notes: ep-33d18a28 (already imported)\n18/29 eng-04-working-notes: ep-9fe985ef (already imported)\n19/29 eng-05-working-notes: ep-cdbb51d3 (already imported)\n20/29 eng-06-working-notes: ep-cfed207a (already imported)\n21/29 eng-07-working-notes: ep-bef5822b (already imported)\n22/29 eng-08-working-notes: ep-d2c4bc03 (already imported)\n23/29 eng-09-working-notes: ep-db60d6a9 (already imported)\n24/29 eng-10-working-notes: ep-2687eb33 (already imported)\n25/29 engineering-risk: ep-e6e91007 (already imported)\n26/29 tentative-estimate: ep-a5338688 (already imported)\n27/29 approved-revision: ep-80c23d55 (already imported)\n28/29 client-call: ep-35f24c4e (already imported)\n29/29 shared-next-step: ep-20fe7c0a (already imported)\nImport complete. All memory contents and maintenance decisions came from the backend.\n",
+  "note": "Repeat import made no changes to persisted source or memory files."
+}

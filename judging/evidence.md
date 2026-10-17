@@ -1,81 +1,78 @@
-# BrainBob — Judging Evidence Sheet
+# BrainBob judging evidence
 
-Fill this sheet with verified links and outcomes before submission. **Blank fields and “not recorded” entries are not passing results.** Internal goals in the [benchmark plan](../docs/benchmarks.md) are not achieved scores.
+Current reading path: [solution and setup](../README.md) → [implemented architecture](../docs/architecture.md) → [evaluation report](../docs/evaluation-report.md). This sheet links recorded evidence; the documentation refresh did not run inference, retrain a model, or repeat the benchmarks.
 
 ## Submission
 
-| Item | Value |
+| Item | Recorded status |
 | --- | --- |
 | Public repository | [jerelvelarde/BrainBob](https://github.com/jerelvelarde/BrainBob) |
-| Submitted commit | Not yet (HEAD when the report was written: `21260c4`; Rusty Rod and benchmark files were still uncommitted) |
-| Live demo URL | Not yet |
-| One-minute video URL | Not yet |
-| Team members | Not yet |
-| Evaluation date and build | 2026-10-17, build `21260c4`; per-experiment code commits in the [evaluation report](../docs/evaluation-report.md#provenance) |
+| Team | Jerel Velarde and Bonan Kou |
+| Track | Shared Brain |
+| Submitted commit | Not yet recorded; individual evidence builds are listed below |
+| Public live demo URL | Not yet recorded; the documented app runs locally |
+| One-minute video URL | Not yet recorded |
+| Evaluation provenance | October 17, 2026; original inference builds and v0.3 rescore are recorded in the [report](../docs/evaluation-report.md#provenance) |
 
-## Working Features and Integration Evidence
+## Working application evidence
 
-| Capability | Evidence to attach | Verified result |
+The [live-workspace verification](live-workspace-20261017/README.md) records a real-provider development demonstration against implementation commits `348db5b`, `e77bb9a`, and `489919b`. The fictional company input is not a held-out benchmark.
+
+| Capability | Recorded observation | Evidence |
 | --- | --- | --- |
-| Fresh-agent shared-memory handoff | Agent A write, Agent B retrieval manifest, and task outcome. | Not recorded |
-| Create/update/forget | Source evidence, committed revisions, and active retrieval behavior. | Not recorded |
-| Memory evaluation | Audit mode, eligible/sample IDs, verdicts, and independently expected outcomes. | Change-and-observe evaluator run on LoCoMo and BANKING77: no accuracy gain (BANKING77 frozen rule +0.0 pts, CI [-1.3, +1.3]; LoCoMo identical at 404/760). Seeded recent-conversation audit implemented in `b82fde7`; no scored result yet. See [report](../docs/evaluation-report.md). |
-| Scope isolation | Authorized and unauthorized retrieval checks. | Not yet (permissions implemented in `467c9b3`; correctness suite pending, no results) |
-| Conflict handling | Stale expected-revision rejection and duplicate-operation checks. | Not yet (`5b2d2ea` adds locks and corrections; no recorded check results) |
-| Persistent retrace | Reloaded history and source → revision → answer links. | Not recorded |
-| 3D visualization | Recording of event-driven actions; label any ambient walking or scripted preview. | Screenshots in [proof-of-work](proof-of-work/index.html), recorded against a labeled local fixture; no live-backend recording yet |
-| NemoClaw harness | Runtime/version and an observed agent execution. | Not yet (not integrated) |
-| NVIDIA Switchyard routing | Route configuration/version and actual selected-target evidence. | Not yet (not integrated) |
-| Crusoe inference and NVIDIA models | Successful call records with provider, actual model IDs, and outcomes. | Crusoe called directly; model ids per role listed in the [report](../docs/evaluation-report.md#integration-status) (Nemotron-3.5-Lightning-30B-A3B, Nemotron-3-Super-120B-A12B, Nemotron-3-Nano-30B-A3B; also Qwen3.8-27B and gpt-oss-120b, which are not NVIDIA). Outcomes in the result folders below. |
-| Optional You.com research | Saved search results and plan citations, if included. | Not recorded |
+| Source ingestion and maintenance | All 29 fictional source conversations imported; 71 records, including one tentative and one retired record, across 22 scopes | [Import and correction results](live-workspace-20261017/live-results.json) |
+| Authorized correction | November 6 record retired in favor of the approved November 13 record; Engineering estimate remained tentative | [Verification narrative](live-workspace-20261017/README.md#observed-memory-outcome) |
+| Fresh-member handoff | Sales answer used November 13 and cited the approved date and acceptance records | [Saved answer](live-workspace-20261017/fresh-sales-answer.json) |
+| Scope checks | 18 member views and event replays contained accessible references; selected unauthorized reads and writes returned 404/403 | [Access checks](live-workspace-20261017/access-checks.json) |
+| Resumable import | Re-import skipped all 29 sources and preserved episode/memory hashes | [Repeat-import record](live-workspace-20261017/import-rerun.json) |
+| Persistent retrace | Browser inspection of actual correction event #103, followed by return to live, without repeating inference | [Capture provenance](live-workspace-20261017/captures.json) |
+| UI/provider integration | Real answer, follow-up draft, citations, source/model inspection, session files, and mobile layout exercised | [Verification and limitations](live-workspace-20261017/README.md#verification) |
+| Offline integration | Next proxy → Python routes, store, ACL, and SSE exercised with deterministic model substitutes | [Earlier commands and results](readiness-20261017/verification.md) |
+| NemoClaw / OpenClaw | Scoped adapter and MCP server implemented; sandbox integration and end-to-end validation pending | [Adapter runbook](../integrations/nemoclaw/README.md), [deterministic checks](nemoclaw-alignment-20261017/README.md) |
+| Switchyard / SQL | Not integrated | [Current architecture](../docs/architecture.md) |
 
-## Paired Evaluation Results
+The member header is development identity selection, not authentication. These observations do not establish public deployment security, all live-stream cases, or complete session-cache revocation behavior. Desk conversations are browser-local; server memory and events persist.
 
-Record actual numerators and denominators, not percentages alone. Use identical held-out tasks and answering-model settings across conditions. See the [benchmark plan](../docs/benchmarks.md) for condition definitions.
+## Corrected organizational pilot
 
-| Condition | Correct / total tasks | Fresh-agent context tokens | Total pipeline tokens | Task latency | Results artifact |
-| --- | --- | --- | --- | --- | --- |
-| No memory (BANKING77, n=300 held-out, seed 42) | 189/300 | 0 | Not recorded | Not recorded | [results](../backend/results/20261017-122228-stream-banking77/results.md) |
-| Ordinary memory, audit disabled (same run) | 202/300 | ~547 (est.) | Not recorded; whole pipeline $0.2215 fresh, wall 479 s | Not recorded | same |
-| Audited memory, frozen rule `min_changes=3` (same run) | 202/300 (paired diff vs ordinary +0.0 pts, 95% CI [-1.3, +1.3]) | ~544 (est.) | same | Not recorded | same |
-| Full authorized history (LongMemEval 50-question subset, different task set) | 39/50 vs BrainBob extracted memory 35/50 | 108,946 vs 2,681 | $2.299 total for both | Not recorded | [results](../bench/results/20261017-110432/results.md) |
-| Append-only vs maintenance-enabled (write-time maintenance) | Not yet | Not yet | Not yet | Not yet | Not yet |
+Six synthetic worlds, 41 checkpoints, three replicates, common answering model/prompt. Inference build `5fcd554`; v0.3 scorer/oracle correction at `c241b6e`, applied to saved answers after results were inspected.
 
-Other held-out runs: LoCoMo 10 conversations, none 85/760, all 404/760, audited 404/760 ([results](../backend/results/20261017-112134-locomo/results.md)); LoCoMo noisy-writer stress test, n=115 ([results](../backend/results/20261017-113727-locomo/results.md)). The `backend/results/` folders are gitignored. Exploratory threshold variants (min 2, min 1, author) are labeled exploratory in the report. Full write-up: [evaluation report](../docs/evaluation-report.md).
+| Condition | Macro CATS v0.3 | Original v0.2 |
+| --- | ---: | ---: |
+| No memory | 25.0% | 25.0% |
+| Full authorized history | 92.0% | 88.6% |
+| Append-only | 67.9% | 67.3% |
+| Maintained BrainBob | 71.9% | 74.4% |
+| Always refuse | 25.0% | 25.0% |
+| Unfiltered | 6.5% | 7.9% |
 
-| Maintenance measure | Observed count / denominator or result |
+Maintained minus no memory: **+46.9 points [22.7, 71.1]**. Maintained minus append-only: **+4.0 points [−9.0, 18.2]**, inconclusive. Intervals are paired bootstraps clustered by world. CATS averages checkpoint replicates, worlds, and task sections; it is not a pooled count of correct answers.
+
+Maintained memory had **0/111 protected-string disclosures in applicable answer/context records**; the unfiltered control had **111/111**. The original traces exercised search, record, and event surfaces. Source/history probes were empty, and export/session-cache probes were unsupported. A rescore does not add missing coverage.
+
+[Corrected scorecard](../bobbench/results/20261017-141014/scorecard.v0.3.md) · [Machine-readable corrected results](../bobbench/results/20261017-141014/scorecard.v0.3.json) · [Original scorecard and traces](../bobbench/results/20261017-141014/) · [Methods and review caveats](../docs/evaluation-report.md#experiment-6-bob-organizational-pilot-proposed-benchmark-synthetic).
+
+## Other measured results
+
+| Experiment | Recorded result | Boundary of the claim |
+| --- | --- | --- |
+| Rusty Rod synthetic correctness | Maintained 12/13 correct updates vs append-only 0/13; 0/32 valid memories wrongly retired; accuracy 68/76 vs 67/76 | State maintenance improved; answer difference +1.3 points [−5.3, 7.9] is inconclusive |
+| LoCoMo, 760 held-out questions | No memory 85/760; memory and audited memory both 404/760 | Context helps on this custom split; no audit gain |
+| LongMemEval, modified 50-question subset | Memory 35/50 with 2,681 answer-context tokens; full history 39/50 with 108,946 | Context reduction with lower observed accuracy; no total pipeline savings claim |
+| BANKING77, frozen policy, 300 tasks | Memory and audited memory both 202/300; audit delta 0.0 points [−1.3, 1.3] | Null result for this audit policy |
+| Qwen3-0.6B relation diagnostic | Base 32/60 → tuned 42/60; +16.7 points [5.0, 28.3]; five false conflicts | Public synthetic pairs, now development data; not safe-default activation evidence |
+| Maintenance-judge swap, one replicate/world | Tuned 72.2 vs default 68.5; v0.3 delta +3.7 points [−11.1, 18.5] | No resolved advantage or non-inferiority; the Super condition also suffered rate limits |
+
+Sources, costs, model settings, and limitations: [evaluation report](../docs/evaluation-report.md). GateMem, MUMBench, and CoMemBench have no reported BrainBob scores. The small checker remains opt-in; the production judge remains gpt-oss-120b.
+
+## Contribution and history
+
+| Contribution | Evidence |
 | --- | --- |
-| Extraction precision and recall | Not yet (Rusty Rod correctness suite pending) |
-| Correct updates given decisive evidence | Not yet |
-| Unsupported new claims | Not yet |
-| Valid memories incorrectly forgotten | Not yet |
-| Random-audit evidence coverage | Not yet |
-| Audit decision quality given evidence | Not yet |
-| End-to-end freshness, including audit misses | Not yet |
-| Unauthorized retrievals | Not yet |
-| Changes with complete retrace evidence | Not yet |
+| Shared memory, maintenance, auditing, evaluation | Backend commits and per-experiment builds in the [evaluation report](../docs/evaluation-report.md#provenance) |
+| Live app launch, resumable company import, desk conversations, answer instructions | `348db5b`, `e77bb9a`, `489919b`, with [recorded verification](live-workspace-20261017/README.md) |
+| Visual interface, inspectors, session files, and subsequent UI work | [Commit-linked proof of work](proof-of-work/index.html); each entry identifies its execution/capture mode |
+| Small checker | Public adapter `b904e6ec0baea37bf70209093b8c59332d3c450a` and saved predictions in the [model handoff](../docs/finetune-handoff.md) |
+| Reused libraries, datasets, and reference material | [Runtime stack](../docs/architecture.md), per-experiment datasets in the [report](../docs/evaluation-report.md), and [character references](../docs/character-design.md) |
 
-Attach dataset/scenario IDs, revision, seeds, actual model and policy versions, scoring rubric, and raw outcomes. Count ingestion, audits, routing judgments, retries, and answering in total pipeline usage. Label public benchmark subsets and modified protocols explicitly.
-
-## Original Hackathon Contributions
-
-The participant guide requires clearly identifying what was built during the event. Complete this table from actual commits and work records; do not assume every repository file is an original contribution.
-
-| Feature or asset | Built during event / reused | Team contribution | Commit, source, or license reference |
-| --- | --- | --- | --- |
-| Shared memory service | Built during event | Not yet | Backend commits `d45d1fe`..`21260c4` (`git log -- backend`) |
-| Memory evaluation | Built during event | Not yet | `7b40bfd`, `e2b4cf5`, `f308bab`, `5e2b4bb`, `833911b`, `b82fde7`; benchmark datasets (LongMemEval, LoCoMo, BANKING77) are third-party |
-| Agent harness and routing integration | Not recorded | Not recorded | Not recorded |
-| 3D scene and character implementation | Not recorded | Not recorded | Not recorded |
-| Memory inspector and retracing | Not recorded | Not recorded | Not recorded |
-| Third-party libraries and reference imagery | Not recorded | Not recorded | Not recorded |
-
-## Known Limits
-
-- NemoClaw and NVIDIA Switchyard are not integrated.
-- The audit/evaluator showed no measurable accuracy gain (see the report); usefulness is not truth, and factual correctness has no scored result yet (Rusty Rod correctness suite pending).
-- Demo scenes are selected or fixture-driven; only held-out numbers are evaluation results.
-- LongMemEval is a 50-question subset with a gpt-oss-120b judge; no run reports multi-seed variation.
-- Full list: [evaluation report](../docs/evaluation-report.md).
-
-Link to the current [implementation status](../README.md) and avoid describing planned capabilities as completed work.
+Original results, scorer reviews, historical designs, and earlier fixture screenshots remain evidence of their own builds. They should not be presented as a single verified final submission build. Fill the submission commit and public video/demo links once those artifacts are actually submitted or published.

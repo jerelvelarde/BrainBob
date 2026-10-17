@@ -1,5 +1,7 @@
 # BrainBob Backend Design
 
+> **Historical design note (11:30 PT).** Later implementation and results supersede the status statements below. Read [current architecture](architecture.md) and [evaluation report](evaluation-report.md).
+
 Owner: Bonan (backend and benchmarks). Frontend: Jerel. Written during the event on 2026-10-17.
 Interfaces: [backend/CONTRACT.md](../backend/CONTRACT.md). Frontend integration: [backend/FRONTEND.md](../backend/FRONTEND.md).
 

@@ -1,5 +1,7 @@
 # BrainBob readiness and scorecard
 
+> **Historical assessment.** The checks and follow-ups below retain their original build context. The organizational pilot now has a corrected v0.3 scorecard, and live-provider workspace evidence is recorded. See the [current evaluation report](evaluation-report.md), [live-workspace verification](../judging/live-workspace-20261017/README.md), and [submission evidence](../judging/evidence.md). The [NemoClaw adapter](../integrations/nemoclaw/README.md) is implemented; sandbox integration and end-to-end validation remain pending.
+
 Assessment: October 17, 2026 (America/Los_Angeles). This combines the frontend checkout with concurrent backend/Bob work from remote `main` through `d85064d`, and the frozen diagnostics scorer from `codex/bob-benchmark@ab084a6`. Milestone histories were merged, not rewritten. No new GPU job, paid inference, deployment, or score submission was performed during this assessment.
 
 **Follow-up to Bonan's `13df1c0` report:** the organizational run is now published;

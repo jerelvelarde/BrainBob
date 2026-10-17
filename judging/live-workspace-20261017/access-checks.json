@@ -1,0 +1,209 @@
+{
+  "captured_at": "2026-10-17T22:15:11.962507+00:00",
+  "backend": "http://127.0.0.1:3001",
+  "checks": [
+    {
+      "member": "exec-01",
+      "visible_memories": 21,
+      "scope_filter": "passed"
+    },
+    {
+      "member": "exec-02",
+      "visible_memories": 21,
+      "scope_filter": "passed"
+    },
+    {
+      "member": "exec-03",
+      "visible_memories": 21,
+      "scope_filter": "passed"
+    },
+    {
+      "member": "sales-01",
+      "visible_memories": 25,
+      "scope_filter": "passed"
+    },
+    {
+      "member": "sales-02",
+      "visible_memories": 25,
+      "scope_filter": "passed"
+    },
+    {
+      "member": "sales-03",
+      "visible_memories": 25,
+      "scope_filter": "passed"
+    },
+    {
+      "member": "sales-04",
+      "visible_memories": 25,
+      "scope_filter": "passed"
+    },
+    {
+      "member": "sales-05",
+      "visible_memories": 25,
+      "scope_filter": "passed"
+    },
+    {
+      "member": "eng-01",
+      "visible_memories": 29,
+      "scope_filter": "passed"
+    },
+    {
+      "member": "eng-02",
+      "visible_memories": 29,
+      "scope_filter": "passed"
+    },
+    {
+      "member": "eng-03",
+      "visible_memories": 29,
+      "scope_filter": "passed"
+    },
+    {
+      "member": "eng-04",
+      "visible_memories": 29,
+      "scope_filter": "passed"
+    },
+    {
+      "member": "eng-05",
+      "visible_memories": 29,
+      "scope_filter": "passed"
+    },
+    {
+      "member": "eng-06",
+      "visible_memories": 29,
+      "scope_filter": "passed"
+    },
+    {
+      "member": "eng-07",
+      "visible_memories": 29,
+      "scope_filter": "passed"
+    },
+    {
+      "member": "eng-08",
+      "visible_memories": 29,
+      "scope_filter": "passed"
+    },
+    {
+      "member": "eng-09",
+      "visible_memories": 29,
+      "scope_filter": "passed"
+    },
+    {
+      "member": "eng-10",
+      "visible_memories": 29,
+      "scope_filter": "passed"
+    },
+    {
+      "member": "exec-01",
+      "replayed_events": 30,
+      "event_reference_filter": "passed",
+      "cursor": 121
+    },
+    {
+      "member": "exec-02",
+      "replayed_events": 30,
+      "event_reference_filter": "passed",
+      "cursor": 121
+    },
+    {
+      "member": "exec-03",
+      "replayed_events": 30,
+      "event_reference_filter": "passed",
+      "cursor": 121
+    },
+    {
+      "member": "sales-01",
+      "replayed_events": 51,
+      "event_reference_filter": "passed",
+      "cursor": 121
+    },
+    {
+      "member": "sales-02",
+      "replayed_events": 37,
+      "event_reference_filter": "passed",
+      "cursor": 121
+    },
+    {
+      "member": "sales-03",
+      "replayed_events": 35,
+      "event_reference_filter": "passed",
+      "cursor": 121
+    },
+    {
+      "member": "sales-04",
+      "replayed_events": 35,
+      "event_reference_filter": "passed",
+      "cursor": 121
+    },
+    {
+      "member": "sales-05",
+      "replayed_events": 35,
+      "event_reference_filter": "passed",
+      "cursor": 121
+    },
+    {
+      "member": "eng-01",
+      "replayed_events": 41,
+      "event_reference_filter": "passed",
+      "cursor": 121
+    },
+    {
+      "member": "eng-02",
+      "replayed_events": 41,
+      "event_reference_filter": "passed",
+      "cursor": 121
+    },
+    {
+      "member": "eng-03",
+      "replayed_events": 41,
+      "event_reference_filter": "passed",
+      "cursor": 121
+    },
+    {
+      "member": "eng-04",
+      "replayed_events": 41,
+      "event_reference_filter": "passed",
+      "cursor": 121
+    },
+    {
+      "member": "eng-05",
+      "replayed_events": 41,
+      "event_reference_filter": "passed",
+      "cursor": 121
+    },
+    {
+      "member": "eng-06",
+      "replayed_events": 41,
+      "event_reference_filter": "passed",
+      "cursor": 121
+    },
+    {
+      "member": "eng-07",
+      "replayed_events": 41,
+      "event_reference_filter": "passed",
+      "cursor": 121
+    },
+    {
+      "member": "eng-08",
+      "replayed_events": 41,
+      "event_reference_filter": "passed",
+      "cursor": 121
+    },
+    {
+      "member": "eng-09",
+      "replayed_events": 41,
+      "event_reference_filter": "passed",
+      "cursor": 121
+    },
+    {
+      "member": "eng-10",
+      "replayed_events": 41,
+      "event_reference_filter": "passed",
+      "cursor": 121
+    }
+  ],
+  "cross_team_source": 404,
+  "cross_team_history": 404,
+  "cross_team_write": 403,
+  "impersonated_author_write": 403,
+  "note": "Selected-identity authorization checks only. Member headers are not production authentication. Events were checked through replay.done; this does not exhaustively prove live-stream isolation."
+}

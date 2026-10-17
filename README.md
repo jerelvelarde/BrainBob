@@ -1,158 +1,141 @@
 # BrainBob
 
-**A shared brain that helps agent teams keep the right knowledge current—and makes every memory change inspectable.**
+**A shared brain for agent teams. Keep knowledge current, control who can use it, and trace every change.**
 
-An agent can finish its task and leave behind a wrong fact. The next agent inherits it, repeats it, and spreads the mistake. BrainBob combines scoped memory, evidence-backed maintenance, and evaluation so teams can inspect what agents remember, why it changed, and what a fresh agent actually uses.
+When one agent remembers an outdated deadline, the next agent can repeat it with confidence. BrainBob gives agents a shared memory layer that checks new facts against existing knowledge, applies authorized corrections, and supplies each agent with the context its user may read. A live 3D brain office makes the sources, decisions, and subsequent answers inspectable.
 
-Built by **Jerel Velarde and Bonan Kou** for the **Shared Brain** track at The Recursive Agents Hackathon, October 17, 2026. The main agent backend uses **Crusoe Managed Inference**; the experimental 0.6B checker was trained and evaluated separately on an NVIDIA L4.
+Built by **Jerel Velarde and Bonan Kou** for the **Shared Brain** track at The Recursive Agents Hackathon, October 17, 2026.
 
-> **Hackathon build in progress.** The memory backend, evaluation experiments, and interactive app are implemented. Jerel is completing the end-to-end app experience. Bonan's [0.6B fine-tuned memory checker](https://huggingface.co/Guangze/memops-small-qwen3-0.6b-lora) is published with synthetic diagnostic results; it remains experimental and opt-in. Final integrated submission verification is pending.
+[Results](#results) · [Run locally](#run-locally) · [Architecture](docs/architecture.md) · [Published benchmark](https://huggingface.co/datasets/JerelVelarde/bob-benchmark) · [Judging evidence](judging/evidence.md)
 
-The app connects to the Python backend through HTTP/SSE. Chat uses live inference and scoped synthetic company records; `/demo` and `/rehearsal` redirect to the live workspace. See the [live workspace setup](docs/live-workspace.md) to seed the fictional company through the actual extraction pipeline. See the [readiness assessment](docs/readiness.md) for verified checks and remaining gates, the [integration runbook](apps/web/README.md) to connect the app, and the [model handoff](docs/finetune-handoff.md) for the experimental checker.
+## The solution
 
-![BrainBob's three-tier memory office and an inspectable agent session file](judging/proof-of-work/screenshots/23-tier-session-file.jpg)
+![BrainBob solution: agents write, facts and approval authority are checked, scoped memory feeds a fresh agent, and usefulness evaluation feeds back into memory](diagrams/memory-simple.png)
 
-*Captured from the scripted Rusty Rod walkthrough. It illustrates individual, team, and organization context; it is not evidence of live inference. [Capture provenance](judging/proof-of-work/screenshots/tier-session-captures.json).*
+**Check before writing, verify after use.** [Editable diagram source](diagrams/memory-simple.mmd).
 
-## The Shared Brain loop
+1. **Check incoming knowledge.** Extract facts from source conversations. Compare each candidate with existing memories: same, conflict, or unrelated. Apply authority, scope, date, and lock rules before changing what is current.
+2. **Share the right context.** Retrieve relevant individual, team, and organization memories for the requesting member. An agent can cite the records it used; retired facts remain in history rather than ordinary retrieval.
+3. **Evaluate and retrace.** Check source support and task usefulness separately. The usefulness evaluator removes a cited memory, answers again, and compares task grades. Ordinary harmful-memory retirement requires confirming evidence; the office exposes recorded operations, sources, and history.
 
-1. **Read:** give an agent the relevant context within its permitted scope.
-2. **Work:** answer with citations to the memories it used.
-3. **Maintain:** extract new facts, distinguish tentative discussion from approved changes, and preserve correction history.
-4. **Evaluate:** check source support separately from whether a memory helps a task.
-5. **Retrace:** inspect the source, decision, memory revision, and subsequent use in the 3D office.
+For example, a tentative Engineering estimate should not replace an approved client commitment. When an authorized correction changes November 6 to November 13, the next Sales agent should use November 13 with supporting citations. Our [recorded live workspace](judging/live-workspace-20261017/README.md) demonstrates that sequence using fictional company data and real Crusoe inference.
 
-The demo company, **Rusty Rod**, has 18 members across Executive, Sales, and Engineering. The three cabinet tiers represent individual, team, and organization memory. A Sales agent should use its own preferences, Sales guidance, and an approved client commitment without receiving private Engineering discussions. A tentative estimate should not overwrite an approved commitment; an authorized correction should reach the next agent.
+![BrainBob live three-desk office after importing the fictional company's source conversations](judging/live-workspace-20261017/live-office.png)
 
-## What is built, and what is next
+*Recorded live workspace at build `489919b`; [capture provenance](judging/live-workspace-20261017/captures.json). This is a development demonstration, separate from the benchmark results below.*
 
-| Area | Current state |
-| --- | --- |
-| Shared memory backend | Python service with extraction, BM25 retrieval, scope checks, immutable correction records, retirement, owner locks, and persisted JSONL memory/events. |
-| Correctness maintenance | Write-time comparison plus deterministic authority/date/scope rules; a recent-conversation audit records sampled evidence and verdicts. |
-| Usefulness evaluation | Remove a cited memory, re-answer, and compare task grades. Harmful memories require confirmation before ordinary evaluator retirement. |
-| Interactive app | Next.js 3D office, three independent desk sessions, CopilotKit chat, HTTP/SSE integration, source inspection, tiered memory views, and event retracing. Offline integration checks pass; final real-provider demo verification remains pending. |
-| Evaluation evidence | Published conversational benchmarks, the synthetic Rusty Rod correctness run, and two recorded backend demo runs. |
-| Bob Benchmark | [Published on Hugging Face](https://huggingface.co/datasets/JerelVelarde/bob-benchmark): organizational worlds, memory pairs, structured diagnostics, and runner source. Recorded organizational results are linked below. |
-| Smaller checker | Published [Qwen3-0.6B LoRA adapter](https://huggingface.co/Guangze/memops-small-qwen3-0.6b-lora): independently rescored 32/60 base → 42/60 tuned on public synthetic checker pairs. Safe integration remains tracked in [#6](https://github.com/jerelvelarde/BrainBob/issues/6). |
+## Results
 
-The recorded backend demo uses legacy identities and disables organization permissions/write-time maintenance. It is a verified **usefulness** demonstration, not proof of the complete organizational app flow. Jerel is connecting that experience to the current app; see the [integration boundary](docs/frontend-integration.md).
+**On our six-world organizational pilot, maintained BrainBob memory scored 71.9% macro CATS versus 25.0% with no memory: +46.9 percentage points, 95% interval [22.7, 71.1].** Maintenance's advantage over append-only memory remains inconclusive.
 
-## Correctness and usefulness are different
+### Organizational memory pilot
 
-**Correctness:** Is the fact supported, current, and authorized? The maintenance layer compares candidate facts with existing records, then applies code-level rules for authority, scope, timing, and locks. Missing evidence does not justify forgetting a valid memory.
+Six synthetic worlds, 41 checkpoints, three replicates per condition. Every condition uses the same answering model and prompt: Nemotron-3.5-Lightning at temperature 0. Results use **scorer/oracle v0.3**, a post-hoc correction applied to the original saved answers without new model calls.
 
-**Usefulness:** Did including this memory change whether an answer was correct? The evaluator compares answers with and without a cited memory. A useful memory is not necessarily true, and an unhelpful memory is not necessarily false.
+| Condition | Macro CATS | Role in the comparison |
+| --- | ---: | --- |
+| No memory | 25.0% | Answers without stored context |
+| Append-only memory | 67.9% | Stores facts without write-time maintenance |
+| **Maintained BrainBob memory** | **71.9%** | Checks and maintains stored facts |
+| Full authorized history | 92.0% | Supplies all readable source events; these small worlds fit in context |
+| Always refuse | 25.0% | Control showing that refusal alone earns some points |
+| Unfiltered history | 6.5% | Control that exposes protected context |
 
-The smaller-model experiment targets the bounded semantic decision **`same` / `conflict` / `unrelated`** through the existing maintenance hook. Code retains control of permissions and mutations. The experiment does not train company facts into model weights or replace the independent evaluation scorer. Until validated, the existing checker remains the default.
+CATS is an all-checks-pass score, not ordinary answer accuracy: a checkpoint must satisfy its required-fact, stale-claim, response-behavior, protected-content, citation, and execution checks. Replicates are averaged, then worlds and the three task sections are equally weighted. The grader uses deterministic checks and retains documented limitations.
 
-## Evidence so far
+- **Maintained vs append-only:** +4.0 points, 95% interval **[−9.0, 18.2]**. This does not establish a maintenance advantage.
+- **Protected-content disclosures:** **0/111 applicable answer/context records** for maintained memory; the unfiltered control disclosed in **111/111**. These are protected-string checks on this pilot, not a general security guarantee.
+- **Version history:** the original v0.2 result was 74.4%. Both scorecards remain available; v0.3 corrects known scoring/oracle errors after results were inspected.
 
-Results below describe specific runs, not general accuracy guarantees. Full setup, limitations, and artifacts are in the [evaluation report](docs/evaluation-report.md).
+[Corrected scorecard](bobbench/results/20261017-141014/scorecard.v0.3.md) · [Original scorecard and traces](bobbench/results/20261017-141014/) · [Full evaluation report](docs/evaluation-report.md#experiment-6-bob-organizational-pilot-proposed-benchmark-synthetic) · [Metric derivation and worked example](https://github.com/jerelvelarde/BrainBob/blob/373eee2e11891e43232ae509c1d7de9ae3567e3a/docs/bob-metrics-explained.md)
 
-| Experiment | Observed result | What it establishes |
+### Supporting experiments
+
+| Experiment | Observed result | Interpretation |
 | --- | --- | --- |
-| Rusty Rod correctness: 30 synthetic scenarios, 76 questions | Maintained memory: **12/13 correct state updates**, **0/32 valid memories wrongly retired**. Answer accuracy: **68/76**, versus append-only **67/76** and full history **73/76**. | Evidence of state maintenance; no demonstrated answer-quality advantage over full history. |
-| LoCoMo: 760 held-out questions | No memory **85/760**; ordinary and audited memory both **404/760**. | Retrieved memory helps this task; the audit adds no measured gain. |
-| LongMemEval: 50-question subset | Answer context **2,681 vs 108,946 tokens**; extracted-memory accuracy **35/50** versus full history **39/50**. | A context-size tradeoff, not accuracy parity or total pipeline savings. |
-| BANKING77: 300 held-out tasks | Ordinary and audited memory both **202/300**; paired audit difference **0.0 percentage points**, 95% interval **[-1.3, +1.3]**. | A null result for the frozen usefulness-audit policy. |
-| Bob organizational pilot: six worlds, 41 checkpoints, three replicates | Recorded macro CATS: maintained **74.4%**, append-only **67.3%**, no-memory **25.0%**, full history **88.6%**. | Maintained vs append-only **+7.1 points**, 95% interval **[-6.2, +21.6]**; no significant gain over append-only. Original run/build and scorer limits apply. |
-| Small-checker Bob diagnostic: 60 public synthetic pairs | Independently rescored base → tuned accuracy: **32/60 → 42/60** (53.3% → 70.0%); macro-F1 **0.437 → 0.694**; **0 invalid outputs** for both. | A measured semantic-classification gain on this pilot, with false-conflict risk; not end-to-end memory safety or independent benchmark validation. |
+| Rusty Rod correctness: 30 held-out synthetic scenarios, 76 questions | **12/13** correct state updates vs **0/13** append-only; **0/32** valid memories wrongly retired. Answer accuracy **68/76 vs 67/76**. | Maintenance improved memory state; the answer-quality difference was not significant. |
+| LoCoMo: 760 held-out questions | **404/760** with memory vs **85/760** without. Audited memory also scored **404/760**. | Retrieved context helped; the audit added no measured gain. |
+| LongMemEval: modified 50-question subset | Answer context **2,681 vs 108,946 tokens**; accuracy **35/50 vs 39/50** for full history. | About 40× less answer context, with lower observed accuracy; not total pipeline savings. |
+| BANKING77: 300 held-out tasks | Ordinary and audited memory both **202/300**; audit difference **0.0 points [−1.3, 1.3]**. | A null result for the frozen usefulness-audit policy. |
+| Small memory checker: 60 synthetic pairs | Qwen3-0.6B base **32/60 → 42/60** with LoRA; **+16.7 points [5.0, 28.3]**. | Better relation classification on this diagnostic, with five false conflicts; experimental and opt-in. |
 
-In the Rusty Rod run, the recent audit changed no answers beyond write-time maintenance. Its short scenarios fit entirely inside the sampling window, and its scored judgments were overwhelmingly supported examples. It does not establish robust contradiction detection or performance when sampling misses decisive evidence. Scope leakage there measures filtered retrieval, not complete application security. The report also documents coarse string-grading errors.
+These experiments measure different capabilities and should not be averaged. The public subsets and modified protocols are not official leaderboard results. [Methods, model settings, artifacts, and limitations](docs/evaluation-report.md).
 
-## Bob (Shared Brain) Benchmark
+## What you can use today
 
-**[Get the published dataset and runners on Hugging Face](https://huggingface.co/datasets/JerelVelarde/bob-benchmark).** This public synthetic pilot evaluates organizational memory through changing facts, permissions, and agent handoffs. The current [pilot data](bobbench/worlds/README.md) contains **six synthetic worlds, 175 timeline items, and 41 checkpoints** covering:
+- **Live agent workspace:** three independent desk conversations, CopilotKit chat, suggested actions, and returned session context.
+- **Scoped memory:** source ingestion, BM25 retrieval, approved corrections, tentative conflicts, owner locks, and retirement.
+- **Inspectable operations:** source/model details, citations, persisted HTTP/SSE events, and read-only retracing.
+- **Reproducible evidence:** published synthetic benchmark, saved predictions, versioned scorecards, and recorded live-app checks.
 
-- Individual/team/organization context assembly and authorized corrections.
-- Cross-organization publication, membership changes, grant expiry, and revocation.
-- Conflicting evidence, retention of valid knowledge, and correction propagation between agents and summaries.
+The [Bob benchmark](https://huggingface.co/datasets/JerelVelarde/bob-benchmark) covers changing facts, organizational permissions, and agent handoffs. The organizational pilot in `bobbench/` is distinct from the smaller memory-pair and structured diagnostics in `benchmarks/bob/`. Oracle labels are public evaluation assets and must stay outside tested agents' inputs and training data; this is not an independently secret test set.
 
-Source events and oracle labels are separate. The Atlas walkthrough is explicitly public development data. Oracle files are public evaluation assets that must stay outside the tested model's inputs and training data; they are not an independently secret test set. Labels have not received independent human adjudication.
-
-The [executable diagnostic pilot](benchmarks/bob/README.md) is a separate, smaller slice: 60 balanced checker pairs plus 12 development pairs, and reference controls over 18 workflow checkpoints. Reference-control scores validate the harness; they are not BrainBob or fine-tuned-model results. The published checker predictions below are a separate real-model run; the recorded organizational run uses its own adapter/build and must not be presented as a verified live app trajectory.
-
-The [frozen Hub release](https://huggingface.co/datasets/JerelVelarde/bob-benchmark/tree/80aee096fe468ed36d576946e06c01e511f70cc0) provides `organizational_worlds`, `memory_pairs`, and `structured_pilot` configurations plus a source archive and hash manifest. The archive excludes BrainBob-specific adapters; use this repository for those. Dataset publication establishes availability, not a performance result. Reuse terms are not yet specified in the release.
-
-The [recorded organizational scorecard](bobbench/results/20261017-141014/scorecard.md) uses build `5fcd554`, scorer 0.1 and phrase checks 0.2. It reports zero protected-string disclosures in 111 applicable records for maintained memory, with export and session-cache probes unsupported. These are small synthetic-pilot results, not general security guarantees or a run of the latest scorer.
-
-The subsequent [scorer review](docs/bob-pilot-review-20261017.md) found a wrong-current-date answer that passes CATS, empty source/history probes, and no existing-session revocation test. The figures above remain historical results pending a consistent rescore; only search, record, and events were exercised in the recorded surface checks.
-
-Bob is a **public pilot benchmark**, informed by GateMem, MUMBench, CoMemBench, and other prior work documented in the [specification](docs/bob-benchmark-spec.md). These pilots are not official results on those external benchmarks.
-
-## Published small memory checker
-
-Bonan's [memops-small Qwen3-0.6B LoRA](https://huggingface.co/Guangze/memops-small-qwen3-0.6b-lora/tree/8f832dbfecddc028d130c0eee321111f4e34404c) classifies candidate/existing fact pairs as strict JSON `same`, `conflict`, or `unrelated`. It was trained on 144 synthetic pairs for one epoch on an NVIDIA L4. The release includes adapter weights, training code, provenance, and base/tuned predictions. Its [run metadata](https://huggingface.co/Guangze/memops-small-qwen3-0.6b-lora/blob/8f832dbfecddc028d130c0eee321111f4e34404c/runs/20261017-210457/run_meta.json) records a saved-adapter reload check matching three tuned predictions.
-
-The [model card](https://huggingface.co/Guangze/memops-small-qwen3-0.6b-lora/blob/8f832dbfecddc028d130c0eee321111f4e34404c/README.md) reports a **+16.7 percentage-point accuracy gain**, but also **five non-conflict pairs mislabeled as conflict** (base: zero), and half of true conflicts still missed as unrelated. These 60 public, single-annotator synthetic pairs have no independent label review. The subsequent [same-set comparison](docs/evaluation-report.md) scores the production gpt-oss-120b judge at **53/60** and Nemotron Super at **56/60**; the tuned checker does not match them. The result supports further testing, not automatic promotion. The [policy replay](experiments/memops-small/POLICY_REPLAY.md) shows five valid records retired under approved, authorized, newer, unlocked inputs. Deterministic permissions alone do not prevent semantic mistakes; keep the experimental path observe-only or gated, with the existing checker as default. See the [independent rescore and integration evidence](docs/readiness.md).
-
-Those original 60 cases have now been inspected case by case and are development data for further tuning. A [fresh frozen 60-case handoff](benchmarks/bob/round2/README.md) provides label-free inputs and evaluator-local gold for round two. [Observe and confirmation modes](experiments/memops-small/SAFE_MODE.md) are implemented; their controlled tests do not establish live-provider safety or complete the final app demo.
+Bonan's [Qwen3-0.6B LoRA checker](https://huggingface.co/Guangze/memops-small-qwen3-0.6b-lora/tree/b904e6ec0baea37bf70209093b8c59332d3c450a) classifies **same / conflict / unrelated**. The production gpt-oss checker remains the default. The original 60 cases have now been inspected and are development data for further tuning. A separate one-replicate maintenance-judge comparison found no statistically resolved advantage for the tuned checker; see [Experiments 7 and 8](docs/evaluation-report.md#experiment-7-small-memory-relation-checker-issue-7-pair-diagnostic).
 
 ## Run locally
 
-### App
+Requires **Node.js 22+**, **pnpm 10.32.1**, **Python 3.12**, and **uv**. Run from the repository root:
 
-Requires Node.js 22+ and pnpm 10.32.1.
-
-```bash
+```sh
 pnpm install
+uv venv --python 3.12 backend/.venv
+uv pip install --python backend/.venv/bin/python -r backend/requirements.txt
+```
+
+Save a Crusoe API key privately at `~/.config/crusoe/api.key` with mode `0600`, or set `BRAINBOB_API_KEY` in the backend environment. Keep it out of Git and browser environment variables. Startup checks, source ingestion, and chat make real provider calls.
+
+```sh
+# Terminal 1: verify provider access and start the backend on port 3001
+pnpm backend
+
+# Terminal 2: import fictional source conversations, then start the app
+pnpm seed:company
 pnpm dev
 ```
 
-- [Live workspace](http://127.0.0.1:3000/): requires the backend below.
-- `/demo` and `/rehearsal` redirect to the live workspace; disconnected inference is shown as unavailable.
+Open **[http://127.0.0.1:3000](http://127.0.0.1:3000)**. Select a desk, ask for a draft, inspect its cited memories, and use Retrace to follow a correction. `/demo`, `/rehearsal`, and `/character-study` redirect to this workspace.
 
-### Backend
+The importer covers **29 fictional conversations, 18 people, and 22 scopes**. Repeating it skips previously imported sources. Memory and events persist under ignored `data/workspace/`; desk conversations and returned session files remain browser-local. [Full setup and behavior](docs/live-workspace.md) · [Proxy configuration and offline smoke check](apps/web/README.md).
 
-Requires Python 3.12 and `uv`. The current client reads a Crusoe API key from `~/.config/crusoe/api.key`; create that file privately and keep credentials out of Git and browser configuration.
-
-```bash
-cd backend
-uv venv --python 3.12
-uv pip install --python .venv/bin/python -r requirements.txt
-.venv/bin/python server.py
-```
-
-These commands use macOS/Linux paths; on Windows use `.venv/Scripts/python.exe`. The server listens on `127.0.0.1:3001` and defaults to Rusty Rod organization mode. Memory, episode, and event files persist in its working directory. Browser requests default to the same-origin `/api/brainbob` proxy. Set server-side `BRAINBOB_API_URL` for a different backend address. `NEXT_PUBLIC_BRAINBOB_API_URL` bypasses the proxy and requires appropriate CORS. See the [connection guide](docs/frontend-integration.md) and [backend contract](backend/CONTRACT.md).
-
-### Checks and experiments
-
-```bash
-# Repository root: frontend checks
+```sh
+# Frontend checks, from the repository root
 pnpm typecheck
 pnpm test
 pnpm build
 
-# From backend/: deterministic backend tests
-.venv/bin/python -m pytest tests -q
-
-# From backend/: development-only correctness smoke run; makes model calls
-.venv/bin/python bench.py correctness --split dev --fast
+# Deterministic backend checks
+(cd backend && .venv/bin/python -m pytest tests -q)
 ```
-
-Use [recorded results](docs/evaluation-report.md) for existing scores. Keep development examples separate from a frozen evaluation set. The [backend demo runbook](backend/demo/DEMO.md) documents reset, seeded history, live calls, and the recorded fallback.
 
 ## Current architecture
 
-| Component | Implementation |
+| Layer | Implementation |
 | --- | --- |
-| App | Next.js, React Three Fiber / Three.js / Drei, CopilotKit + AG-UI |
-| Service and events | Python, FastAPI, HTTP requests and server-sent events |
-| Memory | JSONL persistence, BM25 retrieval, source IDs, supersession links, event history |
-| Extraction and default answering | `nvidia/Nemotron-3.5-Lightning-30B-A3B` on Crusoe |
-| Current maintenance/audit checker | `openai/gpt-oss-120b` on Crusoe |
-| Experimental checker | Published Qwen3-0.6B LoRA semantic-relation classifier; opt-in, not the current default |
+| App | Next.js, React, CopilotKit + AG-UI, React Three Fiber / Three.js / Drei |
+| Service | Python / FastAPI; same-origin Next proxy for HTTP and SSE |
+| Memory | JSONL records and events, BM25 retrieval, scope checks, source and supersession links |
+| Live-app extraction / answering | NVIDIA Nemotron Nano / Nemotron Super on Crusoe |
+| Default maintenance and audit judge | `openai/gpt-oss-120b` on Crusoe |
+| Evaluation | Separate source-support audit, task-usefulness evaluator, and benchmark scorers |
+| Optional NemoClaw/OpenClaw adapter | Scoped memory tools and MCP server implemented; sandbox integration and end-to-end validation pending |
 
-NemoClaw, Switchyard, and SQL storage appear in earlier architecture plans but are not integrated into this build. Model roles and experimental overrides are recorded in the evaluation artifacts.
+The application launcher overrides the backend's default Lightning model assignments; benchmark runs retain their recorded settings. [Component diagram, data flow, and model assignments](docs/architecture.md).
 
-The member selector supplies a **demo identity**, not authentication. Retired records remain in history; retirement is not erasure. Screenshots and replay demonstrate inspectability, while live traces and evaluation runs establish execution and measured behavior.
+The member selector is a development identity marker, **not production authentication**. Retirement preserves history; it is not erasure. Usefulness evaluation requires task grades and is not automatically run on every chat.
 
-## Team and submission
+The [NemoClaw/OpenClaw adapter](integrations/nemoclaw/README.md) exposes `read_memory`, `read_source`, and `propose_memory` with a host-bound member and discussion-only proposals. **The adapter is implemented; sandbox integration and end-to-end validation are pending.** Its ten fake-backend unit tests do not establish a live harness run. The verified app continues to use the direct Python/Crusoe path.
 
-- **Jerel Velarde** — end-to-end app, interaction design, visualization, and independent evaluation presentation.
-- **Bonan Kou** — agents, shared memory, maintenance/evaluation backend, and the smaller-checker experiment.
+Switchyard, SQL storage, and planner alignment remain roadmap work. GateMem, MUMBench, and CoMemBench have no reported BrainBob scores.
 
-Final P0 work: [verify the live app story](https://github.com/jerelvelarde/BrainBob/issues/1), [gate the experimental checker](https://github.com/jerelvelarde/BrainBob/issues/6), [reconcile the organizational pilot with the current build](https://github.com/jerelvelarde/BrainBob/issues/4), and [complete the public demo/video/submission package](https://github.com/jerelvelarde/BrainBob/issues/5). Report the accuracy gain alongside false-conflict risk; the working default checker remains available.
+## Team and evidence
 
-[Judging guide](judging/README.md) · [Evidence sheet](judging/evidence.md) · [Proof of work](judging/proof-of-work/index.html) · [Competition details](docs/competition-details.md)
+**Jerel Velarde:** app, interaction design, visualization, and independent evaluation presentation. **Bonan Kou:** agents, shared memory, maintenance/evaluation backend, and the smaller-checker experiment.
+
+| Document | Start here for |
+| --- | --- |
+| [Architecture](docs/architecture.md) | Implemented components and boundaries |
+| [Evaluation report](docs/evaluation-report.md) | All experiments, corrected scores, and limitations |
+| [Judging guide](judging/README.md) | Reviewer reading path |
+| [Evidence sheet](judging/evidence.md) | Recorded outcomes and remaining submission fields |
+| [Live-workspace verification](judging/live-workspace-20261017/README.md) | Real-provider development demo and access checks |
+| [Proof of work](judging/proof-of-work/index.html) | Commit-linked build milestones and screenshots |

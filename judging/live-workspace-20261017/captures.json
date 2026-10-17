@@ -1,0 +1,38 @@
+[
+  {
+    "file": "mobile-actions.png",
+    "captured_at": "2026-10-17T22:12:28.322Z",
+    "commit": "e77bb9a9792db4e3ad1aab9e13a2a7783e2170df",
+    "note": "Live backend, source import in progress; unrelated docs/demo work remains uncommitted."
+  },
+  {
+    "file": "live-draft.png",
+    "captured_at": "2026-10-17T22:16:03.161Z",
+    "commit": "489919bbbaa0e7b83d0b7844e368ac23747fa03a",
+    "note": "Actual Crusoe response to the suggested draft action, with current approved date and citations. All 29 sources imported."
+  },
+  {
+    "file": "live-correction.png",
+    "captured_at": "2026-10-17T22:16:34.766Z",
+    "commit": "489919bbbaa0e7b83d0b7844e368ac23747fa03a",
+    "note": "Inspector shows the real retired November 6 record, superseding November 13 record, and writer model."
+  },
+  {
+    "file": "live-retrace.png",
+    "captured_at": "2026-10-17T22:16:44.421Z",
+    "commit": "489919bbbaa0e7b83d0b7844e368ac23747fa03a",
+    "note": "Read-only retrace of persisted correction event #103, not a scripted rehearsal."
+  },
+  {
+    "file": "live-office.png",
+    "captured_at": "2026-10-17T22:16:53.227Z",
+    "commit": "489919bbbaa0e7b83d0b7844e368ac23747fa03a",
+    "note": "Three-desk live brain workspace after all 29 source conversations were ingested."
+  },
+  {
+    "file": "live-actions.png",
+    "captured_at": "2026-10-17T22:16:58.779Z",
+    "commit": "489919bbbaa0e7b83d0b7844e368ac23747fa03a",
+    "note": "Context-aware actions on the committed frontend; all 29 sources imported."
+  }
+]

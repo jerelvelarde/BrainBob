@@ -1,0 +1,173 @@
+{
+  "captured_at": "2026-10-17T22:15:31.585761+00:00",
+  "episode_count": 29,
+  "memory_count": 71,
+  "scope_count": 22,
+  "statuses": {
+    "trial": 69,
+    "retired": 1,
+    "tentative": 1
+  },
+  "writer_models": {
+    "nvidia/Nemotron-3.5-Lightning-30B-A3B": 37,
+    "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B": 34
+  },
+  "correction_records": [
+    {
+      "id": "m8",
+      "text": "Atlas pilot delivery date approved as November 6, 2026",
+      "author": "exec-01",
+      "origin": "ep-6cf39048",
+      "date": "2026-10-02",
+      "status": "retired",
+      "scope": "rusty-rod",
+      "reason": "superseded by m64",
+      "flagged": false,
+      "supersedes": null,
+      "owner": null,
+      "authority": "approved",
+      "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+      "conflicts_with": []
+    },
+    {
+      "id": "m63",
+      "text": "Iris Tan estimates the Atlas pilot may need until November 13, 2026 due to CSV timezone questions.",
+      "author": "eng-01",
+      "origin": "ep-a5338688",
+      "date": "2026-10-13",
+      "status": "tentative",
+      "scope": "rusty-rod/engineering",
+      "reason": "",
+      "flagged": false,
+      "supersedes": null,
+      "owner": null,
+      "authority": "tentative",
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+      "conflicts_with": [
+        "m8"
+      ]
+    },
+    {
+      "id": "m64",
+      "text": "Mara Ellis approved changing the Atlas pilot delivery date to November 13, 2026, replacing the prior November 6 commitment",
+      "author": "exec-01",
+      "origin": "ep-80c23d55",
+      "date": "2026-10-15",
+      "status": "trial",
+      "scope": "rusty-rod",
+      "reason": "",
+      "flagged": false,
+      "supersedes": "m8",
+      "owner": null,
+      "authority": "approved",
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+      "conflicts_with": []
+    }
+  ],
+  "correction_events": [
+    {
+      "type": "memory.added",
+      "ts": 1792274091.579063,
+      "seq": 9,
+      "memory": {
+        "id": "m8",
+        "text": "Atlas pilot delivery date approved as November 6, 2026",
+        "author": "exec-01",
+        "origin": "ep-6cf39048",
+        "date": "2026-10-02",
+        "status": "trial",
+        "scope": "rusty-rod",
+        "reason": "",
+        "flagged": false,
+        "supersedes": null,
+        "owner": null,
+        "authority": "approved",
+        "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+        "conflicts_with": []
+      },
+      "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B"
+    },
+    {
+      "type": "memory.added",
+      "ts": 1792275094.337348,
+      "seq": 94,
+      "memory": {
+        "id": "m63",
+        "text": "Iris Tan estimates the Atlas pilot may need until November 13, 2026 due to CSV timezone questions.",
+        "author": "eng-01",
+        "origin": "ep-a5338688",
+        "date": "2026-10-13",
+        "status": "tentative",
+        "scope": "rusty-rod/engineering",
+        "reason": "",
+        "flagged": false,
+        "supersedes": null,
+        "owner": null,
+        "authority": "tentative",
+        "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+        "conflicts_with": [
+          "m8"
+        ]
+      },
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
+    },
+    {
+      "type": "memory.added",
+      "ts": 1792275160.852625,
+      "seq": 103,
+      "memory": {
+        "id": "m64",
+        "text": "Mara Ellis approved changing the Atlas pilot delivery date to November 13, 2026, replacing the prior November 6 commitment",
+        "author": "exec-01",
+        "origin": "ep-80c23d55",
+        "date": "2026-10-15",
+        "status": "trial",
+        "scope": "rusty-rod",
+        "reason": "",
+        "flagged": false,
+        "supersedes": "m8",
+        "owner": null,
+        "authority": "approved",
+        "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+        "conflicts_with": []
+      },
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
+    },
+    {
+      "type": "memory.retired",
+      "ts": 1792275160.853893,
+      "seq": 104,
+      "memory_id": "m8",
+      "reason": "superseded by m64",
+      "task_ids": [],
+      "author": "exec-01",
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "type": "memory.corrected",
+      "ts": 1792275160.854069,
+      "seq": 105,
+      "memory_id": "m8",
+      "new_id": "m64",
+      "author": "exec-01",
+      "model": "openai/gpt-oss-120b"
+    }
+  ],
+  "suggested_action_answer": {
+    "type": "answer.produced",
+    "ts": 1792275285.274391,
+    "seq": 121,
+    "task_id": "t-7c09ada5",
+    "answer": "Hi Elena,\n\nThe current approved delivery commitment for the Atlas pilot is November 13, 2026. The next step is to bring the tested CSV import and pilot acceptance checklist to our upcoming checkpoint. One useful question: Are there any specific exception-tagging scenarios you\u2019d like us to prioritize during testing?",
+    "cited_ids": [
+      "m64",
+      "m1",
+      "m70",
+      "m10",
+      "m30",
+      "m3"
+    ],
+    "viewer": "sales-01"
+  },
+  "note": "One observed synthetic development run, not an accuracy benchmark or held-out evaluation."
+}
