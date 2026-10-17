@@ -121,7 +121,7 @@ function MemberWorkspace({ desk, active, sessions, openRequest, onReaderChange, 
   const scene = active ? <BrainScene playing={playing} speed={1} reducedMotion={reducedMotion} cue={cue ? { ...cue, destination: deskDestinations[desk.id] } : undefined} seek={seek} onProgress={onProgress} reader={reader}
     sessions={sessions} memories={visibleMemories} selectedScope={cue?.scope ?? cabinetTier ?? "all"} selectedMemory={selected ?? ""}
     flaggedScopes={[...new Set(visibleMemories.filter((m) => m.flagged).flatMap((m) => { const scope = sceneScope(m.scope); return scope ? [scope] : []; }))]}
-    onSelect={() => {}} onScope={openCabinet} onWorker={setNotice} onReady={onReady} /> : null;
+    onSelect={() => {}} onScope={openCabinet} onWorker={() => { if (panel === "chat") setChatInspection("session"); else inspect(); }} onReady={onReady} /> : null;
 
   return <main className="app-shell desk-workspace" hidden={!active} data-dramatic={cinematicsAt(cue?.action, progress).darkness > .5 ? cue?.action : undefined}>
     {active && panel !== "chat" ? <section className="scene-view" aria-label="Brain visualization">{scene}</section> : null}

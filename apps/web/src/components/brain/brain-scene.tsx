@@ -6,7 +6,7 @@ import { OrbitControls, RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
 import { Label } from "./scene-label";
 import { EventStage } from "./event-stage";
-import { cinematicsAt, cueForSession, scopeCharacters, workerHomes, type SceneCue, type SceneCinematics } from "@/lib/scene-animation";
+import { cinematicsAt, cueForSession, scopeCharacters, type SceneCue, type SceneCinematics } from "@/lib/scene-animation";
 import { clientOrganization, defaultReader, drawersForTier } from "@/lib/sample-company";
 import { SessionWorker, type DeskSession } from "./session-worker";
 import { BrainBob } from "./brain-bob";
@@ -231,7 +231,12 @@ export default function BrainScene(props: SceneProps) {
         {session ? <SessionWorker session={session} animate={props.playing && !props.reducedMotion} /> : null}
       </group>;
     })}
-    {cue ? <EventStage key={cue.id} cue={cue} playing={props.playing} speed={props.speed} reducedMotion={props.reducedMotion} seek={props.seek} onProgress={props.onProgress} cinematics={cinematics} /> : [0, 1, 4].map((index) => <group key={index} position={[workerHomes[index][0], .05, workerHomes[index][1]]} rotation={[0, .55, 0]}><BrainBob walking={false} inspector={index === 4} phase={index} /></group>)}
+    {cue ? <EventStage key={cue.id} cue={cue} playing={props.playing} speed={props.speed} reducedMotion={props.reducedMotion} seek={props.seek} onProgress={props.onProgress} cinematics={cinematics} /> : <group position={[-5.4, 0, 2.5]} rotation={[0, .55, 0]} onClick={(event) => { event.stopPropagation(); props.onWorker("Memory Bob looks after your session file."); }}>
+      <Box position={[0, .55, 0]} size={[.75, .12, .65]} color="#a17d56" />
+      {[-.25, .25].flatMap((x) => [-.2, .2].map((z) => <Box key={`${x}-${z}`} position={[x, .26, z]} size={[.07, .5, .07]} color="#765c42" />))}
+      <group position={[0, .45, 0]}><BrainBob walking={false} /></group>
+      <Label text="MEMORY BOB" position={[0, 2.25, 0]} width={1.8} onClick={() => props.onWorker("Memory Bob looks after your session file.")} />
+    </group>}
     <CameraRig onReady={props.onReady} cinematics={cinematics} />
   </Canvas></SceneBoundary>;
 }

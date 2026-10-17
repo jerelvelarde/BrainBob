@@ -284,6 +284,7 @@ function ScopeSpotlight({ cue, clock }: { cue: SceneCue; clock: Clock }) {
 
 export function EventStage({ cue, playing, reducedMotion, speed, seek, onProgress, cinematics }: StageProps) {
   const duration = cue.seconds ?? sceneClips[cue.action].seconds;
+  const operator = cue.action === "evaluated" ? 4 : cue.action === "retrieved" || cue.action === "answered" ? 1 : 0;
   const clock = useRef({ time: 0, progress: 0 });
   const lastReported = useRef(-1);
   useEffect(() => {
@@ -302,7 +303,7 @@ export function EventStage({ cue, playing, reducedMotion, speed, seek, onProgres
   }, -2);
   return <group>
     <ScopeSpotlight cue={cue} clock={clock} />
-    {Array.from({ length: 6 }, (_, index) => <Performer key={index} index={index} cue={cue} clock={clock} />)}
+    <Performer index={operator} cue={cue} clock={clock} />
     <TransferPaper cue={cue} clock={clock} />
     {cue.action === "evaluated" ? <><EvaluatorEntrance cue={cue} clock={clock} /><AuditRecords cue={cue} clock={clock} /></> : null}
     {cue.action === "forgotten" ? <OfficeChaos clock={clock} /> : null}
