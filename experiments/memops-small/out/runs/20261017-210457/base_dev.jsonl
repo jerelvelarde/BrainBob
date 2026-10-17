@@ -1,0 +1,12 @@
+{"id": "dev-001", "input_sha256": "30aa4c3bdc9325fecf4569287ad4fcc7f5ac159ca8465bc2f9c876c0e2235a56", "response": "{\n  \"verdict\": \"same\"\n}", "latency_ms": 308.09}
+{"id": "dev-002", "input_sha256": "f23172a7bb3bc0cd210ecea2566c3db47d42dd9faa1e364580ba84d17abca08f", "response": "{\n  \"verdict\": \"unrelated\"\n}", "latency_ms": 337.72}
+{"id": "dev-003", "input_sha256": "ea7f1468ef3c13d0398ed4164767fb720ecf4d6dcb64e5c5ff2bc07a1359016d", "response": "{\n  \"verdict\": \"same\"\n}", "latency_ms": 307.42}
+{"id": "dev-004", "input_sha256": "fe4dbc36a9614444089d3a66950ac4d73a93c2f4044c7316ec1011c9f71b2ebb", "response": "{\n  \"verdict\": \"same\"\n}", "latency_ms": 308.03}
+{"id": "dev-005", "input_sha256": "4e1cb5cee844a209e5b297559d09c9726bba4491d95949d519a58b036c0a7c67", "response": "{\n  \"verdict\": \"unrelated\"\n}", "latency_ms": 339.44}
+{"id": "dev-006", "input_sha256": "382b9c8274981cb5c19de0654528163c9a0ece2988adb1096adbd4543cc552f6", "response": "{\n  \"verdict\": \"same\"\n}", "latency_ms": 309.18}
+{"id": "dev-007", "input_sha256": "1d3cb5cdea645f42383b6c707d8c370619ddb08a79823caeb668068aa784077a", "response": "{\n  \"verdict\": \"same\"\n}", "latency_ms": 334.73}
+{"id": "dev-008", "input_sha256": "37bdc748fb90fcfdb84c0e384c8668d4db6b07e018c7a83c132e6c6a647b22f4", "response": "{\n  \"verdict\": \"same\"\n}", "latency_ms": 307.89}
+{"id": "dev-009", "input_sha256": "b44cdaae46620bd03ffe614cd19a797d63146e8e7680db095e331c50803b7db3", "response": "{\n  \"verdict\": \"unrelated\"\n}", "latency_ms": 333.95}
+{"id": "dev-010", "input_sha256": "2b31e202a43d2a9f9b8845a1658c6292c11efe9839225184afcd74db54f836ce", "response": "{\n  \"verdict\": \"same\"\n}", "latency_ms": 307.31}
+{"id": "dev-011", "input_sha256": "9b1e0708eabc86aae232ad8365989df6031da461c258f280495624d3f5bf3d34", "response": "{\n  \"verdict\": \"same\"\n}", "latency_ms": 309.05}
+{"id": "dev-012", "input_sha256": "7cc71b2773d171a0558e6d21ff2e7e8123e4883319c4be09907d0eb559378aa3", "response": "{\n  \"verdict\": \"same\"\n}", "latency_ms": 309.93}
