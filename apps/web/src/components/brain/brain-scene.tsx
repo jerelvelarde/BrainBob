@@ -150,23 +150,38 @@ function Walker({ index, playing, speed, reducedMotion, event, onClick }: {
   index: number; playing: boolean; speed: number; reducedMotion: boolean; event?: MemoryEvent; onClick: () => void;
 }) {
   const group = useRef<THREE.Group>(null);
-  const time = useRef(index * 3.2);
+  const travel = useRef(index * 1.8);
+  const oriented = useRef(false);
   const route = routes[index];
+  const lengths = useMemo(() => route.map((start, i) => {
+    const end = route[(i + 1) % route.length];
+    return Math.hypot(end[0] - start[0], end[1] - start[1]);
+  }), [route]);
+  const total = lengths.reduce((sum, length) => sum + length, 0);
   useFrame((_, delta) => {
     if (!group.current) return;
-    if (playing && !reducedMotion) time.current += Math.min(delta, .05) * speed * .45;
-    const at = time.current % route.length;
-    const segment = Math.floor(at);
+    if (playing && !reducedMotion) travel.current += Math.min(delta, .05) * speed * .85;
+    let along = travel.current % total;
+    let segment = 0;
+    while (segment < lengths.length - 1 && along >= lengths[segment]) {
+      along -= lengths[segment]; segment++;
+    }
     const start = route[segment];
     const end = route[(segment + 1) % route.length];
-    const progress = at - segment;
+    const progress = along / lengths[segment];
     group.current.position.set(THREE.MathUtils.lerp(start[0], end[0], progress), .05, THREE.MathUtils.lerp(start[1], end[1], progress));
     const angle = Math.atan2(end[0] - start[0], end[1] - start[1]);
-    group.current.rotation.y = THREE.MathUtils.damp(group.current.rotation.y, angle, 9, Math.min(delta, .05));
+    const turn = Math.atan2(Math.sin(angle - group.current.rotation.y), Math.cos(angle - group.current.rotation.y));
+    if (!oriented.current) {
+      group.current.rotation.y = angle;
+      oriented.current = true;
+    } else if (playing && !reducedMotion) {
+      group.current.rotation.y = THREE.MathUtils.damp(group.current.rotation.y, group.current.rotation.y + turn, 9, Math.min(delta, .05));
+    }
   });
   const active = event && ((["Inspector BrainBob", "Inspector Bob"].includes(event.actor) && index === 4) || (["Curator BrainBob", "Curator Bob"].includes(event.actor) && index === 0) || (["Runner BrainBob", "Runner Bob"].includes(event.actor) && index === 1));
   return <group ref={group} position={[route[0][0], .05, route[0][1]]} onClick={(e) => { e.stopPropagation(); onClick(); }}>
-    <BrainBob walking={playing && !reducedMotion} carrying={index === 0 || index === 1} inspector={index === 4} phase={index} />
+    <BrainBob walking={playing && !reducedMotion} carrying={index === 0 || index === 1} inspector={index === 4} phase={index} distance={travel} />
     {active ? <Label position={[0, 1.85, 0]} width={1.35} text={event.action === "evaluated" ? "Checks out!" : event.action === "updated" ? "New info!" : event.action === "forgotten" ? "Let it go." : "On it!"} /> : null}
   </group>;
 }

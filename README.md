@@ -2,13 +2,13 @@
 
 A shared memory layer that agents read before work and maintain afterward, with memory evaluation and a 3D brain office for inspecting and retracing changes.
 
-Meet the **BrainBobs**: our SpongeBob-inspired memory crew, with round yellow bodies, expressive eyes, lavender overalls, and memory badges.
+Meet the **BrainBobs**: our SpongeBob-inspired memory crew, with bright yellow rounded rectangular bodies, simple graphic faces, wide violet pants, and memory badges.
 
 **Shared Brain** is our primary problem: every agent should read the team's project memory before working and update it afterward. BrainBob aims to keep that knowledge current, lean, and conflict-free. Self-improvement comes from better memory.
 
 The current build is an interactive frontend preview. The 3D room fills the screen, with floating **Chat** and **Memories** panels and a compact demo/retrace dock. Warm sand, cream, and yellow keep the room and characters at the center.
 
-![BrainBob's 3D workspace with a floating memory inspector](docs/assets/brainbob-preview.png)
+![BrainBob's 3D workspace with rounded rectangular BrainBobs](docs/assets/brainbob-preview.jpg)
 
 ## What Works Today
 
@@ -33,6 +33,8 @@ pnpm dev
 ```
 
 Open [the local preview](http://127.0.0.1:3000). No API key is needed for the scripted scene.
+
+The [character study](http://127.0.0.1:3000/character-study) compares circular, rounded rectangular, and gently slanted bodies with a movement preview. The room currently uses the rounded rectangle. See the [design research and animation plan](docs/character-design.md) for the reasoning and future actions.
 
 - Drag the room to orbit; scroll or use the zoom controls to inspect the crew.
 - The 3D room fills the workspace. Open **Chat** or **Memories** as floating panels; close either to return to the room.
@@ -81,7 +83,7 @@ Our goal is a coordinated team that shares context, organizes memories, and cont
 
 ![A team of SpongeBobs working at desks inside a brain with organized filing cabinets](docs/assets/brain-memory-team.png)
 
-BrainBobs are inspired by SpongeBob and the brain-office scenes above. Our characters have round yellow bodies and expressive eyes, with lavender overalls, memory badges, and rosy cheeks and tiny smiles. The supplied images are inspiration references, not screenshots of BrainBob.
+BrainBobs are inspired by SpongeBob and the brain-office scenes above. Our characters have bright yellow rounded rectangular bodies, graphic eyes and smiles, wide violet pants, memory badges, and rosy cheeks. The supplied images are inspiration references, not screenshots of BrainBob.
 
 ## Planned: Planning and Human Alignment
 
@@ -145,8 +147,8 @@ The initial proposal samples **10 of the latest 50 eligible conversations** afte
 The scene uses **Three.js**, rendered through **React Three Fiber** in a **Next.js / React** app. **Drei** provides orbit controls, rounded geometry, and billboard labels.
 
 - **Isometric view:** An orthographic camera with a responsive fit, orbit, zoom, and reset.
-- **Procedural characters:** BrainBobs are assembled from 3D meshes in code, with articulated arms and legs, soft rounded bodies, lavender overalls, and memory badges.
-- **Animation:** React Three Fiber's frame loop moves workers along waypoint routes and animates their limbs. Pause and reduced-motion preferences are respected.
+- **Procedural characters:** BrainBobs have rounded rectangular bodies, a replaceable face texture, independently moving arms and feet, wide violet pants, and named hand attachment points for props.
+- **Animation:** React Three Fiber's frame loop moves workers along waypoint routes. Steps follow distance traveled, turns take the shortest direction, and blinks are brief. Pause and reduced-motion preferences are respected.
 - **Current event feedback:** Scripted memory events change cabinet indicators and worker callouts. Walking routes are ambient animation; they do not represent completed backend tasks.
 - **Inspection:** Click a cabinet to open a floating memory inspector. Evidence and history stay available while the room remains visible.
 - **Retracing:** The timeline reconstructs recorded memory state; it does not rewind the characters' physical positions or rerun inference.
@@ -161,9 +163,12 @@ The planned live integration will connect committed memory operations to these v
 | Memory creation | A worker writes a record and files it in the appropriate cabinet. |
 | Memory retrieval | A worker finds a record and delivers it to the agent doing the task. |
 | Memory update | A worker replaces an outdated record with a corrected version. |
-| Memory forgetting | A worker removes a retired record from the active cabinet. |
+| Memory forgetting | A worker removes a retired record and burns its paper representation in a small disposal tray; the archived revision remains retraceable. |
 | Memory evaluation | An inspector checks records against sampled conversation evidence. |
 | Contradiction detected | A confused worker flags conflicting records for resolution. |
+| Teaching and learning | One worker points to a shared record while another listens, takes notes, and acknowledges it. |
+
+Writing, filing, burning paper, teaching, and emotional expressions beyond blinking are planned task animations. Hand attachment points and separate body parts are in place; the current crew still follows ambient walking routes.
 
 The target demonstration is a working shared-memory system with measured evaluation results, made inspectable through the brain animation.
 

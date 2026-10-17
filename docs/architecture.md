@@ -417,7 +417,7 @@ For the small demo corpus, replay from an initial snapshot is sufficient; period
 
 ## 3D Brain Office
 
-Use an isometric room with a curved pink brain interior, desks, filing cabinets, paper records, and yellow BrainBob workers inspired by SpongeBob, built from reusable geometry with soft rounded bodies, lavender overalls, and memory badges. Start with procedural meshes so the first animation does not depend on rigging or external model downloads.
+Use an isometric room with a curved pink brain interior, desks, filing cabinets, paper records, and bright yellow BrainBob workers inspired by SpongeBob. The current procedural characters have rounded rectangular bodies, simple graphic faces, wide violet pants, and memory badges. Keep face textures, arm pivots, feet, and hand attachment points independent so later actions can reuse the same character. See [character research and action design](character-design.md).
 
 React Three Fiber provides a React renderer for Three.js, and its frame loop supports procedural animation. Use the compatible stable renderer path selected during installation. [React Three Fiber introduction](https://r3f.docs.pmnd.rs/getting-started/introduction), [animation guide](https://r3f.docs.pmnd.rs/tutorials/basic-animations)
 
@@ -442,13 +442,15 @@ React Three Fiber provides a React renderer for Three.js, and its frame loop sup
 | `memory.retrieved` | A worker delivers a highlighted record to the task desk. |
 | `memory.created` | The curator files a new paper record. |
 | `memory.updated` | The old record is marked superseded and a new revision is filed. |
-| `memory.forgotten` | The record moves to a labeled archive box. |
+| `memory.forgotten` | After archival commits, a worker burns the paper representation in a small disposal tray; the archived revision remains inspectable. |
 | `memory.quarantined` | The record moves to a disputed-record tray. |
 | `evaluation.sampled` | Selected conversation folders move to the audit desk. |
 | `evaluation.verdict` | The inspector stamps supported, contradicted, or unresolved. |
 | `operation.failed` | The worker shows an error marker; no successful filing animation occurs. |
 
 Resolve worker and cabinet positions deterministically from stable IDs. Animate from an application playback clock, event sequence, and selected speed, so seeking produces consistent poses. Avoid timers that mutate domain state.
+
+The next animation layer should separate locomotion, task poses, facial expression, and held objects. Writing needs a desk target and pen attachment; filing needs a cabinet slot target; teaching and learning need paired actors and a shared document. An action owns the relevant arm while holding or manipulating a prop, overriding its ambient walk swing. Expressions communicate observable task state: attentive while learning, focused while writing, pleased after a successful commit, puzzled by conflicting evidence. A successful-looking animation must follow the corresponding recorded result. The current preview implements walking, blinking, and carried paper only; these task actions remain planned.
 
 Use a bounded animation queue for live bursts; speed up or group cosmetic motions while retaining every event in history. Provide pause, step backward/forward, 0.5×/1×/2× speed, a scrubber, and a clear LIVE or REPLAY label. Respect reduced motion and retain a readable 2D history view when WebGL is unavailable.
 
