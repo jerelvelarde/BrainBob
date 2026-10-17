@@ -149,7 +149,7 @@ function AuditRecords({ cue, clock }: { cue: SceneCue; clock: Clock }) {
   const checking = cue.evaluation?.phase === "check";
   const count = cue.records ? Math.min(cue.records.length, 6) : 6;
   const verdict = cue.evaluation?.verdict;
-  const label = verdict === "helpful" ? "HELPFUL" : verdict === "harmful" ? "HARMFUL" : verdict === "unchanged" ? "NO FLIP" : verdict === "unconfirmed" ? "CONFIRM FAILED · KEPT" : "CHECKS CITED MEMORIES";
+  const label = cue.evaluationLabel ?? (verdict === "helpful" ? "HELPFUL" : verdict === "harmful" ? "HARMFUL" : verdict === "unchanged" ? "NO FLIP" : verdict === "unconfirmed" ? "CONFIRM FAILED · KEPT" : "CHECKS CITED MEMORIES");
   useFrame(() => {
     const p = clock.current.progress;
     sheets.current.forEach((sheet, i) => {

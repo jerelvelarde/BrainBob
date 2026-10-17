@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { backendEventSchema, backendMemorySchema, canRead, readers, type StoredEvent } from "./brain-api";
+import { backendEventSchema, backendMemorySchema, canRead, type StoredEvent } from "./brain-api";
 import { acceptBackendEvent, cuesForEvent, emptyBackendState, eventDescription, memoriesAt } from "./backend-state";
 import { performanceForCue } from "./scene-animation";
+import { defaultReader, organizationScope } from "./sample-company";
+const readers = [{ path: organizationScope }, { path: `${organizationScope}/sales` }, { path: defaultReader }];
 
-const memory = (id: string, scope: string = readers[1].path, supersedes: string | null = null) => backendMemorySchema.parse({ id, text: `${id} claim`, author: "John", origin: "ep-1", date: "2026-10-17", status: "trial", scope, supersedes });
+const memory = (id: string, scope: string = readers[1].path, supersedes: string | null = null) => backendMemorySchema.parse({ id, text: `${id} claim`, author: "sales-01", origin: "ep-1", date: "2026-10-17", status: "trial", scope, supersedes });
 const wire = (seq: number, type: string, data: object = {}) => backendEventSchema.parse({ seq, ts: 1, type, ...data });
 
 describe("backend event projection", () => {
@@ -18,17 +20,17 @@ describe("backend event projection", () => {
     state = accepted.state;
     expect(acceptBackendEvent(state, added)).toEqual({ state, animate: false });
     state = { ...state, replaying: true };
-    accepted = acceptBackendEvent(state, wire(3, "memory.locked", { memory_id: "m1", owner: "Mr. Krabs" }));
+    accepted = acceptBackendEvent(state, wire(3, "memory.locked", { memory_id: "m1", owner: "exec-01" }));
     expect(accepted.animate).toBe(false);
     state = acceptBackendEvent(accepted.state, wire(3, "replay.done")).state;
-    expect(state.seq).toBe(3); expect(state.memories.m1.owner).toBe("Mr. Krabs");
+    expect(state.seq).toBe(3); expect(state.memories.m1.owner).toBe("exec-01");
     expect(() => acceptBackendEvent(state, wire(0, "replay.done"))).toThrow("history was reset");
   });
 
   it("uses ancestor segments, not string prefixes, for reader visibility", () => {
     expect(readers.map((scope) => canRead(scope.path, readers[2].path))).toEqual([true, true, true]);
     expect(readers.map((scope) => canRead(scope.path, readers[1].path))).toEqual([true, true, false]);
-    expect(canRead("krusty-krab/sales", "krusty-krab/salesforce/john")).toBe(false);
+    expect(canRead("rusty-rod/sales", "rusty-rod/salesforce/john")).toBe(false);
     expect(canRead("team", readers[2].path)).toBe(false);
     expect(canRead("", readers[2].path)).toBe(false);
   });
@@ -44,10 +46,10 @@ describe("backend event projection", () => {
 
   it("flags locked records without retiring them and clears the flag on owner resolution", () => {
     let state = emptyBackendState();
-    for (const event of [wire(1, "memory.added", { memory: memory("m1") }), wire(2, "memory.locked", { memory_id: "m1", owner: "Mr. Krabs" }), wire(3, "memory.flagged", { memory_id: "m1", reason: "harmful" })]) state = acceptBackendEvent(state, event).state;
-    expect(state.memories.m1).toMatchObject({ status: "locked", flagged: true, owner: "Mr. Krabs" });
+    for (const event of [wire(1, "memory.added", { memory: memory("m1") }), wire(2, "memory.locked", { memory_id: "m1", owner: "exec-01" }), wire(3, "memory.flagged", { memory_id: "m1", reason: "harmful" })]) state = acceptBackendEvent(state, event).state;
+    expect(state.memories.m1).toMatchObject({ status: "locked", flagged: true, owner: "exec-01" });
     expect(cuesForEvent(state.events[2], state, readers[2].path)[0].action).toBe("flagged");
-    state = acceptBackendEvent(state, wire(4, "memory.resolved", { memory_id: "m1", owner: "Mr. Krabs", action: "keep", new_id: null })).state;
+    state = acceptBackendEvent(state, wire(4, "memory.resolved", { memory_id: "m1", owner: "exec-01", action: "keep", new_id: null })).state;
     expect(state.memories.m1).toMatchObject({ status: "locked", flagged: false });
   });
 

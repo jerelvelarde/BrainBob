@@ -1,20 +1,13 @@
 import { z } from "zod";
+import { canReadScope, companyScope, demoScopes } from "./sample-company";
 
 export const BACKEND_URL = (process.env.NEXT_PUBLIC_BRAINBOB_API_URL ?? "http://127.0.0.1:3001").replace(/\/$/, "");
-export const readers = [
-  { path: "krusty-krab", label: "Krusty Krab", scope: "organization" },
-  { path: "krusty-krab/sales", label: "Sales Team", scope: "team" },
-  { path: "krusty-krab/sales/john", label: "John", scope: "individual" },
-] as const;
-
-export function canRead(scope: string, reader: string) {
-  const parent = scope.split("/").filter(Boolean), child = reader.split("/").filter(Boolean);
-  return parent.length > 0 && parent.length <= child.length && parent.every((part, i) => part === child[i]);
-}
+export const readers = demoScopes;
+export const canRead = canReadScope;
 export function sceneScope(path: string) {
-  return readers.find((r) => r.path === path)?.scope;
+  return companyScope(path)?.scope;
 }
-export function scopeLabel(path: string) { return readers.find((r) => r.path === path)?.label ?? path; }
+export function scopeLabel(path: string) { return companyScope(path)?.label ?? path; }
 
 export const backendMemorySchema = z.object({
   id: z.string(), text: z.string(), author: z.string(), origin: z.string(), date: z.string(),

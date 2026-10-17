@@ -3,7 +3,9 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Clapperboard, FolderClosed, History, Maximize2, MessageCircle, Pause, Play, SkipForward, X, ZoomIn, ZoomOut } from "lucide-react";
-import { canRead, readers, sceneScope, scopeLabel, type BackendAnswer, type StoredEvent } from "@/lib/brain-api";
+import { canRead, sceneScope, scopeLabel, type BackendAnswer, type StoredEvent } from "@/lib/brain-api";
+import { cabinetLabels, defaultReader } from "@/lib/sample-company";
+import { MemberSelect } from "./member-select";
 import { cuesForEvent, eventDescription, eventMemoryIds, memoriesAt, type BackendState } from "@/lib/backend-state";
 import { cinematicsAt, type SceneCue } from "@/lib/scene-animation";
 import { useBrainBackend } from "@/lib/use-brain-backend";
@@ -14,7 +16,7 @@ const BrainScene = dynamic(() => import("./brain/brain-scene"), { ssr: false });
 const SceneChat = dynamic(() => import("./scene-chat"), { ssr: false, loading: () => <p className="chat-loading">Opening chat…</p> });
 
 export function LiveBrainWorkspace() {
-  const [reader, setReader] = useState<string>(readers[2].path);
+  const [reader, setReader] = useState<string>(defaultReader);
   const readerRef = useRef(reader);
   const [panel, setPanel] = useState<"chat" | "memory" | null>(null);
   const [chatLoaded, setChatLoaded] = useState(false);
@@ -68,26 +70,26 @@ export function LiveBrainWorkspace() {
   const shownEvent = cursor === null ? undefined : backend.state.events.find((e) => e.seq === cursor);
 
   return <main className="app-shell" data-dramatic={cinematicsAt(cue?.action, progress).darkness > .5 ? cue?.action : undefined}>
-    <section className="scene-view" aria-label="Brain visualization"><BrainScene playing={playing} speed={1} reducedMotion={reducedMotion} cue={cue} seek={seek} onProgress={onProgress}
+    <section className="scene-view" aria-label="Brain visualization"><BrainScene playing={playing} speed={1} reducedMotion={reducedMotion} cue={cue} seek={seek} onProgress={onProgress} cabinetLabels={cabinetLabels(reader)}
       selectedScope={cue?.scope ?? "all"} selectedMemory={selected ?? ""} flaggedScopes={[...new Set(visibleMemories.filter((m) => m.flagged).flatMap((m) => { const scope = sceneScope(m.scope); return scope ? [scope] : []; }))]} onSelect={() => {}} onScope={(scope) => inspect(visibleMemories.find((m) => sceneScope(m.scope) === scope && m.flagged)?.id ?? visibleMemories.find((m) => sceneScope(m.scope) === scope && m.status !== "retired")?.id)}
       onWorker={setNotice} onReady={onReady} /></section>
     <header className="floating-header"><a className="brand" href="/" aria-label="BrainBob home"><span className="bob-mark" aria-hidden="true"><i /><i /><b /><em /></span><span>BrainBob</span></a>
       <span className={`connection-state ${backend.connection}`} role="status">{backend.connection === "live" ? "Connected" : backend.connection === "syncing" ? "Loading history…" : backend.connection === "offline" ? "Backend offline" : "Connecting…"}</span>
     </header>
-    <div className="panel-launchers"><a className="rehearsal-link" href="/rehearsal" aria-label="Open animation rehearsals"><Clapperboard size={18} /><span>Rehearse</span></a>
+    <div className="panel-launchers"><a className="rehearsal-link" href="/demo" aria-label="Open Rusty Rod correctness demo"><Clapperboard size={18} /><span>Demo</span></a>
       <button ref={chatButton} aria-label="Chat" aria-expanded={panel === "chat"} className={panel === "chat" ? "selected" : ""} onClick={() => { if (panel === "chat") closePanel(); else { setPanel("chat"); setChatLoaded(true); } }}><MessageCircle size={18} /><span>Chat</span></button>
       <button ref={memoryButton} aria-label="Memories" aria-expanded={panel === "memory"} className={panel === "memory" ? "selected" : ""} onClick={() => panel === "memory" ? closePanel() : inspect()}><FolderClosed size={18} /><span>Memories</span></button>
     </div>
-    <label className="reader-control">Reader<select aria-label="Memory reader" value={reader} onChange={(e) => changeReader(e.target.value)}>{readers.map((r) => <option key={r.path} value={r.path}>{r.label}</option>)}</select></label>
+    <MemberSelect value={reader} onChange={changeReader} />
     <section className="floating-panel chat-panel live-chat-panel" aria-label="Crew chat" hidden={panel !== "chat"} onKeyDown={(e) => { if (e.key === "Escape") closePanel(); }}>
       <div className="panel-heading"><div><MessageCircle size={18} /><h2>The crew · {scopeLabel(reader)}</h2></div><button ref={chatClose} className="icon-button" aria-label="Close crew chat" onClick={closePanel}><X size={18} /></button></div>
       {chatLoaded ? <SceneChat key={reader} reader={reader} readOnly={cursor !== null} memories={backend.state.memories} onAnswer={onAnswer} onInspect={inspect} /> : null}
     </section>
-    {panel === "memory" ? <LiveMemoryPanel memories={visibleMemories} selected={selected} events={backend.state.events.filter((e) => cursor === null || e.seq <= cursor)} readOnly={cursor !== null} citedIds={citations} onSelect={setSelected} onClose={closePanel} onRetrace={retrace} /> : null}
+    {panel === "memory" ? <LiveMemoryPanel key={reader} actor={scopeLabel(reader)} memories={visibleMemories} selected={selected} events={backend.state.events.filter((e) => cursor === null || e.seq <= cursor)} readOnly={cursor !== null} citedIds={citations} onSelect={setSelected} onClose={closePanel} onRetrace={retrace} /> : null}
     <div className="camera-controls"><button className="icon-button" aria-label="Zoom in" onClick={() => camera.current?.zoom(1.15)}><ZoomIn size={18} /></button><button className="icon-button" aria-label="Zoom out" onClick={() => camera.current?.zoom(1 / 1.15)}><ZoomOut size={18} /></button><button className="icon-button" aria-label="Reset isometric camera" onClick={() => camera.current?.reset()}><Maximize2 size={18} /></button></div>
     <div className="bottom-controls">
       {backend.error ? <p className="scene-notice" role="alert">{backend.error}</p> : null}
-      {cue ? <div className="clip-caption" role="status"><span>{cursor !== null ? "RECORDED EVENT" : "BACKEND EVENT"} · {scopeLabel(readers.find((r) => r.scope === cue.scope)?.path ?? reader)}</span><strong>{cue.title}</strong>{queue.length > 1 && cursor === null ? <small>{queue.length - 1} scenes queued</small> : null}</div> : notice ? <div className="scene-notice" role="status">{notice}</div> : null}
+      {cue ? <div className="clip-caption" role="status"><span>{cursor !== null ? "RECORDED EVENT" : "BACKEND EVENT"} · {cabinetLabels(reader)[cue.scope]}</span><strong>{cue.title}</strong>{queue.length > 1 && cursor === null ? <small>{queue.length - 1} scenes queued</small> : null}{cue.evaluation ? <small>Usefulness check · not a factual correctness verdict</small> : null}</div> : notice ? <div className="scene-notice" role="status">{notice}</div> : null}
       {timelineOpen ? <div className="timeline-panel"><div className="timeline-top"><span>{cursor === null ? "Event history" : `Retracing #${cursor}`}</span><button className="live-button" onClick={live}>Return to live</button></div>
         <select className="event-select" aria-label="Recorded event" value={cursor ?? ""} onChange={(e) => { if (e.target.value) retrace(Number(e.target.value)); }}><option value="">Choose a recorded event</option>{visibleEvents.map((e) => <option value={e.seq} key={e.seq}>#{e.seq} · {eventDescription(e)}</option>)}</select>
         {shownEvent ? <small>{new Date(shownEvent.ts * 1000).toLocaleString()}</small> : null}

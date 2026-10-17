@@ -6,8 +6,8 @@ describe("memory scene projection", () => {
     const seed = initialTrace();
     const update = makeEvent("updated", seed);
     const events = [...seed, update];
-    expect(projectMemories(events).find((m) => m.id === "launch")?.content).toContain("25");
-    expect(projectMemories(events, 3).find((m) => m.id === "launch")?.content).toContain("24");
+    expect(projectMemories(events).find((m) => m.id === "launch")?.content).toContain("November 13");
+    expect(projectMemories(events, 3).find((m) => m.id === "launch")?.content).toContain("November 6");
     expect(seed).toEqual(initialTrace());
   });
 
@@ -16,7 +16,7 @@ describe("memory scene projection", () => {
     const events = [...seed, makeEvent("forgotten", seed, "coffee")];
     const memory = projectMemories(events).find((m) => m.id === "coffee");
     expect(memory?.status).toBe("forgotten");
-    expect(memory?.evidence).toContain("Black coffee");
+    expect(memory?.evidence).toContain("three-sentence");
     expect(() => makeEvent("retrieved", events, "coffee")).toThrow("active memory");
     expect(projectMemories(events, 3).find((m) => m.id === "coffee")?.status).toBe("active");
   });

@@ -5,7 +5,7 @@ import { CopilotChat, CopilotKitProvider } from "@copilotkit/react-core/v2";
 import { BackendChatAgent, type ChatContext, type ChatMode } from "@/lib/backend-chat-agent";
 import { scopeLabel, type BackendAnswer, type BackendMemory } from "@/lib/brain-api";
 
-const modes = { ask: "Ask", remember: "Remember", feedback: "Check", review: "Review" };
+const modes = { ask: "Ask", remember: "Remember", feedback: "Usefulness", review: "Review" };
 const placeholders = { ask: "Ask the shared brain…", remember: "Paste a conversation to remember…", feedback: "Give the correct answer to your last question…", review: "Send ‘review’ to assess accumulated evidence…" };
 const HiddenControl = () => null;
 
@@ -24,7 +24,7 @@ export default function SceneChat({ reader, readOnly, memories, onAnswer, onInsp
   const [agents] = useState(() => ({ brainbob: agent }));
   return <>
     <div className="chat-modes" aria-label="Chat operation">{(Object.keys(modes) as ChatMode[]).map((value) => <button key={value} aria-pressed={mode === value} disabled={readOnly} onClick={() => { setMode(value); setError(""); }}>{modes[value]}</button>)}</div>
-    {mode === "feedback" ? <p className="chat-context">{answer ? "Check the cited memories using the correct answer to your last question. Feedback is not stored as memory." : "Ask a question first to create a task to check."}</p> : null}
+    {mode === "feedback" ? <p className="chat-context">{answer ? "Leave-one-out usefulness check on the cited memories. A helpful memory is not necessarily factual. The correct answer is feedback, not memory." : "Ask a question first to create a task to check."}</p> : null}
     {mode === "remember" ? <p className="chat-context">Store in {scopeLabel(reader)}.</p> : null}
     {readOnly ? <p className="chat-context">Retracing · return to live to send requests.</p> : null}
     {error ? <p className="backend-error" role="alert">{error}</p> : null}

@@ -1,6 +1,6 @@
 # Frontend connection to the shared brain
 
-Implemented October 17, 2026 against Bonan's [frontend contract](../backend/FRONTEND.md) and [seven decisions](../backend/FRONTEND-QA.md). The main route uses backend HTTP responses and SSE events. `/rehearsal` preserves the standalone animation playground.
+Implemented October 17, 2026 against Bonan's [frontend contract](../backend/FRONTEND.md) and [seven decisions](../backend/FRONTEND-QA.md). The main route uses backend HTTP responses and SSE events. `/rehearsal` preserves the standalone animation playground. The [Rusty Rod correctness walkthrough](rusty-rod-demo.md) is at `/demo`; it is explicitly scripted.
 
 ## Run with Bonan's backend
 
@@ -18,7 +18,7 @@ CopilotKit v2 renders chat through a self-managed AG-UI agent. The adapter emits
 | --- | --- | --- |
 | Ask | `POST /ask {question, reader}` | Actual answer and clickable cited memories |
 | Remember | `POST /episodes {text, scope, author, source}` | Actual stored memories, or a no-new-memories receipt |
-| Check | `POST /feedback {task_id, correct_answer}` | Evidence for correctness flips on the last answer's cited memories |
+| Usefulness | `POST /feedback {task_id, correct_answer}` | Evidence for correctness flips on the last answer's cited memories |
 | Review | `POST /review {}` | Actual promotion, retirement, or flag decisions and reasons |
 | Original conversation | `GET /episodes/{id}` | Source text, date, and source label |
 | Correction/status history | `GET /memories/{id}/history` | Full correction chain and events that can be retraced |
@@ -26,7 +26,7 @@ CopilotKit v2 renders chat through a self-managed AG-UI agent. The adapter emits
 | Retire / lock | `POST /memories/{id}/retire` or `/lock` | Backend status change |
 | Owner resolution | `POST /memories/{id}/resolve` | Keep and clear flag, retire, or correct |
 
-John reads `krusty-krab/sales/john`, `krusty-krab/sales`, and `krusty-krab`. Sales Team reads its path and the organization; Krusty Krab reads only its own path. Remember writes into the selected scope. Changing readers starts a fresh chat context. Scope labels are separate from the paths sent to the backend.
+The member selector has 18 Rusty Rod members across Executive, Sales, and Engineering. For example, `sales-01` reads `rusty-rod/sales/sales-01`, `rusty-rod/sales`, and `rusty-rod`. Executive membership adds no descendant access. Remember writes into the selected member’s individual scope. Changing readers starts a fresh chat context. The 22 scope paths are mapped to the three cabinet levels; labels follow the current member.
 
 **Acting as (demo)** supplies an owner string, not an authenticated identity. The UI disables another owner's resolution controls, and backend 403s remain visible. The current global memory/event endpoints and client filtering are demonstration behavior, not an authorization boundary.
 
@@ -47,7 +47,7 @@ John reads `krusty-krab/sales/john`, `krusty-krab/sales`, and `krusty-krab`. Sal
 | `memory.flagged` | Red flag on the cabinet; locked record stays available |
 | `memory.locked` / owner keeps | Padlock / owner resolution scene |
 
-Supersession retirement does not trigger the fire scene. `memory.corrected`, `evidence.recorded`, and retire/correct resolution bookkeeping do not duplicate scenes already driven by other events. Unscoped `episode.ingested` and `memory.rejected` events update the log but cannot safely be attributed to a cabinet; their request receipts stay in chat. The three demo paths have dedicated cabinet positions; other paths are not silently assigned to them.
+Supersession retirement does not trigger the fire scene. `memory.corrected`, `evidence.recorded`, and retire/correct resolution bookkeeping do not duplicate scenes already driven by other events. Unscoped `episode.ingested` and `memory.rejected` events update the log but cannot safely be attributed to a cabinet; their request receipts stay in chat. The 22 registered Rusty Rod paths map to individual, team, or organization cabinet positions; unregistered paths are not silently assigned to them.
 
 Retrace projects the event log at a selected sequence and poses the corresponding scene. It never resends requests. Mutations and chat input are disabled while retracing; the full correction chain remains available as historical context. Return to live restores current state without bursting through missed animations. Reduced motion uses static poses and manual event selection.
 

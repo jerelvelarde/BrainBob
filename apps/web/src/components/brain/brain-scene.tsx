@@ -16,14 +16,15 @@ type SceneProps = {
   cue?: SceneCue; seek?: { value: number; revision: number }; onProgress: (progress: number) => void;
   selectedScope: MemoryScope | "all"; selectedMemory: string;
   flaggedScopes?: MemoryScope[];
+  cabinetLabels?: Record<MemoryScope, string>;
   onSelect: (memoryId: string) => void; onScope: (scope: MemoryScope) => void;
   onWorker: (name: string) => void; onReady: (handle: SceneHandle) => void;
 };
 const palette = { floor: "#e8d7b9", green: "#b99a76", trim: "#6e5b49", wall: "#e7b6ae", fold: "#c98f91", dark: "#43392f" };
 const banks: { scope: MemoryScope; color: string; x: number; memory: string; label: string }[] = [
-  { scope: "individual", color: "#93bac3", x: -3.8, memory: "coffee", label: "JOHN" },
-  { scope: "team", color: "#d7b268", x: -.5, memory: "launch", label: "SALES TEAM" },
-  { scope: "organization", color: "#c4ac7d", x: 3.2, memory: "sources", label: "KRUSTY KRAB" },
+  { scope: "individual", color: "#93bac3", x: -3.8, memory: "coffee", label: "SALES-01" },
+  { scope: "team", color: "#d7b268", x: -.5, memory: "sources", label: "SALES" },
+  { scope: "organization", color: "#c4ac7d", x: 3.2, memory: "launch", label: "RUSTY ROD" },
 ];
 const routes: [number, number][][] = [
   [[-5.2, 3.4], [-5.2, -2.4], [1.65, -2.4], [1.65, 3.4]],
@@ -247,7 +248,7 @@ export default function BrainScene(props: SceneProps) {
   return <SceneBoundary><Canvas orthographic shadows dpr={[1, 1.7]} camera={{ position: [16, 14, 19], zoom: 45, near: .1, far: 100 }} gl={{ antialias: true, powerPreference: "high-performance" }} aria-label="Interactive isometric brain office with six walking BrainBob memory workers">
     <SceneLighting cinematics={cinematics} />
     <Room />
-    {banks.map((bank) => <Cabinet key={bank.scope} bank={bank} selected={props.selectedScope === bank.scope} active={props.cue?.scope === bank.scope} onClick={() => { props.onScope(bank.scope); props.onSelect(bank.memory); }} />)}
+    {banks.map((bank) => <Cabinet key={bank.scope} bank={props.cabinetLabels ? { ...bank, label: props.cabinetLabels[bank.scope].toUpperCase() } : bank} selected={props.selectedScope === bank.scope} active={props.cue?.scope === bank.scope} onClick={() => { props.onScope(bank.scope); props.onSelect(bank.memory); }} />)}
     {props.flaggedScopes?.map((scope) => <Label key={scope} text="FLAGGED · OWNER REVIEW" position={[scopeCharacters[scope].x, 3.35, -3.8]} width={2.6} />)}
     <Desk position={[-3.6, 0, .9]} />
     <Desk position={[.2, 0, .6]} />

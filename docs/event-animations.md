@@ -2,7 +2,7 @@
 
 Implemented October 17, 2026 for Jerel's visualization request, against Bonan's [frontend event contract](../backend/FRONTEND.md). The main route now connects the scenes to HTTP responses and SSE events; see [frontend integration](frontend-integration.md) for setup, exact mappings, replay behavior, and verification limits. The **animation rehearsal layer** remains available at `/rehearsal` and does not call the backend or claim evaluation results.
 
-Open **Rehearse**, then **Events**. Choose **Krusty Krab (organization)**, **Sales Team (team)**, or **John (individual)**, then choose a scene. These are fixture labels in the playground; the main route maps them to backend scope paths. Replay restarts the clip; the slider seeks to a deterministic moment. The existing pause and speed controls apply. Closing the panel leaves the office visible.
+Open `/rehearsal`, then **Events**. The main Demo link opens the [Rusty Rod correctness walkthrough](rusty-rod-demo.md). Choose **Rusty Rod (organization)**, **Sales (team)**, or **sales-01 (individual)**, then choose a scene. These are fixture labels in the playground; the main route maps them to backend scope paths. Replay restarts the clip; the slider seeks to a deterministic moment. The existing pause and speed controls apply. Closing the panel leaves the office visible.
 
 ## Scenes
 

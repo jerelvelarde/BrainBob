@@ -4,6 +4,7 @@ import type { MemoryAction, MemoryEvent, MemoryScope } from "./memory";
 export type SceneAction = MemoryAction | "arrived" | "rejected" | "answered" | "promoted" | "flagged" | "locked" | "resolved";
 export type SceneCue = { id: string; action: SceneAction; scope: MemoryScope; title: string; source: "fixture" | "trace" | "backend";
   seconds?: number; records?: { id: string; scope: MemoryScope }[];
+  evaluationLabel?: string;
   evaluation?: { phase: "start" | "check" | "finish"; verdict?: "helpful" | "harmful" | "unchanged" | "unconfirmed" } };
 export type Point = [number, number];
 export type BobPose = "idle" | "carry" | "write" | "panic" | "inspect" | "present";
@@ -26,9 +27,9 @@ export function cinematicsAt(action: SceneAction | undefined, progress: number, 
 }
 
 export const scopeCharacters = {
-  individual: { name: "John", role: "Individual", x: -3.8, color: "#93bac3" },
-  team: { name: "Sales Team", role: "Team", x: -.5, color: "#d7b268" },
-  organization: { name: "Krusty Krab", role: "Organization", x: 3.2, color: "#c4ac7d" },
+  individual: { name: "sales-01", role: "Individual", x: -3.8, color: "#93bac3" },
+  team: { name: "Sales", role: "Team", x: -.5, color: "#d7b268" },
+  organization: { name: "Rusty Rod", role: "Organization", x: 3.2, color: "#c4ac7d" },
 } satisfies Record<MemoryScope, { name: string; role: string; x: number; color: string }>;
 
 export const sceneClips: Record<SceneAction, { label: string; seconds: number; phases: [string, string, string]; color: string }> = {

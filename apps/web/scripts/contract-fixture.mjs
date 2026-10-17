@@ -14,9 +14,9 @@ const add = (text, scope, author = "Contract fixture", supersedes = null, owner 
   const memory = { id, text: `[Fixture] ${text}`, scope, author, origin, date: "2026-10-17", status: owner ? "locked" : "trial", reason: "", flagged: false, supersedes, owner };
   memories.set(id, memory); emit("memory.added", { memory: structuredClone(memory) }); return memory;
 };
-add("House rule: every invoice needs approval.", "krusty-krab");
-add("Sales launch is October 24.", "krusty-krab/sales");
-add("John prefers black coffee.", "krusty-krab/sales/john");
+add("Atlas pilot is approved for November 6, 2026.", "rusty-rod");
+add("Cite the approved organization commitment in client updates.", "rusty-rod/sales");
+add("sales-01 prefers concise client updates.", "rusty-rod/sales/sales-01");
 const visible = (scope, reader) => !reader || reader === scope || reader.startsWith(`${scope}/`);
 const retire = (m, reason, confirmed) => { m.status = "retired"; m.flagged = false; m.reason = reason; emit("memory.retired", { memory_id: m.id, reason, task_ids: [], ...(confirmed ? { confirmed: true } : {}) }); };
 
@@ -42,7 +42,7 @@ const server = createServer(async (req, res) => {
   if (url.pathname === "/ask") {
     const found = [...memories.values()].filter((m) => m.status !== "retired" && visible(m.scope, body.reader));
     const task_id = `fixture-t${++taskNumber}`, cited_ids = found.map((m) => m.id);
-    const answer = "CONTRACT FIXTURE — no model call. The sales launch is October 24.";
+    const answer = "CONTRACT FIXTURE — no model call. The approved Atlas pilot is November 6, 2026.";
     tasks.set(task_id, cited_ids); emit("memory.retrieved", { task_id, memory_ids: cited_ids }); emit("answer.produced", { task_id, answer, cited_ids });
     return send({ task_id, answer, cited_ids, memories: found });
   }

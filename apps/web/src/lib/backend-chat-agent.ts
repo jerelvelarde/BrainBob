@@ -34,7 +34,7 @@ export class BackendChatAgent extends AbstractAgent {
             break;
           }
           case "feedback": {
-            if (!context.taskId) throw new Error("Ask a question first, then supply its correct answer in Check mode.");
+            if (!context.taskId) throw new Error("Ask a question first, then supply its correct answer in Usefulness mode.");
             const result = await brainApi.feedback(context.taskId, text, abort.signal);
             const ids = new Set(result.evidence.map((e) => e.memory_id));
             reply = ids.size ? `The cited-memory check recorded correctness flips for ${ids.size} ${ids.size === 1 ? "memory" : "memories"}. Review can now assess the accumulated evidence.` : "The cited-memory check finished with no new correctness-flip evidence.";

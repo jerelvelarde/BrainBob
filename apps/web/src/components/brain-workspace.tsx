@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Archive, ArrowDownToLine, ArrowLeft, ArrowRight, CircleHelp, Clapperboard, FolderClosed, GitBranch, History, Maximize2, MessageCircle, Pause, Play, Plus, RotateCcw, Search, ShieldCheck, X, ZoomIn, ZoomOut } from "lucide-react";
-import { actionLabels, demoSteps, initialTrace, makeEvent, projectMemories, scopes, TRACE_KEY, traceSchema, type MemoryAction, type MemoryEvent, type MemoryScope } from "@/lib/memory";
+import { actionLabels, initialTrace, makeEvent, projectMemories, scopes, TRACE_KEY, traceSchema, type MemoryAction, type MemoryEvent, type MemoryScope } from "@/lib/memory";
 import { cinematicsAt, clipPhase, cueFromMemory, sceneClips, scopeCharacters, type SceneAction, type SceneCue } from "@/lib/scene-animation";
 import type { SceneHandle } from "./brain/brain-scene";
 
@@ -36,7 +36,6 @@ export function BrainWorkspace() {
   const [chatOpen, setChatOpen] = useState(false);
   const [chatLoaded, setChatLoaded] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
-  const [tourStep, setTourStep] = useState<number | null>(null);
   const [notice, setNotice] = useState("");
   const [storageError, setStorageError] = useState("");
   const [animationsOpen, setAnimationsOpen] = useState(false);
@@ -110,16 +109,6 @@ export function BrainWorkspace() {
     }
   }, []);
 
-  useEffect(() => {
-    if (tourStep === null || !playing || cursor !== null) return;
-    const timer = setTimeout(() => {
-      const step = demoSteps[tourStep];
-      if (step) { appendAction(step.action, step.memoryId); setNotice(step.caption); }
-      if (tourStep >= demoSteps.length - 1) { setTourStep(null); setNotice("That's the loop. Click a memory and retrace how it changed."); }
-      else setTourStep(tourStep + 1);
-    }, (tourStep === 0 ? 400 : (sceneClips[demoSteps[tourStep - 1].action].seconds + .3) * 1000) / speed);
-    return () => clearTimeout(timer);
-  }, [tourStep, playing, speed, cursor, appendAction]);
 
   useEffect(() => {
     if (cursor === null || !playing || fixtureCue) return;
@@ -143,23 +132,16 @@ export function BrainWorkspace() {
   const onCameraReady = useCallback((handle: SceneHandle) => { camera.current = handle; }, []);
   const chatAction = useCallback((action: MemoryAction) => appendAction(action), [appendAction]);
 
-  function startTour() {
-    setFixtureCue(undefined); setClipSeek(undefined); setAnimationsOpen(false);
-    const seed = initialTrace();
-    eventsRef.current = seed; setEvents(seed);
-    cursorRef.current = null; setCursor(null); setSelected("launch"); setScope("all");
-    setPlaying(true); setTourStep(0); setNotice("A day in the life of a memory. Let's follow the crew.");
-  }
   function retrace(at: number) {
     setFixtureCue(undefined); setClipSeek({ value: .62, revision: Date.now() });
     const bounded = Math.max(0, Math.min(at, events.length));
-    cursorRef.current = bounded; setCursor(bounded); setPlaying(false); setTourStep(null); setTimelineOpen(true);
+    cursorRef.current = bounded; setCursor(bounded); setPlaying(false); setTimelineOpen(true);
   }
   function returnLive() { cursorRef.current = null; setCursor(null); setPlaying(!reducedMotion); }
   function reset() {
     setFixtureCue(undefined); setClipSeek(undefined);
     const seed = initialTrace(); eventsRef.current = seed; setEvents(seed);
-    cursorRef.current = null; setCursor(null); setSelected("launch"); setTourStep(null);
+    cursorRef.current = null; setCursor(null); setSelected("launch");
     setScope("all"); setQuery(""); setNotice("Fresh filing cabinets. Same excellent crew.");
   }
   function exportTrace() {
@@ -183,7 +165,7 @@ export function BrainWorkspace() {
   function previewAnimation(action: SceneAction, nextScope = animationScope) {
     setAnimationScope(nextScope);
     setFixtureCue({ id: crypto.randomUUID(), action, scope: nextScope, title: sceneClips[action].label, source: "fixture" });
-    setClipSeek(undefined); setClipProgress(0); setTourStep(null); setPlaying(!reducedMotion);
+    setClipSeek(undefined); setClipProgress(0); setPlaying(!reducedMotion);
     setNotice("");
   }
 
@@ -246,7 +228,7 @@ export function BrainWorkspace() {
           <select className="scope-select" value={scope} onChange={(e) => setScope(e.target.value as MemoryScope | "all")} aria-label="Memory scope"><option value="all">All memories</option>{scopes.map((s) => <option key={s} value={s}>{scopeNames[s]}</option>)}</select>
           <div className="memory-list">{filtered.map((memory) => <button className="memory-card" key={memory.id} onClick={() => { setSelected(memory.id); setInspecting(true); }}><span className="scope-pill">{scopeNames[memory.scope]}</span><h3>{memory.title}</h3><p>{memory.content}</p></button>)}
             {!filtered.length ? <p className="empty-state">No memories here yet.</p> : null}</div>
-          <button className="new-memory" disabled={!ready || cursor !== null || tourStep !== null} onClick={() => { appendAction("created"); setInspecting(true); }}><Plus size={16} />Remember something</button>
+          <button className="new-memory" disabled={!ready || cursor !== null} onClick={() => { appendAction("created"); setInspecting(true); }}><Plus size={16} />Remember something</button>
         </> : selectedMemory ? <>
           <div className="memory-meta"><span className="scope-pill">{scopeNames[selectedMemory.scope]}</span><span>v{selectedMemory.revision}{selectedMemory.status === "forgotten" ? " · Archived" : ""}</span></div>
           <h3 className="memory-title">{selectedMemory.title}</h3><p className="memory-value">{selectedMemory.content}</p>
@@ -258,7 +240,7 @@ export function BrainWorkspace() {
           })}</div></details>
           <div className="memory-operations">{([["retrieved", "Retrieve"], ["evaluated", "Check"], ["updated", "Update"], ["forgotten", "Archive"]] as [MemoryAction, string][]).map(([action, label]) => {
             const Icon = actionIcons[action];
-            return <button key={action} disabled={!ready || cursor !== null || tourStep !== null || selectedMemory.status === "forgotten"} onClick={() => appendAction(action)}><Icon size={15} />{label}</button>;
+            return <button key={action} disabled={!ready || cursor !== null || selectedMemory.status === "forgotten"} onClick={() => appendAction(action)}><Icon size={15} />{label}</button>;
           })}</div>
         </> : <p className="empty-state">This memory doesn’t exist at this point in the timeline.</p>}
       </div>
@@ -288,7 +270,7 @@ export function BrainWorkspace() {
           <button className="live-button" onClick={returnLive}>{cursor === null ? "Live" : "Return to live"}</button></div>
       </section> : null}
       <nav className="scene-dock" aria-label="Scene controls">
-        <button className="demo-button" disabled={!ready || tourStep !== null} onClick={startTour}><Play size={16} fill="currentColor" />{tourStep !== null ? "Running…" : "Run demo"}</button>
+        <a className="demo-button" href="/demo"><Play size={16} fill="currentColor" />Atlas demo</a>
         <span className="dock-divider" />
         <button className="icon-button" aria-label={playing ? "Pause the scene" : "Play the scene"} onClick={() => { setClipSeek(undefined); setPlaying(!playing); }}>{playing ? <Pause size={17} /> : <Play size={17} />}</button>
         <button className={timelineOpen ? "selected" : ""} aria-expanded={timelineOpen} onClick={() => setTimelineOpen(!timelineOpen)}><History size={17} />{cursor === null ? "Retrace" : "Retracing"}</button>
@@ -298,7 +280,7 @@ export function BrainWorkspace() {
     {storageError ? <div className="storage-notice" role="status">{storageError}</div> : null}
     <dialog ref={helpRef} className="help-dialog" onCancel={() => setHelpOpen(false)} onClose={() => setHelpOpen(false)}>
       <div className="panel-heading"><h2>Welcome upstairs.</h2><button className="icon-button" aria-label="Close preview guide" onClick={() => setHelpOpen(false)}><X size={18} /></button></div>
-      <p>Drag to orbit. Scroll to zoom. Click a cabinet to inspect its memories.</p><p>Run the demo, then retrace a memory’s history.</p>
+      <p>Drag to orbit. Scroll to zoom. Click a cabinet to inspect its memories.</p><p>Open the Atlas demo for the correctness story. These controls rehearse individual animations.</p>
       <p className="help-disclosure">Scripted preview, saved in this browser. Live inference and shared storage are not connected yet.</p>
     </dialog>
   </main>;

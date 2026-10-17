@@ -21,13 +21,13 @@ export const eventSchema = z.object({
 });
 export type MemoryEvent = z.infer<typeof eventSchema>;
 
-export const TRACE_KEY = "brainbob.scene-trace.v1";
+export const TRACE_KEY = "brainbob.scene-trace.rusty-rod.v2";
 export const traceSchema = z.object({ version: z.literal(1), events: z.array(eventSchema).max(500) });
 
 const initialMemories: Memory[] = [
-  { id: "launch", title: "Project launch date", content: "The team is launching on October 24.", scope: "team", revision: 1, evidence: "Alex, project owner: “Let's launch on October 24.”", status: "active" },
-  { id: "coffee", title: "The little things", content: "Jerel likes his coffee black, and his plans simple.", scope: "individual", revision: 1, evidence: "Jerel: “Black coffee for me. Keep the plan simple.”", status: "active" },
-  { id: "sources", title: "Show your sources", content: "Include evidence links when sharing a research finding.", scope: "organization", revision: 1, evidence: "Team handbook: “Always link the source of a research finding.”", status: "active" },
+  { id: "launch", title: "Approved Atlas commitment", content: "The approved Atlas pilot is due November 6, 2026.", scope: "organization", revision: 1, evidence: "exec-01, authorized approver (fixture): “The Atlas pilot commitment is November 6, 2026.”", status: "active" },
+  { id: "coffee", title: "Client update style", content: "sales-01 prefers concise, three-sentence client updates.", scope: "individual", revision: 1, evidence: "sales-01 (fixture): “Use a concise, three-sentence update.”", status: "active" },
+  { id: "sources", title: "Show your sources", content: "Cite the approved organization commitment in client updates.", scope: "team", revision: 1, evidence: "Sales handbook (fixture): “Cite the approved commitment.”", status: "active" },
 ];
 
 export function initialTrace(): MemoryEvent[] {
@@ -63,12 +63,12 @@ export function makeEvent(action: MemoryAction, events: readonly MemoryEvent[], 
   };
   if (action === "created") {
     const memory: Memory = {
-      id: `idea-${id}`, title: `Team ritual ${memories.filter((m) => m.id.startsWith("idea-")).length + 1}`,
-      content: "Start the day by sharing one thing you learned.", scope: "team", revision: 1,
-      evidence: "Demo teammate: “Let's share one thing we learned at the start of each day.”", status: "active",
+      id: `idea-${id}`, title: `Atlas evidence note ${memories.filter((m) => m.id.startsWith("idea-")).length + 1}`,
+      content: "Use the approved organization commitment in client updates.", scope: "team", revision: 1,
+      evidence: "Sales teammate (fixture): “Use the approved commitment.”", status: "active",
     };
     return { ...base, memoryId: memory.id, title: memory.title, evidence: memory.evidence, after: memory,
-      explanation: "A useful idea became a shared team memory." };
+      explanation: "A supplied instruction became a shared Sales memory." };
   }
   if (!active) throw new Error("Select an active memory first. Forgotten memories remain available in history.");
   if (action === "retrieved") return { ...base, actor: "Runner BrainBob", explanation: "Delivered the exact stored revision to the task desk." };
@@ -76,11 +76,12 @@ export function makeEvent(action: MemoryAction, events: readonly MemoryEvent[], 
     explanation: "Scripted evidence check: the stored claim matches its source. No change needed." };
   if (action === "forgotten") return { ...base, after: { ...active, status: "forgotten" },
     explanation: "Archived from active retrieval. Its evidence and history are still retraceable." };
+  if (active.id === "launch" && active.revision > 1) throw new Error("The approved November 13 revision is already filed. Reset the rehearsal to replay its correction.");
   const content = active.id === "launch"
-    ? `The team is launching on October ${active.content.includes("24") ? "25" : "24"}.`
+    ? "The approved Atlas pilot is due November 13, 2026."
     : `${active.content.replace(/ \(revised\)$/, "")} (revised)`;
   const evidence = active.id === "launch"
-    ? `Alex, project owner: “Correction: ${content.toLowerCase()}”`
+    ? `exec-01, authorized approver (fixture): “Approved correction: ${content}”`
     : `Demo owner: “Please update the record: ${content}”`;
   return { ...base, after: { ...active, content, evidence, revision: active.revision + 1 }, evidence,
     explanation: "An explicit owner correction superseded the previous revision." };
@@ -89,12 +90,3 @@ export function makeEvent(action: MemoryAction, events: readonly MemoryEvent[], 
 export const actionLabels: Record<MemoryAction, string> = {
   created: "Remembered", retrieved: "Retrieved", evaluated: "Checked", updated: "Updated", forgotten: "Archived",
 };
-
-export const demoSteps: { action: MemoryAction; memoryId: string; caption: string }[] = [
-  { action: "retrieved", memoryId: "launch", caption: "Runner BrainBob finds the launch date." },
-  { action: "evaluated", memoryId: "launch", caption: "Inspector BrainBob checks the source." },
-  { action: "updated", memoryId: "launch", caption: "A correction arrives. October 25 it is!" },
-  { action: "retrieved", memoryId: "launch", caption: "The next task gets the corrected memory." },
-  { action: "created", memoryId: "launch", caption: "A new team ritual gets its own record." },
-  { action: "forgotten", memoryId: "coffee", caption: "An old preference moves to the archive." },
-];
