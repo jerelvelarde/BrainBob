@@ -88,3 +88,22 @@ blockquote { font-size: 12px; color: var(--muted); line-height: 1.7; margin: 13p
 .character-study-labels p { font-size: 12px; color: var(--muted); line-height: 1.6; margin: 0; }
 .character-study footer { text-align: center; margin-top: auto; padding-top: 36px; font-size: 12px; color: var(--muted); line-height: 1.7; }
 @media (max-width: 600px) { .character-study header { flex-direction: column; align-items: flex-start; gap: 14px; }.character-study-canvas { height: 300px; margin-top: 0; }.character-study-labels p { font-size: 10px; } }
+
+.animation-panel { right: 30px; left: auto; top: 100px; bottom: auto; width: 284px; max-height: calc(100dvh - 230px); }
+.animation-scope-label { display: block; font-size: 11px; color: var(--muted); margin: 0 0 8px; }
+.animation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 14px; }
+.animation-grid button { display: flex; align-items: center; gap: 10px; padding: 12px 9px; border: 1px solid var(--line); border-radius: 10px; font-size: 12px; text-align: left; background: #fffdf7; }
+.animation-grid button:hover { background: #f5efdf; }
+.animation-grid button[aria-pressed="true"] { background: #fff1bb; border-color: #cfad53; }
+.animation-number { font-family: monospace; font-size: 11px; }
+.animation-scrubber { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+.animation-scrubber > div { display: flex; align-items: center; justify-content: space-between; font-size: 12px; }
+.animation-scrubber button { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); }
+.animation-scrubber input { width: 100%; margin: 14px 0 3px; accent-color: #8972af; }
+.animation-scrubber p { font-size: 10px; color: var(--muted); margin: 4px 0; }
+.animation-disclosure { padding: 12px 16px; border-top: 1px solid var(--line); font-size: 10px; line-height: 1.6; color: var(--muted); }
+.clip-caption { text-align: center; padding: 11px 22px; background: #fffdf0ed; border: 1px solid #ded3bf; border-radius: 14px; box-shadow: 0 5px 24px #6552350d; max-width: min(470px, calc(100vw - 36px)); }
+.clip-caption span { display: block; font-size: 9px; color: #928471; letter-spacing: 1.2px; margin-bottom: 5px; }
+.clip-caption strong { display: block; font-size: 14px; font-weight: 550; }
+.clip-caption small { display: block; font-size: 10px; color: var(--muted); margin-top: 5px; line-height: 1.4; }
+@media (max-width: 760px) { .animation-panel { right: 18px; top: 100px; width: 260px; max-height: calc(100dvh - 270px); }.clip-caption { padding: 9px 14px; }.clip-caption strong { font-size: 12px; } }

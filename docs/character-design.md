@@ -91,6 +91,8 @@ The [character study](http://127.0.0.1:3000/character-study) uses the same face,
 
 ## Design for emotions and actions
 
+**Animation follow-up, October 17:** the [event rehearsal layer](event-animations.md) now implements carrying/filing, writing, panic, inspection, and presentation poses, plus worried and focused graphic faces. Jerel's later direction replaces the small disposal-tray concept below with office-wide cartoon fire, thrown papers, and shredding; evaluator Bob receives a panicked crew bringing records. These are labeled animation fixtures, not a live backend integration. The table below preserves the earlier planning reference; teaching, learning, skeletal clips, and articulated wrist/elbow reach remain planned.
+
 Keep four concerns separate: **locomotion**, **task pose**, **expression**, and **props**. The current procedural model already separates the body, face material, arm pivots, and feet. Named `left-hand-socket` and `right-hand-socket` groups provide stable prop attachment points; carried paper follows the right arm. This is a small procedural rig, not a finished skeletal animation system.
 
 For the next animation layer, give each action an event ID, actor ID, target, progress, and optional partner. An action controls the relevant arm instead of competing with the walking swing. Add wrist/elbow reach where interaction demands it, keeping the resting silhouette compact. Swap facial drawings on the same surface for focused, curious, puzzled, pleased, and attentive expressions. Keep expressions readable at room scale and use exaggerated poses sparingly.
@@ -104,7 +106,7 @@ For the next animation layer, give each action an event ID, actor ID, target, pr
 | Learn | Look toward the teacher, take notes, then acknowledge. | Attentive, then pleased. Show a learned result only when the corresponding check is recorded. |
 | Resolve a conflict | Compare two papers, tilt the body slightly, present the discrepancy. | Puzzled until evidence resolves it; no permanent alarm state. |
 
-These actions and additional expressions are **planned**. Walking, blinking, arm motion, and carried paper are implemented. Keep task animations tied to recorded results, with deterministic playback for retracing; animation completion must never create or delete a memory. Reduced motion should show the final pose and a readable event description, without flame particles or repeated gestures.
+The table records the original action plan; see the animation follow-up above for current implementation and the revised forgetting scene. Keep task animations tied to recorded results, with deterministic playback for retracing; animation completion must never create or delete a memory. Reduced motion uses a still illustrative pose and a readable event description, without repeated gestures or particle motion.
 
 ## Implementation reference
 
@@ -112,4 +114,4 @@ These actions and additional expressions are **planned**. Walking, blinking, arm
 - [Room movement and role assignment](../apps/web/src/components/brain/brain-scene.tsx): waypoint travel, distance-driven gait, and short turns.
 - [Character comparison](../apps/web/src/components/character-study.tsx): three silhouettes under matching lighting with a movement toggle, available at `/character-study`.
 
-The current rig is procedural Three.js geometry rendered through React Three Fiber. It does not yet contain skeletal clips, elbow/wrist reach, facial expressions beyond the neutral smile and blink, or event-driven filing, writing, burning, teaching, or learning sequences.
+The current rig is procedural Three.js geometry rendered through React Three Fiber. Event choreography and additional expressions are documented in [event animations](event-animations.md). It does not yet contain skeletal clips, elbow/wrist reach, teaching, or learning sequences.

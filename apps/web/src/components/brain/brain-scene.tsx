@@ -2,23 +2,27 @@
 
 import { Component, memo, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Billboard, OrbitControls, RoundedBox } from "@react-three/drei";
+import { OrbitControls, RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
+import { Label } from "./scene-label";
+import { EventStage } from "./event-stage";
+import { scopeCharacters, type SceneCue } from "@/lib/scene-animation";
 import { BrainBob } from "./brain-bob";
 import type { MemoryEvent, MemoryScope } from "@/lib/memory";
 
 export type SceneHandle = { reset: () => void; zoom: (factor: number) => void };
 type SceneProps = {
   playing: boolean; reducedMotion: boolean; speed: number; event?: MemoryEvent;
+  cue?: SceneCue; seek?: { value: number; revision: number }; onProgress: (progress: number) => void;
   selectedScope: MemoryScope | "all"; selectedMemory: string;
   onSelect: (memoryId: string) => void; onScope: (scope: MemoryScope) => void;
   onWorker: (name: string) => void; onReady: (handle: SceneHandle) => void;
 };
 const palette = { floor: "#e8d7b9", green: "#b99a76", trim: "#6e5b49", wall: "#e7b6ae", fold: "#c98f91", dark: "#43392f" };
 const banks: { scope: MemoryScope; color: string; x: number; memory: string; label: string }[] = [
-  { scope: "individual", color: "#93bac3", x: -3.8, memory: "coffee", label: "INDIVIDUAL" },
-  { scope: "team", color: "#d7b268", x: -.5, memory: "launch", label: "TEAM MEMORY" },
-  { scope: "organization", color: "#c4ac7d", x: 3.2, memory: "sources", label: "ORGANIZATION" },
+  { scope: "individual", color: "#93bac3", x: -3.8, memory: "coffee", label: "JOHN" },
+  { scope: "team", color: "#d7b268", x: -.5, memory: "launch", label: "SALES TEAM" },
+  { scope: "organization", color: "#c4ac7d", x: 3.2, memory: "sources", label: "KRUSTY KRAB" },
 ];
 const routes: [number, number][][] = [
   [[-5.2, 3.4], [-5.2, -2.4], [1.65, -2.4], [1.65, 3.4]],
@@ -29,34 +33,12 @@ const routes: [number, number][][] = [
   [[5.5, 2.7], [5.5, -2.4], [-1.6, -2.4], [-1.6, 2.7]],
 ];
 
-function Label({ text, position, width = 1.8, selected = false, onClick }: {
-  text: string; position: [number, number, number]; width?: number; selected?: boolean; onClick?: () => void;
-}) {
-  const texture = useMemo(() => {
-    const canvas = document.createElement("canvas");
-    canvas.width = 512; canvas.height = 96;
-    const context = canvas.getContext("2d");
-    if (context) {
-      context.fillStyle = selected ? "#f2d67a" : "#fbf9e9";
-      context.beginPath(); context.roundRect(2, 2, 508, 92, 14); context.fill();
-      context.strokeStyle = "#ded1b8"; context.lineWidth = 3; context.stroke();
-      context.fillStyle = "#63533d"; context.font = "bold 30px monospace";
-      context.textAlign = "center"; context.textBaseline = "middle"; context.fillText(text, 256, 50);
-    }
-    const map = new THREE.CanvasTexture(canvas); map.colorSpace = THREE.SRGBColorSpace;
-    return map;
-  }, [text, selected]);
-  useEffect(() => () => texture.dispose(), [texture]);
-  return <Billboard position={position}><mesh onClick={onClick ? (e) => { e.stopPropagation(); onClick(); } : undefined}>
-    <planeGeometry args={[width, width * 96 / 512]} /><meshBasicMaterial map={texture} transparent depthWrite={false} />
-  </mesh></Billboard>;
-}
 
 function Box({ position, size, color, radius = .04, rotation = [0, 0, 0] }: {
   position: [number, number, number]; size: [number, number, number]; color: string;
   radius?: number; rotation?: [number, number, number];
 }) {
-  return <RoundedBox args={size} radius={radius} smoothness={2} position={position} rotation={rotation} castShadow receiveShadow>
+  return <RoundedBox args={size} radius={Math.min(radius, Math.min(...size) * .48)} smoothness={2} position={position} rotation={rotation} castShadow receiveShadow>
     <meshStandardMaterial color={color} roughness={.78} />
   </RoundedBox>;
 }
@@ -97,7 +79,8 @@ const Room = memo(function Room() {
     {[-5.8, 5.7].map((x) => <Plant key={x} position={[x, 0, -3.7]} />)}
     <Box position={[5.8, .4, 3.8]} size={[.85, .8, .65]} color="#c3a279" />
     <Box position={[5.8, .82, 3.8]} size={[.9, .08, .7]} color="#9a7c5b" />
-    <Label position={[5.8, 1, 3.8]} text="ARCHIVE" width={1} />
+    <Box position={[5.8, .87, 3.8]} size={[.62, .025, .09]} color="#483b52" />
+    <Label position={[5.8, 1.13, 3.8]} text="SHREDDER" width={1} />
   </group>;
 });
 
@@ -113,14 +96,14 @@ function Cabinet({ bank, selected, active, onClick }: { bank: typeof banks[numbe
     onPointerOver={() => { document.body.style.cursor = "pointer"; }} onPointerOut={() => { document.body.style.cursor = "auto"; }}>
     {[-.49, .49].map((x) => <Box key={x} position={[x, .13, 0]} size={[.12, .25, .68]} color={palette.trim} />)}
     <Box position={[0, 1.22, 0]} size={[1.35, 2.15, .8]} color={bank.color} radius={.06} />
-    {[.5, 1.15, 1.8].map((y, i) => <group key={y}>
-      <Box position={[0, y, .428 + (active && i === 1 ? .16 : 0)]} size={[1.15, .56, .05]} color={selected ? "#f4d88b" : bank.color} radius={.025} />
-      <Box position={[0, y + .1, .465 + (active && i === 1 ? .16 : 0)]} size={[.28, .12, .018]} color="#f0e6c9" radius={.01} />
-      <Box position={[0, y - .1, .48 + (active && i === 1 ? .16 : 0)]} size={[.33, .05, .04]} color="#79664e" radius={.015} />
+    {[.5, 1.15, 1.8].map((y, i) => <group key={y} position={[0, 0, active && i === 1 ? .2 : 0]}>
+      <Box position={[0, y, .428]} size={[1.15, .56, .05]} color={selected ? "#f4d88b" : bank.color} radius={.025} />
+      <Box position={[0, y + .1, .465]} size={[.28, .12, .018]} color="#f0e6c9" radius={.01} />
+      <Box position={[0, y - .1, .48]} size={[.33, .05, .04]} color="#79664e" radius={.015} />
     </group>)}
     <Box position={[0, 2.33, 0]} size={[1.45, .1, .86]} color={palette.trim} />
     {active ? <mesh position={[0, 2.55, 0]}><sphereGeometry args={[.09, 12, 10]} /><meshBasicMaterial color="#f4cf49" /></mesh> : null}
-    <Label position={[0, 2.75, 0]} text={bank.label} selected={selected} onClick={onClick} />
+    <Label position={[0, 2.75, 0]} text={`${bank.label} · ${scopeCharacters[bank.scope].role.toUpperCase()}`} width={2.6} selected={selected} onClick={onClick} />
   </group>;
 }
 
@@ -228,11 +211,11 @@ export default function BrainScene(props: SceneProps) {
     <directionalLight position={[-8, 5, -3]} intensity={.6} color="#e7ddf5" />
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -.58, 0]} receiveShadow><planeGeometry args={[200, 200]} /><meshStandardMaterial color="#f0e9dd" roughness={1} /></mesh>
     <Room />
-    {banks.map((bank) => <Cabinet key={bank.scope} bank={bank} selected={props.selectedScope === bank.scope} active={props.event?.scope === bank.scope} onClick={() => { props.onScope(bank.scope); props.onSelect(bank.memory); }} />)}
+    {banks.map((bank) => <Cabinet key={bank.scope} bank={bank} selected={props.selectedScope === bank.scope} active={props.cue?.scope === bank.scope} onClick={() => { props.onScope(bank.scope); props.onSelect(bank.memory); }} />)}
     <Desk position={[-3.6, 0, .9]} />
     <Desk position={[.2, 0, .6]} />
     <Desk position={[3.8, 0, -1]} rotation={-.1} audit />
-    {routes.map((_, index) => <Walker key={index} index={index} playing={props.playing} speed={props.speed} reducedMotion={props.reducedMotion} event={props.event} onClick={() => props.onWorker(index === 4 ? "Inspector BrainBob checks memories against their evidence." : index === 0 ? "Curator BrainBob files new memories and revisions." : "Runner BrainBob delivers memories to the team.")} />)}
+    {props.cue ? <EventStage key={props.cue.id} cue={props.cue} playing={props.playing} speed={props.speed} reducedMotion={props.reducedMotion} seek={props.seek} onProgress={props.onProgress} /> : routes.map((_, index) => <Walker key={index} index={index} playing={props.playing} speed={props.speed} reducedMotion={props.reducedMotion} event={props.event} onClick={() => props.onWorker(index === 4 ? "Inspector BrainBob checks memories against their evidence." : index === 0 ? "Curator BrainBob files new memories and revisions." : "Runner BrainBob delivers memories to the team.")} />)}
     <CameraRig onReady={props.onReady} />
   </Canvas></SceneBoundary>;
 }
