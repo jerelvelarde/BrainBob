@@ -11,6 +11,7 @@ October 17, 2026. Documentation and repository triage only; no new application b
 
 - [GitHub disposition](github-disposition.json): actual update timestamps, states, reasons and URLs returned by GitHub.
 - [Public-link checks](public-links.json): unauthenticated HTTP HEAD returned 200 for the repository, committed narrated MP4, corrected scorecard and public benchmark dataset. This checks reachability, not video playback or submission-form acceptance.
+- Browser preview: the new milestone rendered, its evidence disclosure expanded, and its timeline link navigated correctly with an active marker. No mobile viewport or app behavior was checked.
 - [Local validation](validation.json): judging Markdown links, proof-of-work anchors and embedded-image preservation checked against the recorded base; whitespace checked with `git diff --check`.
 
 The original shared checkout had active teammate edits and diverged from published main. All cleanup work used a separate checkout based on current published main; unrelated files and the original shared index were untouched. Historical tests/results remain tied to their original builds; this documentation-only change did not rerun the application test suites.
