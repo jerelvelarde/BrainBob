@@ -22,7 +22,7 @@ export function Label({ text, position, width = 1.8, selected = false, compact =
     return map;
   }, [text, selected, compact]);
   useEffect(() => () => texture.dispose(), [texture]);
-  return <Billboard position={position}><mesh onClick={onClick ? (e) => { e.stopPropagation(); onClick(); } : undefined}>
-    <planeGeometry args={[width, width * 96 / 512]} /><meshBasicMaterial map={texture} transparent depthWrite={false} />
+  return <Billboard position={position}><mesh renderOrder={compact ? 10 : 0} onClick={onClick ? (e) => { e.stopPropagation(); onClick(); } : undefined}>
+    <planeGeometry args={[width, width * 96 / 512]} /><meshBasicMaterial map={texture} transparent depthWrite={false} depthTest={!compact} />
   </mesh></Billboard>;
 }
