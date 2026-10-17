@@ -140,7 +140,7 @@ function TransferPaper({ cue, clock }: { cue: SceneCue; clock: Clock }) {
   return <group ref={group}>{cue.sessionLabel && ["retrieved", "answered", "created", "updated"].includes(cue.action) ? <SessionFolder /> : <Paper color={cue.action === "flagged" ? "#f7bbbb" : cue.action === "promoted" ? "#ffe095" : undefined} />}
     {cue.action === "flagged" ? <Label text="LOCKED · REVIEW" position={[0, .55, 0]} width={1.8} /> : null}
     {cue.action === "rejected" ? <Label text="RETURN TO SENDER" position={[0, .5, 0]} width={1.8} /> : null}
-    {cue.action === "answered" ? <Label text={cue.sessionLabel ?? "ANSWER + SOURCES"} position={[0, .55, 0]} width={1.8} /> : null}
+    {cue.action === "answered" && !cue.sessionLabel ? <Label text="ANSWER + SOURCES" position={[0, .55, 0]} width={1.8} /> : null}
   </group>;
 }
 
