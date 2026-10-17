@@ -115,6 +115,19 @@ def create_app(store, curator, agent, evaluator, judge, *, events=None,
     bus = events or Bus()
     app = FastAPI(title="BrainBob")
     app.add_middleware(CORSMiddleware, allow_origins=ORIGINS, allow_methods=["*"], allow_headers=["*"])
+    password = os.environ.get("BRAINBOB_DEMO_PASSWORD", "")
+    if os.environ.get("BRAINBOB_REQUIRE_AUTH") == "1" and len(password) < 16:
+        raise RuntimeError("Set BRAINBOB_DEMO_PASSWORD to at least 16 characters before hosting")
+    if password:
+        from brainbob.demo_auth import DemoAuth
+        app.add_middleware(DemoAuth, password=password)
+    sse_max_seconds = float(os.environ.get("BRAINBOB_SSE_MAX_SECONDS", "240"))
+
+    @app.get("/healthz")
+    def health():
+        # Process readiness only; provider access is checked separately.
+        return {"status": "ok"}
+
     tasks: dict[str, dict] = {}
     evidence_log: list[dict] = []
     episodes: dict[str, dict] = {}
@@ -421,7 +434,8 @@ def create_app(store, curator, agent, evaluator, judge, *, events=None,
                 yield {"id": str(last), "data": json.dumps({"type": "replay.done", "seq": last})}
                 if sse_once:
                     return
-                while True:
+                deadline = time.monotonic() + sse_max_seconds
+                while time.monotonic() < deadline:
                     try:
                         ev = q.get_nowait()
                     except queue.Empty:
@@ -487,7 +501,7 @@ def main() -> None:
     app = create_app(store, curator, agent, evaluator, judge, events=events,
                      episode_factory=types.Episode, task_factory=types.Task,
                      episodes_path="episodes.jsonl", org=org, ingest=ingest_fn)
-    uvicorn.run(app, host="127.0.0.1", port=3001)
+    uvicorn.run(app, host=os.environ.get("HOST", "127.0.0.1"), port=int(os.environ.get("PORT", "3001")), workers=1)
 
 
 if __name__ == "__main__":

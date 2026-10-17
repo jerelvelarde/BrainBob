@@ -3,7 +3,7 @@ import collections, hashlib, json, os, sys, threading, time
 import openai
 from openai import OpenAI
 
-CACHE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "cache")
+CACHE = os.environ.get("BRAINBOB_CACHE_DIR") or os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "cache")
 LIGHT = "nvidia/Nemotron-3.5-Lightning-30B-A3B"
 NANO = "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
 QWEN = "Qwen/Qwen3.8-27B"

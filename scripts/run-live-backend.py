@@ -12,8 +12,13 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true', help='Verify configured models with real provider calls, then exit')
     parser.add_argument('--skip-preflight', action='store_true', help='Start directly after a separate successful provider check; does not bypass backend credentials or errors')
-    parser.add_argument('--data-dir', type=Path, default=ROOT / 'data' / 'workspace')
+    parser.add_argument('--data-dir', type=Path, default=Path(os.environ.get('BRAINBOB_DATA_DIR', str(ROOT / 'data' / 'workspace'))))
     args = parser.parse_args()
+    if os.environ.get('BRAINBOB_REQUIRE_AUTH') == '1':
+        if len(os.environ.get('BRAINBOB_DEMO_PASSWORD', '')) < 16:
+            raise SystemExit('Hosted mode requires BRAINBOB_DEMO_PASSWORD (at least 16 characters).')
+        if not os.environ.get('BRAINBOB_API_KEY'):
+            raise SystemExit('Hosted mode requires BRAINBOB_API_KEY.')
     sys.path.insert(0, str(ROOT / 'backend'))
     # Local application defaults. Benchmark and backend defaults remain unchanged.
     os.environ.setdefault('BRAINBOB_AGENT_MODEL', 'nvidia/NVIDIA-Nemotron-3-Super-120B-A12B')

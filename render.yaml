@@ -1,0 +1,28 @@
+# Paid persistent disk; create only when ready to provision the service.
+services:
+  - type: web
+    name: brainbob-api
+    runtime: docker
+    branch: codex/chat-memory-panel
+    plan: starter
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    numInstances: 1
+    healthCheckPath: /healthz
+    autoDeployTrigger: "off"
+    disk:
+      name: brainbob-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: BRAINBOB_API_KEY
+        sync: false
+      - key: BRAINBOB_DEMO_PASSWORD
+        sync: false
+      - key: BRAINBOB_AGENT_MODEL
+        value: nvidia/NVIDIA-Nemotron-3-Super-120B-A12B
+      - key: BRAINBOB_CURATOR_MODEL
+        value: nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B
+      - key: BRAINBOB_JUDGE_MODEL
+        value: openai/gpt-oss-120b
