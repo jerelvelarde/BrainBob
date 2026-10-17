@@ -1,0 +1,114 @@
+{
+ "n_requested": 50,
+ "conditions": {
+  "full": {
+   "n": 50,
+   "overall": [
+    39,
+    50
+   ],
+   "abstention": [
+    4,
+    4
+   ],
+   "by_type": {
+    "knowledge-update": [
+     7,
+     8
+    ],
+    "multi-session": [
+     10,
+     13
+    ],
+    "single-session-assistant": [
+     6,
+     6
+    ],
+    "single-session-preference": [
+     1,
+     3
+    ],
+    "single-session-user": [
+     6,
+     7
+    ],
+    "temporal-reasoning": [
+     9,
+     13
+    ]
+   },
+   "avg_ctx_tokens": 108946,
+   "wall_s": 335,
+   "judge_parse_fail": 0
+  },
+  "brainbob": {
+   "n": 50,
+   "overall": [
+    35,
+    50
+   ],
+   "abstention": [
+    4,
+    4
+   ],
+   "by_type": {
+    "knowledge-update": [
+     8,
+     8
+    ],
+    "multi-session": [
+     7,
+     13
+    ],
+    "single-session-assistant": [
+     6,
+     6
+    ],
+    "single-session-preference": [
+     1,
+     3
+    ],
+    "single-session-user": [
+     5,
+     7
+    ],
+    "temporal-reasoning": [
+     8,
+     13
+    ]
+   },
+   "avg_ctx_tokens": 2681,
+   "wall_s": 404,
+   "judge_parse_fail": 0
+  }
+ },
+ "cost": {
+  "answer": {
+   "pt": 5581356,
+   "ct": 76877,
+   "usd": 1.8589115999999999
+  },
+  "judge": {
+   "pt": 22727,
+   "ct": 7062,
+   "usd": 0.002901850000000001
+  },
+  "extract": {
+   "pt": 5666532,
+   "ct": 768212,
+   "usd": 0.4369690000000004
+  }
+ },
+ "total_usd": 2.2988,
+ "stats": {
+  "extract_parse_fail": 76,
+  "extract_empty": 76,
+  "retry_extract": 61,
+  "retry_answer": 26,
+  "facts_total": 22940,
+  "retry_judge": 8
+ },
+ "wall_s": 404,
+ "unfinished": 0,
+ "note": "cost counts cached calls too (usage replayed)"
+}
