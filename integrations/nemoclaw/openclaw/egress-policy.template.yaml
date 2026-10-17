@@ -1,0 +1,16 @@
+# DESIGN TEMPLATE, NOT APPLY-READY. NOT yet run inside a NemoClaw sandbox.
+# TODO-VERIFY all schema keys/process selectors with pinned OpenShell version.
+# Sources: https://docs.nvidia.com/nemoclaw/user-guide/openclaw/home
+# https://github.com/NVIDIA/NemoClaw
+network_default: deny # TODO-VERIFY representation and DNS/proxy handling
+allow:
+  - host: TODO-VERIFY-brainbob-host
+    port: 3001 # TODO-VERIFY deployed port
+    processes: [TODO-VERIFY-absolute-adapter-python-path]
+  - host: TODO-VERIFY-host-managed-inference-route
+    port: TODO-VERIFY-inference-port
+    processes: [TODO-VERIFY-absolute-openclaw-process-path]
+# Managed inference may use runtime interception instead: TODO-VERIFY.
+# No wildcard domains, direct sandbox Crusoe egress, or broad default policy.
+# Translate to the pinned runtime schema, inspect effective policy, and probe
+# allowed BrainBob/inference plus denied unrelated destinations before acceptance.
