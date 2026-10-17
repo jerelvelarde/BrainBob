@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { demoView, exportDemoView, sampleConversations } from "./correctness-demo";
-import { cabinetLabels, canReadScope, defaultReader, demoMembers, demoScopes, demoTeams } from "./sample-company";
+import { canReadScope, defaultReader, demoMembers, demoScopes, demoTeams, memberForReader } from "./sample-company";
 import { sceneScope } from "./brain-api";
 
 describe("Rusty Rod demo policy and evidence", () => {
@@ -10,7 +10,7 @@ describe("Rusty Rod demo policy and evidence", () => {
     expect(demoTeams.map((team) => demoMembers.filter((member) => member.team === team.slug).length)).toEqual([3, 5, 10]);
     for (const member of demoMembers) {
       expect(demoScopes.filter((scope) => canReadScope(scope.path, member.path))).toHaveLength(3);
-      expect(cabinetLabels(member.path).individual).toBe(member.id);
+      expect(memberForReader(member.path)?.id).toBe(member.id);
       expect(sceneScope(member.path)).toBe("individual");
       expect(sceneScope(`rusty-rod/${member.team}`)).toBe("team");
     }

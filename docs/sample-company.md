@@ -1,6 +1,6 @@
 # Sample Company: Rusty Rod
 
-**Rusty Rod** is the fictional consulting company used to explain BrainBob's shared-memory demo. It has **18 individuals across three teams**. The company structure below is the demo specification; it does not claim that accounts, permissions, or seed data have been implemented.
+**Rusty Rod** is the fictional consulting company used to explain BrainBob's shared-memory demo. It has **18 individuals across three teams**. Names and reference memories are implemented as synthetic frontend fixtures. Accounts and server permissions are not established by the preview.
 
 The central question is **memory correctness**: when project facts change, can the company correct its shared knowledge before another agent repeats an outdated answer?
 
@@ -26,7 +26,42 @@ The arrows show membership and scope structure, not permission to read every des
 | Engineering | 10 | `eng-01` through `eng-10` | Technical decisions, delivery estimates, and implementation constraints. |
 | **Total** | **18** | One team per individual for this demo. | |
 
-Member IDs are placeholders, not employee names or job titles. People are the demo users; agents work on their behalf and must use the permissions of the represented user.
+People are the demo users; agents work on their behalf and must use the permissions of the represented user. All names below are synthetic. Stable IDs and scope paths remain unchanged when display names change.
+
+| Team | ID | Synthetic name |
+| --- | --- | --- |
+| Executive | `exec-01` | Mara Ellis |
+| Executive | `exec-02` | Theo Bennett |
+| Executive | `exec-03` | Nadia Chen |
+| Sales | `sales-01` | Maya Flores |
+| Sales | `sales-02` | Leo Park |
+| Sales | `sales-03` | Priya Shah |
+| Sales | `sales-04` | Oscar Reed |
+| Sales | `sales-05` | Zoe Brooks |
+| Engineering | `eng-01` | Iris Tan |
+| Engineering | `eng-02` | Owen Patel |
+| Engineering | `eng-03` | Ada Morgan |
+| Engineering | `eng-04` | Finn Rivera |
+| Engineering | `eng-05` | Nora Kim |
+| Engineering | `eng-06` | Eli Cooper |
+| Engineering | `eng-07` | Lena Ortiz |
+| Engineering | `eng-08` | Kai Thompson |
+| Engineering | `eng-09` | Ruby Singh |
+| Engineering | `eng-10` | Sam Walker |
+
+## Client Organization: Atlas Harbor
+
+**Atlas Harbor** is a fictional logistics company and Rusty Rod’s client for the Atlas pilot. The pilot reduces the work of preparing client reports. Mara Ellis publishes the approved commitment; Iris Tan’s Engineering estimate remains tentative until an authorized correction.
+
+Atlas Harbor is a separate organization, identified as `atlas-harbor`, not a child scope of `rusty-rod`. A client relationship grants no automatic access to either organization’s private memories. The demo includes a published client brief inside Rusty Rod organization memory. No Atlas Harbor users or internal memory store are seeded; the 22-scope count still describes Rusty Rod alone.
+
+## Cabinets and Session Files
+
+Each cabinet represents a team: **Executive, Sales, Engineering**. Organization identity belongs to the office; the client is shown as its external relationship. The drawers organize session files, not separate individual/team/organization access levels.
+
+A file represents the memory needed for **one agent session**, assembled from relevant, accessible individual, team, and organization records. For Maya’s Atlas client update, it combines her communication preference, Sales guidance, the approved Atlas commitment, the reporting goal, and the published client brief. It excludes Engineering’s private estimate, other members’ private notes, retired revisions, and unrelated office policies.
+
+A team cabinet is a visual organizer, not permission for teammates to open each other’s private session files. See [session-files.md](session-files.md) for assembly, evidence, export, and backend requirements.
 
 ## Memory Scopes
 
@@ -40,7 +75,7 @@ The demo has **22 logical memory spaces**: one organization space, three team sp
 | Engineering team | `rusty-rod/engineering` | The 10 Engineering members. | A technical estimate awaiting validation. |
 | Individual | `rusty-rod/sales/sales-01` | That individual and agents explicitly acting on their behalf. | Personal working notes or communication preferences. |
 
-For example, an agent acting for `sales-01` should read organization memory, Sales team memory, and that user's individual memory. It should not receive Engineering team memory or another salesperson's private notes.
+For example, an agent acting for Maya Flores (`sales-01`) should read organization memory, Sales team memory, and that user's individual memory. It should not receive Engineering team memory or another salesperson's private notes.
 
 Executive membership does not automatically grant access to other teams or individuals. Cross-team sharing requires an authorized publication to organization memory or an explicit grant. Reading a scope does not imply permission to write, approve, or delete its records. This is the intended demo policy, not a claim of production authentication or authorization enforcement.
 

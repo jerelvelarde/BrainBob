@@ -1,10 +1,12 @@
-import { cabinetLabels, canReadScope, companyScope, defaultReader, organizationScope } from "./sample-company";
+import { canReadScope, companyScope, defaultReader, memberName, organizationScope } from "./sample-company";
 import type { SceneCue } from "./scene-animation";
+import { contextRecords, contextSources } from "./demo-context";
+import { buildSessionFile } from "./session-memory";
 
 const org = organizationScope;
 const engineering = `${org}/engineering`;
 export type DemoSource = { id: string; scope: string; at: string; author: string; authority: string; text: string; step: number };
-export type DemoRecord = { id: string; scope: string; text: string; revision: number; sourceId: string; status: "active" | "retired" | "tentative" | "unresolved"; supersedes?: string };
+export type DemoRecord = { id: string; scope: string; text: string; revision: number; sourceId: string; status: "active" | "retired" | "tentative" | "unresolved"; supersedes?: string; tasks?: string[] };
 const sources: DemoSource[] = [
   { id: "atlas-approval-01", scope: org, at: "2026-10-14T09:00:00-07:00", author: "exec-01", authority: "Authorized commitment approver (fixture)", text: "Approved client commitment: deliver the Atlas pilot on November 6, 2026.", step: 0 },
   { id: "atlas-goal-01", scope: org, at: "2026-10-14T09:15:00-07:00", author: "exec-01", authority: "Approved project brief (fixture)", text: "Atlas must reduce the time consultants spend preparing client reports.", step: 0 },
@@ -19,7 +21,7 @@ const steps = [
   { title: "An estimate is not a promise", detail: "Engineering proposes November 13. The approved commitment stays November 6.", action: "evaluated", scope: engineering, reader: `${engineering}/eng-01`, sources: ["atlas-estimate-01", "atlas-risk-01", "atlas-approval-01"], decision: "Tentative conflict · no overwrite" },
   { title: "Sales sees the approved fact", detail: "A Sales agent uses November 6. Private Engineering discussions stay outside this view.", action: "retrieved", scope: org, reader: defaultReader, sources: ["atlas-approval-01"], decision: "Approved commitment retained" },
   { title: "A correction with authority", detail: "The later approval creates revision 2: November 13. Revision 1 stays in history.", action: "updated", scope: org, reader: `${org}/executive/exec-01`, sources: ["atlas-approval-01", "atlas-approval-02"], decision: "Authorized correction · traceable new revision" },
-  { title: "A fresh Sales agent gets it right", detail: "sales-02 uses November 13 from organization memory. The client’s reporting goal stays active.", action: "answered", scope: org, reader: `${org}/sales/sales-02`, sources: ["atlas-approval-02", "atlas-goal-01"], decision: "Current revision supplied to a fresh agent" },
+  { title: "A fresh Sales agent gets it right", detail: "Leo’s session file includes November 13, Sales guidance, and his own preferences. The client’s reporting goal stays active.", action: "answered", scope: org, reader: `${org}/sales/sales-02`, sources: ["atlas-approval-02", "atlas-goal-01"], decision: "Current revision supplied to a fresh agent" },
   { title: "Old evidence cannot undo approval", detail: "The earlier November 6 conversation resurfaces. Its timestamp precedes the approved correction, so revision 2 stays current.", action: "evaluated", scope: org, reader: defaultReader, sources: ["atlas-approval-01", "atlas-approval-02"], decision: "Stale source · no overwrite" },
   { title: "Missing evidence is not a delete order", detail: "Sample recent conversations, record coverage, and preserve valid knowledge when evidence is missing.", action: "evaluated", scope: org, reader: defaultReader, sources: ["atlas-approval-02", "atlas-goal-01"], decision: "Coverage and judgment reported separately" },
 ] as const;
@@ -55,7 +57,9 @@ export function demoView(index: number, reader: string) {
     ] : []),
     ...(index >= 3 ? [{ id: "atlas-date-r2", scope: org, text: "Atlas pilot: November 13, 2026", revision: 2, sourceId: "atlas-approval-02", status: "active" as const, supersedes: "atlas-date-r1" }] : []),
   ];
-  const records = allRecords.filter((record) => canReadScope(record.scope, reader));
+  const records = [...allRecords.map((record) => ({ ...record, tasks: ["atlas-update"] })), ...contextRecords].filter((record) => canReadScope(record.scope, reader));
+  const visibleSources = [...availableSources, ...contextSources.filter((source) => canReadScope(source.scope, reader))];
+  const sessionFile = buildSessionFile(records, visibleSources, reader, index);
   const routine = Array.from({ length: 52 }, (_, i) => ({ id: `routine-${String(i + 1).padStart(2, "0")}`, at: `2026-10-13T${String(Math.floor(i / 3)).padStart(2, "0")}:${String((i % 3) * 20).padStart(2, "0")}:00-07:00`, scope: org }));
   const audit = index === 6 ? sampleConversations([...routine, ...availableSources], reader, 17) : undefined;
   const covered = audit?.selectedIds.includes("atlas-approval-02");
@@ -68,15 +72,15 @@ export function demoView(index: number, reader: string) {
     evaluationLabel: step.action === "evaluated" ? index === 1 ? "TENTATIVE · HOLD" : index === 5 ? "STALE · KEEP CURRENT" : covered ? "SOURCE IN SAMPLE" : "EVIDENCE MISSING · KEEP" : undefined,
   } : undefined;
   return {
-    index, reader, labels: cabinetLabels(reader), cue,
+    index, reader, sessionFile, cue,
     title: canSeeStep ? step.title : "Private team activity",
     detail: canSeeStep ? step.detail : "This member’s view does not include that team’s source, record, or decision.",
     decision: canSeeStep ? step.decision : "Outside this preview’s scope",
     sourceIds: canSeeStep ? step.sources.filter((id) => visibleSourceIds.has(id)) : [],
-    sources: availableSources,
+    sources: visibleSources,
     records,
     currentCommitment: index >= 3 ? "November 13, 2026" : "November 6, 2026",
-    answer: index === 2 || index === 4 ? { text: `The approved Atlas pilot commitment is ${index === 4 ? "November 13" : "November 6"}, 2026. The reporting goal is unchanged.`, citedIds: [index === 4 ? "atlas-date-r2" : "atlas-date-r1", "atlas-goal-r1"], agent: index === 4 ? "Fresh agent for sales-02" : "Agent for sales-01" } : undefined,
+    answer: index === 2 || index === 4 ? { text: `The approved Atlas Harbor pilot commitment is ${index === 4 ? "November 13" : "November 6"}, 2026. The reporting goal is unchanged.`, citedIds: [index === 4 ? "atlas-date-r2" : "atlas-date-r1", "atlas-goal-r1"], agent: `${index === 4 ? "Fresh agent" : "Agent"} for ${memberName(index === 4 ? "sales-02" : "sales-01")}` } : undefined,
     audit: audit ? { ...audit, decisiveEvidenceCovered: covered, judgment: covered ? "Approval source is available for a check" : "Insufficient evidence in this sample; retain the record", cutoff: availableSources.at(-1)?.at } : undefined,
     model: null, execution: "scripted fixture" as const, usefulness: "Not run", cost: null,
   };
@@ -84,6 +88,6 @@ export function demoView(index: number, reader: string) {
 
 /** Exports only this member's synthetic view, never the whole fixture source collection. */
 export function exportDemoView(index: number, reader: string) {
-  const { cue: _cue, labels: _labels, ...view } = demoView(index, reader);
+  const { cue: _cue, ...view } = demoView(index, reader);
   return { format: "brainbob-rusty-rod-preview-v1", ...view, authorization: "Client-side preview only; not server authorization evidence" };
 }

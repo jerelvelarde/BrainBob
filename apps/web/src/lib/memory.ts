@@ -26,7 +26,7 @@ export const traceSchema = z.object({ version: z.literal(1), events: z.array(eve
 
 const initialMemories: Memory[] = [
   { id: "launch", title: "Approved Atlas commitment", content: "The approved Atlas pilot is due November 6, 2026.", scope: "organization", revision: 1, evidence: "exec-01, authorized approver (fixture): “The Atlas pilot commitment is November 6, 2026.”", status: "active" },
-  { id: "coffee", title: "Client update style", content: "sales-01 prefers concise, three-sentence client updates.", scope: "individual", revision: 1, evidence: "sales-01 (fixture): “Use a concise, three-sentence update.”", status: "active" },
+  { id: "coffee", title: "Client update style", content: "Maya Flores prefers concise, three-sentence client updates.", scope: "individual", revision: 1, evidence: "Maya Flores / sales-01 (fixture): “Use a concise, three-sentence update.”", status: "active" },
   { id: "sources", title: "Show your sources", content: "Cite the approved organization commitment in client updates.", scope: "team", revision: 1, evidence: "Sales handbook (fixture): “Cite the approved commitment.”", status: "active" },
 ];
 

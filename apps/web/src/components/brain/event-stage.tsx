@@ -6,7 +6,8 @@ import { RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
 import { BrainBob } from "./brain-bob";
 import { Label } from "./scene-label";
-import { cinematicsAt, performanceForCue, sceneClips, scopeCharacters, type BobPerformance, type SceneCue, type SceneCinematics } from "@/lib/scene-animation";
+import { SessionFolder } from "./session-folder";
+import { cinematicsAt, cueCabinetX, performanceForCue, sceneClips, scopeCharacters, type BobPerformance, type SceneCue, type SceneCinematics } from "@/lib/scene-animation";
 
 type Clock = RefObject<{ time: number; progress: number }>;
 type StageProps = { cue: SceneCue; playing: boolean; reducedMotion: boolean; speed: number;
@@ -95,7 +96,7 @@ function EvaluatorEntrance({ cue, clock }: { cue: SceneCue; clock: Clock }) {
 
 function TransferPaper({ cue, clock }: { cue: SceneCue; clock: Clock }) {
   const group = useRef<THREE.Group>(null);
-  const x = scopeCharacters[cue.scope].x;
+  const x = cueCabinetX(cue);
   useFrame(() => {
     if (!group.current) return;
     const p = clock.current.progress;
@@ -136,10 +137,10 @@ function TransferPaper({ cue, clock }: { cue: SceneCue; clock: Clock }) {
     group.current.position.set(px, py, pz);
     group.current.scale.setScalar(cue.action === "answered" ? 1.65 : 1.2);
   });
-  return <group ref={group}><Paper color={cue.action === "flagged" ? "#f7bbbb" : cue.action === "promoted" ? "#ffe095" : undefined} />
+  return <group ref={group}>{cue.sessionLabel && ["retrieved", "answered", "created", "updated"].includes(cue.action) ? <SessionFolder /> : <Paper color={cue.action === "flagged" ? "#f7bbbb" : cue.action === "promoted" ? "#ffe095" : undefined} />}
     {cue.action === "flagged" ? <Label text="LOCKED · REVIEW" position={[0, .55, 0]} width={1.8} /> : null}
     {cue.action === "rejected" ? <Label text="RETURN TO SENDER" position={[0, .5, 0]} width={1.8} /> : null}
-    {cue.action === "answered" ? <Label text="ANSWER + SOURCES" position={[0, .55, 0]} width={1.8} /> : null}
+    {cue.action === "answered" ? <Label text={cue.sessionLabel ?? "ANSWER + SOURCES"} position={[0, .55, 0]} width={1.8} /> : null}
   </group>;
 }
 
@@ -155,13 +156,13 @@ function AuditRecords({ cue, clock }: { cue: SceneCue; clock: Clock }) {
     sheets.current.forEach((sheet, i) => {
       if (!sheet) return;
       const u = smooth(.12 + i * .045, .56 + i * .045, p);
-      const x = cue.records?.[i] ? scopeCharacters[cue.records[i].scope].x : [-3.8, -.5, 3.2][i % 3];
+      const x = cue.records?.[i] ? (cue.records[i].cabinetX ?? scopeCharacters[cue.records[i].scope].x) : [-3.8, -.5, 3.2][i % 3];
       sheet.position.set(checking ? x : lerp(x, 3.2 + (i % 3) * .33, u), checking ? 1.5 : 1.45 + Math.sin(u * Math.PI) * 1.5 + (i > 2 ? .07 : 0), checking ? -2.8 : lerp(-3, -.35 + Math.floor(i / 3) * .45, u));
       sheet.rotation.set(checking ? 0 : -u * Math.PI / 2, 0, .12 * Math.sin(i));
       sheet.visible = checking || p > .1 + i * .04;
     });
     if (lens.current) {
-      lens.current.position.set((checking ? scopeCharacters[cue.scope].x : 3.55) + Math.sin(clock.current.time * 1.6) * .4, 2.05, (checking ? -2.7 : -.15) + Math.cos(clock.current.time * 1.6) * .15);
+      lens.current.position.set((checking ? cueCabinetX(cue) : 3.55) + Math.sin(clock.current.time * 1.6) * .4, 2.05, (checking ? -2.7 : -.15) + Math.cos(clock.current.time * 1.6) * .15);
       lens.current.rotation.z = -.4;
     }
   });
@@ -172,7 +173,7 @@ function AuditRecords({ cue, clock }: { cue: SceneCue; clock: Clock }) {
       <mesh position={[0, -.42, 0]}><cylinderGeometry args={[.035, .035, .4, 10]} /><meshStandardMaterial color="#7962b2" /></mesh>
       <mesh><circleGeometry args={[.22, 28]} /><meshBasicMaterial color="#bfdded" transparent opacity={.35} side={THREE.DoubleSide} /></mesh>
     </group>
-    <Label text={label} position={checking ? [scopeCharacters[cue.scope].x, 3.15, -2.7] : [3.8, 2.8, -1]} width={2.9} />
+    <Label text={label} position={checking ? [cueCabinetX(cue), 3.15, -2.7] : [3.8, 2.8, -1]} width={2.9} />
   </group>;
 }
 
@@ -276,7 +277,7 @@ function ScopeSpotlight({ cue, clock }: { cue: SceneCue; clock: Clock }) {
   useFrame(() => {
     if (ring.current) ring.current.scale.setScalar(1 + Math.sin(clock.current.time * 2) * .035);
   });
-  return <group position={[scopeCharacters[cue.scope].x, .075, -3.5]}>
+  return <group position={[cueCabinetX(cue), .075, -3.5]}>
     <mesh ref={ring} rotation={[-Math.PI / 2, 0, 0]}><ringGeometry args={[.82, 1.02, 48]} /><meshBasicMaterial color={color} transparent opacity={.7} side={THREE.DoubleSide} /></mesh>
   </group>;
 }
@@ -305,12 +306,12 @@ export function EventStage({ cue, playing, reducedMotion, speed, seek, onProgres
     <TransferPaper cue={cue} clock={clock} />
     {cue.action === "evaluated" ? <><EvaluatorEntrance cue={cue} clock={clock} /><AuditRecords cue={cue} clock={clock} /></> : null}
     {cue.action === "forgotten" ? <OfficeChaos clock={clock} /> : null}
-    {cue.action === "locked" || cue.action === "resolved" ? <group position={[scopeCharacters[cue.scope].x, 2.7, -3.1]}>
+    {cue.action === "locked" || cue.action === "resolved" ? <group position={[cueCabinetX(cue), 2.7, -3.1]}>
       <mesh position={[0, .25, 0]}><torusGeometry args={[.2, .045, 8, 20, Math.PI]} /><meshStandardMaterial color="#7962b2" /></mesh>
       <RoundedBox args={[.5, .38, .12]} radius={.04}><meshStandardMaterial color={cue.action === "resolved" ? "#93bac3" : "#d7b268"} /></RoundedBox>
       <Label text={cue.action === "resolved" ? "OWNER KEPT IT" : "OWNER LOCKED"} position={[0, .7, 0]} width={1.9} />
     </group> : null}
-    {cue.action === "flagged" ? <group position={[scopeCharacters[cue.scope].x + .45, 2.65, -3.7]}>
+    {cue.action === "flagged" ? <group position={[cueCabinetX(cue) + .45, 2.65, -3.7]}>
       <mesh position={[0, -.2, 0]}><cylinderGeometry args={[.025, .025, .8, 8]} /><meshStandardMaterial color="#725c66" /></mesh>
       <RoundedBox args={[.5, .3, .04]} radius={.03} position={[.23, .1, 0]}><meshBasicMaterial color="#cf6572" /></RoundedBox>
     </group> : null}

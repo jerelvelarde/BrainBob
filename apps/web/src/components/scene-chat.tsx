@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { CopilotChat, CopilotKitProvider } from "@copilotkit/react-core/v2";
 import { BackendChatAgent, type ChatContext, type ChatMode } from "@/lib/backend-chat-agent";
 import { scopeLabel, type BackendAnswer, type BackendMemory } from "@/lib/brain-api";
+import { memberId } from "@/lib/sample-company";
 
 const modes = { ask: "Ask", remember: "Remember", feedback: "Usefulness", review: "Review" };
 const placeholders = { ask: "Ask the shared brain…", remember: "Paste a conversation to remember…", feedback: "Give the correct answer to your last question…", review: "Send ‘review’ to assess accumulated evidence…" };
@@ -16,10 +17,10 @@ export default function SceneChat({ reader, readOnly, memories, onAnswer, onInsp
   const [mode, setMode] = useState<ChatMode>("ask");
   const [answer, setAnswer] = useState<BackendAnswer>();
   const [error, setError] = useState("");
-  const context = useRef<ChatContext>({ mode, reader, author: scopeLabel(reader), readOnly });
+  const context = useRef<ChatContext>({ mode, reader, author: memberId(reader), readOnly });
   const callbacks = useRef({ onAnswer });
   useEffect(() => { callbacks.current = { onAnswer }; }, [onAnswer]);
-  useEffect(() => { context.current = { mode, reader, author: scopeLabel(reader), readOnly, taskId: answer?.task_id }; }, [mode, reader, readOnly, answer]);
+  useEffect(() => { context.current = { mode, reader, author: memberId(reader), readOnly, taskId: answer?.task_id }; }, [mode, reader, readOnly, answer]);
   const [agent] = useState(() => new BackendChatAgent(() => context.current, (result) => { setAnswer(result); callbacks.current.onAnswer(result); }, setError));
   const [agents] = useState(() => ({ brainbob: agent }));
   return <>

@@ -6,7 +6,9 @@ import { OrbitControls, RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
 import { Label } from "./scene-label";
 import { EventStage } from "./event-stage";
-import { cinematicsAt, scopeCharacters, type SceneCue, type SceneCinematics } from "@/lib/scene-animation";
+import { cinematicsAt, cueForSession, type SceneCue, type SceneCinematics } from "@/lib/scene-animation";
+import { clientOrganization, defaultReader, demoTeams, teamForReader, type TeamSlug } from "@/lib/sample-company";
+import { SessionFolder } from "./session-folder";
 import { BrainBob } from "./brain-bob";
 import type { MemoryEvent, MemoryScope } from "@/lib/memory";
 
@@ -16,16 +18,13 @@ type SceneProps = {
   cue?: SceneCue; seek?: { value: number; revision: number }; onProgress: (progress: number) => void;
   selectedScope: MemoryScope | "all"; selectedMemory: string;
   flaggedScopes?: MemoryScope[];
-  cabinetLabels?: Record<MemoryScope, string>;
+  reader?: string; onTeam?: (team: TeamSlug) => void;
+  sessionFile?: { label: string; onOpen: () => void };
   onSelect: (memoryId: string) => void; onScope: (scope: MemoryScope) => void;
   onWorker: (name: string) => void; onReady: (handle: SceneHandle) => void;
 };
 const palette = { floor: "#e8d7b9", green: "#b99a76", trim: "#6e5b49", wall: "#e7b6ae", fold: "#c98f91", dark: "#43392f" };
-const banks: { scope: MemoryScope; color: string; x: number; memory: string; label: string }[] = [
-  { scope: "individual", color: "#93bac3", x: -3.8, memory: "coffee", label: "SALES-01" },
-  { scope: "team", color: "#d7b268", x: -.5, memory: "sources", label: "SALES" },
-  { scope: "organization", color: "#c4ac7d", x: 3.2, memory: "launch", label: "RUSTY ROD" },
-];
+const banks = demoTeams;
 const routes: [number, number][][] = [
   [[-5.2, 3.4], [-5.2, -2.4], [1.65, -2.4], [1.65, 3.4]],
   [[5.3, 3.4], [1.8, 3.4], [1.8, -2.4], [5.3, -2.4]],
@@ -105,7 +104,7 @@ function Cabinet({ bank, selected, active, onClick }: { bank: typeof banks[numbe
     </group>)}
     <Box position={[0, 2.33, 0]} size={[1.45, .1, .86]} color={palette.trim} />
     {active ? <mesh position={[0, 2.55, 0]}><sphereGeometry args={[.09, 12, 10]} /><meshBasicMaterial color="#f4cf49" /></mesh> : null}
-    <Label position={[0, 2.75, 0]} text={`${bank.label} · ${scopeCharacters[bank.scope].role.toUpperCase()}`} width={2.6} selected={selected} onClick={onClick} />
+    <Label position={[0, 2.75, 0]} text={`${bank.label.toUpperCase()} · ${bank.count} MEMBERS`} width={2.8} selected={selected} onClick={onClick} />
   </group>;
 }
 
@@ -237,6 +236,9 @@ class SceneBoundary extends Component<{ children: React.ReactNode }, { failed: b
 
 export default function BrainScene(props: SceneProps) {
   const [supported, setSupported] = useState(true);
+  const reader = props.reader ?? defaultReader;
+  const team = teamForReader(reader);
+  const cue = useMemo(() => cueForSession(props.cue, reader), [props.cue, reader]);
   const cinematics = useRef<SceneCinematics>(cinematicsAt(undefined, 0));
   useEffect(() => {
     const canvas = document.createElement("canvas");
@@ -248,12 +250,18 @@ export default function BrainScene(props: SceneProps) {
   return <SceneBoundary><Canvas orthographic shadows dpr={[1, 1.7]} camera={{ position: [16, 14, 19], zoom: 45, near: .1, far: 100 }} gl={{ antialias: true, powerPreference: "high-performance" }} aria-label="Interactive isometric brain office with six walking BrainBob memory workers">
     <SceneLighting cinematics={cinematics} />
     <Room />
-    {banks.map((bank) => <Cabinet key={bank.scope} bank={props.cabinetLabels ? { ...bank, label: props.cabinetLabels[bank.scope].toUpperCase() } : bank} selected={props.selectedScope === bank.scope} active={props.cue?.scope === bank.scope} onClick={() => { props.onScope(bank.scope); props.onSelect(bank.memory); }} />)}
-    {props.flaggedScopes?.map((scope) => <Label key={scope} text="FLAGGED · OWNER REVIEW" position={[scopeCharacters[scope].x, 3.35, -3.8]} width={2.6} />)}
+    <Label text="RUSTY ROD · CONSULTING" position={[-2.8, 4.25, -4.8]} width={3.4} />
+    <Label text={`CLIENT · ${clientOrganization.name.toUpperCase()}`} position={[1.6, 4.25, -4.8]} width={3.4} />
+    {banks.map((bank) => <Cabinet key={bank.slug} bank={bank} selected={team?.slug === bank.slug} active={Boolean(cue) && team?.slug === bank.slug} onClick={() => props.onTeam?.(bank.slug)} />)}
+    {props.flaggedScopes?.length && team ? <Label text="FLAGGED · OWNER REVIEW" position={[team.x, 3.35, -3.8]} width={2.6} /> : null}
     <Desk position={[-3.6, 0, .9]} />
     <Desk position={[.2, 0, .6]} />
+    {props.sessionFile ? <group position={[.62, 1.17, .93]} onClick={(event) => { event.stopPropagation(); props.sessionFile?.onOpen(); }} onPointerOver={() => { document.body.style.cursor = "pointer"; }} onPointerOut={() => { document.body.style.cursor = "auto"; }}>
+      <group rotation={[-Math.PI / 2, 0, -.15]} scale={1.3}><SessionFolder /></group>
+      <Label text={`${props.sessionFile.label.toUpperCase()} · SESSION FILE`} position={[0, .6, 0]} width={2.7} onClick={props.sessionFile.onOpen} />
+    </group> : null}
     <Desk position={[3.8, 0, -1]} rotation={-.1} audit={props.cue?.evaluation?.phase !== "check"} />
-    {props.cue ? <EventStage key={props.cue.id} cue={props.cue} playing={props.playing} speed={props.speed} reducedMotion={props.reducedMotion} seek={props.seek} onProgress={props.onProgress} cinematics={cinematics} /> : routes.map((_, index) => <Walker key={index} index={index} playing={props.playing} speed={props.speed} reducedMotion={props.reducedMotion} event={props.event} onClick={() => props.onWorker(index === 4 ? "Inspector BrainBob checks memories against their evidence." : index === 0 ? "Curator BrainBob files new memories and revisions." : "Runner BrainBob delivers memories to the team.")} />)}
+    {cue ? <EventStage key={cue.id} cue={cue} playing={props.playing} speed={props.speed} reducedMotion={props.reducedMotion} seek={props.seek} onProgress={props.onProgress} cinematics={cinematics} /> : routes.map((_, index) => <Walker key={index} index={index} playing={props.playing} speed={props.speed} reducedMotion={props.reducedMotion} event={props.event} onClick={() => props.onWorker(index === 4 ? "Inspector BrainBob checks memories against their evidence." : index === 0 ? "Curator BrainBob files new memories and revisions." : "Runner BrainBob delivers a session file to the agent.")} />)}
     <CameraRig onReady={props.onReady} cinematics={cinematics} />
   </Canvas></SceneBoundary>;
 }

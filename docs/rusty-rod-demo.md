@@ -8,21 +8,21 @@ This guide follows [the company specification](sample-company.md) and supplement
 
 Run `pnpm dev`, then open `http://127.0.0.1:3000/demo`. No backend or API key is needed. This route is an explicitly **scripted fixture**, not an inference run or benchmark. The homepage's Demo link and the animation playground's Atlas demo link open it.
 
-The scene has three cabinet positions for the selected member's individual, team, and organization scopes. The member selector includes Executive (3), Sales (5), and Engineering (10): 18 members, 22 logical memory scopes. Cabinet labels change with the viewer. Six BrainBobs represent worker roles, not the organization's headcount.
+The three fixed cabinets represent Executive, Sales, and Engineering. Rusty Rod is the office organization; Atlas Harbor is its fictional logistics client. The selector shows 18 synthetic names while preserving their stable IDs and 22 internal memory scopes. Six BrainBobs represent worker roles, not headcount.
 
-Use Next, Previous, or the step selector to retrace; Replay repeats the current animation. Each step chooses a suggested viewer, and the viewer can be changed independently to inspect the intended scope policy. Evidence opens the floating inspector. A record or citation opens its source; Export this view downloads only that member's synthetic records, sources, decision details, and audit metadata.
+Use Next, Previous, or the step selector to retrace; Replay repeats the current animation. Each step chooses a suggested viewer, and the viewer can be changed independently to inspect the intended scope policy. Session file opens the selected person’s task-specific dossier, including individual, team, and organization sections with accessible sources. Download session .md exports that assembled context. The desktop file and the person’s team cabinet also open it. Choosing another cabinet does not switch identity or grant access. Evidence opens the separate floating inspector. A record or citation opens its source; Export this view downloads only that member's synthetic records, sources, decision details, and audit metadata.
 
 | Step | Suggested viewer | What to show |
 | --- | --- | --- |
-| Approved commitment | sales-01 | Organization revision 1 says November 6, 2026, citing `atlas-approval-01`. The reporting goal is a separate valid record. |
-| Tentative estimate | eng-01 | Engineering estimates November 13; the organization commitment stays November 6. Integration readiness remains unresolved. |
-| Scoped Sales answer | sales-01 | The approved November 6 fact is used; Engineering records and evidence are absent from this view. |
-| Authorized correction | exec-01 | Later organization approval creates revision 2 for November 13. The old record is retired as superseded, with both public sources retained. |
-| Fresh-agent handoff | sales-02 | A scripted fresh-agent answer cites revision 2 and the unchanged reporting goal, without Engineering's private estimate or sales-01's personal note. |
-| Stale source resurfaces | sales-01 | The older November 6 source cannot undo the later approval. Revision 2 stays active. |
-| Incomplete audit sample | sales-01 | Seed 17 selects 10 of the latest 50 eligible fixture conversations, excluding the decisive approval in this view. Coverage is No; judgment is insufficient evidence; valid records stay active. |
+| Approved commitment | Maya Flores (`sales-01`) | Organization revision 1 says November 6, 2026, citing `atlas-approval-01`. The reporting goal is a separate valid record. |
+| Tentative estimate | Iris Tan (`eng-01`) | Engineering estimates November 13; the organization commitment stays November 6. Integration readiness remains unresolved. |
+| Scoped Sales answer | Maya Flores (`sales-01`) | The approved November 6 fact is used; Engineering records and evidence are absent from this view. |
+| Authorized correction | Mara Ellis (`exec-01`) | Later organization approval creates revision 2 for November 13. The old record is retired as superseded, with both public sources retained. |
+| Fresh-agent handoff | Leo Park (`sales-02`) | A scripted fresh-agent answer cites revision 2 and the unchanged reporting goal, without Engineering's private estimate or sales-01's personal note. |
+| Stale source resurfaces | Maya Flores (`sales-01`) | The older November 6 source cannot undo the later approval. Revision 2 stays active. |
+| Incomplete audit sample | Maya Flores (`sales-01`) | Seed 17 selects 10 of the latest 50 eligible fixture conversations, excluding the decisive approval in this view. Coverage is No; judgment is insufficient evidence; valid records stay active. |
 
-Switch to exec-01 during the Engineering step: private records, sources, and the decision disappear. This demonstrates the intended presentation policy. **All fixture data is synthetic and shipped in the client bundle; this is not a security test or server authorization.**
+Switch to Mara Ellis (exec-01) during the Engineering step: private records, sources, and the decision disappear. This demonstrates the intended presentation policy. **All fixture data is synthetic and shipped in the client bundle; this is not a security test or server authorization.**
 
 The old animation playground remains at `/rehearsal`, with Rusty Rod labels and Atlas rehearsal records. Its manual retirement effect can still burn the office and shred paper. The correctness walkthrough does not retire unrelated valid knowledge just to show that effect. It does not conflate supersession with wholesale deletion.
 
@@ -36,7 +36,7 @@ The sample preview records its seed, eligible and selected IDs, cutoff, and deci
 
 ## Live status and Bonan's remaining handoff
 
-The main route retains the existing HTTP/SSE integration documented in [frontend-integration.md](frontend-integration.md). Member reads now send Rusty Rod paths, and events from any of the 22 registered paths can map to the current viewer's three cabinet positions. The default Remember request writes to the selected member's individual path. Reading organization memory does not confer approval or write authority.
+The main route retains the existing HTTP/SSE integration documented in [frontend-integration.md](frontend-integration.md). Member reads now send Rusty Rod paths, and events retain their logical scopes while the animation visits the represented member’s team cabinet. The main route does not yet assemble live session files; the downloadable dossier is currently implemented in the scripted walkthrough. The default Remember request writes to the selected member's individual path. Reading organization memory does not confer approval or write authority.
 
 The backend contract currently supports immutable corrections, source episodes, history, locks, and leave-one-out events. The following are **requirements for a live correctness demonstration**, not claims about the current implementation:
 
@@ -60,3 +60,5 @@ Report correct updates; unsupported/stale overwrites; unsupported writes; unjust
 The [760-question LoCoMo result](../backend/results/20261017-112134-locomo/results.md) reports 404/760 before and after auditing and zero retirements. That result does not establish a maintenance gain. A separate exploratory threshold stress test is not a replacement for a held-out maintenance comparison. The walkthrough displays no accuracy gain, cost saving, or security success score.
 
 To turn this into a live demo, run the same sources and sequence through the authorized backend, capture the emitted trace and actual model attribution, then verify the fresh-agent response and denied access cases. A production-looking animation is not evidence that those checks passed.
+
+The [session-file specification](session-files.md) defines the file assembly and the distinction between team organization and record permissions.

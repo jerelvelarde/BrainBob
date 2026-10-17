@@ -176,7 +176,7 @@ export function BrainWorkspace() {
       <BrainScene playing={playing} speed={speed} reducedMotion={reducedMotion} event={currentEvent}
         cue={sceneCue} seek={clipSeek} onProgress={setClipProgress}
         selectedScope={scope} selectedMemory={selected} onSelect={openInspector} onScope={setScope}
-        onWorker={setNotice} onReady={onCameraReady} />
+        onTeam={(team) => { if (team === "sales") { setLibraryOpen(true); setInspecting(false); } else setNotice("Open the Atlas demo to explore named members and their team session files."); }} onWorker={setNotice} onReady={onCameraReady} />
     </section>
 
     <header className="floating-header">

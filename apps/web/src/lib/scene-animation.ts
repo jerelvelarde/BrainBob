@@ -1,12 +1,23 @@
 import type { MemoryAction, MemoryEvent, MemoryScope } from "./memory";
+import { memberForReader, teamForReader } from "./sample-company";
 
 /** Presentation only. These cues never create or change a memory. */
 export type SceneAction = MemoryAction | "arrived" | "rejected" | "answered" | "promoted" | "flagged" | "locked" | "resolved";
 export type SceneCue = { id: string; action: SceneAction; scope: MemoryScope; title: string; source: "fixture" | "trace" | "backend";
-  seconds?: number; records?: { id: string; scope: MemoryScope }[];
+  seconds?: number; records?: { id: string; scope: MemoryScope; cabinetX?: number }[];
+  cabinetX?: number; sessionLabel?: string;
   evaluationLabel?: string;
   evaluation?: { phase: "start" | "check" | "finish"; verdict?: "helpful" | "harmful" | "unchanged" | "unconfirmed" } };
 export type Point = [number, number];
+
+/** A cabinet is a team. Logical scopes stay intact inside the session file. */
+export function cueForSession(cue: SceneCue | undefined, reader: string): SceneCue | undefined {
+  const team = teamForReader(reader), member = memberForReader(reader);
+  if (!cue || !team || !member) return undefined;
+  return { ...cue, cabinetX: team.x, sessionLabel: `${member.label.split(" ")[0]}’S SESSION`,
+    records: cue.records?.map((record) => ({ ...record, cabinetX: team.x })) };
+}
+export function cueCabinetX(cue: SceneCue) { return cue.cabinetX ?? scopeCharacters[cue.scope].x; }
 export type BobPose = "idle" | "carry" | "write" | "panic" | "inspect" | "present";
 export type BobExpression = "happy" | "worried" | "focused";
 export type BobPerformance = { time: number; distance: number; walking: boolean; pose: BobPose; expression: BobExpression; paper: boolean; reaction?: "nod" | "shake" };
@@ -27,7 +38,7 @@ export function cinematicsAt(action: SceneAction | undefined, progress: number, 
 }
 
 export const scopeCharacters = {
-  individual: { name: "sales-01", role: "Individual", x: -3.8, color: "#93bac3" },
+  individual: { name: "Maya Flores", role: "Individual", x: -3.8, color: "#93bac3" },
   team: { name: "Sales", role: "Team", x: -.5, color: "#d7b268" },
   organization: { name: "Rusty Rod", role: "Organization", x: 3.2, color: "#c4ac7d" },
 } satisfies Record<MemoryScope, { name: string; role: string; x: number; color: string }>;
@@ -89,10 +100,10 @@ export function samplePath(points: Waypoint[], progress: number) {
   return { x: last[1], z: last[2], angle: .55, distance, moving: false };
 }
 
-export function workerPerformance(action: SceneAction, scope: MemoryScope, index: number, progress: number) {
+export function workerPerformance(action: SceneAction, scope: MemoryScope, index: number, progress: number, cabinetX?: number) {
   const p = Math.max(0, Math.min(1, progress));
   const [hx, hz] = workerHomes[index];
-  const x = scopeCharacters[scope].x;
+  const x = cabinetX ?? scopeCharacters[scope].x;
   let path: Waypoint[] = [[0, hx, hz], [1, hx, hz]];
   let pose: BobPose = "idle";
   let expression: BobExpression = "happy";
@@ -146,7 +157,7 @@ export function workerPerformance(action: SceneAction, scope: MemoryScope, index
 
 /** Backend audit clips visit only the cited record, rather than staging a whole-brain inspection. */
 export function performanceForCue(cue: SceneCue, index: number, progress: number) {
-  if (!cue.evaluation) return workerPerformance(cue.action, cue.scope, index, progress);
+  if (!cue.evaluation) return workerPerformance(cue.action, cue.scope, index, progress, cue.cabinetX);
   if (index !== 4) {
     // Keep the worried crew spread around their desks while the cited paper travels.
     // Reusing the rehearsal's converging paths for every check piled them onto the inspector.
@@ -154,7 +165,7 @@ export function performanceForCue(cue: SceneCue, index: number, progress: number
     return { ...samplePath([[0, x, z], [1, x, z]], progress), pose: "panic" as const, expression: "worried" as const, paper: true };
   }
   // Stand beside the record so the desk and cabinet do not hide the evaluator's face.
-  const x = scopeCharacters[cue.scope].x - 2;
+  const x = cueCabinetX(cue) - 2;
   const path: Waypoint[] = cue.evaluation.phase === "start" ? [[0, 4.8, .5], [.6, 4.8, -2.15], [1, x, -2.15]]
     : cue.evaluation.phase === "finish" ? [[0, x, -2.15], [.5, 4.8, -2.15], [1, 4.8, .5]]
     : [[0, x, -2.15], [1, x, -2.15]];

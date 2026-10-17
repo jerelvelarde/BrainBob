@@ -173,3 +173,18 @@ blockquote { font-size: 12px; color: var(--muted); line-height: 1.7; margin: 13p
 .demo-answer button { border: 1px solid #cbbbdf; border-radius: 6px; font-size: 10px; padding: 6px; margin: 0 4px 4px 0; }
 .demo-ids { white-space: pre-wrap; font-size: 11px; line-height: 1.8; }
 @media (max-width: 760px) { .correctness-demo .floating-header { max-width: 190px; }.demo-evidence { top: 144px; bottom: 175px; width: calc(100% - 36px); }.correctness-demo .camera-controls { bottom: 180px; }.demo-controls .scene-dock select { font-size: 11px; }.demo-controls .clip-caption strong { font-size: 16px; }.demo-controls .clip-caption small { font-size: 11px; } }
+
+.session-cover { padding: 18px; background: #f4e4bb; border-radius: 12px; margin-bottom: 14px; }
+.session-cover small, .session-cover span { color: var(--muted); font-size: 11px; }
+.session-cover h3 { margin: 9px 0; font-size: 25px; letter-spacing: -.7px; }
+.session-cover p { font-size: 14px; line-height: 1.5; margin: 0 0 10px; }
+.session-tabs { display: flex; gap: 7px; flex-wrap: wrap; margin: 15px 0; }
+.session-tabs span { padding: 7px 9px; border-radius: 7px; font-size: 11px; text-transform: capitalize; background: #e1edf0; }
+.session-tabs [data-scope=team] { background: #f6e8c8; }.session-tabs [data-scope=organization] { background: #ebe2f3; }
+.session-tabs b { margin-left: 5px; }
+.session-records article { border-bottom: 1px solid var(--line); padding: 2px 0 12px; }
+.session-records p { margin-bottom: 7px; }.session-records button { font-size: 11px; color: #80648e; text-decoration: underline; text-underline-offset: 3px; }
+.session-uncertainty { display: block; margin-top: 12px; font-size: 11px; color: #956b29; }
+.session-history { font-size: 12px; color: #80648e; text-align: left; }
+.reader-control select { max-width: 170px; }
+@media(max-width:760px) { .reader-control select { max-width: 150px; }.correctness-demo .floating-header { max-width: 185px; }.correctness-demo .panel-launchers { gap: 5px; } }

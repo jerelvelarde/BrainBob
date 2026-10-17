@@ -26,7 +26,7 @@ CopilotKit v2 renders chat through a self-managed AG-UI agent. The adapter emits
 | Retire / lock | `POST /memories/{id}/retire` or `/lock` | Backend status change |
 | Owner resolution | `POST /memories/{id}/resolve` | Keep and clear flag, retire, or correct |
 
-The member selector has 18 Rusty Rod members across Executive, Sales, and Engineering. For example, `sales-01` reads `rusty-rod/sales/sales-01`, `rusty-rod/sales`, and `rusty-rod`. Executive membership adds no descendant access. Remember writes into the selected member’s individual scope. Changing readers starts a fresh chat context. The 22 scope paths are mapped to the three cabinet levels; labels follow the current member.
+The member selector has 18 Rusty Rod members across Executive, Sales, and Engineering. For example, Maya Flores (`sales-01`) reads `rusty-rod/sales/sales-01`, `rusty-rod/sales`, and `rusty-rod`. Executive membership adds no descendant access. Remember writes into the selected member’s individual scope. Changing readers starts a fresh chat context. The three cabinets are fixed teams: Executive, Sales, and Engineering. Logical access levels stay on the records; animations visit the represented member’s team cabinet. Display names are synthetic; request authors and owner identifiers retain stable member IDs.
 
 **Acting as (demo)** supplies an owner string, not an authenticated identity. The UI disables another owner's resolution controls, and backend 403s remain visible. The current global memory/event endpoints and client filtering are demonstration behavior, not an authorization boundary.
 
@@ -37,7 +37,7 @@ The member selector has 18 Rusty Rod members across Executive, Sales, and Engine
 | Event | Scene behavior |
 | --- | --- |
 | `memory.added` | File a new paper; `supersedes` selects the correction/writing scene |
-| `memory.retrieved` | One cabinet visit per visible scope, retaining the real memory IDs |
+| `memory.retrieved` | A session-folder visit to the member’s team cabinet for each visible scope, retaining the real memory IDs |
 | `answer.produced` | Deliver an answer with citations |
 | `evaluation.started` | Evaluator enters; caption explicitly says **checks the cited memories** |
 | `memory.checked` | Visit that record's cabinet; helpful, harmful, no-flip, or failed-confirmation pose |
@@ -47,7 +47,7 @@ The member selector has 18 Rusty Rod members across Executive, Sales, and Engine
 | `memory.flagged` | Red flag on the cabinet; locked record stays available |
 | `memory.locked` / owner keeps | Padlock / owner resolution scene |
 
-Supersession retirement does not trigger the fire scene. `memory.corrected`, `evidence.recorded`, and retire/correct resolution bookkeeping do not duplicate scenes already driven by other events. Unscoped `episode.ingested` and `memory.rejected` events update the log but cannot safely be attributed to a cabinet; their request receipts stay in chat. The 22 registered Rusty Rod paths map to individual, team, or organization cabinet positions; unregistered paths are not silently assigned to them.
+Supersession retirement does not trigger the fire scene. `memory.corrected`, `evidence.recorded`, and retire/correct resolution bookkeeping do not duplicate scenes already driven by other events. Unscoped `episode.ingested` and `memory.rejected` events update the log but cannot safely be attributed to a cabinet; their request receipts stay in chat. The 22 registered Rusty Rod paths retain individual, team, or organization metadata. A presentation projection supplies the member’s team-cabinet position; unregistered paths are not silently assigned to it. This does not change the backend event schema.
 
 Retrace projects the event log at a selected sequence and poses the corresponding scene. It never resends requests. Mutations and chat input are disabled while retracing; the full correction chain remains available as historical context. Return to live restores current state without bursting through missed animations. Reduced motion uses static poses and manual event selection.
 
@@ -57,10 +57,12 @@ Retrace projects the event log at a selected sequence and poses the correspondin
 
 The real backend was unavailable on this machine during integration. No live Crusoe inference or evaluation quality result is claimed.
 
-For repeatable frontend QA only, run `node apps/web/scripts/contract-fixture.mjs` while port 3001 is free, then reload the frontend. This loopback-only, in-memory fixture implements representative HTTP/SSE flows, labels its records and answers **Contract fixture**, and makes no model calls. Its review deterministically flags the locked house rule; its feedback verdicts are scripted. Stop it before starting the real backend, and reload to clear the fixture projection.
+For repeatable frontend QA only, run `node apps/web/scripts/contract-fixture.mjs` while port 3001 is free, then reload the frontend. This loopback-only, in-memory fixture implements representative HTTP/SSE flows, labels its records and answers **Contract fixture**, and makes no model calls. Its review deterministically flags the locked fixture record; its feedback verdicts are scripted. Stop it before starting the real backend, and reload to clear the fixture projection.
 
 Automated tests cover event replay/deduplication, scope ancestry, correction history, locked flags, confirmation truthfulness, cited-memory verdicts, request payloads, AG-UI lifecycle, and error handling. Browser checks exercised scoped reads, chat requests, original sources, immutable corrections, retracing, locks/flags, and manual retirement against that fixture. Production build and TypeScript checks also pass.
 
 Remaining live validation: run the same flow against Bonan's server and Crusoe, including a real fresh retirement check. Backend task/evaluation state currently lives in process memory; after a backend restart an old feedback task may return 404. The UI surfaces that response and requires a new Ask. Records without a corresponding creation event can be shown from the memory snapshot but cannot be reconstructed at earlier timeline positions.
 
 The README, architecture plan, and judging runbook retain their earlier wording pending Jerel's authorization to update those files.
+
+The [session-file model](session-files.md) is implemented as a deterministic fixture at `/demo`. Live task-context assembly still requires a backend handoff; a folder animation alone does not establish what context was passed to a model.
