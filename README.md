@@ -6,7 +6,36 @@ Think of the SpongeBobs working inside a brain: some plan, some file memories, s
 
 **Focus: Shared Brain.** Every agent reads the team's living project memory before working and updates it afterward. We want to keep shared knowledge current, lean, and conflict-free, then demonstrate measurable gains in output quality.
 
-**Status:** Frontend implementation is in progress. The initial scene uses scripted memory events and browser-local history. The NemoClaw harness, Switchyard routing, Crusoe inference, SQL persistence, and live memory evaluation are planned integrations; no live-model results are claimed yet.
+**Status:** The first 3D frontend is implemented. It includes six walking SpongeBobs, memory cabinets, a revision/evidence inspector, timeline retracing, and CopilotKit scene controls. It uses clearly labeled scripted memory events and browser-local history. The NemoClaw harness, Switchyard routing, Crusoe inference, SQL persistence, and live memory evaluation are planned integrations; no live-model results are claimed yet.
+
+## Run the Frontend
+
+Requires Node.js 22+ and pnpm 10.32.1.
+
+```bash
+pnpm install
+pnpm dev
+```
+
+Open [the local preview](http://127.0.0.1:3000). No API key is needed for the scripted scene.
+
+- Drag the room to orbit; scroll or use the zoom controls to inspect the crew.
+- Click a filing cabinet to filter individual, team, or organization memory.
+- Click a memory card to inspect its source evidence and revision history.
+- Choose **Watch the memory loop** to demonstrate retrieval, evaluation, correction, creation, and archival using fixture data. This restarts the local fixture trace.
+- Scrub the timeline to retrace recorded changes; **Return to live** restores current state.
+- Choose **Talk to the crew** for CopilotKit/AG-UI scene commands such as “retrieve this memory”. These are scripted commands, not live inference.
+- Export the local trace as JSON, or reset the scene to its starting fixture. History is saved in this browser; it is not yet shared across agents or devices.
+
+```bash
+pnpm typecheck
+pnpm test
+pnpm build
+```
+
+The source for this first frontend is in [apps/web](apps/web).
+
+![BrainBob's first 3D isometric memory office](docs/assets/brainbob-preview.png)
 
 ## Chosen Stack
 

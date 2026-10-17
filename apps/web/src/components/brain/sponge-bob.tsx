@@ -1,0 +1,65 @@
+"use client";
+
+import { useRef } from "react";
+import { useFrame } from "@react-three/fiber";
+import { RoundedBox } from "@react-three/drei";
+import * as THREE from "three";
+
+const pores = [[-.24, .28, .07], [.23, .29, .055], [-.26, -.22, .045], [.27, -.16, .065], [-.1, .34, .03], [.1, -.3, .04]];
+
+function Shoe({ side, legRef }: { side: number; legRef: React.Ref<THREE.Group> }) {
+  return <group ref={legRef} position={[side * .17, .5, 0]}>
+    <mesh position={[0, -.1, 0]} castShadow><cylinderGeometry args={[.035, .035, .26, 8]} /><meshStandardMaterial color="#f5ce44" /></mesh>
+    <mesh position={[0, -.26, 0]}><cylinderGeometry args={[.045, .045, .12, 8]} /><meshStandardMaterial color="#fff9e9" /></mesh>
+    <mesh position={[0, -.24, 0]}><cylinderGeometry args={[.047, .047, .015, 8]} /><meshStandardMaterial color="#d3634a" /></mesh>
+    <RoundedBox args={[.19, .12, .29]} radius={.05} position={[side * .025, -.36, .06]} castShadow><meshStandardMaterial color="#263d35" roughness={.7} /></RoundedBox>
+  </group>;
+}
+
+export function SpongeBob({ walking = true, carrying = false, inspector = false, phase = 0 }: {
+  walking?: boolean; carrying?: boolean; inspector?: boolean; phase?: number;
+}) {
+  const body = useRef<THREE.Group>(null);
+  const leftLeg = useRef<THREE.Group>(null);
+  const rightLeg = useRef<THREE.Group>(null);
+  const leftArm = useRef<THREE.Group>(null);
+  const rightArm = useRef<THREE.Group>(null);
+  useFrame(({ clock }) => {
+    const step = clock.elapsedTime * 8 + phase;
+    const sway = walking ? Math.sin(step) * .45 : Math.sin(step * .2) * .035;
+    if (leftLeg.current) leftLeg.current.rotation.x = sway;
+    if (rightLeg.current) rightLeg.current.rotation.x = -sway;
+    if (leftArm.current) leftArm.current.rotation.x = -sway * .6;
+    if (rightArm.current) rightArm.current.rotation.x = carrying ? -.7 : sway * .6;
+    if (body.current) { body.current.position.y = walking ? Math.abs(Math.sin(step)) * .035 : Math.sin(step * .2) * .012; body.current.rotation.z = sway * .04; }
+  });
+  return <group ref={body}>
+    <RoundedBox args={[.68, .79, .3]} radius={.055} position={[0, 1.02, 0]} castShadow><meshStandardMaterial color="#f6cf3b" roughness={.85} /></RoundedBox>
+    {pores.map(([x, y, size], i) => <mesh key={i} position={[x, 1.02 + y, .154]} scale={[1, .85, .15]}><sphereGeometry args={[size, 10, 8]} /><meshStandardMaterial color="#c9a32d" /></mesh>)}
+    {[-1, 1].map((side) => <group key={side}>
+      <mesh position={[side * .16, 1.15, .18]} scale={[1, 1.13, .6]}><sphereGeometry args={[.155, 20, 16]} /><meshStandardMaterial color="#fffdf0" /></mesh>
+      <mesh position={[side * .155, 1.15, .273]}><sphereGeometry args={[.076, 16, 12]} /><meshStandardMaterial color="#60b6bd" /></mesh>
+      <mesh position={[side * .155, 1.15, .33]}><sphereGeometry args={[.042, 14, 12]} /><meshStandardMaterial color="#172c30" /></mesh>
+      <mesh position={[side * .155 - .016, 1.177, .36]}><sphereGeometry args={[.014, 8, 8]} /><meshBasicMaterial color="white" /></mesh>
+      <mesh position={[side * .245, .94, .168]} scale={[1, .55, .2]}><sphereGeometry args={[.07, 12, 8]} /><meshStandardMaterial color="#ed9c5f" /></mesh>
+      <mesh position={[side * .065, .83, .19]}><boxGeometry args={[.075, .105, .055]} /><meshStandardMaterial color="#fffdf1" /></mesh>
+      <group ref={side < 0 ? leftArm : rightArm} position={[side * .39, .97, 0]}>
+        <mesh><sphereGeometry args={[.09, 12, 8]} /><meshStandardMaterial color="#fff9ed" /></mesh>
+        <mesh position={[side * .055, -.18, 0]} rotation={[0, 0, side * .12]}><cylinderGeometry args={[.025, .025, .32, 8]} /><meshStandardMaterial color="#f7ce42" /></mesh>
+        <mesh position={[side * .07, -.35, 0]}><sphereGeometry args={[.06, 10, 8]} /><meshStandardMaterial color="#f7ce42" /></mesh>
+      </group>
+    </group>)}
+    <mesh position={[0, 1.035, .31]} scale={[1, .85, 1.8]}><sphereGeometry args={[.065, 12, 10]} /><meshStandardMaterial color="#f6ce3e" /></mesh>
+    <mesh position={[0, .89, .163]}><boxGeometry args={[.32, .016, .015]} /><meshStandardMaterial color="#a16c25" /></mesh>
+    <RoundedBox args={[.68, .1, .31]} radius={.01} position={[0, .62, 0]}><meshStandardMaterial color="#fff9ed" /></RoundedBox>
+    <RoundedBox args={[.69, .18, .32]} radius={.025} position={[0, .48, 0]} castShadow><meshStandardMaterial color="#976444" /></RoundedBox>
+    <mesh position={[0, .61, .18]} rotation={[0, 0, Math.PI / 4]}><boxGeometry args={[.065, .1, .018]} /><meshStandardMaterial color="#c64d3b" /></mesh>
+    {[-.24, -.1, .1, .24].map((x) => <mesh key={x} position={[x, .53, .165]}><boxGeometry args={[.065, .022, .012]} /><meshStandardMaterial color="#493d30" /></mesh>)}
+    <Shoe side={-1} legRef={leftLeg} /><Shoe side={1} legRef={rightLeg} />
+    {carrying ? <RoundedBox args={[.3, .38, .04]} radius={.018} position={[.45, .7, .25]} rotation={[-.25, 0, -.25]}><meshStandardMaterial color="#fff5ce" /></RoundedBox> : null}
+    {inspector ? <group position={[0, 1.43, 0]}>
+      <mesh><cylinderGeometry args={[.32, .35, .1, 16]} /><meshStandardMaterial color="#548f80" /></mesh>
+      <mesh position={[0, .07, 0]}><cylinderGeometry args={[.2, .25, .13, 16]} /><meshStandardMaterial color="#548f80" /></mesh>
+    </group> : null}
+  </group>;
+}

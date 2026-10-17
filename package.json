@@ -1,0 +1,11 @@
+{
+  "name": "brainbob",
+  "private": true,
+  "packageManager": "pnpm@10.32.1",
+  "scripts": {
+    "dev": "pnpm --filter @brainbob/web dev",
+    "build": "pnpm --filter @brainbob/web build",
+    "typecheck": "pnpm --filter @brainbob/web typecheck",
+    "test": "pnpm --filter @brainbob/web test"
+  }
+}

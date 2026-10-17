@@ -1,8 +1,8 @@
 # BrainBob — Architecture and Tech Stack
 
-Implementation plan for the Recursive Agents Hackathon, October 17, 2026. The 3D frontend is in progress; backend sections describe intended integrations.
+Implementation plan for the Recursive Agents Hackathon, October 17, 2026. The first 3D frontend is implemented; backend sections describe intended integrations.
 
-**Current decisions:** Shared Brain is the primary problem statement. Use NVIDIA NemoClaw for the agent harness, NVIDIA NeMo Switchyard for model routing, and Crusoe Managed Inference for inference. Self-improvement is demonstrated through better shared memory; independent skill learning is deferred. The initial frontend is a clearly labeled scripted preview.
+**Current decisions:** Shared Brain is the primary problem statement. Use NVIDIA NemoClaw for the agent harness, NVIDIA NeMo Switchyard for model routing, and Crusoe Managed Inference for inference. Self-improvement is demonstrated through better shared memory; independent skill learning is deferred. The initial frontend is a clearly labeled scripted preview, with browser-local trace persistence and a self-managed AG-UI scene controller in CopilotKit. The backend runtime/harness bridge below remains to be implemented.
 
 ## Product Decision
 
@@ -31,7 +31,7 @@ Primary track: **Shared Brain**. Every agent must read relevant project memory b
 | UI state | Zustand plus a pure event reducer | Manage event history, selected memory, playback cursor, and scene projection. |
 | Verification | Vitest + Playwright | Check memory semantics, authorization, replay, and the complete browser flow. |
 
-Start locally with a persistent database file and two processes: Next.js on port 3000 and the backend on port 3001. Proxy browser API requests through the web application's origin. Keep the Crusoe key exclusively on the backend.
+The frontend preview runs Next.js on port 3000. The target local stack adds the BrainBob coordinator on port 3001, NemoClaw-managed agent sandboxes, a host-side Switchyard service, and a persistent SQLite file. Proxy browser API requests through the web application's origin. Keep the Crusoe key on the host-managed inference path.
 
 Pin compatible versions during the first integration spike. The current official CopilotKit reference uses `@copilotkit/react-core/v2` for `CopilotKitProvider`, `CopilotChat`, and `useAgent`; verify installed exports before adding imports rather than mixing examples from different releases. [CopilotKit v2 reference](https://docs.copilotkit.ai/reference/v2)
 
@@ -44,7 +44,7 @@ flowchart TD
     User[User] --> Chat[CopilotKit chat]
     User --> Inspect[Memory inspector and retrace controls]
     Chat <--> Runtime[CopilotKit runtime]
-    Runtime <-->|AG-UI over SSE| Agent[Agent orchestrator]
+    Runtime <-->|AG-UI over SSE| Agent[BrainBob memory coordinator]
     Agent <-->|Project-specific adapter| Harness[NemoClaw-managed agents in OpenShell]
     Harness <--> Router[NVIDIA NeMo Switchyard]
     Router <--> Crusoe[Crusoe Managed Inference]
