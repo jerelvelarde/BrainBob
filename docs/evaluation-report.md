@@ -16,6 +16,7 @@ Status date: 2026-10-17 (Pacific), updated 14:36. Experiments 1 to 5 were writte
 
 - **Maintenance beats append-only on the Bob pilot.** maintained 74.4 vs append_only 67.3 macro CATS, +7.1 pts [-6.2, +21.6]; the interval includes zero and per-world results go both ways.
 - **BrainBob beats full history on the Bob pilot.** full_history scored 88.6 macro CATS; the pilot worlds have 27 to 31 timeline items, so the whole authorized history fits in context.
+- **The tuned checker improves the organizational pilot.** In Experiment 8 it scored 72.2 vs 68.5 for the default judge, +3.7 [-7.4, +17.6], one replicate per world.
 - **The tuned 0.6B checker can become the default judge.** It trails both large judges and calls 5 non-conflict pairs "conflict" (base: 0), which raises overwrite risk under authorized corrections.
 - **Scores on GateMem, MUMBench or CoMemBench.** None were run; see [external-benchmark-status.md](external-benchmark-status.md).
 
@@ -180,7 +181,21 @@ Spec: [docs/bob-benchmark-spec.md](bob-benchmark-spec.md); contract: [bobbench/C
 
 Paired bootstrap clustered by world (2000 draws): maintained - append_only +7.1 [-6.2, +21.6] macro; maintained - no_memory +49.4 [+23.1, +75.2]; full_history - append_only +21.3 [+6.3, +38.6]. Probed surfaces for both BrainBob modes (search, record, source, history, events): 0 leaks in 123 probes each; export and session cache are unsupported. Per world, maintenance helped most on w1, w2 and w6 and lost on w3 maintenance (100 to 33.3). Labels are single-annotator and not independently reviewed; oracle v0.2 changed forbidden checks after a baseline-only smoke run and before any BrainBob run (see the worlds changelog). Cost about $0.03 for the whole run. Artifacts: [scorecard.md](../bobbench/results/20261017-141014/scorecard.md), [scorecard.json](../bobbench/results/20261017-141014/scorecard.json), compressed traces.
 
-A judge-swap comparison on the same pilot (production judge vs Nemotron Super teacher vs tuned and base 0.6B checkers, everything else fixed) is being run on Hugging Face Jobs and will be added here.
+**Preliminary.** An independent read-only review of the scorer and oracles ([_notes/codex-score-review.md](../_notes/codex-score-review.md)) found two high-severity false passes: a required date mentioned but not used as the answer (w2/cp-6, about -0.6 pts for maintained), and an oracle that missed a corrected filing deadline (w6/cp-6, about -1.9 pts for maintained and -0.6 for append_only), plus medium issues in phrase tables, historical mentions, failure detection and some counterfactual pairs. Aggregation and the bootstrap were found correct, and the no_memory / always_refuse tie is expected. A corrected scorer and oracle (v0.3) is being applied to the saved answers without new model calls; v0.2 numbers above stay published next to it.
+
+## Experiment 8: Maintenance-judge comparison on the Bob pilot
+
+Same six worlds and checkpoints, same answering model, prompt, extraction and budgets; only the maintenance relation judge changes. Six single-world Hugging Face Jobs runs at commit `d8c571e`, **one replicate each** (the full three-replicate job would have exceeded its timeout), merged by `bobbench/merge_runs.py`. Scorer 0.1, oracle v0.2.
+
+| Maintenance judge | Legitimate | Boundary | Maintenance | Macro CATS | Retired | Judge errors |
+|---|---|---|---|---|---|---|
+| none (append_only) | 47.2 | 100.0 | 50.0 | 65.7 | 0 | n/a |
+| `openai/gpt-oss-120b` (default) | 55.6 | 100.0 | 50.0 | 68.5 | 3 | 0/705 |
+| `nvidia/NVIDIA-Nemotron-3-Super-120B-A12B` | 55.6 | 100.0 | 44.4 | 66.7 | 4 | **111/675** |
+| Qwen3-0.6B + LoRA `@b904e6ec` | 61.1 | 100.0 | 55.6 | 72.2 | 1 | 0/797 |
+| Qwen3-0.6B base | 55.6 | 83.3 | 33.3 | 57.4 | 0 | 0/806 |
+
+Paired bootstrap vs the default judge: tuned +3.7 [-7.4, +17.6]; base -11.1 [-26.9, +8.3]; Nemotron Super -1.9 [-13.9, +8.3]; append_only -2.8 [-19.4, +13.9]. **No interval excludes zero.** Zero leaks in answers, context and probed surfaces for every condition. The Nemotron Super row is not a fair measure of that judge: 111 calls failed on Crusoe rate limits while six jobs ran in parallel, and failed calls fall back to the conservative tentative path. Read the table as: swapping in the tuned 0.6B checker did not make the pilot worse, while the untuned 0.6B checker was the weakest condition, consistent with the 60-pair diagnostic. It is not evidence for making the tuned checker the default. Artifacts: [scorecard.md](../bobbench/results/20261017-judge-swap-merged/scorecard.md), [sources.json](../bobbench/results/20261017-judge-swap-merged/sources.json).
 
 ## Experiment 7: Small memory-relation checker (issue #7, pair diagnostic)
 
