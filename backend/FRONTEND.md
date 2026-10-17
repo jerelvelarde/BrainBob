@@ -18,9 +18,14 @@ Tests: `.venv/Scripts/python -m pytest tests -q` (fake core, no network).
 ## HTTP
 
 **POST /episodes** `{"text": "Alex: let's launch Oct 24", "date": "2026-10-17", "source": "slack"}`
--> `{"episode_id": "ep-1a2b3c4d", "memories": [{"id":"m1","text":"Launch is Oct 24","author":"curator","origin":"ep-1a2b3c4d","date":"2026-10-17","status":"trial","scope":"team"}]}`
+also takes `scope` (path, e.g. `"krusty-krab/sales"`) and `author`; the episode is saved to episodes.jsonl.
+-> `{"episode_id": "ep-1a2b3c4d", "memories": [{"id":"m1","text":"Launch is Oct 24","author":"curator","origin":"ep-1a2b3c4d","date":"2026-10-17","status":"trial","scope":"team","reason":"","flagged":false,"supersedes":null,"owner":null}]}`
+`origin` is the episode id.
 
-**POST /ask** `{"question": "When do we launch?", "now": "2026-10-17"}`
+**GET /episodes/{id}** -> `{id, text, date, source, scope}` (404 if unknown)
+
+**POST /ask** `{"question": "When do we launch?", "now": "2026-10-17", "reader": "krusty-krab/sales/john"}`
+(`reader` optional: only memories whose scope equals the reader path or is an ancestor of it; none means no filter)
 -> `{"task_id": "t-9f8e7d6c", "answer": "Oct 24", "cited_ids": ["m1"], "memories": [Memory]}`
 
 **POST /feedback** `{"task_id": "t-9f8e7d6c", "correct_answer": "October 25"}`
@@ -30,11 +35,17 @@ Tests: `.venv/Scripts/python -m pytest tests -q` (fake core, no network).
 **POST /review** `{}` -> `{"decisions": [{"memory_id":"m1","action":"retire","reason":"...","task_ids":["t-..."]}]}`
 (action: promote / retire / flag)
 
+**POST /memories/{id}/correct** `{text, author}` -> `{memory, retired_id}` (new memory with `supersedes`; old one retired, reason `superseded by <new id>`)
+**POST /memories/{id}/retire** `{reason, author}` -> `{memory}`
+**POST /memories/{id}/lock** `{owner}` -> `{memory}` (status `locked`, `owner` set)
+**POST /memories/{id}/resolve** `{owner, action: "keep"|"retire"|"correct", text?}` -> `{memory}` (the new memory for `correct`); 403 if not the recorded owner. Retire/correct on a locked memory by anyone else is also 403.
+**GET /memories/{id}/history** -> `{chain: [Memory], events: [event]}` (supersedes chain oldest first, plus all events touching those ids)
+
 **GET /memories?status=trial** -> `[Memory + evidence_count + evidence_flips]`
 
 **GET /report** -> author ledger + retire reasons (shape set by the core evaluator).
 
-**GET /events** -> SSE. Replays the full history first, then pushes live. Each message is `data: {json}`.
+**GET /events** -> SSE. Every message has `id: <seq>` and `data: {json}` (each event has `seq`). `?after=<seq>` or the `Last-Event-ID` header resumes. After the replayed history the server sends `replay.done {seq}`, then pushes live. Animate only events after `replay.done`; apply earlier ones as state. `EventSource` reconnects send `Last-Event-ID` automatically.
 
 ```js
 const es = new EventSource("http://127.0.0.1:3001/events");
@@ -57,5 +68,9 @@ Existing actions in `apps/web/src/lib/memory.ts`: created, retrieved, evaluated,
 | memory.promoted | memory_id, reason | `updated` (record moves to trusted shelf) |
 | memory.retired | memory_id, reason, task_ids | `forgotten` (archive) |
 | memory.flagged | memory_id, reason | mark record red (no existing action; add a flag state) |
+| memory.locked | memory_id, owner | lock badge on the record |
+| memory.resolved | memory_id, owner, action, new_id | owner decision; clear the red flag |
+| memory.corrected | memory_id, new_id, author | old record replaced by new_id (memory.added and memory.retired also fire) |
+| replay.done | seq | history finished; animate only events after this |
 
 Note: the server emits episode.ingested, memory.retrieved, answer.produced; the core emits the memory.* and evidence.* events on the same bus.

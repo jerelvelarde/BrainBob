@@ -3,3 +3,6 @@ cache/
 results/
 .venv/
 __pycache__/
+memory.jsonl
+events.jsonl
+episodes.jsonl

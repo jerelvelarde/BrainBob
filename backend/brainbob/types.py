@@ -23,6 +23,8 @@ class Memory:
     scope: str = "team"
     reason: str = ""        # why the last status change happened
     flagged: bool = False   # locked but judged harmful: handed to the owner
+    supersedes: Optional[str] = None  # id of the memory this one corrects
+    owner: Optional[str] = None       # who locked it; only they can resolve it
 
 
 @dataclass

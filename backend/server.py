@@ -4,6 +4,7 @@ from __future__ import annotations
 import asyncio
 import dataclasses
 import json
+import os
 import queue
 import threading
 import time
@@ -11,7 +12,7 @@ import uuid
 from dataclasses import dataclass
 from typing import Any, Callable
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, Header, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from sse_starlette.sse import EventSourceResponse
 
@@ -41,10 +42,12 @@ class Bus:
         self._h: list[dict] = []
         self._subs: list[queue.Queue] = []
         self._lock = threading.Lock()
+        self._seq = 0
 
     def emit(self, type: str, **data: Any) -> dict:
-        ev = {"type": type, "ts": time.time(), **to_dict(data)}
         with self._lock:
+            self._seq += 1
+            ev = {"type": type, "ts": time.time(), "seq": self._seq, **to_dict(data)}
             self._h.append(ev)
             for q in self._subs:
                 q.put(ev)
@@ -61,9 +64,26 @@ class Bus:
             if q in self._subs:
                 self._subs.remove(q)
 
-    def history(self) -> list:
+    def history(self, after: int | None = None) -> list:
         with self._lock:
-            return list(self._h)
+            return [e for e in self._h if after is None or e["seq"] > after]
+
+
+class _Scoped:
+    """Store view that stamps scope/author on every add (the curator does not take them)."""
+
+    def __init__(self, store, scope, author):
+        self._s, self._scope, self._author = store, scope, author
+
+    def add(self, text, **kw):
+        if self._scope:
+            kw["scope"] = self._scope
+        if self._author:
+            kw["author"] = self._author
+        return self._s.add(text, **kw)
+
+    def __getattr__(self, name):
+        return getattr(self._s, name)
 
 
 @dataclass
@@ -83,28 +103,62 @@ class Task:
 
 
 def create_app(store, curator, agent, evaluator, judge, *, events=None,
-               episode_factory=Episode, task_factory=Task, sse_once=False) -> FastAPI:
-    """events: object with emit(type, **data), subscribe(), history(); defaults to a local Bus.
+               episode_factory=Episode, task_factory=Task, sse_once=False,
+               episodes_path=None) -> FastAPI:
+    """events: object with emit(type, **data), subscribe(), history(after=None); defaults to a local Bus.
     The core (curator/evaluator/store) is expected to emit memory.* / evidence.* itself via the
-    same bus; the server emits episode.ingested, memory.retrieved, answer.produced."""
+    same bus; the server emits episode.ingested, memory.retrieved, answer.produced.
+    episodes_path: jsonl file where every posted episode is appended (and reloaded from at start)."""
     bus = events or Bus()
     app = FastAPI(title="BrainBob")
     app.add_middleware(CORSMiddleware, allow_origins=ORIGINS, allow_methods=["*"], allow_headers=["*"])
     tasks: dict[str, dict] = {}
     evidence_log: list[dict] = []
+    episodes: dict[str, dict] = {}
     app.state.bus = bus
+    if episodes_path and os.path.exists(episodes_path):
+        with open(episodes_path, encoding="utf8") as f:
+            for line in f:
+                if line.strip():
+                    d = json.loads(line)
+                    episodes[d["id"]] = d
+
+    def guarded(fn, *a):
+        try:
+            return fn(*a)
+        except KeyError:
+            raise HTTPException(404, "unknown memory id")
+        except PermissionError as e:
+            raise HTTPException(403, str(e))
+        except ValueError as e:
+            raise HTTPException(422, str(e))
 
     @app.post("/episodes")
     def post_episode(body: dict):
         text = body.get("text")
         if not isinstance(text, str) or not text.strip():
             raise HTTPException(422, "text required")
-        ep = episode_factory(id="ep-" + uuid.uuid4().hex[:8], text=text,
-                             date=body.get("date") or time.strftime("%Y-%m-%d"),
-                             source=body.get("source") or "api")
-        mems = curator.ingest(ep, store)
-        bus.emit("episode.ingested", episode_id=ep.id, source=ep.source, n_memories=len(mems))
-        return {"episode_id": ep.id, "memories": to_dict(mems)}
+        eid = "ep-" + uuid.uuid4().hex[:8]
+        rec = {"id": eid, "text": text, "date": body.get("date") or time.strftime("%Y-%m-%d"),
+               "source": body.get("source") or "api", "scope": body.get("scope") or "team",
+               "author": body.get("author")}
+        episodes[eid] = rec
+        if episodes_path:
+            with open(episodes_path, "a", encoding="utf8") as f:
+                f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+        # Bug workaround: curator.py writes memory.origin = episode.source (the label), but origin must be
+        # the episode id. curator.py is not ours to edit, so the Episode handed to it carries the id as source.
+        ep = episode_factory(id=eid, text=text, date=rec["date"], source=eid)
+        mems = curator.ingest(ep, _Scoped(store, body.get("scope"), body.get("author")))
+        bus.emit("episode.ingested", episode_id=eid, source=rec["source"], n_memories=len(mems))
+        return {"episode_id": eid, "memories": to_dict(mems)}
+
+    @app.get("/episodes/{eid}")
+    def get_episode(eid: str):
+        rec = episodes.get(eid)
+        if rec is None:
+            raise HTTPException(404, "unknown episode id")
+        return {k: rec.get(k) for k in ("id", "text", "date", "source", "scope")}
 
     @app.post("/ask")
     def post_ask(body: dict):
@@ -112,7 +166,8 @@ def create_app(store, curator, agent, evaluator, judge, *, events=None,
         if not isinstance(q, str) or not q.strip():
             raise HTTPException(422, "question required")
         tid = "t-" + uuid.uuid4().hex[:8]
-        mems = store.search(q)
+        reader = body.get("reader")
+        mems = store.search(q, reader=reader) if reader else store.search(q)
         bus.emit("memory.retrieved", task_id=tid, memory_ids=[m.id for m in mems])
         ans = agent.answer(q, mems, body.get("now"))
         bus.emit("answer.produced", task_id=tid, answer=ans.text, cited_ids=list(ans.cited_ids))
@@ -140,6 +195,53 @@ def create_app(store, curator, agent, evaluator, judge, *, events=None,
         decisions = evaluator.review(lambda *a, **k: True)
         return {"decisions": to_dict(decisions)}
 
+    @app.post("/memories/{mid}/correct")
+    def post_correct(mid: str, body: dict):
+        text = body.get("text")
+        if not isinstance(text, str) or not text.strip():
+            raise HTTPException(422, "text required")
+        new, old = guarded(store.correct, mid, text, body.get("author") or "user")
+        return {"memory": to_dict(new), "retired_id": old.id}
+
+    @app.post("/memories/{mid}/retire")
+    def post_retire(mid: str, body: dict | None = None):
+        body = body or {}
+        return {"memory": to_dict(guarded(store.retire, mid, body.get("reason") or "", body.get("author")))}
+
+    @app.post("/memories/{mid}/lock")
+    def post_lock(mid: str, body: dict):
+        owner = body.get("owner")
+        if not isinstance(owner, str) or not owner.strip():
+            raise HTTPException(422, "owner required")
+        return {"memory": to_dict(guarded(store.lock, mid, owner))}
+
+    @app.post("/memories/{mid}/resolve")
+    def post_resolve(mid: str, body: dict):
+        owner = body.get("owner")
+        if not isinstance(owner, str) or not owner.strip():
+            raise HTTPException(422, "owner required")
+        return {"memory": to_dict(guarded(store.resolve, mid, owner, body.get("action"), body.get("text")))}
+
+    @app.get("/memories/{mid}/history")
+    def get_history(mid: str):
+        by_id = {m.id: m for m in store.all()}
+        if mid not in by_id:
+            raise HTTPException(404, "unknown memory id")
+        chain = [by_id[mid]]
+        while chain[0].supersedes in by_id:  # back to the root
+            chain.insert(0, by_id[chain[0].supersedes])
+        while True:  # forward to the newest correction
+            nxt = [m for m in by_id.values() if m.supersedes == chain[-1].id]
+            if not nxt or nxt[0] in chain:
+                break
+            chain.append(nxt[0])
+        ids = {m.id for m in chain}
+
+        def related(ev):
+            refs = [ev.get("memory_id"), ev.get("new_id"), (ev.get("memory") or {}).get("id")]
+            return any(r in ids for r in refs if r)
+        return {"chain": to_dict(chain), "events": [e for e in bus.history() if related(e)]}
+
     @app.get("/memories")
     def get_memories(status: str | None = Query(None)):
         out = []
@@ -158,12 +260,18 @@ def create_app(store, curator, agent, evaluator, judge, *, events=None,
         return to_dict(evaluator.report())
 
     @app.get("/events")
-    async def get_events():
+    async def get_events(after: int | None = Query(None), last_event_id: str | None = Header(None)):
+        if after is None and last_event_id and last_event_id.strip().isdigit():
+            after = int(last_event_id)
+
         async def gen():
             q = bus.subscribe()
             try:
-                for ev in bus.history():
-                    yield {"data": json.dumps(ev)}
+                hist = bus.history(after)
+                last = hist[-1]["seq"] if hist else (after or 0)
+                for ev in hist:
+                    yield {"id": str(ev["seq"]), "data": json.dumps(ev)}
+                yield {"id": str(last), "data": json.dumps({"type": "replay.done", "seq": last})}
                 if sse_once:
                     return
                 while True:
@@ -172,7 +280,10 @@ def create_app(store, curator, agent, evaluator, judge, *, events=None,
                     except queue.Empty:
                         await asyncio.sleep(0.1)
                         continue
-                    yield {"data": json.dumps(ev)}
+                    if ev["seq"] <= last:  # already replayed
+                        continue
+                    last = ev["seq"]
+                    yield {"id": str(ev["seq"]), "data": json.dumps(ev)}
             finally:
                 if hasattr(bus, "unsubscribe"):
                     bus.unsubscribe(q)
@@ -195,6 +306,7 @@ def main() -> None:
     import types as _t
     import uvicorn
 
+    events.set_log("events.jsonl")  # reloads history and continues seq after a restart
     store = MemoryStore("memory.jsonl")
     evaluator = Evaluator(store)
     curator = _t.SimpleNamespace(ingest=ingest)
@@ -207,7 +319,8 @@ def main() -> None:
         return r.strip().lower().startswith("yes")
 
     app = create_app(store, curator, agent, evaluator, judge, events=events,
-                     episode_factory=types.Episode, task_factory=types.Task)
+                     episode_factory=types.Episode, task_factory=types.Task,
+                     episodes_path="episodes.jsonl")
     uvicorn.run(app, host="127.0.0.1", port=3001)
 
 
