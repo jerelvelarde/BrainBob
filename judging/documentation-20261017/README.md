@@ -15,3 +15,11 @@ The previously recorded live-workspace evidence is now included so public README
 ## README problem framing follow-up
 
 Commit [`8d9fd83`](https://github.com/jerelvelarde/BrainBob/commit/8d9fd836222ef3345636cf8db9846f059ebbbb9a), October 17 at 4:20:19 PM PDT (`2026-10-17T16:20:19-07:00`), restores the existing burning SpongeBob brain-office meme immediately below the title and adds a problem section about stale facts, unapproved changes, private context, and missing evidence. The existing image was visually inspected and reused unchanged; it is inspiration material, not an application screenshot. All 27 local README links and anchors resolve. A comparison against the prior README confirms the solution, results, and subsequent sections are unchanged. No app or benchmark tests were needed for this prose-only update.
+
+## Featured demo follow-up
+
+Commit [`6249ae9`](https://github.com/jerelvelarde/BrainBob/commit/6249ae9d9c1fb382e328463ddf372567c8af8d5a), October 17 at 4:23:54 PM PDT (`2026-10-17T16:23:54-07:00`), moves the meme into the problem section and places a clickable video preview and watch link immediately below the title. The link targets the published repository video rather than a localhost server.
+
+The other agent’s recording and provenance are published in [`95c64ba`](https://github.com/jerelvelarde/BrainBob/commit/95c64ba135ebe49d8f9b4ff29b0bb9b245fd5419) and [`28c94d8`](https://github.com/jerelvelarde/BrainBob/commit/28c94d8854d8d5bb07c3f9d38e5616a737110d53), copied from their scoped local recording commits. [Recording notes](../../docs/demo/live-one-minute-20261017/README.md) retain the original timing, backend events, editing details, and shared-development-checkout disclosure. This is a silent, edited 60-second live demonstration on fictional data.
+
+Verified 37 local links/anchors across the README and recording notes, the video SHA-256 against its saved verification record, and unchanged solution/results sections. Visually inspected the existing preview. No new app execution, inference, benchmark run, or GitHub playback verification is claimed.
