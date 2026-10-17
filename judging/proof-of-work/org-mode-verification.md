@@ -22,3 +22,7 @@ A temporary loopback server used the merged `create_app`, `Org`, `MemoryStore`, 
 - Conflict and audit events in replay did not disconnect the stream or produce a usefulness verdict.
 
 The fixture was stopped after QA. Real inference, authenticated identity, full access-isolation assurance, and live session-file assembly remain separate validation/integration work. The legacy Node fixture remains available and accepts the member header through CORS, but it is not an authorization test.
+
+## Final merge follow-up
+
+Merge `324ebac` also incorporates the published Rusty Rod correctness suite, held-out results, and recorded backend audit demo through `2fb4afe`. The same backend test command passed **198 tests** on that combined tree. This merge changed no frontend code; the 42-test frontend, typecheck, build, and browser results above remain the checks for `80c8c79`. The new backend demo uses legacy Krusty Krab identities, while the current frontend uses Rusty Rod; their scope mismatch is documented in [the connection guide](../../docs/frontend-integration.md). No additional inference run was performed for this merge.

@@ -10,6 +10,8 @@ Implemented October 17, 2026 against Bonan's [frontend contract](../backend/FRON
 
 For a different server, set `NEXT_PUBLIC_BRAINBOB_API_URL` in `apps/web/.env.local` and restart Next. The backend must allow the frontend origin through CORS. This is a public URL setting; keep Crusoe credentials exclusively on the backend. Reload the page when switching servers or resetting the backend event log.
 
+The separately recorded [backend audit demo](../backend/demo/DEMO.md) uses Krusty Krab / Sales / John identities and runs in `--legacy` mode. Its recorded results belong to that scenario. The current frontend selector and cabinet mapping use Rusty Rod identities, so that demo is not yet a drop-in scenario for this UI. Connecting it requires migrating its fixtures to Rusty Rod scopes or adding an explicit legacy identity mode; do not silently alias organizations or their private records.
+
 ## Chat and inspection
 
 CopilotKit v2 renders chat through a self-managed AG-UI agent. The adapter emits run/message lifecycle events around the backend's HTTP responses; it does not pretend those responses are token streams or use the old scripted command parser.
