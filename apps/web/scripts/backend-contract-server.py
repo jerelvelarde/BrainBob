@@ -3,6 +3,7 @@
 Run from the repo root with backend/.venv/bin/python. State is temporary, model
 calls fail closed, and this verifies integration only, never model quality.
 """
+import os
 import pathlib
 import sys
 import tempfile
@@ -38,4 +39,4 @@ if __name__ == "__main__":
                          episodes_path=str(pathlib.Path(state) / "episodes.jsonl"),
                          ingest=lambda ep, st, org: maintain.ingest(ep, st, org, judge=lambda *_: "unrelated"))
         print("CONTRACT TEST SERVER: deterministic model doubles, temporary state, no inference", flush=True)
-        uvicorn.run(app, host="127.0.0.1", port=3001)
+        uvicorn.run(app, host="127.0.0.1", port=int(os.environ.get("PORT", "3001")))

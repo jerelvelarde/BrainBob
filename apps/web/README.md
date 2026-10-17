@@ -18,12 +18,16 @@ checks actual provider access and keeps persistent data in ignored `data/workspa
 See [the live workspace guide](../../docs/live-workspace.md) for the synthetic
 source dataset, rerun behavior, and current limitations.
 
-Browser requests default to `/api/brainbob` on the UI origin. Next forwards
-HTTP and SSE to `BRAINBOB_API_URL`, defaulting to `http://127.0.0.1:3001`.
-For a remote backend, set this server environment variable before starting Next
-and before production builds. The Next host must be able to reach that address.
-`NEXT_PUBLIC_BRAINBOB_API_URL` can explicitly bypass the proxy, but then the API
-must permit the browser origin through CORS. See `.env.example`.
+Browser requests default to `/api/brainbob` on the UI origin. A Node Route Handler
+forwards HTTP and streams SSE to runtime `BRAINBOB_API_URL` (local default:
+`http://127.0.0.1:3001`). It allows 280 seconds inside a 300-second function budget.
+This avoids Vercel's 120-second external rewrite limit. Keep
+`NEXT_PUBLIC_BRAINBOB_API_URL` unset for hosted use.
+
+For the hosted demo, set the same strong `BRAINBOB_DEMO_PASSWORD` on Next and the
+backend. Username is `brainbob`; selected members remain fictional personas.
+See [the deployment guide](../../docs/deployment.md) for the Vercel settings,
+Render persistent-disk Blueprint, credentials, seed commands and release checks.
 
 ## Repeatable integration check without inference
 
