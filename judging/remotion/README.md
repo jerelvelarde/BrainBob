@@ -1,5 +1,7 @@
 # BrainBob Remotion presentation
 
+**Historical presentation source.** For judging, start with the [finished narrated live recording](../../docs/demo/live-one-minute-20261017/README.md) and [current judge's guide](../README.md). This package remains available to reproduce the earlier presentation; its rendered outputs are not committed.
+
 A three-minute narrated product showcase, a one-minute cut, and a silent presenter composition. Actual project screenshots, a recorded model-run excerpt, and measured benchmark results have distinct on-screen labels. No generated product mockups or fabricated model responses.
 
 ## Watch and present

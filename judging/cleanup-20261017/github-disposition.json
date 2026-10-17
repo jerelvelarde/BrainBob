@@ -1,0 +1,92 @@
+[
+  {
+    "number": 1,
+    "kind": "issue",
+    "url": "https://github.com/jerelvelarde/BrainBob/issues/1",
+    "title": "Live Shared Brain demo: verified development recording",
+    "state": "closed",
+    "state_reason": "completed",
+    "updated_at": "2026-10-17T23:42:31Z"
+  },
+  {
+    "number": 2,
+    "kind": "issue",
+    "url": "https://github.com/jerelvelarde/BrainBob/issues/2",
+    "title": "Scoped memory audit and repeatable demo: implementation delivered",
+    "state": "closed",
+    "state_reason": "completed",
+    "updated_at": "2026-10-17T23:42:34Z"
+  },
+  {
+    "number": 4,
+    "kind": "issue",
+    "url": "https://github.com/jerelvelarde/BrainBob/issues/4",
+    "title": "Organizational Bob pilot: completed with corrected v0.3 results",
+    "state": "closed",
+    "state_reason": "completed",
+    "updated_at": "2026-10-17T23:42:36Z"
+  },
+  {
+    "number": 6,
+    "kind": "issue",
+    "url": "https://github.com/jerelvelarde/BrainBob/issues/6",
+    "title": "Experimental checker: opt-in confirmation and observe modes delivered",
+    "state": "closed",
+    "state_reason": "completed",
+    "updated_at": "2026-10-17T23:42:39Z"
+  },
+  {
+    "number": 7,
+    "kind": "issue",
+    "url": "https://github.com/jerelvelarde/BrainBob/issues/7",
+    "title": "0.6B LoRA experiment: completed; production promotion gate failed",
+    "state": "closed",
+    "state_reason": "completed",
+    "updated_at": "2026-10-17T23:42:42Z"
+  },
+  {
+    "number": 3,
+    "kind": "issue",
+    "url": "https://github.com/jerelvelarde/BrainBob/issues/3",
+    "title": "Scorecard presentation consolidated into final judging package",
+    "state": "closed",
+    "state_reason": "not_planned",
+    "updated_at": "2026-10-17T23:42:43Z"
+  },
+  {
+    "number": 8,
+    "kind": "issue",
+    "url": "https://github.com/jerelvelarde/BrainBob/issues/8",
+    "title": "[P2] Verify the merged NemoClaw adapter in a real sandbox",
+    "state": "open",
+    "state_reason": null,
+    "updated_at": "2026-10-17T23:42:46Z"
+  },
+  {
+    "number": 5,
+    "kind": "issue",
+    "url": "https://github.com/jerelvelarde/BrainBob/issues/5",
+    "title": "[P0] Finish public-demo verification and record the final submission",
+    "state": "open",
+    "state_reason": null,
+    "updated_at": "2026-10-17T23:42:48Z"
+  },
+  {
+    "number": 11,
+    "kind": "pull_request",
+    "url": "https://github.com/jerelvelarde/BrainBob/pull/11",
+    "title": "docs(readme): add the Shared Brain loop diagram",
+    "state": "closed",
+    "reason": "Superseded by diagram already on main",
+    "updated_at": "2026-10-17T23:42:51Z"
+  },
+  {
+    "number": 14,
+    "kind": "pull_request",
+    "url": "https://github.com/jerelvelarde/BrainBob/pull/14",
+    "title": "[Draft] Prepare hosted demo; container and release checks pending",
+    "state": "open",
+    "draft": true,
+    "updated_at": "2026-10-17T23:42:52Z"
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "checked_at": "2026-10-17T23:44:38.547787+00:00",
+  "base_commit": "0bb379c9d159eccdd7b50dfa40c5e0d066407b52",
+  "scope": "All Markdown local file links under judging; proof-of-work anchor IDs, local file links and original embedded image URLs. Does not check Markdown heading fragments, browser rendering, external playback or application behavior.",
+  "markdown_files": 34,
+  "local_markdown_links": 196,
+  "missing_markdown_targets": [],
+  "html_fragment_links": 39,
+  "missing_html_anchors": [],
+  "duplicate_html_ids": [],
+  "missing_html_local_targets": [],
+  "original_image_count": 40,
+  "original_images_preserved": true,
+  "git_diff_check": "passed",
+  "browser_preview": {
+    "checked_at": "2026-10-17T23:45:44.288603+00:00",
+    "surface": "Codex in-app browser, local HTTP preview",
+    "checks": [
+      "Cleanup milestone rendered with its actual implementation commit and timestamp",
+      "Evidence disclosure expanded and revealed the verification link",
+      "Timeline link navigated to the cleanup milestone; active marker and readable layout observed"
+    ],
+    "limits": "No mobile viewport, video playback, hosted deployment or application behavior check"
+  }
+}
