@@ -1,8 +1,8 @@
 # BrainBob
 
-[![Watch BrainBob’s 60-second live demo: a corrected memory guides the next answer](docs/demo/live-one-minute-20261017/output/preview.jpg)](https://github.com/jerelvelarde/BrainBob/blob/main/docs/demo/live-one-minute-20261017/output/brainbob-live-60s.mp4)
+[![Watch BrainBob’s narrated 60-second live demo: a corrected memory guides the next answer](docs/demo/live-one-minute-20261017/output/preview.jpg)](https://github.com/jerelvelarde/BrainBob/blob/main/docs/demo/live-one-minute-20261017/output/brainbob-live-60s-vo.mp4)
 
-**[▶ Watch the 60-second demo](https://github.com/jerelvelarde/BrainBob/blob/main/docs/demo/live-one-minute-20261017/output/brainbob-live-60s.mp4)** · Silent recording of the live app with fictional data. [Recording notes](docs/demo/live-one-minute-20261017/README.md).
+**[▶ Watch the 60-second narrated demo](https://github.com/jerelvelarde/BrainBob/blob/main/docs/demo/live-one-minute-20261017/output/brainbob-live-60s-vo.mp4)** · Edited live recording with ElevenLabs narration and fictional company data. [Recording notes](docs/demo/live-one-minute-20261017/README.md).
 
 **A shared brain for agent teams. Keep knowledge current, control who can use it, and trace every change.**
 
