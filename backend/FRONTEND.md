@@ -5,9 +5,12 @@
 ```
 cd backend
 uv venv .venv   # once
-uv pip install --python .venv fastapi uvicorn sse-starlette httpx pytest
-.venv/Scripts/python server.py     # serves http://127.0.0.1:3001
+uv pip install --python .venv fastapi uvicorn sse-starlette httpx pytest openai rank-bm25
+.venv/Scripts/python server.py     # serves http://127.0.0.1:3001 (macOS/Linux: .venv/bin/python)
 ```
+
+The real server calls Crusoe, so it needs the team's Crusoe key in `~/.config/crusoe/api.key` (one line; never commit it).
+Verified at 11:40 PT: POST /episodes, POST /ask and GET /events work end to end against Crusoe.
 
 CORS allows http://127.0.0.1:3000 and http://localhost:3000. All bodies are JSON.
 Tests: `.venv/Scripts/python -m pytest tests -q` (fake core, no network).

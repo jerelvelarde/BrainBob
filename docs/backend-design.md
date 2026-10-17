@@ -39,6 +39,18 @@ We do not ask a model whether a memory is good. We change the input and watch th
 
 Motivation: a pre-event prototype on a synthetic help desk (not a hackathon result; none of its code is reused) scored 61.3% with no memory, 63.8% keeping every memory, and 70.8% with audited memory on 240 held-out tickets. Shared memory alone barely helped; auditing it did.
 
+## Why Multiple Models
+
+A shared brain has many writers. In a real team, agents run on different models: cheap, fast models for bulk work that make more mistakes, and stronger models for hard work, often from more than one vendor. They all write to the same memory, so the question is whose memories to trust.
+
+- **Author ledger:** every memory records its author (role or model). The ledger shows, by measured results, which writer's memories get promoted and which get retired.
+- **Write cheap, verify by results:** cheap models can write memories because harmful ones are caught and retired.
+- **Independent judge:** grading uses a model from a different family than the answering agent.
+
+Roles today: curator (writes memories) and agent (answers) use Lightning; the judge uses gpt-oss. A careless teammate (Nano, thinking off, high temperature) is being added as a second writer for the stress test below.
+
+Demo line: *Anyone on the team can write to the shared brain. BrainBob checks every memory by its results and tells you which agent's and which model's memories you can trust.*
+
 ## Avoiding Leakage
 
 - Gold answers are used only inside `Task.grade` as a right or wrong signal. Nothing derived from a gold answer is written to memory.
@@ -71,5 +83,17 @@ LoCoMo, all 10 conversations, 760 held-out questions, agent `nvidia/Nemotron-3.5
 | Audited memories | 404/760 (53%) | 1,199 |
 
 The audit saw 267 correctness flips on 780 audit questions: 213 helpful, 54 harmful, spread over 2,377 memories. No memory reached the 3-flip threshold, so nothing was retired and the audited condition equals the all-memories condition. LoCoMo has one clean writer, so its extracted memories are mostly correct. Cost $0.37, 524 s. Raw outputs: [backend/results/20261017-112134-locomo](../backend/results/20261017-112134-locomo/results.md).
+
+### Findings So Far
+
+1. **Memory is far cheaper than full history.** On the LongMemEval subset, extracted memory used about 1/40 of the context for 8 points lower accuracy (within noise at n=50).
+2. **Memory is far better than none.** On LoCoMo, retrieved memories lifted held-out accuracy from 11% to 53%.
+3. **On clean data the audit has nothing to remove.** With one careful writer, 213 of 267 flips were helpful. The 54 harmful flips were spread about one per memory, below the 3-flip threshold.
+4. **So the audit's value depends on bad writers**, which is the Shared Brain setting. Next: the noisy-writer stress test.
+5. **Known issue:** the confirm re-run before retiring hit the response cache, so it confirmed nothing. No memory reached that step in the run above; the fix (`fresh=True`) is in progress.
+
+### Next: Noisy-Writer Stress Test (in progress)
+
+Each LoCoMo session is written twice: by the careful curator, and by a careless teammate (Nano, high temperature) whose errors come from the model itself rather than hand-written injections. Conditions: no memory / careful writer only (reference ceiling) / both writers / both writers audited, with retire thresholds of 3, 2 and 1. Reported as "LoCoMo + noisy writer (stress test)", not as a LoCoMo score. Expected if the audit works: both writers < careful only, audited recovers toward careful only, and the ledger blames the careless writer.
 
 `python bench.py locomo --fast` runs one conversation with 30 audit and 30 held-out questions in about 20 s for about $0.01, and about 1 s from cache. Full runs are only for reported numbers.
