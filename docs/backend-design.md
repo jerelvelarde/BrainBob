@@ -51,7 +51,7 @@ Motivation: a pre-event prototype on a synthetic help desk (not a hackathon resu
 | Experiment | Conditions | Status |
 | --- | --- | --- |
 | LongMemEval subset (50 stratified questions, `longmemeval_s_cleaned`) | full history vs extracted memory | **Measured.** See below. |
-| LoCoMo, held-out half | no memory / all memories / audited memories | Running |
+| LoCoMo, held-out half | no memory / all memories / audited memories | **Measured.** Audit had no effect yet; see below. |
 
 LongMemEval subset, answered by `nvidia/NVIDIA-Nemotron-3-Super-120B-A12B`, judged by `openai/gpt-oss-120b` with the official per-type judge prompts (the official setup uses GPT-4o):
 
@@ -62,4 +62,14 @@ LongMemEval subset, answered by `nvidia/NVIDIA-Nemotron-3-Super-120B-A12B`, judg
 
 About 1/40 of the context for 8 points lower accuracy. With 50 questions this gap is within noise. Total cost $2.30. Raw outputs: [bench/results/20261017-110432](../bench/results/20261017-110432/results.md). This is a LongMemEval subset, not a leaderboard score.
 
-In progress: `backend/bench.py --fast`, a sub-minute, few-cent run for iterating. Full runs are only for reported numbers.
+LoCoMo, all 10 conversations, 760 held-out questions, agent `nvidia/Nemotron-3.5-Lightning-30B-A3B` (thinking off), judge `openai/gpt-oss-120b`:
+
+| Condition | Accuracy | Context tokens per question (estimated) |
+| --- | --- | --- |
+| No memory | 85/760 (11%) | 0 |
+| All memories | 404/760 (53%) | 1,199 |
+| Audited memories | 404/760 (53%) | 1,199 |
+
+The audit saw 267 correctness flips on 780 audit questions: 213 helpful, 54 harmful, spread over 2,377 memories. No memory reached the 3-flip threshold, so nothing was retired and the audited condition equals the all-memories condition. LoCoMo has one clean writer, so its extracted memories are mostly correct. Cost $0.37, 524 s. Raw outputs: [backend/results/20261017-112134-locomo](../backend/results/20261017-112134-locomo/results.md).
+
+`python bench.py locomo --fast` runs one conversation with 30 audit and 30 held-out questions in about 20 s for about $0.01, and about 1 s from cache. Full runs are only for reported numbers.

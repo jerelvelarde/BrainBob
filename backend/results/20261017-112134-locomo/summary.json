@@ -1,0 +1,92 @@
+{
+ "mode": "full",
+ "convs": [
+  "conv-26",
+  "conv-30",
+  "conv-41",
+  "conv-42",
+  "conv-43",
+  "conv-44",
+  "conv-47",
+  "conv-48",
+  "conv-49",
+  "conv-50"
+ ],
+ "agent_model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+ "accuracy": {
+  "none": "85/760 (11%)",
+  "all": "404/760 (53%)",
+  "audited": "404/760 (53%)"
+ },
+ "by_category": {
+  "multi-hop": {
+   "none": "12/138 (9%)",
+   "all": "48/138 (35%)",
+   "audited": "48/138 (35%)"
+  },
+  "open-domain": {
+   "none": "9/45 (20%)",
+   "all": "20/45 (44%)",
+   "audited": "20/45 (44%)"
+  },
+  "single-hop": {
+   "none": "63/418 (15%)",
+   "all": "292/418 (70%)",
+   "audited": "292/418 (70%)"
+  },
+  "temporal": {
+   "none": "1/159 (1%)",
+   "all": "44/159 (28%)",
+   "audited": "44/159 (28%)"
+  }
+ },
+ "n_heldout": 760,
+ "n_audit": 780,
+ "n_memories": 2377,
+ "n_flips": 267,
+ "retired": 0,
+ "promoted": 2,
+ "flagged": 0,
+ "authors": {
+  "curator.written": 2377,
+  "curator.promoted": 2,
+  "curator.retired": 0,
+  "curator.flagged": 0,
+  "curator.harm_changes": 54
+ },
+ "avg_ctx_tokens": {
+  "none": 0,
+  "all": 1199,
+  "audited": 1199
+ },
+ "cost_usd_fresh": 0.3701,
+ "cost_usd_incl_cached": 0.5229,
+ "cost_by_role": {
+  "curator": {
+   "calls": 544,
+   "cached": 310,
+   "pt": 504298,
+   "ct": 94098,
+   "usd": 0.0189,
+   "usd_all": 0.044
+  },
+  "agent": {
+   "calls": 4193,
+   "cached": 934,
+   "pt": 5819423,
+   "ct": 145938,
+   "usd": 0.2445,
+   "usd_all": 0.3202
+  },
+  "judge": {
+   "calls": 4193,
+   "cached": 1410,
+   "pt": 999475,
+   "ct": 434961,
+   "usd": 0.1067,
+   "usd_all": 0.1587
+  }
+ },
+ "wall_s": 524.1,
+ "retired_memories": []
+}
