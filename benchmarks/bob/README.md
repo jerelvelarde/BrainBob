@@ -2,6 +2,8 @@
 
 For [#4](https://github.com/jerelvelarde/BrainBob/issues/4) and Bonan's [one-hour model experiment #7](https://github.com/jerelvelarde/BrainBob/issues/7). Python 3.10+, standard library only. Run from the repository root. No API keys, GPU, package installation or backend changes needed to run the scorer and reference pilot.
 
+The larger organizational pilot is being built in [`bobbench/`](../../bobbench/CONTRACT.md), which landed concurrently. This package supplies the fast small-model evaluation handoff and a separate structured scorer smoke suite; it does not replace those natural-language worlds, oracles, or adapter contract. Keep both result sets labeled separately.
+
 Two separate measurements:
 
 | Measurement | Cases | What it measures |
