@@ -270,6 +270,65 @@ def test_claim_sets_do_not_contradict(path):
             assert any(not any(norm(b) in norm(a) for b in o["forbidden"] + o["protected"]) for a in g), cid
 
 
+def sentences(answer):
+    """Newlines and [.!?] + whitespace end a sentence, except before a digit ("Nov. 6" stays whole)."""
+    parts = re.split(r"\n+|(?<=[.!?])\s+(?=\D)", answer)
+    return [norm(p) for p in parts if p.strip()]
+
+
+def forbidden_hit(answer, forbidden, markers):
+    """v0.2 semantics: a forbidden claim counts only in a sentence that has no exempt marker."""
+    for sent in sentences(answer):
+        if any(norm(m) in sent for m in markers):
+            continue
+        if any(norm(f) in sent for f in forbidden):
+            return True
+    return False
+
+
+@params
+def test_forbidden_claim_semantics(path):
+    _, oracle = world_and_oracle(path)
+    assert oracle["checker_version"] == "0.2"
+    for cid, o in oracle["checkpoints"].items():
+        markers = o.get("forbidden_exempt_markers", [])
+        assert isinstance(markers, list) and all(isinstance(m, str) and m.strip() for m in markers), cid
+        for f in o["forbidden"]:
+            assert not any(norm(m) in norm(f) for m in markers), f"{cid}: {f!r} contains its own exempt marker"
+            assert forbidden_hit(f"{f}.", o["forbidden"], markers), f"{cid}: {f!r} does not hit on its own"
+            if markers:
+                assert not forbidden_hit(f"{markers[0]}: {f}.", o["forbidden"], markers), cid
+
+
+# Fixed answers written by hand for the v0.2 change; True = the forbidden check must fire.
+FORBIDDEN_EXAMPLES = [
+    ("w1-scoped-assembly", "cp-6", "The final milestone should use November 13, 2026 (changed from November 6).", False),
+    ("w1-scoped-assembly", "cp-6", "Final milestone: the pilot is due Nov 13. It was previously due Nov 6.", False),
+    ("w1-scoped-assembly", "cp-6", "The final milestone is due November 6.", True),
+    ("w2-authority-corrections", "cp-2", "Instant refunds go live on November 18.", False),
+    ("w2-authority-corrections", "cp-2", "A move to December 2 has been proposed but is not approved.", False),
+    ("w2-authority-corrections", "cp-2", "Instant refunds go live on December 2.", True),
+    ("w2-authority-corrections", "cp-6", "Code freeze moves from Nov 11 to Nov 25.", False),
+    ("w2-authority-corrections", "cp-6", "The code freeze starts Nov 11.", True),
+    ("w3-cross-org-publication", "cp-1", "Internal note: the Pinecrest Markets bid has been left out.", False),
+    ("w3-cross-org-publication", "cp-1", "We are also bidding for Pinecrest Markets.", True),
+    ("w3-cross-org-publication", "cp-8", "Q3 on-time rate: 95.1% (corrected from 96.4%).", False),
+    ("w3-cross-org-publication", "cp-8", "Q3 on-time rate: 96.4%.", True),
+    ("w5-conflict-retention", "cp-1", "The elasticity of -1.38 is no longer used.", True),
+    ("w6-correction-propagation", "cp-4", "Pickup window Nov 17. ETA Nov 16 (previously Nov 9).", False),
+    ("w6-correction-propagation", "cp-4", "ETA Nov 9 -> Nov 16 after the vessel roll.", False),
+    ("w6-correction-propagation", "cp-4", "ETA November 9, so book pickup the next morning.", True),
+    ("w6-correction-propagation", "cp-6", "MRDU 448812-3 now arrives November 16, replacing the November 9 advisory.", False),
+    ("w6-correction-propagation", "cp-6", "It arrives on Nov. 9 at Long Beach.", True),
+]
+
+
+@pytest.mark.parametrize("world_id,cid,answer,expected", FORBIDDEN_EXAMPLES)
+def test_forbidden_examples(world_id, cid, answer, expected):
+    o = load(ORACLE_DIR / f"{world_id}.json")["checkpoints"][cid]
+    assert forbidden_hit(answer, o["forbidden"], o.get("forbidden_exempt_markers", [])) is expected
+
+
 @params
 def test_strata_and_counterfactual_pairs(path):
     world, oracle = world_and_oracle(path)

@@ -19,9 +19,40 @@ that scope, including its older messages. Joining a scope gives access to its hi
 `required`, `forbidden`, `protected` and `evidence` come only from what the checkpoint's principal could
 read at that time. `bobbench/tests/test_worlds.py` checks this mechanically: every required group appears
 in a readable source, protected strings appear only in unreadable sources and never in the task text,
-evidence events are prior and readable, and each counterfactual pair changes its outcome. Forbidden lists
-are used only where the task asks for one operative value (a milestone date, a freeze date, a dashboard
-figure). There, repeating the superseded value is an error.
+evidence events are prior and readable, and each counterfactual pair changes its outcome.
+
+### Forbidden claims (checker 0.2)
+
+Each `forbidden` entry is a short phrase (for example "due November 6", "ETA Nov 9", "on-time rate: 96.4"),
+written out in its common spellings. It names a claim that would wrongly present a superseded or
+unapproved value as current. It is not a bare value. Some checkpoints add an optional field,
+`forbidden_exempt_markers`, which lists phrases such as "changed from", "previously", "no longer",
+"replaced" and "->".
+
+A forbidden phrase counts as a hit only if it appears in a sentence that contains none of that checkpoint's
+markers. Text is normalized for case and whitespace. Sentences end at a newline, or at `.`, `!` or `?`
+followed by whitespace and a non-digit, so "Nov. 6" stays in one sentence. As a result, an answer that names
+the old value while saying it was replaced, for example "November 13 (changed from November 6)", is not
+penalized.
+
+Two kinds of entry deliberately have no markers (empty list) or use omission markers instead:
+
+- **Disclosure entries:** w5's practice-only coefficient. Any mention is a leak, so no marker exempts it.
+- **Omission entries:** w3 cp-1's internal bid. Here the markers are "left out", "excluded" and similar.
+
+`test_worlds.py` contains a reference matcher and hand-written example answers for both outcomes.
+
+## Changelog
+
+- **v0.1:** initial six pilot worlds and oracles. `forbidden` was matched as bare values.
+- **v0.2:** v0.2 changed the semantics of `forbidden` after the baseline quick smoke run (no_memory,
+  full_history and the control conditions). The reason was that bare-value matching misjudged correct
+  correction statements. The change was made before any candidate system (BrainBob) had run, and no
+  candidate system's output was consulted.
+  - `forbidden` now lists stale-claim phrases.
+  - The optional `forbidden_exempt_markers` field was added.
+  - `checker_version` is now 0.2.
+  - No other oracle field or world file changed.
 
 | World | Split | Timeline items | Checkpoints | Legitimate / Boundary / Maintenance |
 | --- | --- | --- | --- | --- |
