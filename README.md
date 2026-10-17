@@ -1,8 +1,8 @@
 # BrainBob
 
-![SpongeBob brain-office meme: burning filing cabinets, scattered papers, and overwhelmed workers](docs/assets/brain-memory-chaos.png)
+[![Watch BrainBob’s 60-second live demo: a corrected memory guides the next answer](docs/demo/live-one-minute-20261017/output/preview.jpg)](https://github.com/jerelvelarde/BrainBob/blob/main/docs/demo/live-one-minute-20261017/output/brainbob-live-60s.mp4)
 
-*The inspiration behind BrainBob’s memory office.*
+**[▶ Watch the 60-second demo](https://github.com/jerelvelarde/BrainBob/blob/main/docs/demo/live-one-minute-20261017/output/brainbob-live-60s.mp4)** · Silent recording of the live app with fictional data. [Recording notes](docs/demo/live-one-minute-20261017/README.md).
 
 **A shared brain for agent teams. Keep knowledge current, control who can use it, and trace every change.**
 
@@ -13,6 +13,10 @@ Built by **Jerel Velarde and Bonan Kou** for the **Shared Brain** track at The R
 [Problem](#the-problem) · [Solution](#the-solution) · [Results](#results) · [Run locally](#run-locally) · [Architecture](docs/architecture.md) · [Published benchmark](https://huggingface.co/datasets/JerelVelarde/bob-benchmark) · [Judging evidence](judging/evidence.md)
 
 ## The problem
+
+![SpongeBob brain-office meme: burning filing cabinets, scattered papers, and overwhelmed workers](docs/assets/brain-memory-chaos.png)
+
+*The inspiration behind BrainBob’s memory office.*
 
 Agent teams share facts across conversations, people, and tasks. But those facts change: a deadline moves, an estimate becomes an approved commitment, or a teammate's access changes while old notes remain available.
 
