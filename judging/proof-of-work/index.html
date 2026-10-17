@@ -76,6 +76,7 @@
         <nav class="timeline-nav" aria-label="Changelog timeline">
           <h2>OCT 17 / TIMELINE</h2>
           <ul>
+            <li><a href="#2026-10-17-144758-round2-freeze-review"><time datetime="2026-10-17T14:47:58-07:00">2:47:58 PM PDT</time>Fresh checker evaluation and scorer review</a></li>
             <li><a href="#2026-10-17-143714-evaluation-report"><time datetime="2026-10-17T14:37:14-07:00">2:37:14 PM PDT</time>Evaluation report update</a></li>
             <li><a href="#2026-10-17-143446-bob-org-benchmark-pilot"><time datetime="2026-10-17T14:34:46-07:00">2:34:46 PM PDT</time>Bob org benchmark pilot</a></li>
             <li><a href="#2026-10-17-143252-external-benchmark-status"><time datetime="2026-10-17T14:32:52-07:00">2:32:52 PM PDT</time>External benchmark status</a></li>
@@ -113,6 +114,19 @@
       <h2 class="date-heading">October 17, 2026 <span aria-hidden="true">/</span> Shared Brain <span aria-hidden="true">/</span> Pacific Time (PDT)</h2>
 
       <!-- Add new entries here, newest first. Use real timestamps and link the evidence. -->
+
+      <article class="entry" id="2026-10-17-144758-round2-freeze-review">
+        <div class="time"><time datetime="2026-10-17T14:47:58-07:00">2:47:58 PM PDT</time><span>Review commit time</span></div>
+        <div><h2>Fresh 60-case checker evaluation and organizational scorer review</h2>
+          <ul>
+            <li><span class="label">Frozen</span> 60 new checker pairs, 20 per class, with public label-free inputs and evaluator-local gold. The exposed original 60 are development for round two.</li>
+            <li><span class="label">Checked</span> 21 benchmark tests, input/gold/scorer hashes, missing and constant-label controls; second-agent annotation review clarified four wording ambiguities before publication.</li>
+            <li><span class="label">Found</span> a wrong-current-date answer passing the organizational scorer; recorded source/history probes made zero requests. Existing-session revocation was not exercised by the pilot runner.</li>
+          </ul>
+          <p class="note">Codex on Jerel's request. Offline data/scorer work only; no model performance result, training run, or live app verification. Historical scores are preserved with review caveats; no aggregate rescore yet.</p>
+          <div class="links"><a href="https://github.com/jerelvelarde/BrainBob/commit/22ec671b72e65d2573322ef4aae136a9856d8237">22ec671 · fresh evaluation handoff</a><a href="https://github.com/jerelvelarde/BrainBob/commit/641e8db291b62fb1df7bffd82378dcf1642f630b">641e8db · benchmark review</a><a href="../../benchmarks/bob/round2/README.md">Round-two handoff</a><a href="../../docs/bob-pilot-review-20261017.md">Review and reproduction</a></div>
+        </div>
+      </article>
 
       <article class="entry" id="2026-10-17-143714-evaluation-report">
         <div class="time"><time datetime="2026-10-17T14:37:14-07:00">2:37:14 PM PDT</time><span>Latest commit time (454a47b at 2:36:59 PM)</span></div>
