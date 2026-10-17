@@ -4,7 +4,8 @@ Verification performed on October 17, 2026 (America/Los_Angeles).
 
 - Integration commit: [651d72464c440c63dcec8eddab21ba7fe9b86732](https://github.com/jerelvelarde/BrainBob/commit/651d72464c440c63dcec8eddab21ba7fe9b86732), committed 2026-10-17T16:11:24-07:00.
 - Base: `fa0fe6beb9bd998d3877ef10db4be04970bcee38`, PR #12 merged into main.
-- Original adapter implementation: `5e924395c4122438ce13ad7b540aa09b5f521ff8`.
+- Original adapter implementation: [`740beb8`](https://github.com/jerelvelarde/BrainBob/commit/740beb8aa1bafbce73997be8cf4b84243a9043b0).
+- Requirements encoding fix: [`5e92439`](https://github.com/jerelvelarde/BrainBob/commit/5e924395c4122438ce13ad7b540aa09b5f521ff8). The earlier evidence entry mislabeled this requirements-only fix as the adapter implementation; this attribution is corrected here.
 - Merge completed without conflicts, preserving published history.
 - `git diff origin/main -- apps/web backend` was empty at the tested integration commit.
 
