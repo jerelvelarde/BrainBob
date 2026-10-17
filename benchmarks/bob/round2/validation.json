@@ -1,0 +1,38 @@
+{
+  "type": "offline fixture/scorer controls; not model performance",
+  "cases": 60,
+  "templates": 20,
+  "constant_label_accuracy": {
+    "same": {
+      "numerator": 20,
+      "denominator": 60,
+      "rate": 0.3333333333333333
+    },
+    "conflict": {
+      "numerator": 20,
+      "denominator": 60,
+      "rate": 0.3333333333333333
+    },
+    "unrelated": {
+      "numerator": 20,
+      "denominator": 60,
+      "rate": 0.3333333333333333
+    }
+  },
+  "missing_predictions_accuracy": {
+    "numerator": 0,
+    "denominator": 60,
+    "rate": 0.0
+  },
+  "perfect_fixture_accuracy": {
+    "numerator": 60,
+    "denominator": 60,
+    "rate": 1.0
+  },
+  "round1_predictions_rejected": true,
+  "annotation_review": "Second agent blind to gold; 60/60 labels agreed, four ambiguities clarified before final freeze, 12 affected rows rechecked with no remaining material ambiguity. Not human adjudication.",
+  "tests": "python3 -m unittest discover -s benchmarks/bob -p test_*.py -v: 21 passed",
+  "tokenizer_check": "Not run; Bonan must check actual tokenizer length before inference.",
+  "gold_sha256": "17f33f1f98ac1bb610886a9cbdd42db32abef196b110597189d4c470e01e4f58",
+  "inputs_sha256": "a2524b6d702bbf06d713d0f6d2aac06596778c40daf17c2bd57304de2c90cb9f"
+}

@@ -6,6 +6,12 @@ The larger organizational pilot is being built in [`bobbench/`](../../bobbench/C
 
 Two separate measurements:
 
+**Round-two checker handoff:** the original 60 evaluation cases have now been
+inspected case by case and are development data for further tuning. Historical
+round-one results remain valid under their original protocol. Use the
+[fresh frozen 60 inputs](round2/README.md) for the next frozen comparison;
+their evaluator-local gold is not included in this public repository.
+
 | Measurement | Cases | What it measures |
 | --- | --- | --- |
 | Memory-pair classification | 60 evaluation pairs, balanced 20/class; 12 separate development pairs | `same`, `conflict`, `unrelated` predictions from the base or tuned model |
