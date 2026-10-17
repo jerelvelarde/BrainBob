@@ -32,8 +32,16 @@ The evaluator scene is deliberately a rehearsal of the requested inspection visi
 
 Teaching/learning interactions, skeletal animation, wrist/elbow reach, backend SSE wiring, real status projection, authorization, and reliable reconnect/replay remain separate work.
 
+## Dramatic direction
+
+Deletion now dims the room into a warm night scene, with a short camera punch on ignition. Fourteen layered flames grow across the office, with taller flames behind the cabinets and shorter flames in front to keep the workers visible. Thirty papers arc into the shredder; 48 strips fall out. Smoke rises at the rear and embers drift above the fire. Workers hop, raise their hands, and sweat beneath the “EVERYBOB PANIC!” caption. The lights and camera return to normal as the scene ends.
+
+Evaluation dims the surroundings to violet. A spotlight and translucent cone follow the calm evaluator as he enters, while the crew scrambles to collect records. Extra front lighting preserves the characters’ bright yellow color and readable faces. Captions describe the performance, not a verdict from the backend.
+
+Lighting, camera zoom, smoke, embers, sweat, and all other effects share the clip clock. Pause freezes them; seeking and replay reproduce the same moment. Camera motion is limited to a brief zoom of less than 10%, preserves user orbit/zoom, and is disabled for reduced motion. There is no camera shake, flashing alarm, or audio. Interrupting either scene with a different event restores its lighting and camera contribution.
+
 ## Verification
 
-Automated checks cover deterministic seeking, no memory mutation during replay, distinct retrieval destinations, inspector-versus-runner roles, separated panic positions, finite in-room coordinates, and distinct promotion/flag/retirement cues. Browser checks cover the visible scenes, scope selection, pause/scrub/replay, and rapid replacement. No device performance benchmark or live backend evaluation is claimed.
+Automated checks cover deterministic seeking, no memory mutation during replay, distinct retrieval destinations, inspector-versus-runner roles, separated panic positions, finite in-room coordinates, distinct promotion/flag/retirement cues, bounded cinematic zoom, neutral lighting/camera at clip boundaries, and reduced-motion camera suppression. Browser checks cover the visible scenes, scope selection, pause/scrub/replay, and rapid replacement. No device performance benchmark or live backend evaluation is claimed.
 
 The existing README, architecture plan, and demo runbook were intentionally left untouched pending Jerel's approval of their backend revisions.

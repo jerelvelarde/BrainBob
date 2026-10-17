@@ -1,12 +1,12 @@
 "use client";
 
-import { Component, memo, useEffect, useMemo, useRef, useState } from "react";
+import { Component, memo, useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
 import { Label } from "./scene-label";
 import { EventStage } from "./event-stage";
-import { scopeCharacters, type SceneCue } from "@/lib/scene-animation";
+import { cinematicsAt, scopeCharacters, type SceneCue, type SceneCinematics } from "@/lib/scene-animation";
 import { BrainBob } from "./brain-bob";
 import type { MemoryEvent, MemoryScope } from "@/lib/memory";
 
@@ -169,12 +169,50 @@ function Walker({ index, playing, speed, reducedMotion, event, onClick }: {
   </group>;
 }
 
-function CameraRig({ onReady }: Pick<SceneProps, "onReady">) {
+function SceneLighting({ cinematics }: { cinematics: RefObject<SceneCinematics> }) {
+  const ambient = useRef<THREE.AmbientLight>(null);
+  const key = useRef<THREE.DirectionalLight>(null);
+  const fill = useRef<THREE.DirectionalLight>(null);
+  const faceLight = useRef<THREE.DirectionalLight>(null);
+  const ground = useRef<THREE.MeshStandardMaterial>(null);
+  const { scene } = useThree();
+  const colors = useMemo(() => ({ day: new THREE.Color("#f0e9dd"), night: new THREE.Color("#252032"), fire: new THREE.Color("#37212b"), mix: new THREE.Color() }), []);
+  useFrame(() => {
+    const { darkness, heat } = cinematics.current;
+    colors.mix.copy(colors.night).lerp(colors.fire, heat);
+    if (scene.background instanceof THREE.Color) scene.background.copy(colors.day).lerp(colors.mix, darkness);
+    ground.current?.color.copy(colors.day).lerp(colors.mix, darkness);
+    if (ambient.current) ambient.current.intensity = THREE.MathUtils.lerp(1.55, .55, darkness);
+    if (key.current) key.current.intensity = THREE.MathUtils.lerp(2.8, 1.35, darkness);
+    if (fill.current) fill.current.intensity = THREE.MathUtils.lerp(.6, 1.1, darkness);
+    if (faceLight.current) faceLight.current.intensity = darkness * 1.6;
+  }, -.5);
+  return <>
+    <color attach="background" args={["#f0e9dd"]} />
+    <ambientLight ref={ambient} intensity={1.55} color="#fff5e2" />
+    <directionalLight ref={key} position={[5, 12, 8]} intensity={2.8} color="#fff1d5" castShadow shadow-mapSize={[2048, 2048]} shadow-camera-left={-12} shadow-camera-right={12} shadow-camera-top={12} shadow-camera-bottom={-12} shadow-normalBias={.04} />
+    <directionalLight ref={fill} position={[-8, 5, -3]} intensity={.6} color="#c6b4f5" />
+    <directionalLight ref={faceLight} position={[6, 5, 14]} intensity={0} color="#fff3d0" />
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -.58, 0]} receiveShadow><planeGeometry args={[200, 200]} /><meshStandardMaterial ref={ground} color="#f0e9dd" roughness={1} /></mesh>
+  </>;
+}
+
+function CameraRig({ onReady, cinematics }: Pick<SceneProps, "onReady"> & { cinematics: RefObject<SceneCinematics> }) {
   const controls = useRef<React.ComponentRef<typeof OrbitControls>>(null);
+  const appliedZoom = useRef(1);
   const { camera, invalidate, size } = useThree();
+  useFrame(() => {
+    // Multiply only our contribution: wheel/button zoom and orbit remain user-controlled.
+    const next = cinematics.current.zoom;
+    if (next !== appliedZoom.current) {
+      camera.zoom *= next / appliedZoom.current;
+      camera.updateProjectionMatrix();
+      appliedZoom.current = next;
+    }
+  });
   useEffect(() => {
     const fitZoom = Math.max(20, Math.min(size.width / 21, size.height / 13));
-    camera.zoom = fitZoom;
+    camera.zoom = fitZoom * appliedZoom.current;
     camera.updateProjectionMatrix();
     camera.lookAt(0, .9, 0);
     camera.updateMatrixWorld();
@@ -182,7 +220,7 @@ function CameraRig({ onReady }: Pick<SceneProps, "onReady">) {
     controls.current?.update();
     invalidate();
     onReady({
-      reset: () => { camera.position.set(16, 14, 19); camera.zoom = fitZoom; camera.updateProjectionMatrix(); controls.current?.target.set(0, .9, 0); controls.current?.update(); invalidate(); },
+      reset: () => { camera.position.set(16, 14, 19); camera.zoom = fitZoom * appliedZoom.current; camera.updateProjectionMatrix(); controls.current?.target.set(0, .9, 0); controls.current?.update(); invalidate(); },
       zoom: (factor) => { camera.zoom = THREE.MathUtils.clamp(camera.zoom * factor, 18, 85); camera.updateProjectionMatrix(); invalidate(); },
     });
   }, [camera, invalidate, onReady, size]);
@@ -197,6 +235,7 @@ class SceneBoundary extends Component<{ children: React.ReactNode }, { failed: b
 
 export default function BrainScene(props: SceneProps) {
   const [supported, setSupported] = useState(true);
+  const cinematics = useRef<SceneCinematics>(cinematicsAt(undefined, 0));
   useEffect(() => {
     const canvas = document.createElement("canvas");
     const gl = canvas.getContext("webgl2");
@@ -205,17 +244,13 @@ export default function BrainScene(props: SceneProps) {
   }, []);
   if (!supported) return <div className="scene-fallback"><h2>Your memories are in good hands.</h2><p>Enable WebGL to visit the 3D brain. Open Memories to explore memory and history.</p></div>;
   return <SceneBoundary><Canvas orthographic shadows dpr={[1, 1.7]} camera={{ position: [16, 14, 19], zoom: 45, near: .1, far: 100 }} gl={{ antialias: true, powerPreference: "high-performance" }} aria-label="Interactive isometric brain office with six walking BrainBob memory workers">
-    <color attach="background" args={["#f0e9dd"]} />
-    <ambientLight intensity={1.55} color="#fff5e2" />
-    <directionalLight position={[5, 12, 8]} intensity={2.8} color="#fff1d5" castShadow shadow-mapSize={[2048, 2048]} shadow-camera-left={-12} shadow-camera-right={12} shadow-camera-top={12} shadow-camera-bottom={-12} shadow-normalBias={.04} />
-    <directionalLight position={[-8, 5, -3]} intensity={.6} color="#e7ddf5" />
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -.58, 0]} receiveShadow><planeGeometry args={[200, 200]} /><meshStandardMaterial color="#f0e9dd" roughness={1} /></mesh>
+    <SceneLighting cinematics={cinematics} />
     <Room />
     {banks.map((bank) => <Cabinet key={bank.scope} bank={bank} selected={props.selectedScope === bank.scope} active={props.cue?.scope === bank.scope} onClick={() => { props.onScope(bank.scope); props.onSelect(bank.memory); }} />)}
     <Desk position={[-3.6, 0, .9]} />
     <Desk position={[.2, 0, .6]} />
     <Desk position={[3.8, 0, -1]} rotation={-.1} audit />
-    {props.cue ? <EventStage key={props.cue.id} cue={props.cue} playing={props.playing} speed={props.speed} reducedMotion={props.reducedMotion} seek={props.seek} onProgress={props.onProgress} /> : routes.map((_, index) => <Walker key={index} index={index} playing={props.playing} speed={props.speed} reducedMotion={props.reducedMotion} event={props.event} onClick={() => props.onWorker(index === 4 ? "Inspector BrainBob checks memories against their evidence." : index === 0 ? "Curator BrainBob files new memories and revisions." : "Runner BrainBob delivers memories to the team.")} />)}
-    <CameraRig onReady={props.onReady} />
+    {props.cue ? <EventStage key={props.cue.id} cue={props.cue} playing={props.playing} speed={props.speed} reducedMotion={props.reducedMotion} seek={props.seek} onProgress={props.onProgress} cinematics={cinematics} /> : routes.map((_, index) => <Walker key={index} index={index} playing={props.playing} speed={props.speed} reducedMotion={props.reducedMotion} event={props.event} onClick={() => props.onWorker(index === 4 ? "Inspector BrainBob checks memories against their evidence." : index === 0 ? "Curator BrainBob files new memories and revisions." : "Runner BrainBob delivers memories to the team.")} />)}
+    <CameraRig onReady={props.onReady} cinematics={cinematics} />
   </Canvas></SceneBoundary>;
 }

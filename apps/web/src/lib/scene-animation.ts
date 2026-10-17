@@ -7,6 +7,21 @@ export type Point = [number, number];
 export type BobPose = "idle" | "carry" | "write" | "panic" | "inspect" | "present";
 export type BobExpression = "happy" | "worried" | "focused";
 export type BobPerformance = { time: number; distance: number; walking: boolean; pose: BobPose; expression: BobExpression; paper: boolean };
+export type SceneCinematics = { darkness: number; heat: number; zoom: number };
+
+/** Seekable lighting and a single camera punch, with no wall-clock noise or flashing. */
+export function cinematicsAt(action: SceneAction | undefined, progress: number, reducedMotion = false): SceneCinematics {
+  const p = Math.max(0, Math.min(1, progress));
+  const ramp = (from: number, to: number) => {
+    const u = Math.max(0, Math.min(1, (p - from) / (to - from)));
+    return u * u * (3 - 2 * u);
+  };
+  if (action !== "forgotten" && action !== "evaluated") return { darkness: 0, heat: 0, zoom: 1 };
+  const envelope = ramp(0, .12) * (1 - ramp(.88, 1));
+  const punch = ramp(.04, .12) * (1 - ramp(.12, .3));
+  return { darkness: envelope, heat: action === "forgotten" ? envelope : 0,
+    zoom: reducedMotion ? 1 : 1 + envelope * .025 + punch * (action === "forgotten" ? .065 : .04) };
+}
 
 export const scopeCharacters = {
   individual: { name: "John", role: "Individual", x: -3.8, color: "#93bac3" },
@@ -19,8 +34,8 @@ export const sceneClips: Record<SceneAction, { label: string; seconds: number; p
   created: { label: "Store", seconds: 9, phases: ["Write it down", "Off to the right cabinet", "A new memory, filed"], color: "#c2a24a" },
   retrieved: { label: "Retrieve", seconds: 9, phases: ["Find the right cabinet", "Found it! Bring the record", "Memory delivered"], color: "#648f9f" },
   updated: { label: "Rewrite", seconds: 10, phases: ["Pull the old record", "Write the correction", "File the new version"], color: "#9375b2" },
-  forgotten: { label: "Delete", seconds: 12, phases: ["Time to forget!", "Papers out. Shredder on.", "Retired. History preserved."], color: "#d26c45" },
-  evaluated: { label: "Evaluate", seconds: 14, phases: ["The evaluator is here!", "Bring every record!", "Compare with / without memory"], color: "#8972af" },
+  forgotten: { label: "Delete", seconds: 12, phases: ["CODE RED. Forget that!", "EVERYBOB PANIC!", "Crisis over. History preserved."], color: "#d26c45" },
+  evaluated: { label: "Evaluate", seconds: 14, phases: ["Nobody move. He’s here.", "Look busy. Bring the receipts!", "The evidence takes the stand."], color: "#8972af" },
   promoted: { label: "Promote", seconds: 7, phases: ["A helpful memory", "Up to the trusted shelf", "Trusted, with evidence"], color: "#b39243" },
   flagged: { label: "Flag", seconds: 7, phases: ["This record is locked", "A concern for the owner", "Flagged. Kept for review."], color: "#ce6c73" },
   rejected: { label: "Reject", seconds: 6, phases: ["Another record arrives", "Duplicate or tombstone", "Return to sender"], color: "#ba8168" },

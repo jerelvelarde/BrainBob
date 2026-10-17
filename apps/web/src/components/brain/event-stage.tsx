@@ -6,11 +6,11 @@ import { RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
 import { BrainBob } from "./brain-bob";
 import { Label } from "./scene-label";
-import { sceneClips, scopeCharacters, workerPerformance, type BobPerformance, type SceneCue } from "@/lib/scene-animation";
+import { cinematicsAt, sceneClips, scopeCharacters, workerPerformance, type BobPerformance, type SceneCue, type SceneCinematics } from "@/lib/scene-animation";
 
 type Clock = RefObject<{ time: number; progress: number }>;
 type StageProps = { cue: SceneCue; playing: boolean; reducedMotion: boolean; speed: number;
-  seek?: { value: number; revision: number }; onProgress: (progress: number) => void };
+  seek?: { value: number; revision: number }; onProgress: (progress: number) => void; cinematics: RefObject<SceneCinematics> };
 const clamp = THREE.MathUtils.clamp;
 const lerp = THREE.MathUtils.lerp;
 const smooth = (a: number, b: number, p: number) => THREE.MathUtils.smoothstep(p, a, b);
@@ -26,6 +26,8 @@ function Paper({ color = "#fff9e6" }: { color?: string }) {
 
 function Performer({ index, cue, clock }: { index: number; cue: SceneCue; clock: Clock }) {
   const group = useRef<THREE.Group>(null);
+  const sweat = useRef<THREE.Group>(null);
+  const speech = useRef<THREE.Group>(null);
   const performance = useRef<BobPerformance>({ time: 0, distance: 0, walking: false, pose: "idle", expression: "happy", paper: false });
   useFrame(() => {
     const sample = workerPerformance(cue.action, cue.scope, index, clock.current.progress);
@@ -35,13 +37,59 @@ function Performer({ index, cue, clock }: { index: number; cue: SceneCue; clock:
     }
     Object.assign(performance.current, { time: clock.current.time, distance: sample.distance,
       walking: sample.moving, pose: sample.pose, expression: sample.expression, paper: sample.paper });
+    if (sweat.current) {
+      sweat.current.visible = sample.pose === "panic";
+      sweat.current.position.y = 1.22 + Math.sin(clock.current.time * 7 + index) * .07;
+    }
+    if (speech.current) speech.current.visible = cue.action === "forgotten" ? clock.current.progress < .85 : clock.current.progress < .3;
   }, -1);
   return <group ref={group}>
     <BrainBob performance={performance} inspector={index === 4} phase={index} />
+    <group ref={sweat} visible={false} position={[.52, 1.2, 0]} rotation={[0, 0, -.4]}>
+      <mesh scale={[.7, 1.3, .6]}><sphereGeometry args={[.095, 10, 8]} /><meshBasicMaterial color="#bde9ff" /></mesh>
+      <mesh position={[.16, .12, 0]} scale={[.5, 1, .5]}><sphereGeometry args={[.07, 10, 8]} /><meshBasicMaterial color="#bde9ff" /></mesh>
+    </group>
     {cue.action === "evaluated" && index === 4 ? <Label text="EVALUATOR BOB" position={[0, 1.7, 0]} width={1.85} selected /> : null}
-    {cue.action === "evaluated" && index === 2 ? <Label text="He’s here!" position={[0, 1.55, 0]} width={1.15} /> : null}
-    {cue.action === "forgotten" && index === 1 ? <Label text="SHRED EVERYTHING!*" position={[0, 1.65, 0]} width={2.1} /> : null}
+    <group ref={speech}>
+      {cue.action === "evaluated" && index === 2 ? <Label text="He’s here!" position={[0, 1.55, 0]} width={1.15} /> : null}
+      {cue.action === "forgotten" && index === 1 ? <Label text="SHRED EVERYTHING!*" position={[0, 1.65, 0]} width={2.1} /> : null}
+    </group>
   </group>;
+}
+
+function EvaluatorEntrance({ clock }: { clock: Clock }) {
+  const stage = useRef<THREE.Group>(null);
+  const cone = useRef<THREE.MeshBasicMaterial>(null);
+  const spotlight = useRef<THREE.SpotLight>(null);
+  const target = useMemo(() => new THREE.Object3D(), []);
+  useFrame(() => {
+    const p = clock.current.progress;
+    const bob = workerPerformance("evaluated", "team", 4, p);
+    const envelope = smooth(0, .09, p) * (1 - smooth(.88, 1, p));
+    if (stage.current) {
+      stage.current.position.set(bob.x, 0, bob.z);
+      stage.current.visible = envelope > .001;
+    }
+    target.position.set(bob.x, .4, bob.z);
+    target.updateMatrixWorld();
+    if (cone.current) cone.current.opacity = envelope * .1;
+    if (spotlight.current) {
+      spotlight.current.position.set(bob.x, 7, bob.z);
+      spotlight.current.intensity = envelope * 110;
+    }
+  });
+  return <>
+    <primitive object={target} />
+    <spotLight ref={spotlight} target={target} color="#ede5ff" angle={.24} penumbra={.6} distance={14} intensity={0} decay={1.4} />
+    <group ref={stage}>
+      <mesh position={[0, 3.5, 0]}><coneGeometry args={[1.6, 6.8, 40, 1, true]} />
+        <meshBasicMaterial ref={cone} color="#d8caff" transparent opacity={0} depthWrite={false} side={THREE.DoubleSide} />
+      </mesh>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, .08, 0]}>
+        <ringGeometry args={[.85, .9, 48]} /><meshBasicMaterial color="#e7d6ff" transparent opacity={.8} />
+      </mesh>
+    </group>
+  </>;
 }
 
 function TransferPaper({ cue, clock }: { cue: SceneCue; clock: Clock }) {
@@ -144,6 +192,8 @@ function OfficeChaos({ clock }: { clock: Clock }) {
   const flames = useRef<(THREE.Group | null)[]>([]);
   const papers = useRef<(THREE.Group | null)[]>([]);
   const strips = useRef<(THREE.Mesh | null)[]>([]);
+  const smoke = useRef<(THREE.Mesh | null)[]>([]);
+  const embers = useRef<(THREE.Mesh | null)[]>([]);
   const glow = useRef<THREE.PointLight>(null);
   const geometry = useMemo(makeFlameGeometry, []);
   useEffect(() => () => geometry.dispose(), [geometry]);
@@ -153,18 +203,36 @@ function OfficeChaos({ clock }: { clock: Clock }) {
     flames.current.forEach((flame, i) => {
       if (!flame) return;
       const pulse = 1 + .12 * Math.sin(t * 3.6 + i * 1.7);
-      flame.scale.set(envelope * (.85 + (i % 3) * .2), envelope * pulse * (1 + (i % 4) * .2), 1);
+      // Tall flames at the back, lower tongues in front so the panicking faces stay readable.
+      const height = i < 5 ? 1.7 + (i % 3) * .3 : 1.1 + (i % 3) * .24;
+      flame.scale.set(envelope * (1.05 + (i % 3) * .23), envelope * pulse * height, 1);
       flame.rotation.z = Math.sin(t * 2.6 + i) * .07;
     });
     papers.current.forEach((paper, i) => {
       if (!paper) return;
-      const start = .08 + i * .025;
+      const start = .06 + i * .014;
       const u = clamp((p - start) / .46, 0, 1);
       const fromX = [-3.8, -.5, 3.2][i % 3];
       paper.visible = u > 0 && u < 1;
       // Every tossed sheet ends in the slot before strips leave the shredder.
       paper.position.set(lerp(fromX, 5.8, u), lerp(1.6, .9, u) + Math.sin(u * Math.PI) * (2.8 + i % 3), lerp(-3.1, 3.8, u));
       paper.rotation.set(u * 5, u * 3, u * 9 + i);
+    });
+    smoke.current.forEach((puff, i) => {
+      if (!puff) return;
+      const u = (t * .16 + i * .137) % 1;
+      const origin = fireSpots[i % 5];
+      puff.position.set(origin[0] + Math.sin(i * 2.3 + u * 2) * .6, 1.9 + u * 3.4, origin[2] - .2);
+      puff.scale.setScalar(.25 + u * .8);
+      if (puff.material instanceof THREE.MeshBasicMaterial) puff.material.opacity = envelope * Math.sin(u * Math.PI) * .2;
+    });
+    embers.current.forEach((ember, i) => {
+      if (!ember) return;
+      const u = (t * .3 + i * .071) % 1;
+      const origin = fireSpots[i % fireSpots.length];
+      ember.position.set(origin[0] + Math.sin(i + u * 4) * .5, origin[1] + .3 + u * 3.3, origin[2] + Math.cos(i + u * 3) * .3);
+      ember.scale.setScalar(envelope * Math.sin(u * Math.PI));
+      ember.rotation.z = t * 2 + i;
     });
     strips.current.forEach((strip, i) => {
       if (!strip) return;
@@ -173,7 +241,7 @@ function OfficeChaos({ clock }: { clock: Clock }) {
       strip.position.set(5.8 + Math.sin(i * 2.4) * u * .9, .65 - u * .55, 3.85 + u * (.4 + (i % 4) * .16));
       strip.rotation.set(u * 3 + i, 0, u * 4 + i);
     });
-    if (glow.current) glow.current.intensity = envelope * 12;
+    if (glow.current) glow.current.intensity = envelope * 30;
   });
   return <group>
     <pointLight ref={glow} color="#ff9f3c" position={[0, 3.5, 0]} distance={16} intensity={0} />
@@ -184,9 +252,15 @@ function OfficeChaos({ clock }: { clock: Clock }) {
         <mesh geometry={geometry} position={[.03, .02, .04]} scale={[.3, .4, 1]}><meshBasicMaterial color="#fff09c" side={THREE.DoubleSide} toneMapped={false} /></mesh>
       </group>
     </group>)}
-    {Array.from({ length: 16 }, (_, i) => <group key={i} ref={(g) => { papers.current[i] = g; }}><Paper /></group>)}
-    {Array.from({ length: 32 }, (_, i) => <mesh key={i} ref={(g) => { strips.current[i] = g; }}>
+    {Array.from({ length: 30 }, (_, i) => <group key={i} ref={(g) => { papers.current[i] = g; }}><Paper /></group>)}
+    {Array.from({ length: 48 }, (_, i) => <mesh key={i} ref={(g) => { strips.current[i] = g; }}>
       <boxGeometry args={[.035, .3 + i % 3 * .06, .012]} /><meshStandardMaterial color={i % 2 ? "#fff4d9" : "#e8d8b9"} side={THREE.DoubleSide} />
+    </mesh>)}
+    {Array.from({ length: 20 }, (_, i) => <mesh key={`smoke-${i}`} ref={(g) => { smoke.current[i] = g; }}>
+      <sphereGeometry args={[1, 10, 8]} /><meshBasicMaterial color="#9b8894" transparent opacity={0} depthWrite={false} />
+    </mesh>)}
+    {Array.from({ length: 42 }, (_, i) => <mesh key={`ember-${i}`} ref={(g) => { embers.current[i] = g; }}>
+      <octahedronGeometry args={[.055]} /><meshBasicMaterial color={i % 2 ? "#ffe7a3" : "#ffa43c"} toneMapped={false} />
     </mesh>)}
   </group>;
 }
@@ -202,7 +276,7 @@ function ScopeSpotlight({ cue, clock }: { cue: SceneCue; clock: Clock }) {
   </group>;
 }
 
-export function EventStage({ cue, playing, reducedMotion, speed, seek, onProgress }: StageProps) {
+export function EventStage({ cue, playing, reducedMotion, speed, seek, onProgress, cinematics }: StageProps) {
   const duration = sceneClips[cue.action].seconds;
   const clock = useRef({ time: 0, progress: 0 });
   const lastReported = useRef(-1);
@@ -212,9 +286,11 @@ export function EventStage({ cue, playing, reducedMotion, speed, seek, onProgres
   useEffect(() => {
     if (reducedMotion) clock.current.time = duration * .62;
   }, [reducedMotion, duration]);
+  useEffect(() => () => { cinematics.current = cinematicsAt(undefined, 0); }, [cinematics]);
   useFrame((_, delta) => {
     if (playing && !reducedMotion) clock.current.time = Math.min(duration, clock.current.time + Math.min(delta, .1) * speed);
     clock.current.progress = clock.current.time / duration;
+    Object.assign(cinematics.current, cinematicsAt(cue.action, clock.current.progress, reducedMotion));
     const tick = Math.floor(clock.current.progress * 50);
     if (tick !== lastReported.current) { onProgress(clock.current.progress); lastReported.current = tick; }
   }, -2);
@@ -222,7 +298,7 @@ export function EventStage({ cue, playing, reducedMotion, speed, seek, onProgres
     <ScopeSpotlight cue={cue} clock={clock} />
     {Array.from({ length: 6 }, (_, index) => <Performer key={index} index={index} cue={cue} clock={clock} />)}
     <TransferPaper cue={cue} clock={clock} />
-    {cue.action === "evaluated" ? <AuditRecords clock={clock} /> : null}
+    {cue.action === "evaluated" ? <><EvaluatorEntrance clock={clock} /><AuditRecords clock={clock} /></> : null}
     {cue.action === "forgotten" ? <OfficeChaos clock={clock} /> : null}
     {cue.action === "flagged" ? <group position={[scopeCharacters[cue.scope].x + .45, 2.65, -3.7]}>
       <mesh position={[0, -.2, 0]}><cylinderGeometry args={[.025, .025, .8, 8]} /><meshStandardMaterial color="#725c66" /></mesh>

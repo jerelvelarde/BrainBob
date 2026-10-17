@@ -98,10 +98,12 @@ export function BrainBob({ walking = true, carrying = false, inspector = false, 
     if (leftFoot.current) { leftFoot.current.position.y = .22 + Math.max(0, sway) * .045; leftFoot.current.position.z = .035 + sway * .055; }
     if (rightFoot.current) { rightFoot.current.position.y = .22 + Math.max(0, -sway) * .045; rightFoot.current.position.z = .035 - sway * .055; }
     if (leftArm.current) {
+      leftArm.current.position.y = pose === "panic" ? .9 : .6;
       leftArm.current.rotation.x = pose === "inspect" || pose === "write" ? -.9 : -.16 * sway;
       leftArm.current.rotation.z = pose === "panic" ? -2.1 + Math.sin(time * 10) * .18 : 0;
     }
     if (rightArm.current) {
+      rightArm.current.position.y = pose === "panic" ? .9 : .6;
       rightArm.current.rotation.x = pose === "write" ? -1.1 + Math.sin(time * 13) * .12 : pose === "present" || pose === "inspect" ? -1.2 : pose === "carry" ? -.65 : .16 * sway;
       rightArm.current.rotation.z = pose === "panic" ? 2.1 + Math.sin(time * 11) * .18 : pose === "write" ? -.15 : 0;
     }
@@ -109,8 +111,8 @@ export function BrainBob({ walking = true, carrying = false, inspector = false, 
     if (penProp.current) penProp.current.visible = pose === "write";
     if (notebookProp.current) notebookProp.current.visible = pose === "write";
     if (body.current) {
-      body.current.position.y = moving ? Math.abs(sway) * (pose === "panic" ? .045 : .012) : 0;
-      body.current.rotation.z = sway * (pose === "panic" ? .09 : .025);
+      body.current.position.y = moving ? Math.abs(sway) * (pose === "panic" ? .12 : .012) : 0;
+      body.current.rotation.z = sway * (pose === "panic" ? .16 : .025);
       body.current.rotation.x = pose === "inspect" || pose === "write" ? .12 : 0;
     }
     if (face.current) {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { initialTrace, makeEvent, projectMemories, scopes } from "./memory";
-import { backendSceneActions, cueFromMemory, samplePath, sceneClips, workerPerformance, type SceneAction } from "./scene-animation";
+import { backendSceneActions, cinematicsAt, cueFromMemory, samplePath, sceneClips, workerPerformance, type SceneAction } from "./scene-animation";
 
 describe("scene choreography", () => {
   it("replays a recorded action without changing its memory projection", () => {
@@ -57,5 +57,30 @@ describe("scene choreography", () => {
     expect(backendSceneActions["memory.retired"]).toBe("forgotten");
     expect(backendSceneActions["memory.flagged"]).toBe("flagged");
     expect(backendSceneActions["memory.rejected"]).toBe("rejected");
+  });
+
+  it("restores lighting and camera at the end or when a dramatic cue is replaced", () => {
+    const neutral = { darkness: 0, heat: 0, zoom: 1 };
+    for (const action of ["forgotten", "evaluated"] as const) {
+      expect(cinematicsAt(action, 0)).toEqual(neutral);
+      expect(cinematicsAt(action, 1)).toEqual(neutral);
+      expect(cinematicsAt(action, .12).zoom).toBeGreaterThan(cinematicsAt(action, .62).zoom);
+      for (let p = 0; p <= 1; p += .01) {
+        const frame = cinematicsAt(action, p);
+        expect(frame.zoom).toBeLessThanOrEqual(1.1);
+        expect(frame.darkness).toBeGreaterThanOrEqual(0);
+        expect(frame.darkness).toBeLessThanOrEqual(1);
+      }
+    }
+    for (const action of ["retrieved", "flagged", undefined] as const) expect(cinematicsAt(action, .62)).toEqual(neutral);
+  });
+
+  it("keeps cinematic seeking deterministic and suppresses camera motion for reduced motion", () => {
+    const frame = cinematicsAt("forgotten", .12);
+    cinematicsAt("forgotten", .8);
+    expect(cinematicsAt("forgotten", .12)).toEqual(frame);
+    for (const action of ["forgotten", "evaluated"] as const) {
+      for (const p of [0, .04, .12, .62, 1]) expect(cinematicsAt(action, p, true).zoom).toBe(1);
+    }
   });
 });

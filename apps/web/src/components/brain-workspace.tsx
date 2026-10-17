@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Archive, ArrowDownToLine, ArrowLeft, ArrowRight, CircleHelp, Clapperboard, FolderClosed, GitBranch, History, Maximize2, MessageCircle, Pause, Play, Plus, RotateCcw, Search, ShieldCheck, X, ZoomIn, ZoomOut } from "lucide-react";
 import { actionLabels, demoSteps, initialTrace, makeEvent, projectMemories, scopes, TRACE_KEY, traceSchema, type MemoryAction, type MemoryEvent, type MemoryScope } from "@/lib/memory";
-import { clipPhase, cueFromMemory, sceneClips, scopeCharacters, type SceneAction, type SceneCue } from "@/lib/scene-animation";
+import { cinematicsAt, clipPhase, cueFromMemory, sceneClips, scopeCharacters, type SceneAction, type SceneCue } from "@/lib/scene-animation";
 import type { SceneHandle } from "./brain/brain-scene";
 
 const BrainScene = dynamic(() => import("./brain/brain-scene"), { ssr: false, loading: () => <div className="scene-loading"><div className="loading-bob">▦</div><span>Opening the memory floor…</span></div> });
@@ -189,7 +189,7 @@ export function BrainWorkspace() {
 
   function closeAnimations() { setAnimationsOpen(false); animationButton.current?.focus(); }
 
-  return <main className="app-shell">
+  return <main className="app-shell" data-dramatic={cinematicsAt(sceneCue?.action, clipProgress).darkness > .5 ? sceneCue?.action : undefined}>
     <section className="scene-view" aria-label="Brain visualization">
       <BrainScene playing={playing} speed={speed} reducedMotion={reducedMotion} event={currentEvent}
         cue={sceneCue} seek={clipSeek} onProgress={setClipProgress}
