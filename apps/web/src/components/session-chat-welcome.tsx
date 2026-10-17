@@ -24,7 +24,6 @@ export function SessionWelcome({ input, suggestionView }: ComponentProps<typeof 
     <div className="session-welcome-inner">
       <div className="welcome-bob" aria-hidden="true"><span className="bob-mark"><i /><i /><b /><em /></span><span className="welcome-spark">✦</span></div>
       <h1>Hey {name},<br /><span>Welcome back!</span></h1>
-      <p className="welcome-intro">A little context. A head start. What’s on your mind?</p>
       <div className="welcome-composer">{input}</div>
       {suggestionView}
     </div>
@@ -32,7 +31,6 @@ export function SessionWelcome({ input, suggestionView }: ComponentProps<typeof 
 }
 
 const icons = { draft: PencilLine, plan: ListChecks, clarify: Search };
-const labels = { draft: "Draft", plan: "Prepare", clarify: "Refine" };
 export const SessionPromptCards = forwardRef<HTMLDivElement, CopilotChatSuggestionViewProps>(function SessionPromptCards({ suggestions, onSelectSuggestion }, ref) {
   const { prompts, disabled } = useContext(SessionWelcomeContext);
   if (!suggestions.length) return null;
@@ -41,8 +39,7 @@ export const SessionPromptCards = forwardRef<HTMLDivElement, CopilotChatSuggesti
     if (!prompt) return null;
     const Icon = icons[prompt.action];
     return <button key={prompt.action} className="session-prompt" data-action={prompt.action} disabled={disabled || !onSelectSuggestion} onClick={() => onSelectSuggestion?.(suggestion, index)}>
-      <span className="prompt-top"><span><Icon size={15} />{labels[prompt.action]}</span><ArrowUpRight size={16} /></span>
-      <strong>{prompt.title}</strong><span className="prompt-context">{prompt.context}</span>
+      <Icon size={18} aria-hidden="true" /><strong>{prompt.title}</strong><ArrowUpRight size={14} aria-hidden="true" />
     </button>;
   })}</div>;
 });

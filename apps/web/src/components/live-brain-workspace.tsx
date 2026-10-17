@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FolderClosed, FolderOpen, History, Maximize2, MessageCircle, Pause, Play, SkipForward, ZoomIn, ZoomOut } from "lucide-react";
 import { canRead, sceneScope, scopeLabel, type BackendAnswer, type StoredEvent } from "@/lib/brain-api";
 import { memberForReader, memberId, teamForReader } from "@/lib/sample-company";
-import { sessionStatus, type SessionActivity } from "@/lib/active-session";
+import { sessionStatus, type ActiveSession, type SessionActivity } from "@/lib/active-session";
 import { createDeskSessions, initialDeskId, recordDeskActivity, resetDesk, type DeskId, type LocalDeskSession } from "@/lib/desk-sessions";
 import type { DeskSession } from "./brain/session-worker";
 import { MemberSelect } from "./member-select";
@@ -55,13 +55,14 @@ function MemberWorkspace({ desk, active, sessions, openRequest, onReaderChange, 
   const [seek, setSeek] = useState<{ value: number; revision: number }>();
   const [timelineOpen, setTimelineOpen] = useState(false);
   const [notice, setNotice] = useState("");
+  const [chatSnapshot, setChatSnapshot] = useState<ActiveSession | null>(null);
   const [citations, setCitations] = useState<string[]>([]);
   const chatButton = useRef<HTMLButtonElement>(null), memoryButton = useRef<HTMLButtonElement>(null);
   const sessionButton = useRef<HTMLButtonElement>(null);
   const camera = useRef<SceneHandle | null>(null);
   useEffect(() => { activeRef.current = active; if (!active) setQueue([]); }, [active]);
   useEffect(() => {
-    if (active && openRequest) { setChatLoaded(true); setChatInspection(openRequest.file ? "session" : null); setPanel("chat"); }
+    if (active && openRequest) { setChatSnapshot(null); setChatLoaded(true); setChatInspection(openRequest.file ? "session" : null); setPanel("chat"); }
   }, [active, openRequest?.token, openRequest?.file]);
   const onLive = useCallback((event: StoredEvent, state: BackendState) => {
     if (!activeRef.current || cursorRef.current !== null) return;
@@ -87,7 +88,7 @@ function MemberWorkspace({ desk, active, sessions, openRequest, onReaderChange, 
   const onAnswer = useCallback((answer: BackendAnswer) => { setCitations(answer.cited_ids); }, []);
   const onSessionActivity = useCallback((event: SessionActivity) => onActivity(desk.id, desk.revision, event), [onActivity, desk.id, desk.revision]);
   function closePanel() { const previous = panel; setPanel(null); (previous === "chat" ? chatButton : memoryButton).current?.focus(); }
-  function openChat(file = false) { setChatLoaded(true); setChatInspection(file ? "session" : null); setPanel("chat"); }
+  function openChat(file = false) { setChatSnapshot(null); setChatLoaded(true); setChatInspection(file ? "session" : null); setPanel("chat"); }
   function inspectInChat(id: string) { setSelected(id); setChatInspection("memory"); }
   function retrace(seq: number) {
     const event = backend.state.events.find((e) => e.seq === seq);
@@ -115,11 +116,11 @@ function MemberWorkspace({ desk, active, sessions, openRequest, onReaderChange, 
     </div>
     <MemberSelect value={reader} onChange={changeReader} onNewSession={onNewSession} autoFocus={active && desk.revision > 0 && !startChat}
       sessions={sessions.map((item) => ({ label: item.label, selected: item.selected, onOpen: item.onOpen }))} />
-    <SessionChatDialog open={active && panel === "chat"} reader={reader} onClose={closePanel} returnFocus={chatButton} fileOpen={chatInspection === "session"}
-      onFile={() => setChatInspection(chatInspection === "session" ? null : "session")}
-      inspection={chatInspection === "session" ? <LiveSessionPanel reader={reader} session={session} onClose={() => setChatInspection(null)} onChat={() => setChatInspection(null)} onInspect={inspectInChat} />
+    <SessionChatDialog open={active && panel === "chat"} reader={reader} onClose={closePanel} returnFocus={chatButton} fileOpen={chatInspection !== null} onCloseInspection={() => setChatInspection(null)}
+      onFile={() => { setChatSnapshot(null); setChatInspection(chatInspection ? null : "session"); }}
+      inspection={chatInspection === "session" ? <LiveSessionPanel key={(chatSnapshot ?? session)?.taskId ?? "saved"} reader={reader} session={chatSnapshot ?? session} memories={visibleMemories} onClose={() => setChatInspection(null)} onInspect={inspectInChat} />
         : chatInspection === "memory" ? <LiveMemoryPanel actor={memberId(reader)} memories={visibleMemories} selected={selected} events={backend.state.events.filter((e) => cursor === null || e.seq <= cursor)} readOnly={cursor !== null} citedIds={citations} onSelect={setSelected} onClose={() => setChatInspection(null)} onRetrace={(seq) => { closePanel(); retrace(seq); }} /> : null}>
-      {chatLoaded ? <SceneChat key={reader} reader={reader} connected={backend.connection === "live"} readOnly={cursor !== null} memories={backend.state.memories} onAnswer={onAnswer} onInspect={inspectInChat} onSessionActivity={onSessionActivity} /> : null}
+      {chatLoaded ? <SceneChat key={reader} reader={reader} connected={backend.connection === "live"} readOnly={cursor !== null} memories={backend.state.memories} onAnswer={onAnswer} onInspect={inspectInChat} onExploreMemory={(snapshot) => { setChatSnapshot(snapshot); setChatInspection("session"); }} onSessionActivity={onSessionActivity} /> : null}
     </SessionChatDialog>
     {panel === "memory" ? <LiveMemoryPanel key={reader} actor={memberId(reader)} memories={visibleMemories} selected={selected} events={backend.state.events.filter((e) => cursor === null || e.seq <= cursor)} readOnly={cursor !== null} citedIds={citations} onSelect={setSelected} onClose={closePanel} onRetrace={retrace} /> : null}
     <div className="camera-controls"><button className="icon-button" aria-label="Zoom in" onClick={() => camera.current?.zoom(1.15)}><ZoomIn size={18} /></button><button className="icon-button" aria-label="Zoom out" onClick={() => camera.current?.zoom(1 / 1.15)}><ZoomOut size={18} /></button><button className="icon-button" aria-label="Reset isometric camera" onClick={() => camera.current?.reset()}><Maximize2 size={18} /></button></div>

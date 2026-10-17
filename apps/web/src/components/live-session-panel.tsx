@@ -1,44 +1,54 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { Download, FolderOpen, X } from "lucide-react";
-import { companyScope, memberForReader, teamForReader } from "@/lib/sample-company";
-import { sessionStatus, type ActiveSession } from "@/lib/active-session";
+import { useEffect, useRef, useState } from "react";
+import { ArrowUpRight, Brain, Download, X } from "lucide-react";
+import { canReadScope, companyScope } from "@/lib/sample-company";
+import type { ActiveSession } from "@/lib/active-session";
+import type { BackendMemory } from "@/lib/brain-api";
 
-export function LiveSessionPanel({ reader, session, onClose, onChat, onInspect }: {
-  reader: string; session: ActiveSession | null; onClose: () => void; onChat: () => void; onInspect: (id: string) => void;
+export function LiveSessionPanel({ reader, session, memories, onClose, onInspect }: {
+  reader: string; session: ActiveSession | null; memories: BackendMemory[];
+  onClose: () => void; onInspect: (id: string) => void;
 }) {
   const close = useRef<HTMLButtonElement>(null);
-  const member = memberForReader(reader);
+  const [view, setView] = useState<"reply" | "saved">("reply");
+  const answered = session?.status === "answered";
+  const cited = answered ? session.memories.filter((memory) => session.citedIds.includes(memory.id)) : [];
+  const saved = memories.filter((memory) => canReadScope(memory.scope, reader) && memory.status !== "retired");
+  const showingReply = answered && view === "reply";
+  const records = showingReply ? cited : saved;
   useEffect(() => { close.current?.focus(); }, []);
   function download() {
-    if (!session || session.status !== "answered") return;
+    if (!answered) return;
     const url = URL.createObjectURL(new Blob([JSON.stringify({ reader, ...session, provenance: "Records returned by /ask; not a full model prompt or source archive." }, null, 2)], { type: "application/json" }));
-    const anchor = document.createElement("a"); anchor.href = url; anchor.download = `${member?.id}-${session.taskId}-session.json`; anchor.click();
+    const anchor = document.createElement("a"); anchor.href = url; anchor.download = `${session.taskId}-memory.json`; anchor.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
-  return <aside className="floating-panel inspector-panel session-evidence session-file-panel" aria-label="Active session file" onKeyDown={(event) => { if (event.key === "Escape") onClose(); }}>
-    <div className="panel-heading"><div><FolderOpen size={18} /><h2>Session file</h2></div><button ref={close} className="icon-button" aria-label="Close session file" onClick={onClose}><X size={18} /></button></div>
+  return <aside className="floating-panel inspector-panel session-evidence session-file-panel" aria-label="Memory explorer">
+    <div className="panel-heading"><div><Brain size={18} /><h2>Memory</h2></div><button ref={close} className="icon-button" aria-label="Close memory" onClick={onClose}><X size={18} /></button></div>
     <div className="panel-scroll">
-      <div className="session-cover"><small>{teamForReader(reader)?.label} · Rusty Rod</small><h3>{member?.label}</h3><p>{session?.question ?? "Your Bob is ready at the desk."}</p><span role="status">{sessionStatus(session)}{session?.status === "answered" ? ` · ${session.memories.length} memories` : ""}</span></div>
-      {!session ? <><p className="empty-state">Ask a question to fill this file with the memory returned for your session.</p><button className="session-history" onClick={onChat}>Ask the shared brain →</button></> : null}
-      {session?.status === "working" ? <p className="empty-state">Bob is working on your question. The file will fill when the backend returns its selected records.</p> : null}
-      {session?.status === "failed" ? <p className="backend-error" role="alert">{session.error}</p> : null}
-      {session?.status === "cancelled" ? <p className="empty-state">This request was stopped. No completed memory file was returned.</p> : null}
-      {session?.status === "answered" ? <>
-        <p className="session-note">Frozen from this answer’s backend response. New memory changes do not rewrite this file.</p>
-        {(["individual", "team", "organization"] as const).map((tier) => {
-          const records = session.memories.filter((memory) => companyScope(memory.scope)?.scope === tier);
-          return <details key={tier} open><summary>{tier === "individual" ? "Individual" : tier === "team" ? "Team" : "Organization"} · {records.length}</summary><div className="session-records">{records.length ? records.map((memory) => <article key={memory.id}>
-            <small>{companyScope(memory.scope)?.label} · {memory.status}{session.citedIds.includes(memory.id) ? " · cited" : ""}</small>
-            {memory.status === "tentative" ? <strong className="session-uncertainty">Tentative · not an approved fact</strong> : null}
-            <p>{memory.text}</p><button onClick={() => onInspect(memory.id)}>Source and history · {memory.id}</button>
-          </article>) : <p className="session-note">No memory returned from this tier.</p>}</div></details>;
-        })}
-        <details><summary>Answer</summary><p className="session-answer">{session.answer || "The backend returned an empty answer."}</p></details>
-        <details><summary>About this file</summary><p className="session-note">Task: {session.taskId}. These are the records returned by /ask, not the full model prompt or source text. Source and history opens the record’s current inspector. This file belongs to the current chat, independently of event retrace.</p></details>
-      </> : null}
+      <p className="memory-intro">{showingReply ? "The context behind this reply." : "The context BrainBob can draw on for you."}</p>
+      {answered ? <div className="memory-view-switch" aria-label="Memory view">
+        <button aria-pressed={showingReply} onClick={() => setView("reply")}>Used in reply <span>{cited.length}</span></button>
+        <button aria-pressed={!showingReply} onClick={() => setView("saved")}>Saved <span>{saved.length}</span></button>
+      </div> : null}
+      {showingReply ? <blockquote className="memory-question">{session.question}</blockquote> : null}
+      {!records.length ? <p className="empty-state">{showingReply ? "This reply did not cite any saved memories." : "No saved memories yet."}</p> : null}
+      {(["individual", "team", "organization"] as const).map((tier) => {
+        const group = records.filter((memory) => companyScope(memory.scope)?.scope === tier);
+        if (!group.length) return null;
+        return <section className="memory-source-group" key={tier}>
+          <h3>{tier === "individual" ? "About you" : tier === "team" ? "Your team" : "Your organization"}<span>{group.length}</span></h3>
+          {group.map((memory) => <button className="memory-source-card" key={memory.id} onClick={() => onInspect(memory.id)}>
+            <span className="memory-source-label">{companyScope(memory.scope)?.label}<ArrowUpRight size={14} /></span>
+            {memory.flagged ? <span className="session-uncertainty">Flagged for review</span> : ["tentative", "unresolved"].includes(memory.status) ? <span className="session-uncertainty">Not yet confirmed</span> : null}
+            <span className="memory-source-text">{memory.text}</span>
+            <span className="memory-source-link">Source & history</span>
+          </button>)}
+        </section>;
+      })}
+      {showingReply ? <p className="memory-snapshot-note">Saved with this reply. Source & history shows the record’s latest details.</p> : null}
     </div>
-    <div className="panel-footer"><button onClick={download} disabled={session?.status !== "answered"}><Download size={14} />Download file</button><span>Current chat</span></div>
+    {answered ? <div className="panel-footer"><button onClick={download}><Download size={14} />Download snapshot</button></div> : null}
   </aside>;
 }

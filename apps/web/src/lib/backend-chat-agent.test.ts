@@ -23,10 +23,38 @@ describe("CopilotKit backend bridge", () => {
     expect(fetcher.mock.calls[0][0]).toContain("/ask");
     expect(JSON.parse(fetcher.mock.calls[0][1].body)).toMatchObject({ question: expect.stringContaining("Current request: When do we launch?"), reader: defaultReader });
     expect(JSON.parse(fetcher.mock.calls[0][1].body).question).toContain("Maya Flores");
-    expect(events.map((e) => e.type)).toEqual(["RUN_STARTED", "TEXT_MESSAGE_START", "TEXT_MESSAGE_CONTENT", "TEXT_MESSAGE_END", "RUN_FINISHED"]);
-    expect(events[2]).toMatchObject({ delta: "November 13, 2026" }); expect(answered).toHaveBeenCalledOnce();
+    expect(events.map((e) => e.type)).toEqual(["RUN_STARTED", "TOOL_CALL_START", "TOOL_CALL_ARGS", "TOOL_CALL_END", "TOOL_CALL_RESULT", "TEXT_MESSAGE_START", "TEXT_MESSAGE_CONTENT", "TEXT_MESSAGE_END", "RUN_FINISHED"]);
+    expect(events.find((event) => event.type === "TEXT_MESSAGE_CONTENT")).toMatchObject({ delta: "November 13, 2026" });
+    const receipt = answered.mock.calls[0][1];
+    expect(receipt).toMatchObject({ requestId: "run-1", question: "When do we launch?" });
+    expect(events.find((event) => event.type === "TEXT_MESSAGE_START")).toMatchObject({ messageId: receipt.messageId });
+    expect(events.find((event) => event.type === "TOOL_CALL_START")).toMatchObject({ toolCallName: "consult_memory" });
+    expect(events.find((event) => event.type === "TOOL_CALL_RESULT")).toMatchObject({ content: expect.stringContaining(receipt.messageId) });
     expect(activity.mock.calls.map(([event]) => event.type)).toEqual(["started", "answered"]);
     expect(activity.mock.calls[0][0]).toMatchObject({ requestId: "run-1", question: "When do we launch?" });
+  });
+
+  it("binds each retrieval receipt to its own reply across follow-ups", async () => {
+    vi.stubGlobal("fetch", vi.fn()
+      .mockResolvedValueOnce(response({ task_id: "first", answer: "First reply", cited_ids: [], memories: [] }))
+      .mockResolvedValueOnce(response({ task_id: "second", answer: "Follow-up reply", cited_ids: [], memories: [] })));
+    const answered = vi.fn();
+    const agent = new BackendChatAgent(() => context("ask"), answered, vi.fn());
+    const runs = [
+      await lastValueFrom(agent.run(input("First question")).pipe(toArray())),
+      await lastValueFrom(agent.run({ ...input("Follow-up"), runId: "run-2" }).pipe(toArray())),
+    ];
+    const first = answered.mock.calls[0][1], second = answered.mock.calls[1][1];
+    expect(first.messageId).not.toBe(second.messageId);
+    expect(first.question).toBe("First question");
+    expect(second.requestId).toBe("run-2");
+    runs.forEach((events, index) => {
+      const tool = events.find((event) => event.type === "TOOL_CALL_START");
+      const result = events.find((event) => event.type === "TOOL_CALL_RESULT");
+      expect(result).toMatchObject({ toolCallId: tool?.toolCallId,
+        content: expect.stringContaining(answered.mock.calls[index][1].messageId) });
+      expect(events.find((event) => event.type === "TEXT_MESSAGE_START")).toMatchObject({ messageId: answered.mock.calls[index][1].messageId });
+    });
   });
 
   it("ends the desk's working state on cancellation and request failure", async () => {
