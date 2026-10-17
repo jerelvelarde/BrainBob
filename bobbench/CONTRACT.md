@@ -108,11 +108,12 @@ may revisit existing artifacts.
 ## BrainBob component adapter (implementation readiness)
 
 `adapters/brainbob.py` now supplies both `append_only` and `maintained` using the
-real `backend.brainbob` MemoryStore, dynamic Org ACL, curator, and write-time
-maintenance. It uses the same `bobbench.answer` answering function as the other
+real `brainbob` MemoryStore, dynamic Org ACL, curator, write-time maintenance,
+and seeded recent-conversation audits. It uses the same `bobbench.answer` answering function as the other
 Track A conditions. Unit tests stub inference only; their results are **not model
-scores or evidence of production HTTP conformance**. No provider calls were made
-while implementing the adapter.
+scores or certification of production security**. The adapter also probes the
+real HTTP routes in process. No provider calls were made while reconciling the
+adapters or running the merged unit tests.
 
 After configuring the intended inference endpoints and budget, run from the root:
 
@@ -127,7 +128,7 @@ The second command makes model calls. `--fast` is one replicate, not a no-networ
 mode. Use three replicates for calibration. Backend curator/judge roles use
 `BRAINBOB_*` configuration; the shared answerer uses `BOBBENCH_ANSWER_*`.
 Their effective configuration is exported without credentials. Ingestion model
-calls/tokens/cost deltas are added to checkpoint costs and the complete backend
+and audit calls/tokens/cost deltas are added to checkpoint costs and the complete backend
 usage is included in the adapter export; retries remain incompletely instrumented.
 
 Declared adapter behavior and limitations:
@@ -135,22 +136,29 @@ Declared adapter behavior and limitations:
 - Source audiences map to separate backend memory scopes, preserving event IDs
   as provenance. The curator extracts facts; maintained mode calls the actual
   semantic judge and correction rules. The source's occurrence time is the memory
-  date, while approval policy is evaluated at receipt time.
+  date, and approval policy is evaluated at that source occurrence time. Receipt
+  time advances the delivery clock; timestamps compare actual instants across
+  timezone offsets, and future-effective facts are withheld until effective.
 - Trusted-channel sources from a policy-authorized approver are tagged approved
   for that scope. Other sources remain discussion, regardless of approval words
   in their text. This is an explicit authority mapping; it does not independently
   classify which sentences constitute commitments.
 - Session assembly applies the actual backend ACL at requested time/purpose,
-  delivers active extracted facts with their authority/status, groups by source
-  event, and uses the common context-budget serializer. It does not use oracle
+  delivers the highest-ranked active extracted memories with their
+  authority/status, labels each with its source event, and trims to the context
+  budget. The default retrieval limit is ten memories. It does not use oracle
   labels, add repair rules, or send full original sources to hide retrieval gaps.
-- A policy change invalidates an open session before answering; callers must
-  reopen it with the current time envelope. Same-process state starts empty per
-  world and refuses to reuse an existing candidate memory file.
-- Production HTTP/search/history/export/event/cache conformance probes remain
-  unsupported. Automatic dependent-summary propagation, historical retrieval of
-  retired facts, transactional ingestion rollback, and complete retry telemetry
-  are absent. Core extraction/judge disk caches may be reused across replicates;
+- Existing sessions recheck access before answering. A policy change advances
+  that check to the newer delivery clock, so an old requested-time envelope
+  cannot bypass a new revocation; unauthorized memories are removed before
+  the answerer runs. Same-process state starts empty per world and refuses to
+  reuse an existing candidate state directory.
+- Search, record, source, history, and event probes use real `create_app` HTTP
+  handlers through an in-process TestClient. Export and session-cache endpoints
+  remain unsupported. Audit sampling, coverage, decisions, and operations are
+  retained in exports. Automatic dependency-graph propagation, historical
+  retrieval of retired facts, transactional ingestion rollback, physical
+  erasure assurance, and complete retry telemetry remain absent. Core extraction/judge disk caches may be reused across replicates;
   use distinct configured cache namespaces for independent stochastic runs.
 - Core extraction currently returns no facts for some model failures as well as
   genuinely empty sources. This ambiguity remains visible as lost task utility;
@@ -159,8 +167,11 @@ Declared adapter behavior and limitations:
 
 ### Bonan's local GPU judge
 
-`BrainBobAdapter(judge=callback)` passes the callback only to maintained ingestion;
-append-only and the default production judge stay unchanged. The existing bridge
+`BrainBobAdapter(judge=callback)` passes the callback to maintained ingestion
+and to correction proposals made by the recent-conversation audit. Append-only
+and the default production judge stay unchanged. The audit
+`supported/contradicted/insufficient` checker uses its own configured backend judge
+with that distinct rubric; the semantic pair callback does not replace it. The existing bridge
 can load a frozen adapter directly on a GPU worker, without a standing inference
 endpoint. Run this setup on that GPU worker, not the development laptop:
 
@@ -183,9 +194,10 @@ run_benchmark(
 )
 ```
 
-This replaces only the semantic pair judge: extraction and the shared answerer
-still need their configured models/providers. The callback's `model_id` is
-preserved in maintenance decisions and exported effective configuration. Its
+This replaces only the semantic pair judge: extraction, audit correctness
+checking, and the shared answerer still need their configured models/providers. The callback's `model_id` is
+preserved in maintenance decisions and the exported `memory_pair_judge`
+configuration; the separate audit judge remains accurately identified. Its
 token/cost/latency telemetry is not provided by this hook and is explicitly
 unmeasured; instrument it separately before comparing total pipeline costs.
 The example makes inference calls when executed; it was not run during adapter

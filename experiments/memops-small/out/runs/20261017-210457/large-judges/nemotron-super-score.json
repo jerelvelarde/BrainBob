@@ -1,0 +1,537 @@
+{
+  "accuracy": {
+    "numerator": 56,
+    "denominator": 60,
+    "rate": 0.9333333333333333
+  },
+  "macro_f1": 0.9326599326599326,
+  "invalid_output": {
+    "numerator": 0,
+    "denominator": 60,
+    "rate": 0.0
+  },
+  "missing_predictions": 0,
+  "confusion_matrix": {
+    "same": {
+      "same": 20,
+      "conflict": 0,
+      "unrelated": 0,
+      "invalid": 0
+    },
+    "conflict": {
+      "same": 0,
+      "conflict": 20,
+      "unrelated": 0,
+      "invalid": 0
+    },
+    "unrelated": {
+      "same": 0,
+      "conflict": 4,
+      "unrelated": 16,
+      "invalid": 0
+    }
+  },
+  "latency_ms": {
+    "n": 60,
+    "p50": 888.4,
+    "p95": 1023.2
+  },
+  "outcomes": [
+    {
+      "id": "eval-001",
+      "template_id": "identifier",
+      "gold": "unrelated",
+      "predicted": "unrelated",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-002",
+      "template_id": "owner",
+      "gold": "unrelated",
+      "predicted": "unrelated",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-003",
+      "template_id": "threshold",
+      "gold": "same",
+      "predicted": "same",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-004",
+      "template_id": "entity",
+      "gold": "same",
+      "predicted": "same",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-005",
+      "template_id": "preference",
+      "gold": "same",
+      "predicted": "same",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-006",
+      "template_id": "negation",
+      "gold": "unrelated",
+      "predicted": "conflict",
+      "correct": false,
+      "error": null
+    },
+    {
+      "id": "eval-007",
+      "template_id": "interval",
+      "gold": "same",
+      "predicted": "same",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-008",
+      "template_id": "count",
+      "gold": "conflict",
+      "predicted": "conflict",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-009",
+      "template_id": "frequency",
+      "gold": "unrelated",
+      "predicted": "unrelated",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-010",
+      "template_id": "owner",
+      "gold": "conflict",
+      "predicted": "conflict",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-011",
+      "template_id": "units",
+      "gold": "same",
+      "predicted": "same",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-012",
+      "template_id": "historical",
+      "gold": "conflict",
+      "predicted": "conflict",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-013",
+      "template_id": "timezone",
+      "gold": "conflict",
+      "predicted": "conflict",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-014",
+      "template_id": "negation",
+      "gold": "conflict",
+      "predicted": "conflict",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-015",
+      "template_id": "negation",
+      "gold": "same",
+      "predicted": "same",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-016",
+      "template_id": "timezone",
+      "gold": "same",
+      "predicted": "same",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-017",
+      "template_id": "condition",
+      "gold": "same",
+      "predicted": "same",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-018",
+      "template_id": "contact",
+      "gold": "unrelated",
+      "predicted": "unrelated",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-019",
+      "template_id": "entity",
+      "gold": "unrelated",
+      "predicted": "unrelated",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-020",
+      "template_id": "condition",
+      "gold": "unrelated",
+      "predicted": "unrelated",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-021",
+      "template_id": "set",
+      "gold": "unrelated",
+      "predicted": "unrelated",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-022",
+      "template_id": "location",
+      "gold": "same",
+      "predicted": "same",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-023",
+      "template_id": "preference",
+      "gold": "conflict",
+      "predicted": "conflict",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-024",
+      "template_id": "money",
+      "gold": "same",
+      "predicted": "same",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-025",
+      "template_id": "timezone",
+      "gold": "unrelated",
+      "predicted": "conflict",
+      "correct": false,
+      "error": null
+    },
+    {
+      "id": "eval-026",
+      "template_id": "identifier",
+      "gold": "conflict",
+      "predicted": "conflict",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-027",
+      "template_id": "contact",
+      "gold": "conflict",
+      "predicted": "conflict",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-028",
+      "template_id": "version",
+      "gold": "conflict",
+      "predicted": "conflict",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-029",
+      "template_id": "set",
+      "gold": "conflict",
+      "predicted": "conflict",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-030",
+      "template_id": "launch",
+      "gold": "conflict",
+      "predicted": "conflict",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-031",
+      "template_id": "interval",
+      "gold": "conflict",
+      "predicted": "conflict",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-032",
+      "template_id": "identifier",
+      "gold": "same",
+      "predicted": "same",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-033",
+      "template_id": "frequency",
+      "gold": "conflict",
+      "predicted": "conflict",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-034",
+      "template_id": "money",
+      "gold": "unrelated",
+      "predicted": "unrelated",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-035",
+      "template_id": "frequency",
+      "gold": "same",
+      "predicted": "same",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-036",
+      "template_id": "entity",
+      "gold": "conflict",
+      "predicted": "conflict",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-037",
+      "template_id": "units",
+      "gold": "conflict",
+      "predicted": "conflict",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-038",
+      "template_id": "threshold",
+      "gold": "conflict",
+      "predicted": "conflict",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-039",
+      "template_id": "interval",
+      "gold": "unrelated",
+      "predicted": "unrelated",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-040",
+      "template_id": "historical",
+      "gold": "same",
+      "predicted": "same",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-041",
+      "template_id": "count",
+      "gold": "same",
+      "predicted": "same",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-042",
+      "template_id": "launch",
+      "gold": "same",
+      "predicted": "same",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-043",
+      "template_id": "location",
+      "gold": "conflict",
+      "predicted": "conflict",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-044",
+      "template_id": "version",
+      "gold": "unrelated",
+      "predicted": "unrelated",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-045",
+      "template_id": "duration",
+      "gold": "same",
+      "predicted": "same",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-046",
+      "template_id": "money",
+      "gold": "conflict",
+      "predicted": "conflict",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-047",
+      "template_id": "condition",
+      "gold": "conflict",
+      "predicted": "conflict",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-048",
+      "template_id": "units",
+      "gold": "unrelated",
+      "predicted": "conflict",
+      "correct": false,
+      "error": null
+    },
+    {
+      "id": "eval-049",
+      "template_id": "version",
+      "gold": "same",
+      "predicted": "same",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-050",
+      "template_id": "contact",
+      "gold": "same",
+      "predicted": "same",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-051",
+      "template_id": "duration",
+      "gold": "unrelated",
+      "predicted": "unrelated",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-052",
+      "template_id": "owner",
+      "gold": "same",
+      "predicted": "same",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-053",
+      "template_id": "set",
+      "gold": "same",
+      "predicted": "same",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-054",
+      "template_id": "duration",
+      "gold": "conflict",
+      "predicted": "conflict",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-055",
+      "template_id": "preference",
+      "gold": "unrelated",
+      "predicted": "unrelated",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-056",
+      "template_id": "location",
+      "gold": "unrelated",
+      "predicted": "unrelated",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-057",
+      "template_id": "threshold",
+      "gold": "unrelated",
+      "predicted": "unrelated",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-058",
+      "template_id": "launch",
+      "gold": "unrelated",
+      "predicted": "unrelated",
+      "correct": true,
+      "error": null
+    },
+    {
+      "id": "eval-059",
+      "template_id": "historical",
+      "gold": "unrelated",
+      "predicted": "conflict",
+      "correct": false,
+      "error": null
+    },
+    {
+      "id": "eval-060",
+      "template_id": "count",
+      "gold": "unrelated",
+      "predicted": "unrelated",
+      "correct": true,
+      "error": null
+    }
+  ],
+  "manifest": {
+    "benchmark": "Bob public diagnostic pilot v0.1",
+    "split": "eval",
+    "created_at": "2026-10-17T21:13:35.471742+00:00",
+    "commit": null,
+    "benchmark_worktree_dirty": null,
+    "sha256": {
+      "benchmark.py": "bea826b22717deaac56d5cf624fbf009a10f655d61cb14cb7b5a822caed70ddb",
+      "worlds.json": "e0e0602cbeb0435ef43091b826d56810a34c95d6ec9c7a5f79e02a8424ee5ff3",
+      "eval.jsonl": "e317b49b08b295166f72041c52776f8953a1c128e1f2f242d18fa6a62991bda0",
+      "dev.jsonl": "477b47ffb6ad9ab2bc996ee5ce027bd91d7befb1255a9097caaee22504f61d2f"
+    },
+    "status": "public synthetic non-Core; no hidden-test or production conformance claim"
+  },
+  "model": "nemotron-super",
+  "predictions_sha256": "595d2a89f6403798ffeadc554098dbad797ed0d36ff1af8e2b7385ce20d54df7"
+}

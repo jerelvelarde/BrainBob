@@ -137,12 +137,14 @@ def fake_complete(role, messages, fresh=False, **kw):
         return json.dumps([s.split(": ", 1)[1] if ": " in s else s])
     if role == "judge":
         return '{"verdict": "unrelated", "reason": "fake"}' if "candidate" in content else '{"verdict": "insufficient", "reason": "fake"}'
-    raise AssertionError(f"unexpected core model role: {role}")
+    raise AssertionError(f"unexpected BrainBob model call for role {role}")
 
 
-def fake_shared_answer(task, context, **kwargs):
-    return {"answer": "fake answer", "cited_event_ids": re.findall(r"^\[(evt-\d+)\]", context, re.M),
-            "cost": {"calls": 0, "usd": 0.0}}
+def fake_answer(task, context, principal=None, requested_time=None, purpose=None, cache_salt="", fresh=False):
+    """Stands in for bobbench.answer.answer: cites every event id that labels a context block."""
+    ids = list(dict.fromkeys(re.findall(r"^\[(evt-[^\]]+)\]", context, re.M)))
+    return {"answer": "fake answer", "cited_event_ids": ids, "raw": "", "error": None,
+            "cost": {"model": "fake", "usd": 0.0, "calls": 1}}
 
 
 def S(seq, eid, actor, audience, at, content):
@@ -155,8 +157,8 @@ def S(seq, eid, actor, audience, at, content):
 def adapter(monkeypatch, tmp_path, request):
     monkeypatch.setattr(llm, "complete", fake_complete)
     mod = _adapter_mod()
-    assert mod.llm is llm  # one shared core configuration/usage identity
-    a = mod.BrainBobAdapter(mode=request.param, answer_fn=fake_shared_answer)
+    assert mod.bb_llm is llm  # share core hooks, usage, and configuration
+    a = mod.BrainBobAdapter(mode=request.param, answer_fn=fake_answer)
     a.reset(WORLD, {"context_tokens": 4000}, str(tmp_path))
     for e in [P(1, "member_add", "acme:alice", "acme/sales", "2026-10-01"),
               P(2, "member_add", "acme:bob", "acme/eng", "2026-10-01"),
@@ -179,10 +181,12 @@ BOTH = pytest.mark.parametrize("adapter", ["append_only", "maintained"], indirec
 def test_adapter_flow_and_transfer(adapter):
     a = adapter
     m = a.maintain(7, {})
-    assert m["ok"] and m["operation"] == "write_time_only" and m["mode"] == a.mode
+    assert m["ran"] == (a.mode == "maintained") and (not m["ran"] or m["seed"] == 0)
     s = a.open_session("acme:alice", "What is the sales target and the release date?", "2026-10-05T00:00:00Z", None, {"context_tokens": 4000})
     assert set(s["source_ids"]) == {"evt-1", "evt-3"} and "November 13" not in s["context"]
     assert "forty deals" in s["context"] and s["context_tokens"] > 0 and s["context_tokens"] <= 4000
+    assert re.search(r"^\[evt-1\] 2026-10-02T10:00:00Z \| scope acme/sales \| authority discussion \| status active$",
+                     s["context"], re.M)
     out = a.act(s, "What is the sales target and the release date?")
     assert out["answer"] == "fake answer" and set(out["cited_event_ids"]) == {"evt-1", "evt-3"} and "usd" in out["cost"]
     a.close_session(s)
@@ -196,12 +200,17 @@ def test_adapter_flow_and_transfer(adapter):
     s_old = a.open_session("acme:alice", "sales target", "2026-10-05T12:00:00Z", None, {})
     a.apply_policy(P(10, "member_remove", "acme:alice", "acme/sales", "2026-10-05"))
     o = a.act(s_old, "sales target")
-    assert o["error"] == "policy changed; reopen session"
-    assert "evt-1" not in o["cited_event_ids"] and "forty deals" not in s_old["context"]
+    assert o["recheck_dropped"] and "evt-1" not in o["cited_event_ids"] and "forty deals" not in s_old["context"]
     t = a.export_trace()
-    assert t["mode"] == a.mode and t["model_configuration"]["agent"]["model"]
-    assert any(m["origin"] == "evt-1" for m in t["memories"])
-    assert t["acts"] and t["operations"]
+    assert t["condition"] == a.mode and t["models"]["memory"]["curator"] and t["episode_event_map"]["evt-1@0"] == "evt-1"
+    if a.mode == "maintained":
+        run = t["audit"]["runs"][0]
+        assert t["audit"]["supported"] and run["seed"] == 0 and run["sampled_ids"] and 0 < run["coverage"] <= 1
+        assert set(run["sampled_event_ids"]) <= {"evt-1", "evt-2", "evt-3"}
+    else:
+        assert t["audit"] == "unsupported"
+    assert t["cost"]["answering_calls"] == 3
+    assert t["trace_sha256"] and any(op["op"] == "act" for op in t["operations"])
 
 
 @BOTH
@@ -215,19 +224,26 @@ def test_adapter_grant_expiry(adapter):
 
 
 @BOTH
-def test_adapter_declares_unsupported_surfaces_and_scopes_context(adapter):
-    # The implemented adapter is a core component, not an HTTP test client.
-    # Unsupported surfaces are an explicit readiness gap, never a passed probe.
+def test_adapter_surfaces(adapter):
     a = adapter
     a.apply_policy(P(8, "member_remove", "acme:alice", "acme/sales", "2026-10-06"))
-    before = a.open_session("acme:alice", "sales target", "2026-10-05", None, {})
-    after = a.open_session("acme:alice", "sales target", "2026-10-07", None, {})
-    assert "forty deals" in before["context"] and "evt-1" in before["source_ids"]
-    assert "forty deals" not in after["context"] and "evt-1" not in after["source_ids"]
-    unknown = a.open_session("nobody", "sales target", "2026-10-05", None, {})
-    assert unknown["source_ids"] == [] and "forty deals" not in unknown["context"]
-    for surface in ("search", "record", "source", "history", "events", "export", "session_cache"):
-        assert a.inspect_surface("acme:alice", surface, {"event_id": "evt-1", "at": "2026-10-07"}) is None
+    before = a.inspect_surface("acme:alice", "search", {"query": "sales target", "at": "2026-10-05"})
+    after = a.inspect_surface("acme:alice", "search", {"query": "sales target", "at": "2026-10-07"})
+    texts = lambda r: " ".join(m["text"] for m in r["responses"][0]["body"]["memories"])
+    assert before["responses"][0]["status"] == 200 and "forty deals" in texts(before) and "forty deals" not in texts(after)
+    assert a.inspect_surface("acme:alice", "source", {"event_id": "evt-1", "at": "2026-10-05"})["responses"][0]["status"] == 200
+    assert a.inspect_surface("acme:alice", "source", {"event_id": "evt-1", "at": "2026-10-07"})["responses"][0]["status"] == 404
+    rec = a.inspect_surface("acme:alice", "record", {"event_id": "evt-1", "at": "2026-10-07"})
+    assert rec["responses"][0]["status"] == 200 and not rec["responses"][0]["matched"]
+    assert all(r["status"] == 404 for r in a.inspect_surface("acme:alice", "history", {"event_id": "evt-1", "at": "2026-10-07"})["responses"])
+    assert all(r["status"] == 200 for r in a.inspect_surface("acme:alice", "history", {"event_id": "evt-1", "at": "2026-10-05"})["responses"])
+    ev = a.inspect_surface("acme:alice", "events", {"at": "2026-10-07"})["responses"][0]
+    assert ev["status"] == 200 and ev["body"][-1]["type"] == "replay.done"
+    assert "forty deals" not in json.dumps(ev["body"])
+    assert "forty deals" in json.dumps(a.inspect_surface("acme:alice", "events", {"at": "2026-10-05"})["responses"][0]["body"])
+    assert a.inspect_surface("acme:alice", "search", {"query": "x"})["responses"][0]["status"] == 200
+    assert a.inspect_surface("nobody", "search", {"query": "x"})["responses"][0]["status"] == 401
+    assert a.inspect_surface("acme:alice", "export", {}) is None and a.inspect_surface("acme:alice", "session_cache", {}) is None
 
 
 # ---------------------------------------------------------------- acl: group subjects, channels, parity

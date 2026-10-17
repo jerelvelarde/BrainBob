@@ -1,0 +1,39 @@
+{
+ "gpt-oss-120b": {
+  "model": "openai/gpt-oss-120b",
+  "prompt_tokens": 13997,
+  "completion_tokens": 9500,
+  "errors": 0,
+  "settings": {
+   "max_tokens": 1024
+  }
+ },
+ "nemotron-super": {
+  "model": "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B",
+  "prompt_tokens": 11670,
+  "completion_tokens": 700,
+  "errors": 0,
+  "settings": {
+   "max_tokens": 64,
+   "extra_body": {
+    "chat_template_kwargs": {
+     "enable_thinking": false
+    }
+   }
+  }
+ },
+ "nemotron-lightning": {
+  "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+  "prompt_tokens": 8525,
+  "completion_tokens": 514,
+  "errors": 16,
+  "settings": {
+   "max_tokens": 64,
+   "extra_body": {
+    "chat_template_kwargs": {
+     "enable_thinking": false
+    }
+   }
+  }
+ }
+}

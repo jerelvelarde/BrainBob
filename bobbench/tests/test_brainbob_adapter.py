@@ -1,7 +1,7 @@
 import pytest
 
 from bobbench.adapters import resolve
-from bobbench.adapters.brainbob import BrainBobAdapter, curator, llm, maintain
+from bobbench.adapters.brainbob import BrainBobAdapter, bb_curator as curator, bb_llm as llm, bb_maintain as maintain, bb_audit
 from core_fixtures import CLIENT, ENG, EXEC, MAYA, RR, T, _pol, _src, base_manifest, mini_world
 
 
@@ -49,8 +49,8 @@ def test_local_judge_injection_is_used_only_for_maintenance_and_tracks_identity(
     receipt = a.ingest(_src(4, "new", EXEC, [RR], T(3), "The deadline is November 13."))
     if mode == "maintained":
         assert len(calls) == 1 and a.store.all()[0].status == "retired"
-        assert receipt["results"][0]["model"] == judge.model_id
-        assert a.export_trace()["model_configuration"]["judge"] == {
+        assert receipt["episodes"][0]["decisions"][0]["model"] == judge.model_id
+        assert a.export_trace()["model_configuration"]["memory_pair_judge"] == {
             "implementation": "injected_callable", "model": judge.model_id, "usage": None}
     else:
         assert calls == [] and a.store.all()[0].status == "trial"
@@ -88,10 +88,11 @@ def test_private_context_and_revoked_sessions_are_blocked(adapter):
     assert "cobalt-19" in old["context"]
     adapter.apply_policy(_pol(11, "member_remove", ENG, "rusty-rod/eng", T(4)))
     result = adapter.act(old, "secret")
-    assert result["error"] and old["context"] == ""
-    assert adapter.test_calls == []
+    assert result["recheck_dropped"] and old["context"] == ""
+    assert adapter.test_calls == [""]
     assert "cobalt-19" not in adapter.open_session(ENG, "secret", T(5), None, {})["context"]
-    assert adapter.inspect_surface(ENG, "history", {}) is None
+    assert adapter.inspect_surface(ENG, "history", {"event_id": "private", "at": T(5)})["responses"][0]["status"] == 404
+    assert adapter.inspect_surface(ENG, "export", {}) is None
 
 
 def test_cross_org_purpose_grant_and_expiry_use_backend_acl(adapter):
@@ -130,3 +131,43 @@ def test_backend_usage_is_added_once_to_shared_answerer_cost(adapter, monkeypatc
     assert first["cost"]["calls"] == 2 and first["cost"]["prompt_tokens"] == 100
     assert second["cost"]["calls"] == 0 and second["cost"]["prompt_tokens"] == 0
     assert first["cost"]["backend_retry_count"] is None
+
+
+def test_audit_reproposal_uses_injected_pair_judge_and_preserves_audit_trace(adapter, monkeypatch):
+    def judge(candidate, memory):
+        return "unrelated"
+
+    judge.model_id = "local:pair-judge@revision"
+    adapter.judge = judge
+    adapter.ingest(_src(10, "existing", EXEC, [RR], T(2), "The deadline is November 6."))
+    adapter.ingest(_src(11, "candidate", EXEC, [RR], T(3), "The owner is Maya."))
+    forwarded = []
+    original = maintain.ingest
+
+    def capture(*args, **kwargs):
+        forwarded.append(kwargs.get("judge"))
+        return original(*args, **kwargs)
+
+    def audit_proposal(store, episodes, seed, propose):
+        propose(store.all()[0], episodes[-1])
+        return bb_audit.AuditReport(seed, [e.id for e in episodes], [episodes[-1].id], counts={})
+
+    monkeypatch.setattr(maintain, "ingest", capture)
+    monkeypatch.setattr(bb_audit, "audit_recent", audit_proposal)
+    receipt = adapter.maintain(11, {})
+    assert receipt["ran"] and forwarded == [judge]
+    trace = adapter.export_trace()
+    assert trace["audit"]["supported"] and trace["audit"]["runs"][0]["sampled_event_ids"] == ["candidate"]
+    assert trace["models"]["memory"]["pair_judge"] == judge.model_id
+    assert trace["model_configuration"]["judge"]["model"] == llm._roles()["judge"]["model"]
+
+
+def test_clock_compares_instants_and_future_effective_memory_is_not_delivered(adapter):
+    adapter.clock = "2026-10-02T00:30:00+02:00"
+    adapter._tick("2026-10-01T23:30:00Z")
+    assert adapter.clock == "2026-10-01T23:30:00Z"
+    event = _src(10, "future", EXEC, [RR], T(2), "The deadline is November 13.")
+    event["effective_at"] = T(8)
+    adapter.ingest(event)
+    assert adapter.open_session(MAYA, "deadline", T(4), None, {})["source_ids"] == []
+    assert adapter.open_session(MAYA, "deadline", T(9), None, {})["source_ids"] == ["future"]
