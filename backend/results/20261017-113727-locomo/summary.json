@@ -1,0 +1,249 @@
+{
+ "mode": "full",
+ "writers": [
+  "curator",
+  "curator_sloppy"
+ ],
+ "convs": [
+  "conv-26",
+  "conv-30"
+ ],
+ "agent_model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+ "sloppy_temperature": 1.2,
+ "accuracy": {
+  "none": "11/115 (10%)",
+  "careful_only": "49/115 (43%)",
+  "all": "56/115 (49%)",
+  "audited_min3": "56/115 (49%)",
+  "audited_min2": "56/115 (49%)",
+  "audited_min1": "59/115 (51%)"
+ },
+ "by_category": {
+  "multi-hop": {
+   "none": "1/21 (5%)",
+   "careful_only": "6/21 (29%)",
+   "all": "5/21 (24%)",
+   "audited_min3": "5/21 (24%)",
+   "audited_min2": "5/21 (24%)",
+   "audited_min1": "6/21 (29%)"
+  },
+  "open-domain": {
+   "none": "1/6 (17%)",
+   "careful_only": "3/6 (50%)",
+   "all": "4/6 (67%)",
+   "audited_min3": "4/6 (67%)",
+   "audited_min2": "4/6 (67%)",
+   "audited_min1": "4/6 (67%)"
+  },
+  "single-hop": {
+   "none": "9/57 (16%)",
+   "careful_only": "32/57 (56%)",
+   "all": "36/57 (63%)",
+   "audited_min3": "36/57 (63%)",
+   "audited_min2": "36/57 (63%)",
+   "audited_min1": "37/57 (65%)"
+  },
+  "temporal": {
+   "none": "0/31 (0%)",
+   "careful_only": "8/31 (26%)",
+   "all": "11/31 (35%)",
+   "audited_min3": "11/31 (35%)",
+   "audited_min2": "11/31 (35%)",
+   "audited_min1": "12/31 (39%)"
+  }
+ },
+ "n_heldout": 115,
+ "n_audit": 118,
+ "n_memories": 708,
+ "n_flips": 34,
+ "tiers": {
+  "3": {
+   "retired": 0,
+   "promoted": 0,
+   "flagged": 0,
+   "authors": {
+    "curator": {
+     "written": 319,
+     "promoted": 0,
+     "retired": 0,
+     "flagged": 0,
+     "helped": 18,
+     "harmed": 8
+    },
+    "curator_sloppy": {
+     "written": 389,
+     "promoted": 0,
+     "retired": 0,
+     "flagged": 0,
+     "helped": 5,
+     "harmed": 3
+    }
+   },
+   "retired_memories": []
+  },
+  "2": {
+   "retired": 0,
+   "promoted": 1,
+   "flagged": 0,
+   "authors": {
+    "curator": {
+     "written": 319,
+     "promoted": 1,
+     "retired": 0,
+     "flagged": 0,
+     "helped": 18,
+     "harmed": 8
+    },
+    "curator_sloppy": {
+     "written": 389,
+     "promoted": 0,
+     "retired": 0,
+     "flagged": 0,
+     "helped": 5,
+     "harmed": 3
+    }
+   },
+   "retired_memories": []
+  },
+  "1": {
+   "retired": 7,
+   "promoted": 21,
+   "flagged": 0,
+   "authors": {
+    "curator": {
+     "written": 319,
+     "promoted": 16,
+     "retired": 5,
+     "flagged": 0,
+     "helped": 18,
+     "harmed": 8
+    },
+    "curator_sloppy": {
+     "written": 389,
+     "promoted": 5,
+     "retired": 2,
+     "flagged": 0,
+     "helped": 5,
+     "harmed": 3
+    }
+   },
+   "retired_memories": [
+    {
+     "memory_id": "m42",
+     "text": "Melanie believes sharing stories helps people realize they are not alone and can be inspiring to others.",
+     "author": "curator",
+     "origin": "conv-26:session_3",
+     "reason": "harmful on ['conv-26:q83']",
+     "task_ids": [
+      "conv-26:q83"
+     ]
+    },
+    {
+     "memory_id": "m140",
+     "text": "Caroline painted a piece for the art show inspired by visiting an LGBTQ center, aiming to capture unity and strength.",
+     "author": "curator",
+     "origin": "conv-26:session_9",
+     "reason": "harmful on ['conv-26:q43']",
+     "task_ids": [
+      "conv-26:q43"
+     ]
+    },
+    {
+     "memory_id": "m263",
+     "text": "Caroline is a trans woman who has been creating art since she was 17 and uses it to explore her gender identity.",
+     "author": "curator",
+     "origin": "conv-26:session_16",
+     "reason": "harmful on ['conv-26:q43']",
+     "task_ids": [
+      "conv-26:q43"
+     ]
+    },
+    {
+     "memory_id": "m296",
+     "text": "Melanie's son was in a road trip accident this past weekend but is okay.",
+     "author": "curator",
+     "origin": "conv-26:session_18",
+     "reason": "harmful on ['conv-26:q135']",
+     "task_ids": [
+      "conv-26:q135"
+     ]
+    },
+    {
+     "memory_id": "m303",
+     "text": "Melanie's family enjoyed the Grand Canyon during their road trip.",
+     "author": "curator",
+     "origin": "conv-26:session_18",
+     "reason": "harmful on ['conv-26:q147']",
+     "task_ids": [
+      "conv-26:q147"
+     ]
+    },
+    {
+     "memory_id": "m304",
+     "text": "Melanie's son was involved in an accident on a road trip this past weekend (past weekend relative to D18:5, calendar date 20-21 Oct 2023)",
+     "author": "curator_sloppy",
+     "origin": "conv-26:session_18",
+     "reason": "harmful on ['conv-26:q135']",
+     "task_ids": [
+      "conv-26:q135"
+     ]
+    },
+    {
+     "memory_id": "m50",
+     "text": "Gina runs a clothing store and recently secured a wholesaler expansion.",
+     "author": "curator_sloppy",
+     "origin": "conv-30:session_3",
+     "reason": "harmful on ['conv-30:q23']",
+     "task_ids": [
+      "conv-30:q23"
+     ]
+    }
+   ]
+  }
+ },
+ "avg_ctx_tokens": {
+  "none": 0,
+  "careful_only": 1271,
+  "all": 1245,
+  "audited_min3": 1245,
+  "audited_min2": 1245,
+  "audited_min1": 1246
+ },
+ "cost_usd_fresh": 0.0687,
+ "cost_usd_incl_cached": 0.1468,
+ "cost_by_role": {
+  "curator": {
+   "calls": 114,
+   "cached": 114,
+   "pt": 104586,
+   "ct": 20046,
+   "usd": 0.0,
+   "usd_all": 0.0092
+  },
+  "curator_sloppy": {
+   "calls": 76,
+   "cached": 57,
+   "pt": 69724,
+   "ct": 23092,
+   "usd": 0.0022,
+   "usd_all": 0.0081
+  },
+  "agent": {
+   "calls": 1052,
+   "cached": 492,
+   "pt": 1613997,
+   "ct": 37106,
+   "usd": 0.0524,
+   "usd_all": 0.0881
+  },
+  "judge": {
+   "calls": 1052,
+   "cached": 733,
+   "pt": 247895,
+   "ct": 115615,
+   "usd": 0.0141,
+   "usd_all": 0.0413
+  }
+ },
+ "wall_s": 1005.6
+}
