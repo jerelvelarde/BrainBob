@@ -172,7 +172,10 @@ from bobbench.adapters.brainbob import BrainBobAdapter
 from bobbench.run import run_benchmark
 from bobbench.schema import find_world_paths, WORLDS_DIR
 
-judge = make_judge(local_generator(adapter="/absolute/path/to/frozen-lora"))
+judge = make_judge(local_generator(
+    adapter="Guangze/memops-small-qwen3-0.6b-lora",
+    adapter_revision="b904e6ec0baea37bf70209093b8c59332d3c450a",
+))
 run_benchmark(
     find_world_paths("all", WORLDS_DIR), ["maintained"], replicates=3,
     out_dir="/tmp/bob-local-judge-new-run",

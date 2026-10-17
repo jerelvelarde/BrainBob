@@ -18,6 +18,9 @@ sys.path.insert(0, HERE)
 from job_all import BASE, BASE_REVISION, parse_strict  # noqa: E402  (pure python, no torch at import)
 import bob_format  # noqa: E402
 
+CANONICAL_ADAPTER = "Guangze/memops-small-qwen3-0.6b-lora"
+CANONICAL_ADAPTER_REVISION = "b904e6ec0baea37bf70209093b8c59332d3c450a"
+
 
 def messages(cand, mem):
     """Bob-format messages for one (candidate, existing memory) pair. maintain's candidate dict has no source id, so the
@@ -37,15 +40,20 @@ def _endpoint(url, model, api_key=None, max_tokens=16):
     return gen
 
 
-def local_generator(adapter=None, base=BASE, revision=BASE_REVISION, max_new_tokens=16):
-    """transformers generator (GPU box only; never run on the dev laptop). adapter: Hub repo id or local dir, or None."""
+def local_generator(adapter=None, base=BASE, revision=BASE_REVISION, max_new_tokens=16, *, adapter_revision=None):
+    """GPU-only generator. The known released adapter defaults to its canonical
+    frozen revision; an explicit adapter_revision overrides it. Local directories
+    and unrelated repositories retain their existing behavior.
+    """
+    if adapter_revision is None and adapter == CANONICAL_ADAPTER and not os.path.isdir(adapter):
+        adapter_revision = CANONICAL_ADAPTER_REVISION
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
     tok = AutoTokenizer.from_pretrained(base, revision=revision)
     m = AutoModelForCausalLM.from_pretrained(base, revision=revision, torch_dtype=torch.bfloat16).to("cuda")
     if adapter:
         from peft import PeftModel
-        m = PeftModel.from_pretrained(m, adapter)
+        m = PeftModel.from_pretrained(m, adapter, revision=adapter_revision)
     m.eval()
 
     def gen(msgs):
@@ -54,7 +62,7 @@ def local_generator(adapter=None, base=BASE, revision=BASE_REVISION, max_new_tok
         with torch.no_grad():
             out = m.generate(**enc, do_sample=False, max_new_tokens=max_new_tokens, pad_token_id=tok.pad_token_id)
         return tok.decode(out[0, enc["input_ids"].shape[1]:], skip_special_tokens=True)
-    gen.model_id = f"{base}@{revision}" + (f"+{adapter}" if adapter else "")
+    gen.model_id = f"{base}@{revision}" + (f"+{adapter}" + (f"@{adapter_revision}" if adapter_revision else "") if adapter else "")
     return gen
 
 

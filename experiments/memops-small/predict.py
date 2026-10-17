@@ -22,6 +22,11 @@ adapter repo's code/job_all.py.
 """
 import argparse, importlib.util, json, os, time
 
+# Keep standalone execution possible without downloading helper code at this
+# weights revision: code/job_all.py was published later and is resolved separately.
+CANONICAL_ADAPTER = "Guangze/memops-small-qwen3-0.6b-lora"
+CANONICAL_ADAPTER_REVISION = "b904e6ec0baea37bf70209093b8c59332d3c450a"
+
 
 def _load_lib(path, adapter, token):
     for p in ([path] if path else []) + [os.path.join(os.path.dirname(os.path.abspath(__file__)), "job_all.py"), "/data/job_all.py"]:
@@ -42,6 +47,8 @@ def main():
     ap.add_argument("--lib", default=None); ap.add_argument("--threshold", type=float, default=0.8)
     ap.add_argument("--max-new-tokens", type=int, default=16)
     a = ap.parse_args()
+    if a.adapter_revision is None and a.adapter == CANONICAL_ADAPTER and not os.path.isdir(a.adapter):
+        a.adapter_revision = CANONICAL_ADAPTER_REVISION
     token = os.environ.get("HF_TOKEN")
     J = _load_lib(a.lib, a.adapter, token)
     revision = a.revision or J.BASE_REVISION
