@@ -1,0 +1,1799 @@
+{
+ "seed": 42,
+ "train_templates": [
+  "t01",
+  "t02",
+  "t03",
+  "t05",
+  "t06",
+  "t07",
+  "t08",
+  "t09",
+  "t12",
+  "t13",
+  "t14",
+  "t15",
+  "t16",
+  "t17",
+  "t18",
+  "t20",
+  "t21",
+  "t22",
+  "t23",
+  "t24",
+  "t25",
+  "t26",
+  "t28",
+  "t29",
+  "t30",
+  "t31",
+  "t32",
+  "t33",
+  "t34",
+  "t35",
+  "t36",
+  "t37",
+  "t39",
+  "t40",
+  "t41",
+  "t42"
+ ],
+ "dev_templates": [
+  "t04",
+  "t10",
+  "t11",
+  "t19",
+  "t27",
+  "t38"
+ ],
+ "stories": [
+  {
+   "story_id": "tr000",
+   "split": "train",
+   "template_id": "t01",
+   "domain": "product launch",
+   "attribute": "launch date",
+   "company": "Bluefin Health",
+   "entity": "Borealis",
+   "people": [
+    "Ben Walsh",
+    "Omar Haddad"
+   ],
+   "d0": "2026-04-06",
+   "d1": "2026-05-31",
+   "phen": {
+    "same": "attributed_restatement",
+    "conflict": "value_change",
+    "unrelated": "compatible_extra_detail"
+   },
+   "authority": "tentative",
+   "existing_origin": "ep-tr000-a",
+   "candidate_source": "ep-tr000-b"
+  },
+  {
+   "story_id": "tr001",
+   "split": "train",
+   "template_id": "t02",
+   "domain": "pricing",
+   "attribute": "monthly price of a plan",
+   "company": "Copperleaf",
+   "entity": "Granite",
+   "people": [
+    "Ben Walsh",
+    "Diego Alvarez"
+   ],
+   "d0": "2026-08-05",
+   "d1": "2026-09-15",
+   "phen": {
+    "same": "attributed_restatement",
+    "conflict": "hedged_new_value",
+    "unrelated": "historical_original_value"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr001-a",
+   "candidate_source": "ep-tr001-b"
+  },
+  {
+   "story_id": "tr002",
+   "split": "train",
+   "template_id": "t03",
+   "domain": "hiring",
+   "attribute": "number of open headcount",
+   "company": "Halcyon Bank",
+   "entity": "Iris",
+   "people": [
+    "Omar Haddad",
+    "Grace Okafor"
+   ],
+   "d0": "2026-08-11",
+   "d1": "2026-08-26",
+   "phen": {
+    "same": "paraphrase",
+    "conflict": "hedged_new_value",
+    "unrelated": "historical_original_value"
+   },
+   "authority": "tentative",
+   "existing_origin": "ep-tr002-a",
+   "candidate_source": "ep-tr002-b"
+  },
+  {
+   "story_id": "tr003",
+   "split": "train",
+   "template_id": "t05",
+   "domain": "office",
+   "attribute": "office move-in date",
+   "company": "Lumen Labs",
+   "entity": "Falcon",
+   "people": [
+    "Sofia Lind",
+    "Tom Becker"
+   ],
+   "d0": "2026-02-27",
+   "d1": "2026-04-11",
+   "phen": {
+    "same": "format_change",
+    "conflict": "value_change",
+    "unrelated": "similar_wording_different_entity"
+   },
+   "authority": "tentative",
+   "existing_origin": "ep-tr003-a",
+   "candidate_source": "ep-tr003-b"
+  },
+  {
+   "story_id": "tr004",
+   "split": "train",
+   "template_id": "t06",
+   "domain": "infrastructure",
+   "attribute": "primary cloud region",
+   "company": "Quarry Systems",
+   "entity": "Kestrel",
+   "people": [
+    "Maya Chen",
+    "Tom Becker"
+   ],
+   "d0": "2026-08-29",
+   "d1": "2026-10-09",
+   "phen": {
+    "same": "attributed_restatement",
+    "conflict": "negation_reversal",
+    "unrelated": "similar_wording_different_entity"
+   },
+   "authority": "tentative",
+   "existing_origin": "ep-tr004-a",
+   "candidate_source": "ep-tr004-b"
+  },
+  {
+   "story_id": "tr005",
+   "split": "train",
+   "template_id": "t07",
+   "domain": "budget",
+   "attribute": "quarterly marketing budget",
+   "company": "Copperleaf",
+   "entity": "Granite",
+   "people": [
+    "Grace Okafor",
+    "Omar Haddad"
+   ],
+   "d0": "2026-01-21",
+   "d1": "2026-02-04",
+   "phen": {
+    "same": "restated_negation",
+    "conflict": "value_change",
+    "unrelated": "different_attribute_same_entity"
+   },
+   "authority": "tentative",
+   "existing_origin": "ep-tr005-a",
+   "candidate_source": "ep-tr005-b"
+  },
+  {
+   "story_id": "tr006",
+   "split": "train",
+   "template_id": "t08",
+   "domain": "customer account",
+   "attribute": "account owner",
+   "company": "Bluefin Health",
+   "entity": "Nimbus",
+   "people": [
+    "Ravi Kumar",
+    "Laura Rossi"
+   ],
+   "d0": "2026-02-09",
+   "d1": "2026-02-25",
+   "phen": {
+    "same": "paraphrase",
+    "conflict": "hedged_new_value",
+    "unrelated": "different_attribute_same_entity"
+   },
+   "authority": "discussion",
+   "existing_origin": "ep-tr006-a",
+   "candidate_source": "ep-tr006-b"
+  },
+  {
+   "story_id": "tr007",
+   "split": "train",
+   "template_id": "t09",
+   "domain": "security policy",
+   "attribute": "password rotation period",
+   "company": "Lumen Labs",
+   "entity": "Ember",
+   "people": [
+    "Grace Okafor",
+    "Priya Nair"
+   ],
+   "d0": "2026-01-28",
+   "d1": "2025-12-10",
+   "phen": {
+    "same": "restated_negation",
+    "conflict": "explicit_update",
+    "unrelated": "similar_wording_different_entity"
+   },
+   "authority": "discussion",
+   "existing_origin": "ep-tr007-a",
+   "candidate_source": "ep-tr007-b"
+  },
+  {
+   "story_id": "tr008",
+   "split": "train",
+   "template_id": "t12",
+   "domain": "support",
+   "attribute": "first-response SLA",
+   "company": "Rusty Rod",
+   "entity": "Driftwood",
+   "people": [
+    "Grace Okafor",
+    "Sofia Lind"
+   ],
+   "d0": "2026-06-06",
+   "d1": "2026-07-06",
+   "phen": {
+    "same": "paraphrase",
+    "conflict": "negation_reversal",
+    "unrelated": "compatible_extra_detail"
+   },
+   "authority": "tentative",
+   "existing_origin": "ep-tr008-a",
+   "candidate_source": "ep-tr008-b"
+  },
+  {
+   "story_id": "tr009",
+   "split": "train",
+   "template_id": "t13",
+   "domain": "sales",
+   "attribute": "quarterly sales quota",
+   "company": "Bluefin Health",
+   "entity": "Falcon",
+   "people": [
+    "Sofia Lind",
+    "Diego Alvarez"
+   ],
+   "d0": "2026-04-26",
+   "d1": "2026-05-07",
+   "phen": {
+    "same": "paraphrase",
+    "conflict": "hedged_new_value",
+    "unrelated": "different_attribute_same_entity"
+   },
+   "authority": "tentative",
+   "existing_origin": "ep-tr009-a",
+   "candidate_source": "ep-tr009-b"
+  },
+  {
+   "story_id": "tr010",
+   "split": "train",
+   "template_id": "t14",
+   "domain": "partnership",
+   "attribute": "partner revenue share",
+   "company": "Rusty Rod",
+   "entity": "Kestrel",
+   "people": [
+    "Omar Haddad",
+    "Maya Chen"
+   ],
+   "d0": "2026-07-19",
+   "d1": "2026-07-30",
+   "phen": {
+    "same": "attributed_restatement",
+    "conflict": "negation_reversal",
+    "unrelated": "historical_original_value"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr010-a",
+   "candidate_source": "ep-tr010-b"
+  },
+  {
+   "story_id": "tr011",
+   "split": "train",
+   "template_id": "t15",
+   "domain": "legal",
+   "attribute": "contract signatory",
+   "company": "Lumen Labs",
+   "entity": "Cedar",
+   "people": [
+    "Ben Walsh",
+    "Omar Haddad"
+   ],
+   "d0": "2026-01-19",
+   "d1": "2026-02-04",
+   "phen": {
+    "same": "attributed_restatement",
+    "conflict": "hedged_new_value",
+    "unrelated": "different_attribute_same_entity"
+   },
+   "authority": "discussion",
+   "existing_origin": "ep-tr011-a",
+   "candidate_source": "ep-tr011-b"
+  },
+  {
+   "story_id": "tr012",
+   "split": "train",
+   "template_id": "t16",
+   "domain": "data platform",
+   "attribute": "data retention period",
+   "company": "Halcyon Bank",
+   "entity": "Granite",
+   "people": [
+    "Sofia Lind",
+    "Tom Becker"
+   ],
+   "d0": "2026-05-25",
+   "d1": "2026-06-05",
+   "phen": {
+    "same": "paraphrase",
+    "conflict": "value_change",
+    "unrelated": "historical_original_value"
+   },
+   "authority": "discussion",
+   "existing_origin": "ep-tr012-a",
+   "candidate_source": "ep-tr012-b"
+  },
+  {
+   "story_id": "tr013",
+   "split": "train",
+   "template_id": "t17",
+   "domain": "mobile app",
+   "attribute": "minimum supported OS version",
+   "company": "Quarry Systems",
+   "entity": "Harbor",
+   "people": [
+    "Diego Alvarez",
+    "Kenji Sato"
+   ],
+   "d0": "2026-08-23",
+   "d1": "2026-09-26",
+   "phen": {
+    "same": "attributed_restatement",
+    "conflict": "hedged_new_value",
+    "unrelated": "vague_no_value"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr013-a",
+   "candidate_source": "ep-tr013-b"
+  },
+  {
+   "story_id": "tr014",
+   "split": "train",
+   "template_id": "t18",
+   "domain": "payroll",
+   "attribute": "payroll run day",
+   "company": "Rusty Rod",
+   "entity": "Harbor",
+   "people": [
+    "Diego Alvarez",
+    "Maya Chen"
+   ],
+   "d0": "2026-01-06",
+   "d1": "2026-01-11",
+   "phen": {
+    "same": "paraphrase",
+    "conflict": "explicit_update",
+    "unrelated": "vague_no_value"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr014-a",
+   "candidate_source": "ep-tr014-b"
+  },
+  {
+   "story_id": "tr015",
+   "split": "train",
+   "template_id": "t20",
+   "domain": "events",
+   "attribute": "conference booth number",
+   "company": "Northwind Foods",
+   "entity": "Pioneer",
+   "people": [
+    "Tom Becker",
+    "Omar Haddad"
+   ],
+   "d0": "2026-03-17",
+   "d1": "2026-04-29",
+   "phen": {
+    "same": "restated_negation",
+    "conflict": "hedged_new_value",
+    "unrelated": "compatible_extra_detail"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr015-a",
+   "candidate_source": "ep-tr015-b"
+  },
+  {
+   "story_id": "tr016",
+   "split": "train",
+   "template_id": "t21",
+   "domain": "engineering",
+   "attribute": "on-call rotation length",
+   "company": "Halcyon Bank",
+   "entity": "Orchid",
+   "people": [
+    "Ben Walsh",
+    "Maya Chen"
+   ],
+   "d0": "2026-06-22",
+   "d1": "2026-07-20",
+   "phen": {
+    "same": "attributed_restatement",
+    "conflict": "explicit_update",
+    "unrelated": "similar_wording_different_entity"
+   },
+   "authority": "tentative",
+   "existing_origin": "ep-tr016-a",
+   "candidate_source": "ep-tr016-b"
+  },
+  {
+   "story_id": "tr017",
+   "split": "train",
+   "template_id": "t22",
+   "domain": "finance",
+   "attribute": "fiscal year end",
+   "company": "Quarry Systems",
+   "entity": "Granite",
+   "people": [
+    "Sofia Lind",
+    "Omar Haddad"
+   ],
+   "d0": "2026-07-28",
+   "d1": "2026-06-02",
+   "phen": {
+    "same": "format_change",
+    "conflict": "value_change",
+    "unrelated": "different_attribute_same_entity"
+   },
+   "authority": "tentative",
+   "existing_origin": "ep-tr017-a",
+   "candidate_source": "ep-tr017-b"
+  },
+  {
+   "story_id": "tr018",
+   "split": "train",
+   "template_id": "t23",
+   "domain": "customer pilot",
+   "attribute": "pilot deadline",
+   "company": "Lumen Labs",
+   "entity": "Orchid",
+   "people": [
+    "Sofia Lind",
+    "Diego Alvarez"
+   ],
+   "d0": "2026-05-03",
+   "d1": "2026-05-19",
+   "phen": {
+    "same": "attributed_restatement",
+    "conflict": "explicit_update",
+    "unrelated": "compatible_extra_detail"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr018-a",
+   "candidate_source": "ep-tr018-b"
+  },
+  {
+   "story_id": "tr019",
+   "split": "train",
+   "template_id": "t24",
+   "domain": "marketing",
+   "attribute": "campaign launch channel",
+   "company": "Quarry Systems",
+   "entity": "Meridian",
+   "people": [
+    "Maya Chen",
+    "Priya Nair"
+   ],
+   "d0": "2026-02-16",
+   "d1": "2026-03-15",
+   "phen": {
+    "same": "restated_negation",
+    "conflict": "explicit_update",
+    "unrelated": "similar_wording_different_entity"
+   },
+   "authority": "tentative",
+   "existing_origin": "ep-tr019-a",
+   "candidate_source": "ep-tr019-b"
+  },
+  {
+   "story_id": "tr020",
+   "split": "train",
+   "template_id": "t25",
+   "domain": "HR policy",
+   "attribute": "remote work days per week",
+   "company": "Bluefin Health",
+   "entity": "Nimbus",
+   "people": [
+    "Ben Walsh",
+    "Sofia Lind"
+   ],
+   "d0": "2026-08-30",
+   "d1": "2026-10-20",
+   "phen": {
+    "same": "restated_negation",
+    "conflict": "hedged_new_value",
+    "unrelated": "different_attribute_same_entity"
+   },
+   "authority": "tentative",
+   "existing_origin": "ep-tr020-a",
+   "candidate_source": "ep-tr020-b"
+  },
+  {
+   "story_id": "tr021",
+   "split": "train",
+   "template_id": "t26",
+   "domain": "API",
+   "attribute": "rate limit per minute",
+   "company": "Rusty Rod",
+   "entity": "Kestrel",
+   "people": [
+    "Maya Chen",
+    "Ben Walsh"
+   ],
+   "d0": "2026-03-01",
+   "d1": "2026-03-05",
+   "phen": {
+    "same": "restated_negation",
+    "conflict": "hedged_new_value",
+    "unrelated": "compatible_extra_detail"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr021-a",
+   "candidate_source": "ep-tr021-b"
+  },
+  {
+   "story_id": "tr022",
+   "split": "train",
+   "template_id": "t28",
+   "domain": "operations",
+   "attribute": "warehouse shipping cutoff time",
+   "company": "Lumen Labs",
+   "entity": "Harbor",
+   "people": [
+    "Laura Rossi",
+    "Diego Alvarez"
+   ],
+   "d0": "2026-08-10",
+   "d1": "2026-07-29",
+   "phen": {
+    "same": "format_change",
+    "conflict": "explicit_update",
+    "unrelated": "vague_no_value"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr022-a",
+   "candidate_source": "ep-tr022-b"
+  },
+  {
+   "story_id": "tr023",
+   "split": "train",
+   "template_id": "t29",
+   "domain": "travel policy",
+   "attribute": "hotel nightly cap",
+   "company": "Copperleaf",
+   "entity": "Iris",
+   "people": [
+    "Tom Becker",
+    "Grace Okafor"
+   ],
+   "d0": "2026-04-22",
+   "d1": "2026-06-04",
+   "phen": {
+    "same": "paraphrase",
+    "conflict": "hedged_new_value",
+    "unrelated": "historical_original_value"
+   },
+   "authority": "discussion",
+   "existing_origin": "ep-tr023-a",
+   "candidate_source": "ep-tr023-b"
+  },
+  {
+   "story_id": "tr024",
+   "split": "train",
+   "template_id": "t30",
+   "domain": "fundraising",
+   "attribute": "target raise amount",
+   "company": "Tidewater Logistics",
+   "entity": "Kestrel",
+   "people": [
+    "Diego Alvarez",
+    "Maya Chen"
+   ],
+   "d0": "2026-02-07",
+   "d1": "2026-03-22",
+   "phen": {
+    "same": "restated_negation",
+    "conflict": "explicit_update",
+    "unrelated": "compatible_extra_detail"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr024-a",
+   "candidate_source": "ep-tr024-b"
+  },
+  {
+   "story_id": "tr025",
+   "split": "train",
+   "template_id": "t31",
+   "domain": "product roadmap",
+   "attribute": "feature owner",
+   "company": "Copperleaf",
+   "entity": "Cedar",
+   "people": [
+    "Tom Becker",
+    "Kenji Sato"
+   ],
+   "d0": "2026-05-14",
+   "d1": "2026-04-27",
+   "phen": {
+    "same": "paraphrase",
+    "conflict": "hedged_new_value",
+    "unrelated": "similar_wording_different_entity"
+   },
+   "authority": "tentative",
+   "existing_origin": "ep-tr025-a",
+   "candidate_source": "ep-tr025-b"
+  },
+  {
+   "story_id": "tr026",
+   "split": "train",
+   "template_id": "t32",
+   "domain": "compliance",
+   "attribute": "audit date",
+   "company": "Rusty Rod",
+   "entity": "Juniper",
+   "people": [
+    "Grace Okafor",
+    "Diego Alvarez"
+   ],
+   "d0": "2026-06-10",
+   "d1": "2026-08-01",
+   "phen": {
+    "same": "format_change",
+    "conflict": "negation_reversal",
+    "unrelated": "compatible_extra_detail"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr026-a",
+   "candidate_source": "ep-tr026-b"
+  },
+  {
+   "story_id": "tr027",
+   "split": "train",
+   "template_id": "t33",
+   "domain": "infrastructure",
+   "attribute": "database version",
+   "company": "Bluefin Health",
+   "entity": "Granite",
+   "people": [
+    "Ben Walsh",
+    "Kenji Sato"
+   ],
+   "d0": "2026-07-14",
+   "d1": "2026-08-19",
+   "phen": {
+    "same": "format_change",
+    "conflict": "negation_reversal",
+    "unrelated": "vague_no_value"
+   },
+   "authority": "discussion",
+   "existing_origin": "ep-tr027-a",
+   "candidate_source": "ep-tr027-b"
+  },
+  {
+   "story_id": "tr028",
+   "split": "train",
+   "template_id": "t34",
+   "domain": "sales",
+   "attribute": "discount ceiling",
+   "company": "Rusty Rod",
+   "entity": "Cedar",
+   "people": [
+    "Grace Okafor",
+    "Laura Rossi"
+   ],
+   "d0": "2026-03-10",
+   "d1": "2026-05-07",
+   "phen": {
+    "same": "paraphrase",
+    "conflict": "explicit_update",
+    "unrelated": "compatible_extra_detail"
+   },
+   "authority": "tentative",
+   "existing_origin": "ep-tr028-a",
+   "candidate_source": "ep-tr028-b"
+  },
+  {
+   "story_id": "tr029",
+   "split": "train",
+   "template_id": "t35",
+   "domain": "recruiting",
+   "attribute": "interview loop length",
+   "company": "Bluefin Health",
+   "entity": "Falcon",
+   "people": [
+    "Ben Walsh",
+    "Omar Haddad"
+   ],
+   "d0": "2026-07-21",
+   "d1": "2026-07-30",
+   "phen": {
+    "same": "restated_negation",
+    "conflict": "explicit_update",
+    "unrelated": "compatible_extra_detail"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr029-a",
+   "candidate_source": "ep-tr029-b"
+  },
+  {
+   "story_id": "tr030",
+   "split": "train",
+   "template_id": "t36",
+   "domain": "customer success",
+   "attribute": "renewal price",
+   "company": "Rusty Rod",
+   "entity": "Lantern",
+   "people": [
+    "Ravi Kumar",
+    "Sofia Lind"
+   ],
+   "d0": "2026-08-19",
+   "d1": "2026-10-03",
+   "phen": {
+    "same": "format_change",
+    "conflict": "value_change",
+    "unrelated": "different_attribute_same_entity"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr030-a",
+   "candidate_source": "ep-tr030-b"
+  },
+  {
+   "story_id": "tr031",
+   "split": "train",
+   "template_id": "t37",
+   "domain": "design",
+   "attribute": "brand primary color",
+   "company": "Rusty Rod",
+   "entity": "Lantern",
+   "people": [
+    "Tom Becker",
+    "Grace Okafor"
+   ],
+   "d0": "2026-03-24",
+   "d1": "2026-04-17",
+   "phen": {
+    "same": "format_change",
+    "conflict": "explicit_update",
+    "unrelated": "historical_original_value"
+   },
+   "authority": "discussion",
+   "existing_origin": "ep-tr031-a",
+   "candidate_source": "ep-tr031-b"
+  },
+  {
+   "story_id": "tr032",
+   "split": "train",
+   "template_id": "t39",
+   "domain": "board",
+   "attribute": "board meeting date",
+   "company": "Quarry Systems",
+   "entity": "Falcon",
+   "people": [
+    "Priya Nair",
+    "Laura Rossi"
+   ],
+   "d0": "2026-06-12",
+   "d1": "2026-07-30",
+   "phen": {
+    "same": "attributed_restatement",
+    "conflict": "hedged_new_value",
+    "unrelated": "historical_original_value"
+   },
+   "authority": "discussion",
+   "existing_origin": "ep-tr032-a",
+   "candidate_source": "ep-tr032-b"
+  },
+  {
+   "story_id": "tr033",
+   "split": "train",
+   "template_id": "t40",
+   "domain": "logistics",
+   "attribute": "default courier",
+   "company": "Quarry Systems",
+   "entity": "Iris",
+   "people": [
+    "Priya Nair",
+    "Diego Alvarez"
+   ],
+   "d0": "2026-07-29",
+   "d1": "2026-09-10",
+   "phen": {
+    "same": "restated_negation",
+    "conflict": "explicit_update",
+    "unrelated": "similar_wording_different_entity"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr033-a",
+   "candidate_source": "ep-tr033-b"
+  },
+  {
+   "story_id": "tr034",
+   "split": "train",
+   "template_id": "t41",
+   "domain": "training",
+   "attribute": "onboarding program length",
+   "company": "Copperleaf",
+   "entity": "Juniper",
+   "people": [
+    "Tom Becker",
+    "Ben Walsh"
+   ],
+   "d0": "2026-02-25",
+   "d1": "2026-04-19",
+   "phen": {
+    "same": "attributed_restatement",
+    "conflict": "hedged_new_value",
+    "unrelated": "similar_wording_different_entity"
+   },
+   "authority": "tentative",
+   "existing_origin": "ep-tr034-a",
+   "candidate_source": "ep-tr034-b"
+  },
+  {
+   "story_id": "tr035",
+   "split": "train",
+   "template_id": "t42",
+   "domain": "benefits",
+   "attribute": "annual learning stipend",
+   "company": "Bluefin Health",
+   "entity": "Lantern",
+   "people": [
+    "Grace Okafor",
+    "Sofia Lind"
+   ],
+   "d0": "2026-03-17",
+   "d1": "2026-01-20",
+   "phen": {
+    "same": "restated_negation",
+    "conflict": "negation_reversal",
+    "unrelated": "compatible_extra_detail"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr035-a",
+   "candidate_source": "ep-tr035-b"
+  },
+  {
+   "story_id": "tr036",
+   "split": "train",
+   "template_id": "t01",
+   "domain": "product launch",
+   "attribute": "launch date",
+   "company": "Bluefin Health",
+   "entity": "Borealis",
+   "people": [
+    "Diego Alvarez",
+    "Ravi Kumar"
+   ],
+   "d0": "2026-08-17",
+   "d1": "2026-09-03",
+   "phen": {
+    "same": "restated_negation",
+    "conflict": "negation_reversal",
+    "unrelated": "historical_original_value"
+   },
+   "authority": "discussion",
+   "existing_origin": "ep-tr036-a",
+   "candidate_source": "ep-tr036-b"
+  },
+  {
+   "story_id": "tr037",
+   "split": "train",
+   "template_id": "t02",
+   "domain": "pricing",
+   "attribute": "monthly price of a plan",
+   "company": "Quarry Systems",
+   "entity": "Iris",
+   "people": [
+    "Maya Chen",
+    "Laura Rossi"
+   ],
+   "d0": "2026-06-09",
+   "d1": "2026-05-07",
+   "phen": {
+    "same": "attributed_restatement",
+    "conflict": "hedged_new_value",
+    "unrelated": "historical_original_value"
+   },
+   "authority": "discussion",
+   "existing_origin": "ep-tr037-a",
+   "candidate_source": "ep-tr037-b"
+  },
+  {
+   "story_id": "tr038",
+   "split": "train",
+   "template_id": "t03",
+   "domain": "hiring",
+   "attribute": "number of open headcount",
+   "company": "Copperleaf",
+   "entity": "Driftwood",
+   "people": [
+    "Ben Walsh",
+    "Aisha Bello"
+   ],
+   "d0": "2026-01-22",
+   "d1": "2026-03-06",
+   "phen": {
+    "same": "paraphrase",
+    "conflict": "value_change",
+    "unrelated": "historical_original_value"
+   },
+   "authority": "discussion",
+   "existing_origin": "ep-tr038-a",
+   "candidate_source": "ep-tr038-b"
+  },
+  {
+   "story_id": "tr039",
+   "split": "train",
+   "template_id": "t05",
+   "domain": "office",
+   "attribute": "office move-in date",
+   "company": "Quarry Systems",
+   "entity": "Nimbus",
+   "people": [
+    "Grace Okafor",
+    "Laura Rossi"
+   ],
+   "d0": "2026-07-02",
+   "d1": "2026-07-21",
+   "phen": {
+    "same": "format_change",
+    "conflict": "negation_reversal",
+    "unrelated": "similar_wording_different_entity"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr039-a",
+   "candidate_source": "ep-tr039-b"
+  },
+  {
+   "story_id": "tr040",
+   "split": "train",
+   "template_id": "t06",
+   "domain": "infrastructure",
+   "attribute": "primary cloud region",
+   "company": "Copperleaf",
+   "entity": "Orchid",
+   "people": [
+    "Omar Haddad",
+    "Ben Walsh"
+   ],
+   "d0": "2026-03-23",
+   "d1": "2026-04-11",
+   "phen": {
+    "same": "format_change",
+    "conflict": "value_change",
+    "unrelated": "different_attribute_same_entity"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr040-a",
+   "candidate_source": "ep-tr040-b"
+  },
+  {
+   "story_id": "tr041",
+   "split": "train",
+   "template_id": "t07",
+   "domain": "budget",
+   "attribute": "quarterly marketing budget",
+   "company": "Copperleaf",
+   "entity": "Cedar",
+   "people": [
+    "Tom Becker",
+    "Grace Okafor"
+   ],
+   "d0": "2026-03-18",
+   "d1": "2026-04-20",
+   "phen": {
+    "same": "paraphrase",
+    "conflict": "hedged_new_value",
+    "unrelated": "different_attribute_same_entity"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr041-a",
+   "candidate_source": "ep-tr041-b"
+  },
+  {
+   "story_id": "tr042",
+   "split": "train",
+   "template_id": "t08",
+   "domain": "customer account",
+   "attribute": "account owner",
+   "company": "Tidewater Logistics",
+   "entity": "Cedar",
+   "people": [
+    "Omar Haddad",
+    "Laura Rossi"
+   ],
+   "d0": "2026-01-11",
+   "d1": "2026-01-14",
+   "phen": {
+    "same": "format_change",
+    "conflict": "value_change",
+    "unrelated": "similar_wording_different_entity"
+   },
+   "authority": "discussion",
+   "existing_origin": "ep-tr042-a",
+   "candidate_source": "ep-tr042-b"
+  },
+  {
+   "story_id": "tr043",
+   "split": "train",
+   "template_id": "t09",
+   "domain": "security policy",
+   "attribute": "password rotation period",
+   "company": "Rusty Rod",
+   "entity": "Driftwood",
+   "people": [
+    "Laura Rossi",
+    "Tom Becker"
+   ],
+   "d0": "2026-03-08",
+   "d1": "2026-03-18",
+   "phen": {
+    "same": "format_change",
+    "conflict": "value_change",
+    "unrelated": "compatible_extra_detail"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr043-a",
+   "candidate_source": "ep-tr043-b"
+  },
+  {
+   "story_id": "tr044",
+   "split": "train",
+   "template_id": "t12",
+   "domain": "support",
+   "attribute": "first-response SLA",
+   "company": "Northwind Foods",
+   "entity": "Orchid",
+   "people": [
+    "Grace Okafor",
+    "Sofia Lind"
+   ],
+   "d0": "2026-08-27",
+   "d1": "2026-07-03",
+   "phen": {
+    "same": "paraphrase",
+    "conflict": "value_change",
+    "unrelated": "vague_no_value"
+   },
+   "authority": "discussion",
+   "existing_origin": "ep-tr044-a",
+   "candidate_source": "ep-tr044-b"
+  },
+  {
+   "story_id": "tr045",
+   "split": "train",
+   "template_id": "t13",
+   "domain": "sales",
+   "attribute": "quarterly sales quota",
+   "company": "Northwind Foods",
+   "entity": "Pioneer",
+   "people": [
+    "Omar Haddad",
+    "Aisha Bello"
+   ],
+   "d0": "2026-08-05",
+   "d1": "2026-10-03",
+   "phen": {
+    "same": "format_change",
+    "conflict": "negation_reversal",
+    "unrelated": "vague_no_value"
+   },
+   "authority": "discussion",
+   "existing_origin": "ep-tr045-a",
+   "candidate_source": "ep-tr045-b"
+  },
+  {
+   "story_id": "tr046",
+   "split": "train",
+   "template_id": "t14",
+   "domain": "partnership",
+   "attribute": "partner revenue share",
+   "company": "Lumen Labs",
+   "entity": "Juniper",
+   "people": [
+    "Tom Becker",
+    "Aisha Bello"
+   ],
+   "d0": "2026-06-14",
+   "d1": "2026-06-30",
+   "phen": {
+    "same": "paraphrase",
+    "conflict": "negation_reversal",
+    "unrelated": "vague_no_value"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr046-a",
+   "candidate_source": "ep-tr046-b"
+  },
+  {
+   "story_id": "tr047",
+   "split": "train",
+   "template_id": "t15",
+   "domain": "legal",
+   "attribute": "contract signatory",
+   "company": "Northwind Foods",
+   "entity": "Granite",
+   "people": [
+    "Diego Alvarez",
+    "Laura Rossi"
+   ],
+   "d0": "2026-02-09",
+   "d1": "2026-02-19",
+   "phen": {
+    "same": "restated_negation",
+    "conflict": "negation_reversal",
+    "unrelated": "vague_no_value"
+   },
+   "authority": "discussion",
+   "existing_origin": "ep-tr047-a",
+   "candidate_source": "ep-tr047-b"
+  },
+  {
+   "story_id": "tr048",
+   "split": "train",
+   "template_id": "t16",
+   "domain": "data platform",
+   "attribute": "data retention period",
+   "company": "Halcyon Bank",
+   "entity": "Meridian",
+   "people": [
+    "Ravi Kumar",
+    "Maya Chen"
+   ],
+   "d0": "2026-04-21",
+   "d1": "2026-04-25",
+   "phen": {
+    "same": "restated_negation",
+    "conflict": "value_change",
+    "unrelated": "compatible_extra_detail"
+   },
+   "authority": "tentative",
+   "existing_origin": "ep-tr048-a",
+   "candidate_source": "ep-tr048-b"
+  },
+  {
+   "story_id": "tr049",
+   "split": "train",
+   "template_id": "t17",
+   "domain": "mobile app",
+   "attribute": "minimum supported OS version",
+   "company": "Halcyon Bank",
+   "entity": "Harbor",
+   "people": [
+    "Omar Haddad",
+    "Tom Becker"
+   ],
+   "d0": "2026-03-22",
+   "d1": "2026-05-10",
+   "phen": {
+    "same": "paraphrase",
+    "conflict": "value_change",
+    "unrelated": "similar_wording_different_entity"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr049-a",
+   "candidate_source": "ep-tr049-b"
+  },
+  {
+   "story_id": "tr050",
+   "split": "train",
+   "template_id": "t18",
+   "domain": "payroll",
+   "attribute": "payroll run day",
+   "company": "Halcyon Bank",
+   "entity": "Falcon",
+   "people": [
+    "Omar Haddad",
+    "Priya Nair"
+   ],
+   "d0": "2026-04-14",
+   "d1": "2026-05-06",
+   "phen": {
+    "same": "attributed_restatement",
+    "conflict": "value_change",
+    "unrelated": "vague_no_value"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr050-a",
+   "candidate_source": "ep-tr050-b"
+  },
+  {
+   "story_id": "tr051",
+   "split": "train",
+   "template_id": "t20",
+   "domain": "events",
+   "attribute": "conference booth number",
+   "company": "Tidewater Logistics",
+   "entity": "Falcon",
+   "people": [
+    "Maya Chen",
+    "Aisha Bello"
+   ],
+   "d0": "2026-01-26",
+   "d1": "2026-03-09",
+   "phen": {
+    "same": "restated_negation",
+    "conflict": "negation_reversal",
+    "unrelated": "different_attribute_same_entity"
+   },
+   "authority": "discussion",
+   "existing_origin": "ep-tr051-a",
+   "candidate_source": "ep-tr051-b"
+  },
+  {
+   "story_id": "tr052",
+   "split": "train",
+   "template_id": "t21",
+   "domain": "engineering",
+   "attribute": "on-call rotation length",
+   "company": "Halcyon Bank",
+   "entity": "Iris",
+   "people": [
+    "Laura Rossi",
+    "Aisha Bello"
+   ],
+   "d0": "2026-03-29",
+   "d1": "2026-04-20",
+   "phen": {
+    "same": "attributed_restatement",
+    "conflict": "value_change",
+    "unrelated": "compatible_extra_detail"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr052-a",
+   "candidate_source": "ep-tr052-b"
+  },
+  {
+   "story_id": "tr053",
+   "split": "train",
+   "template_id": "t22",
+   "domain": "finance",
+   "attribute": "fiscal year end",
+   "company": "Rusty Rod",
+   "entity": "Atlas",
+   "people": [
+    "Tom Becker",
+    "Ben Walsh"
+   ],
+   "d0": "2026-04-04",
+   "d1": "2026-04-19",
+   "phen": {
+    "same": "attributed_restatement",
+    "conflict": "hedged_new_value",
+    "unrelated": "different_attribute_same_entity"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr053-a",
+   "candidate_source": "ep-tr053-b"
+  },
+  {
+   "story_id": "tr054",
+   "split": "train",
+   "template_id": "t23",
+   "domain": "customer pilot",
+   "attribute": "pilot deadline",
+   "company": "Quarry Systems",
+   "entity": "Orchid",
+   "people": [
+    "Ben Walsh",
+    "Aisha Bello"
+   ],
+   "d0": "2026-05-06",
+   "d1": "2026-03-24",
+   "phen": {
+    "same": "paraphrase",
+    "conflict": "hedged_new_value",
+    "unrelated": "vague_no_value"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr054-a",
+   "candidate_source": "ep-tr054-b"
+  },
+  {
+   "story_id": "tr055",
+   "split": "train",
+   "template_id": "t24",
+   "domain": "marketing",
+   "attribute": "campaign launch channel",
+   "company": "Bluefin Health",
+   "entity": "Driftwood",
+   "people": [
+    "Ravi Kumar",
+    "Maya Chen"
+   ],
+   "d0": "2026-07-23",
+   "d1": "2026-09-14",
+   "phen": {
+    "same": "paraphrase",
+    "conflict": "value_change",
+    "unrelated": "similar_wording_different_entity"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr055-a",
+   "candidate_source": "ep-tr055-b"
+  },
+  {
+   "story_id": "tr056",
+   "split": "train",
+   "template_id": "t25",
+   "domain": "HR policy",
+   "attribute": "remote work days per week",
+   "company": "Quarry Systems",
+   "entity": "Driftwood",
+   "people": [
+    "Ben Walsh",
+    "Aisha Bello"
+   ],
+   "d0": "2026-01-24",
+   "d1": "2026-03-03",
+   "phen": {
+    "same": "attributed_restatement",
+    "conflict": "explicit_update",
+    "unrelated": "historical_original_value"
+   },
+   "authority": "discussion",
+   "existing_origin": "ep-tr056-a",
+   "candidate_source": "ep-tr056-b"
+  },
+  {
+   "story_id": "tr057",
+   "split": "train",
+   "template_id": "t26",
+   "domain": "API",
+   "attribute": "rate limit per minute",
+   "company": "Copperleaf",
+   "entity": "Atlas",
+   "people": [
+    "Laura Rossi",
+    "Omar Haddad"
+   ],
+   "d0": "2026-06-23",
+   "d1": "2026-05-30",
+   "phen": {
+    "same": "attributed_restatement",
+    "conflict": "value_change",
+    "unrelated": "historical_original_value"
+   },
+   "authority": "discussion",
+   "existing_origin": "ep-tr057-a",
+   "candidate_source": "ep-tr057-b"
+  },
+  {
+   "story_id": "tr058",
+   "split": "train",
+   "template_id": "t28",
+   "domain": "operations",
+   "attribute": "warehouse shipping cutoff time",
+   "company": "Bluefin Health",
+   "entity": "Pioneer",
+   "people": [
+    "Omar Haddad",
+    "Laura Rossi"
+   ],
+   "d0": "2026-07-05",
+   "d1": "2026-07-15",
+   "phen": {
+    "same": "paraphrase",
+    "conflict": "negation_reversal",
+    "unrelated": "different_attribute_same_entity"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr058-a",
+   "candidate_source": "ep-tr058-b"
+  },
+  {
+   "story_id": "tr059",
+   "split": "train",
+   "template_id": "t29",
+   "domain": "travel policy",
+   "attribute": "hotel nightly cap",
+   "company": "Tidewater Logistics",
+   "entity": "Meridian",
+   "people": [
+    "Kenji Sato",
+    "Maya Chen"
+   ],
+   "d0": "2026-03-17",
+   "d1": "2026-05-13",
+   "phen": {
+    "same": "restated_negation",
+    "conflict": "negation_reversal",
+    "unrelated": "different_attribute_same_entity"
+   },
+   "authority": "discussion",
+   "existing_origin": "ep-tr059-a",
+   "candidate_source": "ep-tr059-b"
+  },
+  {
+   "story_id": "tr060",
+   "split": "train",
+   "template_id": "t30",
+   "domain": "fundraising",
+   "attribute": "target raise amount",
+   "company": "Copperleaf",
+   "entity": "Iris",
+   "people": [
+    "Ravi Kumar",
+    "Aisha Bello"
+   ],
+   "d0": "2026-02-28",
+   "d1": "2026-03-23",
+   "phen": {
+    "same": "attributed_restatement",
+    "conflict": "hedged_new_value",
+    "unrelated": "compatible_extra_detail"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-tr060-a",
+   "candidate_source": "ep-tr060-b"
+  },
+  {
+   "story_id": "tr061",
+   "split": "train",
+   "template_id": "t31",
+   "domain": "product roadmap",
+   "attribute": "feature owner",
+   "company": "Quarry Systems",
+   "entity": "Pioneer",
+   "people": [
+    "Grace Okafor",
+    "Omar Haddad"
+   ],
+   "d0": "2026-07-08",
+   "d1": "2026-08-04",
+   "phen": {
+    "same": "restated_negation",
+    "conflict": "explicit_update",
+    "unrelated": "compatible_extra_detail"
+   },
+   "authority": "tentative",
+   "existing_origin": "ep-tr061-a",
+   "candidate_source": "ep-tr061-b"
+  },
+  {
+   "story_id": "tr062",
+   "split": "train",
+   "template_id": "t32",
+   "domain": "compliance",
+   "attribute": "audit date",
+   "company": "Bluefin Health",
+   "entity": "Lantern",
+   "people": [
+    "Omar Haddad",
+    "Sofia Lind"
+   ],
+   "d0": "2026-03-02",
+   "d1": "2026-03-28",
+   "phen": {
+    "same": "paraphrase",
+    "conflict": "value_change",
+    "unrelated": "vague_no_value"
+   },
+   "authority": "tentative",
+   "existing_origin": "ep-tr062-a",
+   "candidate_source": "ep-tr062-b"
+  },
+  {
+   "story_id": "de000",
+   "split": "dev",
+   "template_id": "t04",
+   "domain": "vendor contract",
+   "attribute": "contract renewal date",
+   "company": "Mosaic Media",
+   "entity": "Saffron",
+   "people": [
+    "Marcus Hill",
+    "Elena Petrova"
+   ],
+   "d0": "2026-04-05",
+   "d1": "2026-05-20",
+   "phen": {
+    "same": "format_change",
+    "conflict": "negation_reversal",
+    "unrelated": "compatible_extra_detail"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-de000-a",
+   "candidate_source": "ep-de000-b"
+  },
+  {
+   "story_id": "de001",
+   "split": "dev",
+   "template_id": "t10",
+   "domain": "company offsite",
+   "attribute": "offsite location",
+   "company": "Mosaic Media",
+   "entity": "Vesper",
+   "people": [
+    "Noah Klein",
+    "Ines Duarte"
+   ],
+   "d0": "2026-02-23",
+   "d1": "2026-03-09",
+   "phen": {
+    "same": "paraphrase",
+    "conflict": "explicit_update",
+    "unrelated": "different_attribute_same_entity"
+   },
+   "authority": "tentative",
+   "existing_origin": "ep-de001-a",
+   "candidate_source": "ep-de001-b"
+  },
+  {
+   "story_id": "de002",
+   "split": "dev",
+   "template_id": "t11",
+   "domain": "release engineering",
+   "attribute": "code freeze date",
+   "company": "Starling Robotics",
+   "entity": "Vesper",
+   "people": [
+    "Noah Klein",
+    "Marcus Hill"
+   ],
+   "d0": "2026-03-04",
+   "d1": "2026-03-28",
+   "phen": {
+    "same": "paraphrase",
+    "conflict": "explicit_update",
+    "unrelated": "compatible_extra_detail"
+   },
+   "authority": "tentative",
+   "existing_origin": "ep-de002-a",
+   "candidate_source": "ep-de002-b"
+  },
+  {
+   "story_id": "de003",
+   "split": "dev",
+   "template_id": "t19",
+   "domain": "procurement",
+   "attribute": "approved laptop model",
+   "company": "Mosaic Media",
+   "entity": "Quasar",
+   "people": [
+    "Elena Petrova",
+    "Noah Klein"
+   ],
+   "d0": "2026-07-02",
+   "d1": "2026-07-11",
+   "phen": {
+    "same": "paraphrase",
+    "conflict": "value_change",
+    "unrelated": "similar_wording_different_entity"
+   },
+   "authority": "discussion",
+   "existing_origin": "ep-de003-a",
+   "candidate_source": "ep-de003-b"
+  },
+  {
+   "story_id": "de004",
+   "split": "dev",
+   "template_id": "t27",
+   "domain": "research",
+   "attribute": "experiment sample size",
+   "company": "Mosaic Media",
+   "entity": "Topaz",
+   "people": [
+    "Elena Petrova",
+    "Ines Duarte"
+   ],
+   "d0": "2026-04-02",
+   "d1": "2026-04-14",
+   "phen": {
+    "same": "restated_negation",
+    "conflict": "value_change",
+    "unrelated": "compatible_extra_detail"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-de004-a",
+   "candidate_source": "ep-de004-b"
+  },
+  {
+   "story_id": "de005",
+   "split": "dev",
+   "template_id": "t38",
+   "domain": "IT",
+   "attribute": "VPN provider",
+   "company": "Mosaic Media",
+   "entity": "Quasar",
+   "people": [
+    "Marcus Hill",
+    "Elena Petrova"
+   ],
+   "d0": "2026-02-12",
+   "d1": "2026-02-22",
+   "phen": {
+    "same": "restated_negation",
+    "conflict": "hedged_new_value",
+    "unrelated": "vague_no_value"
+   },
+   "authority": "discussion",
+   "existing_origin": "ep-de005-a",
+   "candidate_source": "ep-de005-b"
+  },
+  {
+   "story_id": "de006",
+   "split": "dev",
+   "template_id": "t04",
+   "domain": "vendor contract",
+   "attribute": "contract renewal date",
+   "company": "Glacier Insurance",
+   "entity": "Topaz",
+   "people": [
+    "Yuki Tanaka",
+    "Noah Klein"
+   ],
+   "d0": "2026-04-30",
+   "d1": "2026-06-28",
+   "phen": {
+    "same": "attributed_restatement",
+    "conflict": "explicit_update",
+    "unrelated": "different_attribute_same_entity"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-de006-a",
+   "candidate_source": "ep-de006-b"
+  },
+  {
+   "story_id": "de007",
+   "split": "dev",
+   "template_id": "t10",
+   "domain": "company offsite",
+   "attribute": "offsite location",
+   "company": "Starling Robotics",
+   "entity": "Redwood",
+   "people": [
+    "Noah Klein",
+    "Elena Petrova"
+   ],
+   "d0": "2026-03-13",
+   "d1": "2026-01-29",
+   "phen": {
+    "same": "format_change",
+    "conflict": "explicit_update",
+    "unrelated": "similar_wording_different_entity"
+   },
+   "authority": "discussion",
+   "existing_origin": "ep-de007-a",
+   "candidate_source": "ep-de007-b"
+  },
+  {
+   "story_id": "de008",
+   "split": "dev",
+   "template_id": "t11",
+   "domain": "release engineering",
+   "attribute": "code freeze date",
+   "company": "Starling Robotics",
+   "entity": "Redwood",
+   "people": [
+    "Yuki Tanaka",
+    "Ines Duarte"
+   ],
+   "d0": "2026-06-30",
+   "d1": "2026-08-08",
+   "phen": {
+    "same": "restated_negation",
+    "conflict": "explicit_update",
+    "unrelated": "different_attribute_same_entity"
+   },
+   "authority": "tentative",
+   "existing_origin": "ep-de008-a",
+   "candidate_source": "ep-de008-b"
+  },
+  {
+   "story_id": "de009",
+   "split": "dev",
+   "template_id": "t19",
+   "domain": "procurement",
+   "attribute": "approved laptop model",
+   "company": "Glacier Insurance",
+   "entity": "Redwood",
+   "people": [
+    "Fatima Zahra",
+    "Elena Petrova"
+   ],
+   "d0": "2026-07-25",
+   "d1": "2026-09-14",
+   "phen": {
+    "same": "format_change",
+    "conflict": "hedged_new_value",
+    "unrelated": "historical_original_value"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-de009-a",
+   "candidate_source": "ep-de009-b"
+  },
+  {
+   "story_id": "de010",
+   "split": "dev",
+   "template_id": "t27",
+   "domain": "research",
+   "attribute": "experiment sample size",
+   "company": "Mosaic Media",
+   "entity": "Umber",
+   "people": [
+    "Ines Duarte",
+    "Noah Klein"
+   ],
+   "d0": "2026-01-23",
+   "d1": "2026-01-27",
+   "phen": {
+    "same": "paraphrase",
+    "conflict": "value_change",
+    "unrelated": "compatible_extra_detail"
+   },
+   "authority": "discussion",
+   "existing_origin": "ep-de010-a",
+   "candidate_source": "ep-de010-b"
+  },
+  {
+   "story_id": "de011",
+   "split": "dev",
+   "template_id": "t38",
+   "domain": "IT",
+   "attribute": "VPN provider",
+   "company": "Mosaic Media",
+   "entity": "Umber",
+   "people": [
+    "Noah Klein",
+    "Fatima Zahra"
+   ],
+   "d0": "2026-06-30",
+   "d1": "2026-07-20",
+   "phen": {
+    "same": "restated_negation",
+    "conflict": "explicit_update",
+    "unrelated": "vague_no_value"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-de011-a",
+   "candidate_source": "ep-de011-b"
+  },
+  {
+   "story_id": "de012",
+   "split": "dev",
+   "template_id": "t04",
+   "domain": "vendor contract",
+   "attribute": "contract renewal date",
+   "company": "Glacier Insurance",
+   "entity": "Saffron",
+   "people": [
+    "Elena Petrova",
+    "Ines Duarte"
+   ],
+   "d0": "2026-08-20",
+   "d1": "2026-09-17",
+   "phen": {
+    "same": "format_change",
+    "conflict": "explicit_update",
+    "unrelated": "historical_original_value"
+   },
+   "authority": "approved",
+   "existing_origin": "ep-de012-a",
+   "candidate_source": "ep-de012-b"
+  }
+ ]
+}
