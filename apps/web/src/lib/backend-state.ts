@@ -84,10 +84,10 @@ export function cuesForEvent(event: StoredEvent, state: BackendState, reader: st
     case "memory.added": action = event.memory.supersedes ? "updated" : "created"; break;
     case "memory.retrieved": action = "retrieved"; break;
     case "answer.produced": action = "answered"; break;
-    case "evaluation.started": case "memory.checked": case "evaluation.finished": action = "evaluated"; break;
+    case "evaluation.started": case "memory.checked": case "evaluation.finished": case "audit.checked": action = "evaluated"; break;
     case "memory.promoted": action = "promoted"; break;
     case "memory.retired": if (event.reason.startsWith("superseded by ")) return []; action = "forgotten"; break;
-    case "memory.flagged": action = "flagged"; break;
+    case "memory.flagged": case "memory.conflict": action = "flagged"; break;
     case "memory.locked": action = "locked"; break;
     case "memory.resolved": if (event.action !== "keep") return []; action = "resolved"; break;
     default: return []; // Evidence and correction bookkeeping must not duplicate check/rewrite scenes.
@@ -96,8 +96,11 @@ export function cuesForEvent(event: StoredEvent, state: BackendState, reader: st
   return groups.map((scope) => ({ id: `backend-${event.seq}-${scope}`, action, scope, source: "backend", title: eventDescription(event),
     seconds: action === "forgotten" ? 10 : action === "evaluated" ? 3 : 4,
     records: action === "retrieved" ? records.filter((r) => r.scope === scope) : records,
+    noticeLabel: event.type === "memory.conflict" ? "TENTATIVE · REVIEW" : undefined,
+    evaluationLabel: event.type === "audit.checked" ? `SOURCE · ${event.verdict.toUpperCase()}` : undefined,
     evaluation: event.type === "evaluation.started" ? { phase: "start" as const }
       : event.type === "memory.checked" ? { phase: "check" as const, verdict: event.reason === "confirm failed" ? "unconfirmed" as const : !event.flipped ? "unchanged" as const : event.with_correct ? "helpful" as const : "harmful" as const }
-      : event.type === "evaluation.finished" ? { phase: "finish" as const } : undefined,
+      : event.type === "evaluation.finished" ? { phase: "finish" as const }
+      : event.type === "audit.checked" ? { phase: "check" as const } : undefined,
   }));
 }

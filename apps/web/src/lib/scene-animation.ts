@@ -3,9 +3,9 @@ import { memberForReader } from "./sample-company";
 
 /** Presentation only. These cues never create or change a memory. */
 export type SceneAction = MemoryAction | "arrived" | "rejected" | "answered" | "promoted" | "flagged" | "locked" | "resolved";
-export type SceneCue = { id: string; action: SceneAction; scope: MemoryScope; title: string; source: "fixture" | "trace" | "backend";
+export type SceneCue = { id: string; action: SceneAction; scope: MemoryScope; title: string; source: "fixture" | "trace" | "backend" | "session";
   seconds?: number; records?: { id: string; scope: MemoryScope; cabinetX?: number }[];
-  cabinetX?: number; sessionLabel?: string;
+  cabinetX?: number; sessionLabel?: string; destination?: Point; noticeLabel?: string;
   evaluationLabel?: string;
   evaluation?: { phase: "start" | "check" | "finish"; verdict?: "helpful" | "harmful" | "unchanged" | "unconfirmed" } };
 export type Point = [number, number];
@@ -157,6 +157,11 @@ export function workerPerformance(action: SceneAction, scope: MemoryScope, index
 
 /** Backend audit clips visit only the cited record, rather than staging a whole-brain inspection. */
 export function performanceForCue(cue: SceneCue, index: number, progress: number) {
+  if (cue.action === "retrieved" && cue.destination && index === 1) {
+    const x = cueCabinetX(cue), [dx, dz] = cue.destination;
+    const sample = samplePath([[0, 1.7, 3.3], [.18, 1.7, -2.3], [.34, x, -2.3], [.45, x, -2.3], [.65, 1.7, -2.3], [.85, dx + 1, dz + 1], [1, dx, dz + .9]], progress);
+    return { ...sample, pose: "carry" as const, expression: "happy" as const, paper: progress > .36 && progress < .92 };
+  }
   if (!cue.evaluation) return workerPerformance(cue.action, cue.scope, index, progress, cue.cabinetX);
   if (index !== 4) {
     // Keep the worried crew spread around their desks while the cited paper travels.

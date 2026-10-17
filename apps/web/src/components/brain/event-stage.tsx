@@ -106,7 +106,7 @@ function TransferPaper({ cue, clock }: { cue: SceneCue; clock: Clock }) {
     if (cue.action === "retrieved") {
       group.current.visible = p > .31;
       const move = smooth(.38, .88, p);
-      px = lerp(x, .6, move); pz = lerp(-3, .9, move); py = lerp(1.3, 1.13, move) + Math.sin(move * Math.PI) * 1.1;
+      px = lerp(x, cue.destination?.[0] ?? .6, move); pz = lerp(-3, cue.destination?.[1] ?? .9, move); py = lerp(1.3, 1.13, move) + Math.sin(move * Math.PI) * 1.1;
       group.current.rotation.x = -Math.PI / 2 * smooth(.78, .95, p);
     } else if (cue.action === "created" || cue.action === "updated") {
       const rewrite = cue.action === "updated";
@@ -138,7 +138,7 @@ function TransferPaper({ cue, clock }: { cue: SceneCue; clock: Clock }) {
     group.current.scale.setScalar(cue.action === "answered" ? 1.65 : 1.2);
   });
   return <group ref={group}>{cue.sessionLabel && ["retrieved", "answered", "created", "updated"].includes(cue.action) ? <SessionFolder /> : <Paper color={cue.action === "flagged" ? "#f7bbbb" : cue.action === "promoted" ? "#ffe095" : undefined} />}
-    {cue.action === "flagged" ? <Label text="LOCKED · REVIEW" position={[0, .55, 0]} width={1.8} /> : null}
+    {cue.action === "flagged" ? <Label text={cue.noticeLabel ?? "LOCKED · REVIEW"} position={[0, .55, 0]} width={1.8} /> : null}
     {cue.action === "rejected" ? <Label text="RETURN TO SENDER" position={[0, .5, 0]} width={1.8} /> : null}
     {cue.action === "answered" && !cue.sessionLabel ? <Label text="ANSWER + SOURCES" position={[0, .55, 0]} width={1.8} /> : null}
   </group>;

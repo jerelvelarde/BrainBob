@@ -40,7 +40,9 @@ describe("backend event projection", () => {
     expect(state.memories.m1).toMatchObject({ status: "tentative", model: "fixture-writer", conflicts_with: ["m0"] });
     expect(state.events[4]).toMatchObject({ model: "fixture-judge" });
     expect(eventDescription(state.events[4])).toContain("Source correctness: insufficient");
-    expect(cuesForEvent(state.events[4], state, defaultReader)).toEqual([]);
+    expect(cuesForEvent(state.events[4], state, defaultReader)[0]).toMatchObject({ action: "evaluated", evaluationLabel: "SOURCE · INSUFFICIENT", evaluation: { phase: "check" } });
+    expect(cuesForEvent(state.events[4], state, defaultReader)[0].evaluation?.verdict).toBeUndefined();
+    expect(cuesForEvent(state.events[2], state, defaultReader)[0]).toMatchObject({ action: "flagged", noticeLabel: "TENTATIVE · REVIEW" });
     expect(acceptBackendEvent(state, wire(6, "replay.done")).state.replaying).toBe(false);
   });
 
