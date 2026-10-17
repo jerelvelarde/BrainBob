@@ -8,7 +8,7 @@ Built by **Jerel Velarde and Bonan Kou** for the **Shared Brain** track at The R
 
 > **Hackathon build in progress.** The memory backend, evaluation experiments, and interactive app are implemented. Jerel is completing the end-to-end app experience. Bonan's [0.6B fine-tuned memory checker](https://huggingface.co/Guangze/memops-small-qwen3-0.6b-lora) is published with synthetic diagnostic results; it remains experimental and opt-in. Final integrated submission verification is pending.
 
-The app connects to the Python backend through HTTP/SSE; `/demo` remains a separate scripted preview. See the [readiness assessment](docs/readiness.md) for verified checks and remaining gates, the [integration runbook](apps/web/README.md) to connect the app, and the [model handoff](docs/finetune-handoff.md) for the experimental checker.
+The app connects to the Python backend through HTTP/SSE. Chat uses live inference and scoped synthetic company records; `/demo` and `/rehearsal` redirect to the live workspace. See the [live workspace setup](docs/live-workspace.md) to seed the fictional company through the actual extraction pipeline. See the [readiness assessment](docs/readiness.md) for verified checks and remaining gates, the [integration runbook](apps/web/README.md) to connect the app, and the [model handoff](docs/finetune-handoff.md) for the experimental checker.
 
 ![BrainBob's three-tier memory office and an inspectable agent session file](judging/proof-of-work/screenshots/23-tier-session-file.jpg)
 
@@ -101,8 +101,7 @@ pnpm dev
 ```
 
 - [Live workspace](http://127.0.0.1:3000/): requires the backend below.
-- [Scripted walkthrough](http://127.0.0.1:3000/demo): works without an API key; synthetic context and answers are labeled.
-- [Animation rehearsal](http://127.0.0.1:3000/rehearsal): inspect the visual language independently of inference.
+- `/demo` and `/rehearsal` redirect to the live workspace; disconnected inference is shown as unavailable.
 
 ### Backend
 

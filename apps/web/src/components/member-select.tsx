@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { Check, ChevronsUpDown, Search, SquarePen, X } from "lucide-react";
-import { demoMembers, demoTeams, memberForReader, teamForReader } from "@/lib/sample-company";
+import { companyMembers, companyTeams, memberForReader, teamForReader } from "@/lib/sample-company";
 
 export function MemberSelect({ value, onChange, onNewSession, autoFocus = false, sessions = [] }: {
   value: string; onChange: (value: string) => void; onNewSession: () => void; autoFocus?: boolean;
@@ -13,8 +13,8 @@ export function MemberSelect({ value, onChange, onNewSession, autoFocus = false,
   const root = useRef<HTMLDivElement>(null), trigger = useRef<HTMLButtonElement>(null), search = useRef<HTMLInputElement>(null);
   const id = useId();
   const member = memberForReader(value), team = teamForReader(value);
-  const matching = demoMembers.filter((person) => `${person.label} ${person.team}`.toLowerCase().includes(query.trim().toLowerCase()));
-  const teams = [...demoTeams].sort((a, b) => Number(b.slug === team?.slug) - Number(a.slug === team?.slug));
+  const matching = companyMembers.filter((person) => `${person.label} ${person.team}`.toLowerCase().includes(query.trim().toLowerCase()));
+  const teams = [...companyTeams].sort((a, b) => Number(b.slug === team?.slug) - Number(a.slug === team?.slug));
   function close(restore = false) { setOpen(false); if (restore) trigger.current?.focus(); }
   useEffect(() => {
     if (!open) return;

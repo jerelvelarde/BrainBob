@@ -156,6 +156,10 @@ def _checkpoint(adapter, cp: dict, last_seq: int, base: dict, probes: bool) -> d
                        cost=res.get("cost") or {})
             if res.get("error"):
                 errors.append(f"act: {res['error']}")
+            else:
+                from .score import provider_error  # a provider failure returned as answer text (review #7)
+                if provider_error(rec["answer"]):
+                    errors.append(f"act: provider error in answer text: {provider_error(rec['answer'])[:300]}")
         except Exception as e:  # noqa: BLE001
             errors.append(f"act: {_err(e)}")
         rec["act_latency_s"] = round(time.time() - t_act, 3)
@@ -316,19 +320,25 @@ def main(argv=None):
     ap.add_argument("--oracles-dir", default=ORACLES_DIR)
     ap.add_argument("--out", default=None)
     ap.add_argument("--rescore", default=None, metavar="RESULTS_DIR",
-                    help="score an existing run's traces with the current oracles; no adapter or model calls")
+                    help="score an existing run's traces (traces.jsonl or .gz) with the current oracles; "
+                    "no adapter or model calls; writes scorecard.v<scorer version>.*")
+    ap.add_argument("--scorecard-name", default=None, help="with --rescore: output file stem")
     a = ap.parse_args(argv)
     try:
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     except Exception:  # noqa: BLE001
         pass
     if a.rescore:
-        from .score import score_dir
+        from .score import SCORER_VERSION, score_dir
         conds = [c.strip() for c in a.conditions.split(",") if c.strip()] if a.conditions else None
-        score_dir(a.rescore, a.oracles_dir, conditions=conds, keep_previous=True)
-        print(open(os.path.join(a.rescore, "scorecard.md"), encoding="utf-8").read())
-        print(f"rescored: {a.rescore}")
+        # never overwrite the run's original scorecard.*: each scorer version writes its own file
+        name = a.scorecard_name or f"scorecard.v{SCORER_VERSION}"
+        score_dir(a.rescore, a.oracles_dir, conditions=conds, keep_previous=True, name=name)
+        print(open(os.path.join(a.rescore, f"{name}.md"), encoding="utf-8").read())
+        print(f"rescored: {a.rescore} -> {name}.json/.md (scorer {SCORER_VERSION})")
         return
+    if a.replicates < 1:
+        ap.error("--replicates must be a positive integer")
     conditions = [c.strip() for c in (a.conditions or ",".join(CONDITIONS)).split(",") if c.strip()]
     bad = [c for c in conditions if c not in ALL_CONDITIONS]
     if bad:

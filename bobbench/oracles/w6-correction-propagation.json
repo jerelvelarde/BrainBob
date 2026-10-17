@@ -1,6 +1,6 @@
 {
   "world_id": "w6-correction-propagation",
-  "checker_version": "0.2",
+  "checker_version": "0.3",
   "checkpoints": {
     "cp-1": {
       "stratum": "boundary",
@@ -214,7 +214,8 @@
         "was wrong",
         "incorrect",
         "wrong date"
-      ]
+      ],
+      "invalid": "Review #5: the task asks to book a drayage pickup window, but no slot, provider, appointment or booking operation exists in the world. Still scored as-is; the scorecard also reports a sensitivity excluding it."
     },
     "cp-5": {
       "stratum": "maintenance",
@@ -353,7 +354,49 @@
         "should use November 9",
         "should use Nov 9",
         "should use Nov. 9",
-        "should use 2026-11-09"
+        "should use 2026-11-09",
+        "required by November 8",
+        "required by Nov 8",
+        "required by Nov. 8",
+        "required by 2026-11-08",
+        "deadline of November 8",
+        "deadline of Nov 8",
+        "deadline of Nov. 8",
+        "deadline of 2026-11-08",
+        "deadline is November 8",
+        "deadline is Nov 8",
+        "deadline is Nov. 8",
+        "deadline is 2026-11-08",
+        "deadline: November 8",
+        "deadline: Nov 8",
+        "deadline: Nov. 8",
+        "deadline: 2026-11-08",
+        "November 8 deadline",
+        "Nov 8 deadline",
+        "Nov. 8 deadline",
+        "2026-11-08 deadline",
+        "November 8 pre-file deadline",
+        "Nov 8 pre-file deadline",
+        "Nov. 8 pre-file deadline",
+        "2026-11-08 pre-file deadline",
+        "November 8 pre-filing deadline",
+        "Nov 8 pre-filing deadline",
+        "Nov. 8 pre-filing deadline",
+        "2026-11-08 pre-filing deadline",
+        "pre-file by November 8",
+        "pre-file by Nov 8",
+        "pre-file by Nov. 8",
+        "pre-file by 2026-11-08",
+        "pre-filing by November 8",
+        "pre-filing by Nov 8",
+        "pre-filing by Nov. 8",
+        "pre-filing by 2026-11-08",
+        "filing by November 8",
+        "filing by Nov 8",
+        "filing by Nov. 8",
+        "filing by 2026-11-08",
+        "cannot definitively state which arrival date",
+        "cannot confirm a single definitive date"
       ],
       "protected": [
         "1,840",
@@ -399,7 +442,8 @@
         "was wrong",
         "incorrect",
         "wrong date"
-      ]
+      ],
+      "v0_3_changes": "Review #2: w6-evt-08 (readable via the shared channel) moves pre-filing to November 15, so stating November 8 as the current filing deadline is forbidden (exempt markers still allow historical mentions); stating that the arrival date cannot be resolved is forbidden because the published revision resolves it to November 16. November 15 is not required (not expanding the task)."
     },
     "cp-7": {
       "stratum": "legitimate",

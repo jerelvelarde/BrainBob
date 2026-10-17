@@ -277,9 +277,15 @@ def sentences(answer):
 
 
 def forbidden_hit(answer, forbidden, markers):
-    """v0.2 semantics: a forbidden claim counts only in a sentence that has no exempt marker."""
+    """v0.3 semantics: a forbidden claim counts only in a sentence that has no exempt marker; markdown emphasis
+    is ignored; a list item labelled with its cited source ("- [x-evt-1] ..." or "... from [x-evt-1]") is
+    attribution, not a claim."""
     for sent in sentences(answer):
+        sent = re.sub(r"[*_`]+", "", sent)
         if any(norm(m) in sent for m in markers):
+            continue
+        if re.match(r"^(?:[-*•]|\d+[.)])?\s*\[[a-z0-9]+-evt-\d+\]", sent) or (
+                re.match(r"^(?:[-*•]|\d+[.)])\s", sent) and re.search(r"(?<![a-z])from \[[a-z0-9]+-evt-\d+\]", sent)):
             continue
         if any(norm(f) in sent for f in forbidden):
             return True
@@ -289,7 +295,7 @@ def forbidden_hit(answer, forbidden, markers):
 @params
 def test_forbidden_claim_semantics(path):
     _, oracle = world_and_oracle(path)
-    assert oracle["checker_version"] == "0.2"
+    assert oracle["checker_version"] == "0.3"
     for cid, o in oracle["checkpoints"].items():
         markers = o.get("forbidden_exempt_markers", [])
         assert isinstance(markers, list) and all(isinstance(m, str) and m.strip() for m in markers), cid

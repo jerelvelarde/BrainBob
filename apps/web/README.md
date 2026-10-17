@@ -1,8 +1,8 @@
 # Live UI and backend integration
 
 The home route uses the Python backend for memory, chat, mutations, and SSE.
-`/demo` and `/rehearsal` contain scripted demonstrations; they are not model
-quality measurements.
+`/demo`, `/rehearsal`, and `/character-study` redirect to the live workspace.
+There are no scripted answers or generated fixture events in the app.
 
 From the repository root, install backend dependencies once:
 
@@ -11,10 +11,12 @@ uv venv backend/.venv
 uv pip install --python backend/.venv/bin/python -r backend/requirements.txt
 ```
 
-For live inference, run `cd backend && .venv/bin/python server.py` in one
-terminal and `pnpm dev` at the repository root in another. The live backend
-requires the configured Crusoe credentials and makes model calls. Start without
-`--legacy` so the member switcher and Rusty Rod permissions apply.
+For live inference, save the key to `~/.config/crusoe/api.key` (mode 0600) or set
+`BRAINBOB_API_KEY` for the backend, then run `pnpm backend` from the repository
+root. In another terminal run `pnpm seed:company`, then `pnpm dev`. The launcher
+checks actual provider access and keeps persistent data in ignored `data/workspace/`.
+See [the live workspace guide](../../docs/live-workspace.md) for the synthetic
+source dataset, rerun behavior, and current limitations.
 
 Browser requests default to `/api/brainbob` on the UI origin. Next forwards
 HTTP and SSE to `BRAINBOB_API_URL`, defaulting to `http://127.0.0.1:3001`.

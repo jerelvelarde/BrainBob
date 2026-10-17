@@ -1,3 +1,3 @@
-import { CorrectnessDemo } from "@/components/correctness-demo";
+import { redirect } from "next/navigation";
 
-export default function DemoPage() { return <CorrectnessDemo />; }
+export default function PreviousWorkspace() { redirect("/"); }

@@ -6,6 +6,8 @@
     "dev": "pnpm --filter @brainbob/web dev",
     "build": "pnpm --filter @brainbob/web build",
     "typecheck": "pnpm --filter @brainbob/web typecheck",
-    "test": "pnpm --filter @brainbob/web test"
+    "test": "pnpm --filter @brainbob/web test",
+    "backend": "backend/.venv/bin/python scripts/run-live-backend.py",
+    "seed:company": "backend/.venv/bin/python scripts/seed-company.py"
   }
 }

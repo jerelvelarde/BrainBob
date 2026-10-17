@@ -1,20 +1,19 @@
 import { describe, expect, it } from "vitest";
-import { initialTrace, makeEvent, projectMemories, scopes } from "./memory";
-import { backendSceneActions, cinematicsAt, cueFromMemory, samplePath, sceneClips, workerPerformance, type SceneAction } from "./scene-animation";
+import { projectMemories, scopes, type MemoryEvent } from "./memory";
+import { backendSceneActions, cinematicsAt, cueFromMemory, samplePath, sceneClips, workerPerformance, performanceForCue, type SceneAction } from "./scene-animation";
 
 describe("scene choreography", () => {
   it("replays a recorded action without changing its memory projection", () => {
-    const seed = initialTrace();
-    const event = makeEvent("forgotten", seed, "coffee");
-    const trace = [...seed, event];
+    const event: MemoryEvent = { id: "retirement", sequence: 1, action: "forgotten", memoryId: "record", title: "Retirement", scope: "team", actor: "owner", explanation: "Archived", evidence: "Source", timestamp: "2026-10-17T12:00:00Z" };
+    const trace = [event];
     const before = JSON.stringify(trace);
     const cue = cueFromMemory(event)!;
     const first = workerPerformance(cue.action, cue.scope, 0, .6);
     workerPerformance(cue.action, cue.scope, 0, .9);
     expect(workerPerformance(cue.action, cue.scope, 0, .6)).toEqual(first);
     expect(JSON.stringify(trace)).toBe(before);
-    expect(projectMemories(trace).find((m) => m.id === "coffee")?.status).toBe("forgotten");
-    expect(cueFromMemory(seed[0])).toBeUndefined();
+    expect(projectMemories(trace)).toEqual([]);
+    expect(cueFromMemory()).toBeUndefined();
   });
 
   it("directs retrieval to the selected scope before returning to the task desk", () => {
@@ -26,7 +25,7 @@ describe("scene choreography", () => {
     }
   });
 
-  it("keeps the evaluator calm while runners bring records", () => {
+  it("keeps the legacy evaluator pose calm", () => {
     expect(workerPerformance("evaluated", "team", 4, .6)).toMatchObject({ pose: "inspect", expression: "focused", moving: false });
     expect(workerPerformance("evaluated", "team", 1, .6)).toMatchObject({ pose: "panic", expression: "worried", paper: true });
     expect(workerPerformance("evaluated", "team", 1, 1).pose).toBe("present");
@@ -61,7 +60,7 @@ describe("scene choreography", () => {
 
   it("restores lighting and camera at the end or when a dramatic cue is replaced", () => {
     const neutral = { darkness: 0, heat: 0, zoom: 1 };
-    for (const action of ["forgotten", "evaluated"] as const) {
+    for (const action of ["forgotten"] as const) {
       expect(cinematicsAt(action, 0)).toEqual(neutral);
       expect(cinematicsAt(action, 1)).toEqual(neutral);
       expect(cinematicsAt(action, .12).zoom).toBeGreaterThan(cinematicsAt(action, .62).zoom);
@@ -73,6 +72,14 @@ describe("scene choreography", () => {
       }
     }
     for (const action of ["retrieved", "flagged", undefined] as const) expect(cinematicsAt(action, .62)).toEqual(neutral);
+  });
+
+  it("lets the evaluator enter and leave without dramatic lighting", () => {
+    const cue = { id: "eval", action: "evaluated", scope: "team", source: "backend", title: "Check", evaluation: { phase: "start" } } as const;
+    expect(performanceForCue(cue, 4, 0).x).toBeGreaterThan(7);
+    expect(performanceForCue(cue, 4, 1)).toMatchObject({ x: 4.8, z: 2.3, moving: false });
+    expect(performanceForCue({ ...cue, evaluation: { phase: "finish" } }, 4, 1).x).toBeGreaterThan(7);
+    for (const progress of [0, .2, .6, 1]) expect(cinematicsAt("evaluated", progress)).toEqual({ darkness: 0, heat: 0, zoom: 1 });
   });
 
   it("keeps cinematic seeking deterministic and suppresses camera motion for reduced motion", () => {

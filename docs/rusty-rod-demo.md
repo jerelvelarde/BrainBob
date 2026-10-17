@@ -1,5 +1,7 @@
 # Rusty Rod: memory correctness demo
 
+> Historical scripted walkthrough. This document records the earlier implementation. Its routes now redirect to the live workspace, and its scripted agents and events have been removed. For current instructions, use [Live company workspace](live-workspace.md). The following material is retained as design history, not current run instructions.
+
 The central problem is **memory correctness**: preventing wrong or stale shared knowledge from spreading across agents. Self-improvement is the outcome. The room makes the evidence, decisions, and revisions visible.
 
 This guide follows [the company specification](sample-company.md) and supplements the earlier demo runbook. The frontend now uses Rusty Rod rather than the Krusty Krab/John fixtures. Historical screenshots retain their original names and appearance.
