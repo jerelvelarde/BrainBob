@@ -77,6 +77,8 @@ The [frozen Hub release](https://huggingface.co/datasets/JerelVelarde/bob-benchm
 
 The [recorded organizational scorecard](bobbench/results/20261017-141014/scorecard.md) uses build `5fcd554`, scorer 0.1 and phrase checks 0.2. It reports zero protected-string disclosures in 111 applicable records for maintained memory, with export and session-cache probes unsupported. These are small synthetic-pilot results, not general security guarantees or a run of the latest scorer.
 
+The subsequent [scorer review](docs/bob-pilot-review-20261017.md) found a wrong-current-date answer that passes CATS, empty source/history probes, and no existing-session revocation test. The figures above remain historical results pending a consistent rescore; only search, record, and events were exercised in the recorded surface checks.
+
 Bob is a **public pilot benchmark**, informed by GateMem, MUMBench, CoMemBench, and other prior work documented in the [specification](docs/bob-benchmark-spec.md). These pilots are not official results on those external benchmarks.
 
 ## Published small memory checker
@@ -84,6 +86,8 @@ Bob is a **public pilot benchmark**, informed by GateMem, MUMBench, CoMemBench, 
 Bonan's [memops-small Qwen3-0.6B LoRA](https://huggingface.co/Guangze/memops-small-qwen3-0.6b-lora/tree/8f832dbfecddc028d130c0eee321111f4e34404c) classifies candidate/existing fact pairs as strict JSON `same`, `conflict`, or `unrelated`. It was trained on 144 synthetic pairs for one epoch on an NVIDIA L4. The release includes adapter weights, training code, provenance, and base/tuned predictions. Its [run metadata](https://huggingface.co/Guangze/memops-small-qwen3-0.6b-lora/blob/8f832dbfecddc028d130c0eee321111f4e34404c/runs/20261017-210457/run_meta.json) records a saved-adapter reload check matching three tuned predictions.
 
 The [model card](https://huggingface.co/Guangze/memops-small-qwen3-0.6b-lora/blob/8f832dbfecddc028d130c0eee321111f4e34404c/README.md) reports a **+16.7 percentage-point accuracy gain**, but also **five non-conflict pairs mislabeled as conflict** (base: zero), and half of true conflicts still missed as unrelated. These 60 public, single-annotator synthetic pairs have no independent label review. The subsequent [same-set comparison](docs/evaluation-report.md) scores the production gpt-oss-120b judge at **53/60** and Nemotron Super at **56/60**; the tuned checker does not match them. The result supports further testing, not automatic promotion. The [policy replay](experiments/memops-small/POLICY_REPLAY.md) shows five valid records retired under approved, authorized, newer, unlocked inputs. Deterministic permissions alone do not prevent semantic mistakes; keep the experimental path observe-only or gated, with the existing checker as default. See the [independent rescore and integration evidence](docs/readiness.md).
+
+Those original 60 cases have now been inspected case by case and are development data for further tuning. A [fresh frozen 60-case handoff](benchmarks/bob/round2/README.md) provides label-free inputs and evaluator-local gold for round two. [Observe and confirmation modes](experiments/memops-small/SAFE_MODE.md) are implemented; their controlled tests do not establish live-provider safety or complete the final app demo.
 
 ## Run locally
 
