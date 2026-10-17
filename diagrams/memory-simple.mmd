@@ -1,0 +1,4 @@
+graph LR
+  W["Agents write"] --> C{"Check<br/>same, conflict or new?<br/>allowed to approve?"}
+  C --> B[("Shared brain<br/>org / team / me")]
+  B --> R["Fresh agent reads<br/>only what it may see"]
