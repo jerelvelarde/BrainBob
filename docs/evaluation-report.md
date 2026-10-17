@@ -1,6 +1,6 @@
 # BrainBob Evaluation Report
 
-Status date: 2026-10-17 (Pacific), updated 14:45. Experiments 1 to 5 were written at build `21260c4`; Experiments 6 and 7 cite their own builds. All numbers below are copied from the `results.md` / `summary.json` files linked in each section. Nothing here was re-run for this report.
+Status date: 2026-10-17 (Pacific), updated 14:36. Experiments 1 to 5 were written at build `21260c4`; Experiments 6 and 7 cite their own builds. All numbers below are copied from the `results.md` / `summary.json` files linked in each section. Nothing here was re-run for this report.
 
 ## Supported headlines
 
