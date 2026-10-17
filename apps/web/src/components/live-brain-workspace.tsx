@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Clapperboard, FolderClosed, FolderOpen, History, Maximize2, MessageCircle, Pause, Play, SkipForward, X, ZoomIn, ZoomOut } from "lucide-react";
+import { Clapperboard, FolderClosed, FolderOpen, History, Maximize2, MessageCircle, Pause, Play, SkipForward, ZoomIn, ZoomOut } from "lucide-react";
 import { canRead, sceneScope, scopeLabel, type BackendAnswer, type StoredEvent } from "@/lib/brain-api";
 import { defaultReader, memberForReader, memberId, teamForReader } from "@/lib/sample-company";
 import { sessionStatus, updateActiveSession, type ActiveSession, type SessionActivity } from "@/lib/active-session";
@@ -12,6 +12,7 @@ import { cinematicsAt, type SceneCue } from "@/lib/scene-animation";
 import { useBrainBackend } from "@/lib/use-brain-backend";
 import { LiveMemoryPanel } from "./live-memory-panel";
 import { LiveSessionPanel } from "./live-session-panel";
+import { SessionChatDialog } from "./session-chat-dialog";
 import type { SceneHandle } from "./brain/brain-scene";
 
 const BrainScene = dynamic(() => import("./brain/brain-scene"), { ssr: false });
@@ -25,7 +26,8 @@ export function LiveBrainWorkspace() {
 // Remount every identity-bound cache, request, chat, and event cursor together.
 function MemberWorkspace({ reader, onReaderChange }: { reader: string; onReaderChange: (reader: string) => void }) {
   const readerRef = useRef(reader);
-  const [panel, setPanel] = useState<"chat" | "memory" | "session" | null>(null);
+  const [panel, setPanel] = useState<"chat" | "memory" | null>(null);
+  const [chatInspection, setChatInspection] = useState<"session" | "memory" | null>(null);
   const [session, setSession] = useState<ActiveSession | null>(null);
   const [chatLoaded, setChatLoaded] = useState(false);
   const [selected, setSelected] = useState<string>();
@@ -40,7 +42,7 @@ function MemberWorkspace({ reader, onReaderChange }: { reader: string; onReaderC
   const [timelineOpen, setTimelineOpen] = useState(false);
   const [notice, setNotice] = useState("");
   const [citations, setCitations] = useState<string[]>([]);
-  const chatButton = useRef<HTMLButtonElement>(null), memoryButton = useRef<HTMLButtonElement>(null), chatClose = useRef<HTMLButtonElement>(null);
+  const chatButton = useRef<HTMLButtonElement>(null), memoryButton = useRef<HTMLButtonElement>(null);
   const sessionButton = useRef<HTMLButtonElement>(null);
   const camera = useRef<SceneHandle | null>(null);
   const onLive = useCallback((event: StoredEvent, state: BackendState) => {
@@ -54,7 +56,6 @@ function MemberWorkspace({ reader, onReaderChange }: { reader: string; onReaderC
     const update = () => { setReducedMotion(media.matches); if (media.matches) setPlaying(false); };
     update(); media.addEventListener("change", update); return () => media.removeEventListener("change", update);
   }, []);
-  useEffect(() => { if (panel === "chat") chatClose.current?.focus(); }, [panel]);
   const displayed = useMemo(() => cursor === null ? backend.state.memories : memoriesAt(backend.state.events, cursor), [backend.state, cursor]);
   const visibleMemories = useMemo(() => Object.values(displayed).filter((m) => canRead(m.scope, reader)), [displayed, reader]);
   const visibleEvents = useMemo(() => backend.state.events.filter((e) => eventMemoryIds(e, backend.state.events).some((id) => backend.state.memories[id] && canRead(backend.state.memories[id].scope, reader))), [backend.state, reader]);
@@ -67,7 +68,9 @@ function MemberWorkspace({ reader, onReaderChange }: { reader: string; onReaderC
   const inspect = useCallback((id?: string) => { setSelected(id); setPanel("memory"); }, []);
   const onAnswer = useCallback((answer: BackendAnswer) => { setCitations(answer.cited_ids); }, []);
   const onSessionActivity = useCallback((event: SessionActivity) => { setSession((current) => updateActiveSession(current, event, reader)); }, [reader]);
-  function closePanel() { const previous = panel; setPanel(null); (previous === "chat" ? chatButton : previous === "session" ? sessionButton : memoryButton).current?.focus(); }
+  function closePanel() { const previous = panel; setPanel(null); (previous === "chat" ? chatButton : memoryButton).current?.focus(); }
+  function openChat(file = false) { setChatLoaded(true); setChatInspection(file ? "session" : null); setPanel("chat"); }
+  function inspectInChat(id: string) { setSelected(id); setChatInspection("memory"); }
   function retrace(seq: number) {
     const event = backend.state.events.find((e) => e.seq === seq);
     if (!event) { setNotice("This event is not in the loaded log yet."); return; }
@@ -80,25 +83,26 @@ function MemberWorkspace({ reader, onReaderChange }: { reader: string; onReaderC
   const shownEvent = cursor === null ? undefined : backend.state.events.find((e) => e.seq === cursor);
 
   return <main className="app-shell" data-dramatic={cinematicsAt(cue?.action, progress).darkness > .5 ? cue?.action : undefined}>
-    <section className="scene-view" aria-label="Brain visualization"><BrainScene playing={playing} speed={1} reducedMotion={reducedMotion} cue={cue} seek={seek} onProgress={onProgress} reader={reader}
-      session={{ label: memberForReader(reader)?.label.split(" ")[0] ?? "Bob", status: sessionStatus(session), working: session?.status === "working", selected: panel === "session", onOpen: () => setPanel("session") }}
+    <section className="scene-view" aria-label="Brain visualization"><BrainScene playing={playing && panel !== "chat"} speed={1} reducedMotion={reducedMotion} cue={cue} seek={seek} onProgress={onProgress} reader={reader}
+      session={{ label: memberForReader(reader)?.label.split(" ")[0] ?? "Bob", status: sessionStatus(session), working: session?.status === "working", selected: panel === "chat", onOpen: () => openChat(), onFile: () => openChat(true) }}
       selectedScope={cue?.scope ?? "all"} selectedMemory={selected ?? ""} flaggedScopes={[...new Set(visibleMemories.filter((m) => m.flagged).flatMap((m) => { const scope = sceneScope(m.scope); return scope ? [scope] : []; }))]} onSelect={() => {}} onScope={(scope) => inspect(visibleMemories.find((m) => sceneScope(m.scope) === scope && m.flagged)?.id ?? visibleMemories.find((m) => sceneScope(m.scope) === scope && m.status !== "retired")?.id)}
       onWorker={setNotice} onReady={onReady} /></section>
     <header className="floating-header"><a className="brand" href="/" aria-label="BrainBob home"><span className="bob-mark" aria-hidden="true"><i /><i /><b /><em /></span><span>BrainBob</span></a>
       <span className={`connection-state ${backend.connection}`} role="status">{backend.connection === "live" ? "Connected" : backend.connection === "syncing" ? "Loading history…" : backend.connection === "offline" ? "Backend offline" : "Connecting…"}</span>
     </header>
     <div className="panel-launchers"><a className="rehearsal-link" href="/demo" aria-label="Open Rusty Rod correctness demo"><Clapperboard size={18} /><span>Demo</span></a>
-      <button ref={sessionButton} aria-label="Open active session file" aria-expanded={panel === "session"} className={panel === "session" ? "selected" : ""} onClick={() => panel === "session" ? closePanel() : setPanel("session")}><FolderOpen size={18} /><span>Session</span></button>
-      <button ref={chatButton} aria-label="Chat" aria-expanded={panel === "chat"} className={panel === "chat" ? "selected" : ""} onClick={() => { if (panel === "chat") closePanel(); else { setPanel("chat"); setChatLoaded(true); } }}><MessageCircle size={18} /><span>Chat</span></button>
+      <button ref={sessionButton} aria-label="Open active session file" aria-expanded={panel === "chat" && chatInspection === "session"} onClick={() => openChat(true)}><FolderOpen size={18} /><span>Session</span></button>
+      <button ref={chatButton} aria-label="Chat" aria-haspopup="dialog" aria-expanded={panel === "chat"} className={panel === "chat" ? "selected" : ""} onClick={() => openChat()}><MessageCircle size={18} /><span>Chat</span></button>
       <button ref={memoryButton} aria-label="Memories" aria-expanded={panel === "memory"} className={panel === "memory" ? "selected" : ""} onClick={() => panel === "memory" ? closePanel() : inspect()}><FolderClosed size={18} /><span>Memories</span></button>
     </div>
     <MemberSelect value={reader} onChange={changeReader} />
-    <section className="floating-panel chat-panel live-chat-panel" aria-label="Crew chat" hidden={panel !== "chat"} onKeyDown={(e) => { if (e.key === "Escape") closePanel(); }}>
-      <div className="panel-heading"><div><MessageCircle size={18} /><h2>The crew · {scopeLabel(reader)}</h2></div><button ref={chatClose} className="icon-button" aria-label="Close crew chat" onClick={closePanel}><X size={18} /></button></div>
-      {chatLoaded ? <SceneChat key={reader} reader={reader} readOnly={cursor !== null} memories={backend.state.memories} onAnswer={onAnswer} onInspect={inspect} onSessionActivity={onSessionActivity} /> : null}
-    </section>
+    <SessionChatDialog open={panel === "chat"} reader={reader} onClose={closePanel} returnFocus={chatButton} fileOpen={chatInspection === "session"}
+      onFile={() => setChatInspection(chatInspection === "session" ? null : "session")}
+      inspection={chatInspection === "session" ? <LiveSessionPanel reader={reader} session={session} onClose={() => setChatInspection(null)} onChat={() => setChatInspection(null)} onInspect={inspectInChat} />
+        : chatInspection === "memory" ? <LiveMemoryPanel actor={memberId(reader)} memories={visibleMemories} selected={selected} events={backend.state.events.filter((e) => cursor === null || e.seq <= cursor)} readOnly={cursor !== null} citedIds={citations} onSelect={setSelected} onClose={() => setChatInspection(null)} onRetrace={(seq) => { closePanel(); retrace(seq); }} /> : null}>
+      {chatLoaded ? <SceneChat key={reader} reader={reader} readOnly={cursor !== null} memories={backend.state.memories} onAnswer={onAnswer} onInspect={inspectInChat} onSessionActivity={onSessionActivity} /> : null}
+    </SessionChatDialog>
     {panel === "memory" ? <LiveMemoryPanel key={reader} actor={memberId(reader)} memories={visibleMemories} selected={selected} events={backend.state.events.filter((e) => cursor === null || e.seq <= cursor)} readOnly={cursor !== null} citedIds={citations} onSelect={setSelected} onClose={closePanel} onRetrace={retrace} /> : null}
-    {panel === "session" ? <LiveSessionPanel reader={reader} session={session} onClose={closePanel} onChat={() => { setPanel("chat"); setChatLoaded(true); }} onInspect={inspect} /> : null}
     <div className="camera-controls"><button className="icon-button" aria-label="Zoom in" onClick={() => camera.current?.zoom(1.15)}><ZoomIn size={18} /></button><button className="icon-button" aria-label="Zoom out" onClick={() => camera.current?.zoom(1 / 1.15)}><ZoomOut size={18} /></button><button className="icon-button" aria-label="Reset isometric camera" onClick={() => camera.current?.reset()}><Maximize2 size={18} /></button></div>
     <div className="bottom-controls">
       {backend.error ? <p className="scene-notice" role="alert">{backend.error}</p> : null}

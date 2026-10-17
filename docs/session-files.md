@@ -15,7 +15,7 @@ flowchart LR
 
 ## The demo file
 
-At `/demo`, select **Maya Flores**, open **Session file**, and download `sales-01-atlas-session.md`. A seated Bob stays at the center desk with the file; clicking Bob, the folder, or its label opens the same panel. Clicking a cabinet opens its tier inspector with accessible and closed drawers; its session-file button opens the assembled file. The file contains:
+At `/demo`, select **Maya Flores**, open **Session file**, and download `sales-01-atlas-session.md`. A seated Bob stays at the center desk with the file. Clicking the table, Bob, or nameplate opens a full-screen personal chat; clicking the folder or its label opens that chat with the file inspector. Clicking a cabinet opens its tier inspector with accessible and closed drawers; its session-file button opens the assembled file. The file contains:
 
 - Individual: Maya’s preference for a concise, three-sentence client update.
 - Team: Sales guidance to cite the approved commitment and preserve the reporting goal.
@@ -42,6 +42,8 @@ The client brief is published into Rusty Rod organization memory. Atlas Harbor i
 The frontend assembler is deterministic and uses authored `atlas-update` relevance tags. Its Markdown download is real, but the scenario and sources are synthetic. It does not call a relevance model, establish context completeness for arbitrary tasks, or run Crusoe inference. All fixture data ships in the browser; client filtering is a presentation preview, not an access boundary.
 
 The main HTTP/SSE route also gives the selected member a seated Bob and an inspectable session file. The current chat is the session boundary: Ask drives Working, Answer ready, Failed, or Stopped state. Remember, Usefulness, and Review do not replace its answer file. Bob writes while an Ask is in flight; pause and reduced motion freeze the gesture. The file can also be opened through the keyboard-accessible Session button.
+
+The table opens a full-screen CopilotKit conversation with a personal greeting and three memory-based starter prompts, one per tier. Suggestions use accessible current records; retired and flagged records are excluded, while tentative context is labeled as an open question. With no loaded records, the prompts ask to discover context instead of inventing facts. Closing the chat preserves its conversation; changing members clears it. The file opens beside the conversation on desktop and covers it on mobile. The `/demo` chat returns explicitly scripted context previews with no inference; the main route retains backend requests.
 
 After Ask completes, the file snapshots the returned task ID, question, answer, cited IDs, and accessible records from `/ask.memories`, grouped by Individual, Team, and Organization. It can be downloaded as JSON. Subsequent SSE changes do not rewrite this snapshot; the next Ask starts a new file, and switching members clears the previous member’s chat and file. Before Ask, or after failure/cancellation, the UI does not invent a completed file. This is the current chat’s file, not a historical file reconstructed by event retrace.
 

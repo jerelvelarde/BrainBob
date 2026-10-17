@@ -16,6 +16,10 @@ The separately recorded [backend audit demo](../backend/demo/DEMO.md) uses Krust
 
 CopilotKit v2 renders chat through a self-managed AG-UI agent. The adapter emits run/message lifecycle events around the backend's HTTP responses; it does not pretend those responses are token streams or use the old scripted command parser.
 
+Click the session table or seated Bob to open the full-screen personalized conversation. Maya sees “Hey Maya, Welcome back!” and three starters drawn from her individual, Sales, and organization memory. These deterministic suggestions use accessible records, omit retired/flagged memories, and label tentative context. Empty tiers get discovery prompts with no invented saved facts. CopilotKit owns the composer, suggestion submission, send/stop state, and transcript. Closing the dialog preserves the conversation; changing members starts fresh. Session-file and citation inspection stay inside the dialog, with a side panel on desktop and a separate overlay on mobile. Escape closes the chat and restores focus to its launcher.
+
+The implementation uses the installed v2 [CopilotChat](https://docs.copilotkit.ai/reference/v2/components/CopilotChat) and [CopilotChatView](https://docs.copilotkit.ai/reference/v2/components/CopilotChatView) slots with static [useConfigureSuggestions](https://docs.copilotkit.ai/reference/v2/hooks/useConfigureSuggestions). No extra suggestion-generation model call is made. Browser checks covered a prompt-to-HTTP-answer flow, session-file inspection, preserved conversation, mobile layout/focus, and an unavailable-backend error using the local fixture.
+
 | Control | Request | Result shown |
 | --- | --- | --- |
 | Ask | `POST /ask {question, reader}` | Actual answer and clickable cited memories |

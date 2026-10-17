@@ -12,6 +12,8 @@ The three fixed cabinets represent Individual, Team, and Organization. Drawers r
 
 Use Next, Previous, or the step selector to retrace; Replay repeats the current animation. Each step chooses a suggested viewer, and the viewer can be changed independently to inspect the intended scope policy. Session file opens the selected person’s task-specific dossier, including individual, team, and organization sections with accessible sources. Download session .md exports that assembled context. The desk folder also opens it. Cabinets open a tier inspector with available memory and closed drawers. Choosing a cabinet does not switch identity or grant access. Evidence opens the separate floating inspector. A record or citation opens its source; Export this view downloads only that member's synthetic records, sources, decision details, and audit metadata.
 
+Click the table or seated Bob for a full-screen personal chat. Maya’s welcome includes three prompts based on her accessible memory tiers. Selecting a prompt shows an explicitly **scripted memory preview**, not a generated answer; arbitrary questions also return the selected file context. Session file opens beside the conversation, or over it on mobile. Back to brain preserves the conversation for the same member and walkthrough step. Changing member or step creates a fresh preview context. Use the main route with the backend for actual answering.
+
 | Step | Suggested viewer | What to show |
 | --- | --- | --- |
 | Approved commitment | Maya Flores (`sales-01`) | Organization revision 1 says November 6, 2026, citing `atlas-approval-01`. The reporting goal is a separate valid record. |

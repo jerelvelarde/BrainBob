@@ -267,8 +267,10 @@ export default function BrainScene(props: SceneProps) {
     {banks.map((bank) => <Cabinet key={bank.scope} bank={bank} reader={reader} selected={props.selectedScope === bank.scope} active={cue?.scope === bank.scope} onClick={() => { props.onScope(bank.scope); props.onSelect(bank.memory); }} />)}
     {props.flaggedScopes?.map((scope) => <Label key={scope} text="FLAGGED · OWNER REVIEW" position={[scopeCharacters[scope].x, 3.35, -3.8]} width={2.6} />)}
     <Desk position={[-3.6, 0, .9]} />
-    <Desk position={[.2, 0, .6]} occupied={Boolean(props.session)} />
-    {props.session ? <group position={[.2, 0, .6]}><SessionWorker session={props.session} animate={props.playing && !props.reducedMotion} /></group> : null}
+    <group onClick={props.session ? (event) => { event.stopPropagation(); props.session?.onOpen(); } : undefined}>
+      <Desk position={[.2, 0, .6]} occupied={Boolean(props.session)} />
+      {props.session ? <group position={[.2, 0, .6]}><SessionWorker session={props.session} animate={props.playing && !props.reducedMotion} /></group> : null}
+    </group>
     <Desk position={[3.8, 0, -1]} rotation={-.1} audit={props.cue?.evaluation?.phase !== "check"} />
     {cue ? <EventStage key={cue.id} cue={cue} playing={props.playing} speed={props.speed} reducedMotion={props.reducedMotion} seek={props.seek} onProgress={props.onProgress} cinematics={cinematics} /> : routes.map((_, index) => <Walker key={index} index={index} playing={props.playing} speed={props.speed} reducedMotion={props.reducedMotion} event={props.event} onClick={() => props.onWorker(index === 4 ? "Inspector BrainBob checks memories against their evidence." : index === 0 ? "Curator BrainBob files new memories and revisions." : "Runner BrainBob delivers a session file to the agent.")} />)}
     <CameraRig onReady={props.onReady} cinematics={cinematics} />
