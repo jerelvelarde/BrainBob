@@ -76,6 +76,7 @@
         <nav class="timeline-nav" aria-label="Changelog timeline">
           <h2>OCT 17 / TIMELINE</h2>
           <ul>
+            <li><a href="#2026-10-17-160830-vercel-preparation"><time datetime="2026-10-17T16:08:30-07:00">4:08:30 PM PDT</time>Vercel and persistent backend preparation</a></li>
             <li><a href="#2026-10-17-144758-round2-freeze-review"><time datetime="2026-10-17T14:47:58-07:00">2:47:58 PM PDT</time>Fresh checker evaluation and scorer review</a></li>
             <li><a href="#2026-10-17-143714-evaluation-report"><time datetime="2026-10-17T14:37:14-07:00">2:37:14 PM PDT</time>Evaluation report update</a></li>
             <li><a href="#2026-10-17-143446-bob-org-benchmark-pilot"><time datetime="2026-10-17T14:34:46-07:00">2:34:46 PM PDT</time>Bob org benchmark pilot</a></li>
@@ -114,6 +115,19 @@
       <h2 class="date-heading">October 17, 2026 <span aria-hidden="true">/</span> Shared Brain <span aria-hidden="true">/</span> Pacific Time (PDT)</h2>
 
       <!-- Add new entries here, newest first. Use real timestamps and link the evidence. -->
+
+      <article class="entry" id="2026-10-17-160830-vercel-preparation">
+        <div class="time"><time datetime="2026-10-17T16:08:30-07:00">4:08:30 PM PDT</time><span>Frontend deployment commit time</span></div>
+        <div><h2>Vercel frontend and persistent backend prepared</h2>
+          <ul>
+            <li><span class="label">Prepared</span> Docker and Render disk configuration for the complete Python API, with shared demo access, health checks and persistent memory/event paths.</li>
+            <li><span class="label">Added</span> an authenticated streaming Vercel route with a 300-second function budget and finite, resumable backend SSE sessions.</li>
+            <li><span class="label">Verified</span> 291 backend tests, 43 frontend tests, production build, and local authenticated HTTP/SSE integration using temporary data and deterministic models.</li>
+          </ul>
+          <p class="note">Deployment preparation only: no hosted release or live model-quality claim. Docker daemon unavailable; container build and hosted persistence/streaming checks remain pending. Shared password protects fictional demo personas, not individual identities.</p>
+          <p class="note"><a href="https://github.com/jerelvelarde/BrainBob/commit/b794d9436de1a01fab0068489d27a9dcebffab42">Backend commit b794d94</a> · <a href="https://github.com/jerelvelarde/BrainBob/commit/66e93a7f8fcbad2c502272dec7ff096ef2222209">Vercel commit 66e93a7</a> · <a href="../deployment-preparation-20261017/README.md">Validation evidence</a> · <a href="../../docs/deployment.md">Deployment guide</a></p>
+        </div>
+      </article>
 
       <article class="entry" id="2026-10-17-144758-round2-freeze-review">
         <div class="time"><time datetime="2026-10-17T14:47:58-07:00">2:47:58 PM PDT</time><span>Review commit time</span></div>
