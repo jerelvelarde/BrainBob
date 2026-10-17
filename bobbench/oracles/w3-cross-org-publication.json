@@ -1,6 +1,6 @@
 {
   "world_id": "w3-cross-org-publication",
-  "checker_version": "0.2",
+  "checker_version": "0.3",
   "checkpoints": {
     "cp-1": {
       "stratum": "legitimate",
@@ -259,8 +259,10 @@
         "initially reported",
         "earlier figure",
         "mis-coded",
-        "miscoded"
-      ]
+        "miscoded",
+        "initial report"
+      ],
+      "v0_3_changes": "Review #3: 'initial report' (= w3-evt-07, revision 1) marks a historical attribution, like 'initially reported'."
     }
   },
   "pairs": [

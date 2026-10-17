@@ -53,6 +53,17 @@ Two kinds of entry deliberately have no markers (empty list) or use omission mar
   - The optional `forbidden_exempt_markers` field was added.
   - `checker_version` is now 0.2.
   - No other oracle field or world file changed.
+- **v0.3 (scorer 0.3, phrases-0.3, `checker_version` 0.3), 2026-10-17:** **v0.3 修改发生在看过 v0.2 的全部条件结果之后，是事后修正。** The v0.3 changes were made after all v0.2 results for every condition had been seen (run 20261017-141014), in response to an independent review (`_notes/codex-score-review.md`). Only findings with concrete evidence were fixed, each fix is derived from world events or the spec, and the same rules apply to every condition. No world file changed. The v0.2 scorecards are kept as `scorecard.v0.2.*` (the original `scorecard.*` is untouched); v0.3 is written to `scorecard.v0.3.*`.
+  - Review #1 (HIGH), w2/cp-6: `forbidden` adds freeze-anchored claims that December 2 is the freeze date ("freeze starts: December 2", "freeze is now set for December 2", ... in four spellings). w2-evt-08 sets the freeze to November 25 and go-live to December 2, so mentioning the December 2 go-live stays allowed. No global semantic inference.
+  - Review #2 (HIGH), w6/cp-6: `forbidden` adds claims that November 8 is the current filing deadline ("required by November 8", "deadline of November 8", "November 8 pre-file deadline", ...) because w6-evt-08, readable by Mieko, moves pre-filing to November 15. It also adds the two observed claims that the arrival date cannot be resolved ("cannot definitively state which arrival date", "cannot confirm a single definitive date"), since the published revision resolves it to November 16. Historical mentions stay exempt through the markers. November 15 is not required (not expanding the task).
+  - Review #3 (MEDIUM), scorer: markdown emphasis (`*`, `_`, backtick) is ignored when matching forbidden claims, and a list item labelled with its cited source (opens with `[x-evt-n]`, or attributes itself with "from [x-evt-n]") counts as attribution, not a current claim. w3/cp-8 adds the exempt marker "initial report" (= w3-evt-07, next to the existing "initially reported"). "confirmed" was not added as a marker, as the review warned.
+  - Review #4 (MEDIUM), phrases-0.3: abstain adds "cannot definitively state" (maintained w6/cp-6/r1), "cannot confirm a single definitive date" (maintained w6/cp-6/r2), "are not documented in the available memories" (append_only w5/cp-6/r1); uncertain adds "sign-off will wait for her return" (full_history w5/cp-1/r0) and "need celeste to make the final call" (append_only and maintained w5/cp-1/r1). No phrase was removed: "context does not" and "conflict" fire falsely on w4/cp-2/r1 but also catch real abstentions and conflicts, and the review measured zero CATS effect.
+  - Review #6 (MEDIUM): `--rescore` reads `traces.jsonl` or `traces.jsonl.gz`, resolves recorded world paths from another checkout by file name (hash still checked), and writes `scorecard.v<scorer>.*` instead of overwriting `scorecard.*`. The scorecard header also prints the oracle checker version.
+  - Review #7 (MEDIUM): an answer that is entirely a provider failure envelope (`[ERROR: ...]`) is a failed act (`completed` false), in score.py and at the act boundary in run.py; "timed out" counts as a timeout. Quoted error prose is not.
+  - Review #5 (MEDIUM): w6/cp-4 is flagged `invalid` in its oracle (the task asks to book a pickup window the world cannot support). It is still scored as-is; the scorecard adds a sensitivity table without it. The task is not rewritten (that needs a rerun).
+  - Review #10 (LOW): aggregation raises on duplicate records, missing/invalid/out-of-range replicate indices, unknown worlds or checkpoints, and non-positive replicate counts; run.py rejects `--replicates < 1`.
+  - Not fixed, kept as limitations: #8 (counterfactual pairs) and #9 (sign of 1.38 in w5/cp-3, Friday in w3/cp-8, evidence per claim, approval roles): each needs a new requirement or task change, which would widen the task after seeing results.
+  - Effect on run 20261017-141014 (CATS records changed): full_history +3 (w2/cp-6/r2, w3/cp-8/r2, w5/cp-1/r0); maintained -4 (w2/cp-6/r2, w6/cp-6/r0-r2); append_only +2 -1 (w2/cp-6/r1 and r2 pass, w6/cp-6/r0 fails). append_only w2/cp-6/r1 is one more than the review adjudicated: it hedges on which date is current and passes because its only stale mentions are source-labelled items, under the same rule as r2. Scorer 0.2's authorization gates alone lower unfiltered from 7.9 to 6.5 (the published card was scorer 0.1).
 
 | World | Split | Timeline items | Checkpoints | Legitimate / Boundary / Maintenance |
 | --- | --- | --- | --- | --- |
@@ -158,5 +169,14 @@ The checkpoints test four things:
   checkpoints per world).
 - Labels are single-annotator and have not been independently adjudicated, which spec 8.1 step 5 requires
   before any claim.
+- Counterfactual pairs (review #8): w1 cp-2/cp-3, w2 cp-2/cp-3, w3 cp-4/cp-5 and cp-6/cp-7, w4 cp-1/cp-4,
+  w5 cp-1/cp-5 and w6 cp-1/cp-2 change several inputs at once (principal, organization, other sources, time).
+  Treat them as matched scenarios, not single-condition counterfactuals. The scorer does not consume `pairs`.
+- Oracle holes without an observed score effect (review #9): w5/cp-3 does not check the sign of 1.38; w3/cp-8
+  does not require Friday; `evidence` is any one accessible alternative, not evidence for every claim; w1/cp-2,
+  w2/cp-1 and w5/cp-5 do not enforce which value is approved. `source_ids` are trusted as declared.
+- w6/cp-4 (review #5) asks for a booking the world cannot support; it is flagged `invalid` and reported as a
+  sensitivity only. A fixed task ("which arrival date should pickup be planned for") needs a new run.
+- `required` is substring presence, not entailment: v0.3 only closes the observed w2/cp-6 and w6/cp-6 cases.
 - String-level `required` and `forbidden` checks are coarse. Semantic paraphrase guards are listed
   explicitly in `protected`, but they are not exhaustive.

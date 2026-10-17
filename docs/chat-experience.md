@@ -21,3 +21,15 @@ Clicking a source opens the existing original-conversation and correction-histor
 On narrow screens, inspection covers the conversation and makes it inert. Escape dismisses inspection first, then the chat. Closing chat returns to the brain and keeps the current desk's conversation available.
 
 This interface uses the existing CopilotKit message, Markdown, composer, copy, cancellation, and tool-rendering primitives. It adds no backend endpoints and does not automatically persist every chat message as memory.
+
+## Brain beside the conversation
+
+The desktop chat keeps a wide 3D memory office beside the transcript. The same event queue drives this view and the full brain view, with one mounted scene for the selected desk. Source inspection uses the lower half of the panel so the Bobs remain visible during correction and retirement. On mobile, **Brain & memory** opens the panel over the conversation; closing it returns focus to the trigger.
+
+One memory operator sits at the side when idle; the three active-session Bobs remain seated at their desks. A single operator performs each event. For checks, Evaluator Bob quietly enters from the right, inspects the relevant records, and leaves; evaluation has no panic, spotlight, darkening, or camera punch. Movement represents a memory operation: filing, retrieving, correcting, retiring, promoting, locking, flagging, resolving, or evaluating. Correctness-audit checks carry source verdict labels, separately from the cited-memory usefulness checks. Correction bookkeeping and retirement of a superseded predecessor do not trigger duplicate fire scenes. Retirement is a tombstone with history, not hard deletion.
+
+Starting a person’s first chat, switching people, or creating a new session loads permitted context through the actual `/memories` endpoint. After that load succeeds, a presentation-only sequence collects a file from each non-empty accessible tier and delivers it to the selected desk. It is labeled **Session file**; it does not invent an SSE event, call inference, or assert that all saved context was used in an answer. Empty/failed loads do not invent files, and reconnecting does not repeat the introduction. Historical SSE replay remains state-only.
+
+Cabinet and drawer counts use accessible, non-retired records. Click a 3D cabinet or a folder row to open Individual, Team, or Organization files. The folder browser lists all accessible teams or organizations, then drills into their files with breadcrumbs and search. The Individual cabinet opens all current-person files directly. Inaccessible teams, people, and the separate client organization are omitted from both the active reader’s cabinet drawers and the folder browser. Source/history inspection stays available on each file. The activity list is explicitly recorded history. The current action shows animation progress, not backend processing progress.
+
+Reduced-motion mode keeps state and recorded activity current without waiting for choreography. Pause and skip affect presentation only. Backend changes and chat responses never wait for a Bob to finish walking.

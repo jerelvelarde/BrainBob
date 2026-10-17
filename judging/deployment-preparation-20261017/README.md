@@ -16,6 +16,10 @@ Frontend commit time: 2026-10-17T16:08:30-07:00 (America/Los_Angeles). These res
 - `deployment-smoke.mjs` against the same servers — passed UI/API authentication, direct-backend protection, cross-origin write rejection, immediate SSE delivery and reconnect/resume. The fixture used a five-second SSE lifetime to exercise expiry quickly; hosted configuration uses 240 seconds.
 - Tests use isolated temporary data and deterministic model doubles; no provider calls or accuracy claims.
 
+## Integration with the latest PR work
+
+Merged the incoming PR head `75d3816618f53f1bb6ffdc1d142890b5c61bbb7f` without rewriting either history. Both proof-of-work entries and all existing screenshot evidence were retained. The combined frontend passed **9 files / 46 tests** and the production Turbopack build with TypeScript. Backend implementation did not change during the merge; its 291-test result above remains applicable.
+
 ## Limits
 
 Docker daemon was unavailable, so the image was not built or run. No Render service or Vercel deployment was created. Remote build, real inference, hosted streaming, provider credentials and persistent-disk restart verification remain release checks. The shared password authorizes access to fictional personas; it is not individual user authentication. Render Blueprint provisioning requires paid hosting and disk.
