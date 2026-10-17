@@ -26,7 +26,7 @@ export type SessionFile = ReturnType<typeof buildSessionFile>;
 
 export function sessionFileMarkdown(file: SessionFile) {
   const lines = [`# Agent session: ${file.member.name}`, "", `Task: ${file.task.title}`, `Client: ${file.client}`,
-    `Acting for: ${file.member.id} (${file.member.reader})`, `Team cabinet: ${file.team}`, `Snapshot: walkthrough step ${file.snapshot + 1}`,
+    `Acting for: ${file.member.id} (${file.member.reader})`, `Team: ${file.team}`, `Snapshot: walkthrough step ${file.snapshot + 1}`,
     "", "Scripted fixture. Task relevance is authored; no live inference or server authorization is claimed.",
     "Use only active records as facts. Tentative estimates and unresolved questions are context, not approved commitments."];
   if (file.missingEvidenceCount) lines.push("", `Incomplete evidence: ${file.missingEvidenceCount} relevant record(s) omitted because their evidence was unavailable. Do not assume this context is complete.`);

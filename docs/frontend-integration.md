@@ -26,7 +26,7 @@ CopilotKit v2 renders chat through a self-managed AG-UI agent. The adapter emits
 | Retire / lock | `POST /memories/{id}/retire` or `/lock` | Backend status change |
 | Owner resolution | `POST /memories/{id}/resolve` | Keep and clear flag, retire, or correct |
 
-The member selector has 18 Rusty Rod members across Executive, Sales, and Engineering. For example, Maya Flores (`sales-01`) reads `rusty-rod/sales/sales-01`, `rusty-rod/sales`, and `rusty-rod`. Executive membership adds no descendant access. Remember writes into the selected member’s individual scope. Changing readers starts a fresh chat context. The three cabinets are fixed teams: Executive, Sales, and Engineering. Logical access levels stay on the records; animations visit the represented member’s team cabinet. Display names are synthetic; request authors and owner identifiers retain stable member IDs.
+The member selector has 18 Rusty Rod members across Executive, Sales, and Engineering. For example, Maya Flores (`sales-01`) reads `rusty-rod/sales/sales-01`, `rusty-rod/sales`, and `rusty-rod`. Executive membership adds no descendant access. Remember writes into the selected member’s individual scope. Changing readers starts a fresh chat context. The three cabinets are Individual, Team, and Organization. Their drawers represent members, teams, and organizations. Animations visit the record’s matching tier; only the represented member’s own, team, and organization drawers appear accessible. Display names are synthetic; request authors and owner identifiers retain stable member IDs.
 
 **Acting as (demo)** supplies an owner string, not an authenticated identity. The UI disables another owner's resolution controls, and backend 403s remain visible. The current global memory/event endpoints and client filtering are demonstration behavior, not an authorization boundary.
 
@@ -37,7 +37,7 @@ The member selector has 18 Rusty Rod members across Executive, Sales, and Engine
 | Event | Scene behavior |
 | --- | --- |
 | `memory.added` | File a new paper; `supersedes` selects the correction/writing scene |
-| `memory.retrieved` | A session-folder visit to the member’s team cabinet for each visible scope, retaining the real memory IDs |
+| `memory.retrieved` | A session-folder visit to the matching tier cabinet for each visible scope, retaining the real memory IDs |
 | `answer.produced` | Deliver an answer with citations |
 | `evaluation.started` | Evaluator enters; caption explicitly says **checks the cited memories** |
 | `memory.checked` | Visit that record's cabinet; helpful, harmful, no-flip, or failed-confirmation pose |
@@ -47,7 +47,7 @@ The member selector has 18 Rusty Rod members across Executive, Sales, and Engine
 | `memory.flagged` | Red flag on the cabinet; locked record stays available |
 | `memory.locked` / owner keeps | Padlock / owner resolution scene |
 
-Supersession retirement does not trigger the fire scene. `memory.corrected`, `evidence.recorded`, and retire/correct resolution bookkeeping do not duplicate scenes already driven by other events. Unscoped `episode.ingested` and `memory.rejected` events update the log but cannot safely be attributed to a cabinet; their request receipts stay in chat. The 22 registered Rusty Rod paths retain individual, team, or organization metadata. A presentation projection supplies the member’s team-cabinet position; unregistered paths are not silently assigned to it. This does not change the backend event schema.
+Supersession retirement does not trigger the fire scene. `memory.corrected`, `evidence.recorded`, and retire/correct resolution bookkeeping do not duplicate scenes already driven by other events. Unscoped `episode.ingested` and `memory.rejected` events update the log but cannot safely be attributed to a cabinet; their request receipts stay in chat. The 22 registered Rusty Rod paths retain individual, team, or organization metadata. A presentation projection supplies the logical tier’s cabinet position and the reader selects the accessible drawer; unregistered paths are not silently assigned to a tier. This does not change the backend event schema.
 
 Retrace projects the event log at a selected sequence and poses the corresponding scene. It never resends requests. Mutations and chat input are disabled while retracing; the full correction chain remains available as historical context. Return to live restores current state without bursting through missed animations. Reduced motion uses static poses and manual event selection.
 

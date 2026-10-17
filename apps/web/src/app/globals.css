@@ -179,7 +179,7 @@ blockquote { font-size: 12px; color: var(--muted); line-height: 1.7; margin: 13p
 .session-cover h3 { margin: 9px 0; font-size: 25px; letter-spacing: -.7px; }
 .session-cover p { font-size: 14px; line-height: 1.5; margin: 0 0 10px; }
 .session-tabs { display: flex; gap: 7px; flex-wrap: wrap; margin: 15px 0; }
-.session-tabs span { padding: 7px 9px; border-radius: 7px; font-size: 11px; text-transform: capitalize; background: #e1edf0; }
+.session-tabs button { padding: 7px 9px; border-radius: 7px; font-size: 11px; text-transform: capitalize; background: #e1edf0; }
 .session-tabs [data-scope=team] { background: #f6e8c8; }.session-tabs [data-scope=organization] { background: #ebe2f3; }
 .session-tabs b { margin-left: 5px; }
 .session-records article { border-bottom: 1px solid var(--line); padding: 2px 0 12px; }
@@ -188,3 +188,9 @@ blockquote { font-size: 12px; color: var(--muted); line-height: 1.7; margin: 13p
 .session-history { font-size: 12px; color: #80648e; text-align: left; }
 .reader-control select { max-width: 170px; }
 @media(max-width:760px) { .reader-control select { max-width: 150px; }.correctness-demo .floating-header { max-width: 185px; }.correctness-demo .panel-launchers { gap: 5px; } }
+
+.tier-drawers { margin: 12px 0 18px; }
+.tier-drawer { display: flex; align-items: center; gap: 9px; padding: 12px; font-size: 12px; color: var(--muted); border-bottom: 1px solid var(--line); }
+.tier-drawer span { flex: 1; }.tier-drawer small { font-size: 10px; }
+.tier-drawer[data-access=open] { background: #f8edcf; border-radius: 9px; color: var(--ink); }
+.tier-note { margin-top: 20px; }

@@ -2,7 +2,7 @@
 
 Implemented October 17, 2026 for Jerel's visualization request, against Bonan's [frontend event contract](../backend/FRONTEND.md). The main route now connects the scenes to HTTP responses and SSE events; see [frontend integration](frontend-integration.md) for setup, exact mappings, replay behavior, and verification limits. The **animation rehearsal layer** remains available at `/rehearsal` and does not call the backend or claim evaluation results.
 
-Open `/rehearsal`, then **Events**. The main Demo link opens the [Rusty Rod correctness walkthrough](rusty-rod-demo.md). Choose **Rusty Rod (organization)**, **Sales (team)**, or **Maya Flores (individual)**, then choose a scene. These are logical record scopes. The cabinets now represent Executive, Sales, and Engineering; the playground uses Maya’s Sales cabinet. Main-route animation uses the selected member’s team cabinet, preserving the backend scope metadata. Replay restarts the clip; the slider seeks to a deterministic moment. The existing pause and speed controls apply. Closing the panel leaves the office visible.
+Open `/rehearsal`, then **Events**. The main Demo link opens the [Rusty Rod correctness walkthrough](rusty-rod-demo.md). Choose **Rusty Rod (organization)**, **Sales (team)**, or **Maya Flores (individual)**, then choose a scene. These are logical record scopes. The cabinets represent Individual, Team, and Organization; their drawers separate people, teams, and organizations. Animations use the matching tier cabinet, preserving the backend scope metadata. The selected member determines which drawer is accessible. Replay restarts the clip; the slider seeks to a deterministic moment. The existing pause and speed controls apply. Closing the panel leaves the office visible.
 
 ## Scenes
 
@@ -11,7 +11,7 @@ Open `/rehearsal`, then **Events**. The main Demo link opens the [Rusty Rod corr
 | `episode.ingested` | `arrived` | A conversation sheet flies into the office. |
 | `memory.added` | `created` | Curator writes, carries a record toward the selected cabinet, and files its paper representation. |
 | `memory.rejected` | `rejected` | The incoming paper bounces away from the cabinet and returns to sender. |
-| `memory.retrieved` | `retrieved` | Runner visits the represented member’s team cabinet and delivers a tabbed session folder to the task desk. |
+| `memory.retrieved` | `retrieved` | Runner visits the record’s tier cabinet and delivers a tabbed session folder to the task desk. |
 | `answer.produced` | `answered` | An answer packet with sources moves to the front of the office; chat shows the actual answer and citations. |
 | `evaluation.started`, `memory.checked`, `evaluation.finished` | `evaluated` | A calm evaluator Bob arrives wearing a beret and graphic glasses. Worried workers rush to serve him. Each checked record gets a cabinet visit and verdict pose; only cited memories are evaluated. |
 | `memory.promoted` | `promoted` | A golden record rises to the trusted shelf. It does not rewrite the claim. |
@@ -24,7 +24,7 @@ The standalone evaluator scene is a rehearsal. The main route uses checked IDs a
 
 ## Playback and state
 
-- `scene-animation.ts` defines wire-event names, logical scopes, team-cabinet projection, clip durations, and pure worker paths.
+- `scene-animation.ts` defines wire-event names, logical scopes, tier-cabinet projection, clip durations, and pure worker paths.
 - `event-stage.tsx` owns a single frame-loop clock. Workers, expressions, paper, lens, fire, and shredder effects all sample it. A new cue ID replaces the previous choreography; no stale completion callback can modify memory.
 - `brain-bob.tsx` separates locomotion, arm pose, expression, and props. Added happy, worried, and focused faces; carrying, writing, panic, inspection, and presentation poses. The accepted yellow rounded rectangle and violet pants remain unchanged.
 - Existing recorded frontend memory actions still drive playground clips. Main-route Retrace instead projects the backend event log at a selected sequence; neither version issues domain operations during playback.

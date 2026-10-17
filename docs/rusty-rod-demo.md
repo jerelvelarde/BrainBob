@@ -8,9 +8,9 @@ This guide follows [the company specification](sample-company.md) and supplement
 
 Run `pnpm dev`, then open `http://127.0.0.1:3000/demo`. No backend or API key is needed. This route is an explicitly **scripted fixture**, not an inference run or benchmark. The homepage's Demo link and the animation playground's Atlas demo link open it.
 
-The three fixed cabinets represent Executive, Sales, and Engineering. Rusty Rod is the office organization; Atlas Harbor is its fictional logistics client. The selector shows 18 synthetic names while preserving their stable IDs and 22 internal memory scopes. Six BrainBobs represent worker roles, not headcount.
+The three fixed cabinets represent Individual, Team, and Organization. Drawers represent people, teams (Executive, Sales, Engineering), and organizations. Only the selected member’s own, team, and Rusty Rod drawers are accessible. Rusty Rod is the office organization; Atlas Harbor is its fictional logistics client. The selector shows 18 synthetic names while preserving their stable IDs and 22 internal memory scopes. Six BrainBobs represent worker roles, not headcount.
 
-Use Next, Previous, or the step selector to retrace; Replay repeats the current animation. Each step chooses a suggested viewer, and the viewer can be changed independently to inspect the intended scope policy. Session file opens the selected person’s task-specific dossier, including individual, team, and organization sections with accessible sources. Download session .md exports that assembled context. The desktop file and the person’s team cabinet also open it. Choosing another cabinet does not switch identity or grant access. Evidence opens the separate floating inspector. A record or citation opens its source; Export this view downloads only that member's synthetic records, sources, decision details, and audit metadata.
+Use Next, Previous, or the step selector to retrace; Replay repeats the current animation. Each step chooses a suggested viewer, and the viewer can be changed independently to inspect the intended scope policy. Session file opens the selected person’s task-specific dossier, including individual, team, and organization sections with accessible sources. Download session .md exports that assembled context. The desk folder also opens it. Cabinets open a tier inspector with available memory and closed drawers. Choosing a cabinet does not switch identity or grant access. Evidence opens the separate floating inspector. A record or citation opens its source; Export this view downloads only that member's synthetic records, sources, decision details, and audit metadata.
 
 | Step | Suggested viewer | What to show |
 | --- | --- | --- |
@@ -36,7 +36,7 @@ The sample preview records its seed, eligible and selected IDs, cutoff, and deci
 
 ## Live status and Bonan's remaining handoff
 
-The main route retains the existing HTTP/SSE integration documented in [frontend-integration.md](frontend-integration.md). Member reads now send Rusty Rod paths, and events retain their logical scopes while the animation visits the represented member’s team cabinet. The main route does not yet assemble live session files; the downloadable dossier is currently implemented in the scripted walkthrough. The default Remember request writes to the selected member's individual path. Reading organization memory does not confer approval or write authority.
+The main route retains the existing HTTP/SSE integration documented in [frontend-integration.md](frontend-integration.md). Member reads now send Rusty Rod paths, and events retain their logical scopes while the animation visits the matching Individual, Team, or Organization cabinet. The main route does not yet assemble live session files; the downloadable dossier is currently implemented in the scripted walkthrough. The default Remember request writes to the selected member's individual path. Reading organization memory does not confer approval or write authority.
 
 The backend contract currently supports immutable corrections, source episodes, history, locks, and leave-one-out events. The following are **requirements for a live correctness demonstration**, not claims about the current implementation:
 
@@ -61,4 +61,4 @@ The [760-question LoCoMo result](../backend/results/20261017-112134-locomo/resul
 
 To turn this into a live demo, run the same sources and sequence through the authorized backend, capture the emitted trace and actual model attribution, then verify the fresh-agent response and denied access cases. A production-looking animation is not evidence that those checks passed.
 
-The [session-file specification](session-files.md) defines the file assembly and the distinction between team organization and record permissions.
+The [session-file specification](session-files.md) defines the file assembly and the distinction between tier drawers, access, and task relevance.

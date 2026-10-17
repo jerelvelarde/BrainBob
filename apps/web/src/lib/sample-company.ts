@@ -3,9 +3,9 @@ import type { MemoryScope } from "./memory";
 export const organizationScope = "rusty-rod";
 export const clientOrganization = { id: "atlas-harbor", name: "Atlas Harbor", kind: "Logistics company", relationship: "Client", project: "Atlas pilot" } as const;
 export const demoTeams = [
-  { slug: "executive", label: "Executive", prefix: "exec", count: 3, x: -3.8, color: "#93bac3", names: ["Mara Ellis", "Theo Bennett", "Nadia Chen"] },
-  { slug: "sales", label: "Sales", prefix: "sales", count: 5, x: -.5, color: "#d7b268", names: ["Maya Flores", "Leo Park", "Priya Shah", "Oscar Reed", "Zoe Brooks"] },
-  { slug: "engineering", label: "Engineering", prefix: "eng", count: 10, x: 3.2, color: "#baa6ce", names: ["Iris Tan", "Owen Patel", "Ada Morgan", "Finn Rivera", "Nora Kim", "Eli Cooper", "Lena Ortiz", "Kai Thompson", "Ruby Singh", "Sam Walker"] },
+  { slug: "executive", label: "Executive", prefix: "exec", count: 3, names: ["Mara Ellis", "Theo Bennett", "Nadia Chen"] },
+  { slug: "sales", label: "Sales", prefix: "sales", count: 5, names: ["Maya Flores", "Leo Park", "Priya Shah", "Oscar Reed", "Zoe Brooks"] },
+  { slug: "engineering", label: "Engineering", prefix: "eng", count: 10, names: ["Iris Tan", "Owen Patel", "Ada Morgan", "Finn Rivera", "Nora Kim", "Eli Cooper", "Lena Ortiz", "Kai Thompson", "Ruby Singh", "Sam Walker"] },
 ] as const;
 export type TeamSlug = typeof demoTeams[number]["slug"];
 export const demoMembers = demoTeams.flatMap((team) => Array.from({ length: team.count }, (_, i) => {
@@ -29,3 +29,11 @@ export function memberForReader(reader: string) { return demoMembers.find((perso
 export function teamForReader(reader: string) { return demoTeams.find((team) => team.slug === memberForReader(reader)?.team); }
 export function memberName(id: string) { return demoMembers.find((person) => person.id === id)?.label ?? id; }
 export function memberId(reader: string) { return memberForReader(reader)?.id ?? reader; }
+
+/** Drawer labels are public fixture metadata; contents still follow scope ancestry. */
+export function drawersForTier(scope: MemoryScope, reader: string) {
+  const entries = scope === "individual" ? demoMembers
+    : scope === "team" ? demoScopes.filter((item) => item.scope === "team")
+    : [{ path: organizationScope, label: "Rusty Rod" }, { path: clientOrganization.id, label: clientOrganization.name }];
+  return entries.map((entry) => ({ path: entry.path, label: entry.label, accessible: Boolean(memberForReader(reader)) && canReadScope(entry.path, reader) }));
+}

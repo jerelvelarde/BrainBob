@@ -6,8 +6,8 @@ import { OrbitControls, RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
 import { Label } from "./scene-label";
 import { EventStage } from "./event-stage";
-import { cinematicsAt, cueForSession, type SceneCue, type SceneCinematics } from "@/lib/scene-animation";
-import { clientOrganization, defaultReader, demoTeams, teamForReader, type TeamSlug } from "@/lib/sample-company";
+import { cinematicsAt, cueForSession, scopeCharacters, type SceneCue, type SceneCinematics } from "@/lib/scene-animation";
+import { clientOrganization, defaultReader, drawersForTier } from "@/lib/sample-company";
 import { SessionFolder } from "./session-folder";
 import { BrainBob } from "./brain-bob";
 import type { MemoryEvent, MemoryScope } from "@/lib/memory";
@@ -18,13 +18,17 @@ type SceneProps = {
   cue?: SceneCue; seek?: { value: number; revision: number }; onProgress: (progress: number) => void;
   selectedScope: MemoryScope | "all"; selectedMemory: string;
   flaggedScopes?: MemoryScope[];
-  reader?: string; onTeam?: (team: TeamSlug) => void;
+  reader?: string;
   sessionFile?: { label: string; onOpen: () => void };
   onSelect: (memoryId: string) => void; onScope: (scope: MemoryScope) => void;
   onWorker: (name: string) => void; onReady: (handle: SceneHandle) => void;
 };
 const palette = { floor: "#e8d7b9", green: "#b99a76", trim: "#6e5b49", wall: "#e7b6ae", fold: "#c98f91", dark: "#43392f" };
-const banks = demoTeams;
+const banks: { scope: MemoryScope; x: number; color: string; label: string; memory: string }[] = [
+  { scope: "individual", x: -3.8, color: "#93bac3", label: "INDIVIDUAL", memory: "coffee" },
+  { scope: "team", x: -.5, color: "#d7b268", label: "TEAM", memory: "sources" },
+  { scope: "organization", x: 3.2, color: "#baa6ce", label: "ORGANIZATION", memory: "launch" },
+];
 const routes: [number, number][][] = [
   [[-5.2, 3.4], [-5.2, -2.4], [1.65, -2.4], [1.65, 3.4]],
   [[5.3, 3.4], [1.8, 3.4], [1.8, -2.4], [5.3, -2.4]],
@@ -92,19 +96,26 @@ function Plant({ position }: { position: [number, number, number] }) {
   </group>;
 }
 
-function Cabinet({ bank, selected, active, onClick }: { bank: typeof banks[number]; selected: boolean; active: boolean; onClick: () => void }) {
+function Cabinet({ bank, reader, selected, active, onClick }: { bank: typeof banks[number]; reader: string; selected: boolean; active: boolean; onClick: () => void }) {
+  const allDrawers = drawersForTier(bank.scope, reader);
+  const drawers = bank.scope === "individual" ? [...allDrawers.filter((drawer) => drawer.accessible), ...allDrawers.filter((drawer) => !drawer.accessible)].slice(0, 3) : allDrawers;
   return <group position={[bank.x, 0, -3.85]} onClick={(e) => { e.stopPropagation(); onClick(); }}
     onPointerOver={() => { document.body.style.cursor = "pointer"; }} onPointerOut={() => { document.body.style.cursor = "auto"; }}>
     {[-.49, .49].map((x) => <Box key={x} position={[x, .13, 0]} size={[.12, .25, .68]} color={palette.trim} />)}
     <Box position={[0, 1.22, 0]} size={[1.35, 2.15, .8]} color={bank.color} radius={.06} />
-    {[.5, 1.15, 1.8].map((y, i) => <group key={y} position={[0, 0, active && i === 1 ? .2 : 0]}>
-      <Box position={[0, y, .428]} size={[1.15, .56, .05]} color={selected ? "#f4d88b" : bank.color} radius={.025} />
-      <Box position={[0, y + .1, .465]} size={[.28, .12, .018]} color="#f0e6c9" radius={.01} />
-      <Box position={[0, y - .1, .48]} size={[.33, .05, .04]} color="#79664e" radius={.015} />
-    </group>)}
+    {drawers.map((drawer, i) => {
+      const y = drawers.length === 2 ? 1.65 - i * .9 : 1.8 - i * .65;
+      return <group key={drawer.path} position={[0, 0, active && drawer.accessible ? .2 : 0]}>
+        <Box position={[0, y, .428]} size={[1.15, drawers.length === 2 ? .8 : .56, .05]} color={drawer.accessible ? "#f4d88b" : bank.color} radius={.025} />
+        <Label position={[0, y + .08, .5]} text={drawer.label.toUpperCase()} width={1.03} compact selected={drawer.accessible} onClick={onClick} />
+        <Box position={[-.08, y - .12, .48]} size={[.33, .05, .04]} color="#79664e" radius={.015} />
+        {!drawer.accessible ? <group position={[.37, y - .12, .49]}><mesh position={[0, .04, 0]}><torusGeometry args={[.045, .012, 6, 10, Math.PI]} /><meshStandardMaterial color="#6d6673" /></mesh><Box position={[0, 0, 0]} size={[.1, .08, .03]} color="#6d6673" radius={.01} /></group> : null}
+      </group>;
+    })}
     <Box position={[0, 2.33, 0]} size={[1.45, .1, .86]} color={palette.trim} />
     {active ? <mesh position={[0, 2.55, 0]}><sphereGeometry args={[.09, 12, 10]} /><meshBasicMaterial color="#f4cf49" /></mesh> : null}
-    <Label position={[0, 2.75, 0]} text={`${bank.label.toUpperCase()} · ${bank.count} MEMBERS`} width={2.8} selected={selected} onClick={onClick} />
+    <Label position={[0, 2.75, 0]} text={bank.label} width={2.6} selected={selected} onClick={onClick} />
+    {bank.scope === "individual" ? <Label position={[0, .15, .55]} text="18 PEOPLE · INSPECT" width={1.15} onClick={onClick} /> : null}
   </group>;
 }
 
@@ -237,7 +248,6 @@ class SceneBoundary extends Component<{ children: React.ReactNode }, { failed: b
 export default function BrainScene(props: SceneProps) {
   const [supported, setSupported] = useState(true);
   const reader = props.reader ?? defaultReader;
-  const team = teamForReader(reader);
   const cue = useMemo(() => cueForSession(props.cue, reader), [props.cue, reader]);
   const cinematics = useRef<SceneCinematics>(cinematicsAt(undefined, 0));
   useEffect(() => {
@@ -252,8 +262,8 @@ export default function BrainScene(props: SceneProps) {
     <Room />
     <Label text="RUSTY ROD · CONSULTING" position={[-2.8, 4.25, -4.8]} width={3.4} />
     <Label text={`CLIENT · ${clientOrganization.name.toUpperCase()}`} position={[1.6, 4.25, -4.8]} width={3.4} />
-    {banks.map((bank) => <Cabinet key={bank.slug} bank={bank} selected={team?.slug === bank.slug} active={Boolean(cue) && team?.slug === bank.slug} onClick={() => props.onTeam?.(bank.slug)} />)}
-    {props.flaggedScopes?.length && team ? <Label text="FLAGGED · OWNER REVIEW" position={[team.x, 3.35, -3.8]} width={2.6} /> : null}
+    {banks.map((bank) => <Cabinet key={bank.scope} bank={bank} reader={reader} selected={props.selectedScope === bank.scope} active={cue?.scope === bank.scope} onClick={() => { props.onScope(bank.scope); props.onSelect(bank.memory); }} />)}
+    {props.flaggedScopes?.map((scope) => <Label key={scope} text="FLAGGED · OWNER REVIEW" position={[scopeCharacters[scope].x, 3.35, -3.8]} width={2.6} />)}
     <Desk position={[-3.6, 0, .9]} />
     <Desk position={[.2, 0, .6]} />
     {props.sessionFile ? <group position={[.62, 1.17, .93]} onClick={(event) => { event.stopPropagation(); props.sessionFile?.onOpen(); }} onPointerOver={() => { document.body.style.cursor = "pointer"; }} onPointerOut={() => { document.body.style.cursor = "auto"; }}>

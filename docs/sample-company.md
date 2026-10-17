@@ -57,11 +57,15 @@ Atlas Harbor is a separate organization, identified as `atlas-harbor`, not a chi
 
 ## Cabinets and Session Files
 
-Each cabinet represents a team: **Executive, Sales, Engineering**. Organization identity belongs to the office; the client is shown as its external relationship. The drawers organize session files, not separate individual/team/organization access levels.
+The three cabinets represent **Individual, Team, and Organization**. Drawers separate the members, teams, and organizations within those tiers:
 
-A file represents the memory needed for **one agent session**, assembled from relevant, accessible individual, team, and organization records. For Maya’s Atlas client update, it combines her communication preference, Sales guidance, the approved Atlas commitment, the reporting goal, and the published client brief. It excludes Engineering’s private estimate, other members’ private notes, retired revisions, and unrelated office policies.
+- Individual: one drawer per person; only the represented member’s drawer is accessible.
+- Team: Executive, Sales, and Engineering drawers; only their own team is accessible.
+- Organization: Rusty Rod and its client Atlas Harbor; Rusty Rod members read Rusty Rod’s shared memory. The client’s private drawer remains closed.
 
-A team cabinet is a visual organizer, not permission for teammates to open each other’s private session files. See [session-files.md](session-files.md) for assembly, evidence, export, and backend requirements.
+A Sales member can read all their individual memory, all Sales memory, and all shared Rusty Rod memory, but no Executive memory or other person’s private records. A session file then selects relevant, accessible context from those three tiers for the task. The 3D Individual cabinet previews three named drawers; its inspector lists all 18 people.
+
+Cabinets organize memory; session files combine it. See [session-files.md](session-files.md) for assembly, evidence, export, and backend requirements.
 
 ## Memory Scopes
 

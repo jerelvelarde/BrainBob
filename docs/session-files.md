@@ -1,23 +1,21 @@
-# Team cabinets and agent session files
+# Tier cabinets and agent session files
 
-Rusty Rod is the organization. Executive, Sales, and Engineering each have a cabinet. Atlas Harbor is a fictional client organization. The roster and stable member IDs are in [sample-company.md](sample-company.md).
+The room has **Individual, Team, and Organization cabinets**. Each drawer is a person, team, or organization. For a Sales member, the accessible drawers are their own, Sales, and Rusty Rod. Executive and other members’ individual drawers stay closed. Atlas Harbor is a fictional logistics client, not an inherited permission scope.
 
-**One file is the context for one agent session**, acting for a particular member on a particular task at a particular memory revision. It combines relevant individual, team, and organization records. A file is a derived snapshot, not a new permission scope or a replacement for the canonical memory store.
+A **session file** combines the relevant, accessible memory needed for a specific agent task. Access covers all records in the three permitted scopes; relevance determines which current records enter this particular file. It is a derived snapshot, not a new permission scope or a replacement for canonical memory.
 
 ```mermaid
 flowchart LR
-    ORG["Rusty Rod"] --> TEAMS["Executive · Sales · Engineering cabinets"]
-    ORG --- CLIENT["Atlas Harbor · client organization"]
-    TEAMS --> FILE["Maya’s Atlas session file"]
-    PERSONAL["Maya’s relevant individual context"] --> FILE
-    TEAM["Relevant Sales guidance"] --> FILE
-    SHARED["Relevant Rusty Rod knowledge"] --> FILE
+    PERSONAL["Individual cabinet · Maya drawer"] --> FILE["Maya’s Atlas session file"]
+    TEAM["Team cabinet · Sales drawer"] --> FILE
+    SHARED["Organization cabinet · Rusty Rod drawer"] --> FILE
+    CLOSED["Executive / other people / private client drawers · no access"]
     FILE --> AGENT["Agent working for Maya"]
 ```
 
 ## The demo file
 
-At `/demo`, select **Maya Flores**, open **Session file**, and download `sales-01-atlas-session.md`. The visible desk folder and her Sales cabinet open the same panel. The file contains:
+At `/demo`, select **Maya Flores**, open **Session file**, and download `sales-01-atlas-session.md`. The visible desk folder opens the same panel. Clicking a cabinet opens its tier inspector with accessible and closed drawers; its session-file button opens the assembled file. The file contains:
 
 - Individual: Maya’s preference for a concise, three-sentence client update.
 - Team: Sales guidance to cite the approved commitment and preserve the reporting goal.
@@ -33,7 +31,7 @@ The client brief is published into Rusty Rod organization memory. Atlas Harbor i
 ## Assembly contract
 
 1. Identify the represented member, task, and memory snapshot. Authenticate this identity on the server for live operation.
-2. Enforce access before relevance selection, including access to evidence. A cabinet’s team membership must not reveal another member’s individual records or files.
+2. Enforce access before relevance selection, including access to evidence. A drawer label must not reveal another member’s individual records or files.
 3. Select current records relevant to the task; preserve tentative and unresolved information as labeled context. Do not treat them as approved facts.
 4. Attach the exact IDs/revisions and accessible evidence. Report missing required evidence or insufficient task context rather than asserting completeness.
 5. Freeze the selected context as the session’s input. Later corrections can produce a new file; retracing an earlier session must retain its earlier snapshot.
@@ -43,6 +41,6 @@ The client brief is published into Rusty Rod organization memory. Atlas Harbor i
 
 The frontend assembler is deterministic and uses authored `atlas-update` relevance tags. Its Markdown download is real, but the scenario and sources are synthetic. It does not call a relevance model, establish context completeness for arbitrary tasks, or run Crusoe inference. All fixture data ships in the browser; client filtering is a presentation preview, not an access boundary.
 
-The main HTTP/SSE route shares the team-cabinet scene and names. It still uses the existing backend retrieval/answer contract; **live session-file assembly and storage are not implemented**. The folder visualization must not be described as proof of the model’s actual input.
+The main HTTP/SSE route shares the tier-cabinet scene and names. It still uses the existing backend retrieval/answer contract; **live session-file assembly and storage are not implemented**. The folder visualization must not be described as proof of the model’s actual input.
 
 Bonan’s backend handoff should provide a session/task ID, represented member, selected memory IDs/revisions, accessible source references, relevance/omission metadata, snapshot/event sequence, actual model attribution, and cost where available. Keep factual correctness, leave-one-out usefulness, and retrieval relevance distinct. Do not add a wire event until both sides agree its contract. Backend and bench remain Bonan’s files.

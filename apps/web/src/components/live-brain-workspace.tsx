@@ -70,7 +70,7 @@ export function LiveBrainWorkspace() {
   const shownEvent = cursor === null ? undefined : backend.state.events.find((e) => e.seq === cursor);
 
   return <main className="app-shell" data-dramatic={cinematicsAt(cue?.action, progress).darkness > .5 ? cue?.action : undefined}>
-    <section className="scene-view" aria-label="Brain visualization"><BrainScene playing={playing} speed={1} reducedMotion={reducedMotion} cue={cue} seek={seek} onProgress={onProgress} reader={reader} onTeam={(team) => { if (team === teamForReader(reader)?.slug) inspect(); else setNotice("Choose a member of that team to preview their accessible memories."); }}
+    <section className="scene-view" aria-label="Brain visualization"><BrainScene playing={playing} speed={1} reducedMotion={reducedMotion} cue={cue} seek={seek} onProgress={onProgress} reader={reader}
       selectedScope={cue?.scope ?? "all"} selectedMemory={selected ?? ""} flaggedScopes={[...new Set(visibleMemories.filter((m) => m.flagged).flatMap((m) => { const scope = sceneScope(m.scope); return scope ? [scope] : []; }))]} onSelect={() => {}} onScope={(scope) => inspect(visibleMemories.find((m) => sceneScope(m.scope) === scope && m.flagged)?.id ?? visibleMemories.find((m) => sceneScope(m.scope) === scope && m.status !== "retired")?.id)}
       onWorker={setNotice} onReady={onReady} /></section>
     <header className="floating-header"><a className="brand" href="/" aria-label="BrainBob home"><span className="bob-mark" aria-hidden="true"><i /><i /><b /><em /></span><span>BrainBob</span></a>

@@ -5,8 +5,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Clapperboard, Download, FileSearch, FolderOpen, Pause, Play, RotateCcw, X, ZoomIn, ZoomOut } from "lucide-react";
 import { demoStepCount, demoStepTitles, demoView, exportDemoView, stepReader } from "@/lib/correctness-demo";
 import { cinematicsAt } from "@/lib/scene-animation";
-import { companyScope, demoTeams, memberForReader, memberName } from "@/lib/sample-company";
+import { companyScope, memberName } from "@/lib/sample-company";
 import { MemberSelect } from "./member-select";
+import { TierMemoryPanel } from "./tier-memory-panel";
+import type { MemoryScope } from "@/lib/memory";
 import { SessionFilePanel } from "./session-file-panel";
 import type { SceneHandle } from "./brain/brain-scene";
 
@@ -19,8 +21,8 @@ export function CorrectnessDemo() {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [progress, setProgress] = useState(.62);
   const [seek, setSeek] = useState({ value: .62, revision: 0 });
-  const [panel, setPanel] = useState<"evidence" | "session" | null>(null);
-  const [notice, setNotice] = useState("");
+  const [panel, setPanel] = useState<"evidence" | "session" | "cabinet" | null>(null);
+  const [cabinetScope, setCabinetScope] = useState<MemoryScope>("team");
   const [sourceId, setSourceId] = useState<string>();
   const camera = useRef<SceneHandle | null>(null);
   const evidenceButton = useRef<HTMLButtonElement>(null);
@@ -37,10 +39,10 @@ export function CorrectnessDemo() {
   const onReady = useCallback((handle: SceneHandle) => { camera.current = handle; }, []);
   const onProgress = useCallback((value: number) => { setProgress(value); if (value >= 1) setPlaying(false); }, []);
   function go(index: number) {
-    setStep(index); setReader(stepReader(index)); setSourceId(undefined); setNotice("");
+    setStep(index); setReader(stepReader(index)); setSourceId(undefined);
     setPlaying(!reducedMotion); setSeek({ value: reducedMotion ? .62 : 0, revision: Date.now() });
   }
-  function closePanel() { setPanel(null); (panel === "session" ? sessionButton : evidenceButton).current?.focus(); }
+  function closePanel() { setPanel(null); (panel === "evidence" ? evidenceButton : sessionButton).current?.focus(); }
   function exportView() {
     const url = URL.createObjectURL(new Blob([JSON.stringify(exportDemoView(step, reader), null, 2)], { type: "application/json" }));
     const anchor = document.createElement("a"); anchor.href = url; anchor.download = `rusty-rod-step-${step + 1}-${reader.split("/").at(-1)}.json`; anchor.click();
@@ -49,14 +51,14 @@ export function CorrectnessDemo() {
   return <main className="app-shell correctness-demo" data-dramatic={cinematicsAt(view.cue?.action, progress).darkness > .5 ? view.cue?.action : undefined}>
     <section className="scene-view" aria-label="Rusty Rod memory office"><BrainScene playing={playing} reducedMotion={reducedMotion} speed={1} cue={view.cue} seek={seek} onProgress={onProgress} reader={reader}
       sessionFile={{ label: view.sessionFile.member.name.split(" ")[0], onOpen: () => setPanel("session") }}
-      onTeam={(team) => { if (team === memberForReader(reader)?.team) { setPanel("session"); setNotice(""); } else setNotice(`${demoTeams.find((item) => item.slug === team)?.label} cabinet. Choose a member of that team to preview their session file.`); }}
-      selectedScope={view.cue?.scope ?? "all"} selectedMemory="" onSelect={() => {}} onScope={() => setPanel("session")} onWorker={() => setPanel("session")} onReady={onReady} /></section>
+      selectedScope={panel === "cabinet" ? cabinetScope : view.cue?.scope ?? "all"} selectedMemory="" onSelect={() => {}} onScope={(scope) => { setCabinetScope(scope); setPanel("cabinet"); }} onWorker={() => setPanel("session")} onReady={onReady} /></section>
     <header className="floating-header"><a className="brand" href="/" aria-label="BrainBob home"><span className="bob-mark" aria-hidden="true"><i /><i /><b /><em /></span>BrainBob</a><span className="connection-state">Rusty Rod · scripted demo</span></header>
     <div className="panel-launchers"><a className="rehearsal-link" href="/rehearsal" aria-label="Open animation playground"><Clapperboard size={18} /><span>Animations</span></a>
       <button ref={sessionButton} aria-label="Open session file" aria-expanded={panel === "session"} onClick={() => panel === "session" ? closePanel() : setPanel("session")}><FolderOpen size={18} /><span>Session file</span></button>
       <button ref={evidenceButton} aria-label="Scenario evidence" aria-expanded={panel === "evidence"} onClick={() => panel === "evidence" ? closePanel() : setPanel("evidence")}><FileSearch size={18} /><span>Evidence</span></button></div>
-    <MemberSelect value={reader} onChange={(value) => { setReader(value); setSourceId(undefined); setNotice(""); setPlaying(false); setSeek({ value: .62, revision: Date.now() }); }} />
-    {panel === "session" ? <SessionFilePanel key={view.sessionFile.id} file={view.sessionFile} onClose={closePanel} onHistory={() => setPanel("evidence")} /> : null}
+    <MemberSelect value={reader} onChange={(value) => { setReader(value); setSourceId(undefined); setPlaying(false); setSeek({ value: .62, revision: Date.now() }); }} />
+    {panel === "cabinet" ? <TierMemoryPanel key={`${cabinetScope}-${reader}`} scope={cabinetScope} reader={reader} records={view.records} onClose={closePanel} onSession={() => setPanel("session")} onEvidence={(id) => { setSourceId(id); setPanel("evidence"); }} /> : null}
+    {panel === "session" ? <SessionFilePanel key={view.sessionFile.id} file={view.sessionFile} onTier={(scope) => { setCabinetScope(scope); setPanel("cabinet"); }} onClose={closePanel} onHistory={() => setPanel("evidence")} /> : null}
     {panel === "evidence" ? <aside className="floating-panel inspector-panel demo-evidence" aria-label="Scenario evidence" onKeyDown={(event) => { if (event.key === "Escape") closePanel(); }}>
       <div className="panel-heading"><div><FileSearch size={18} /><h2>Memory correctness</h2></div><button ref={closeButton} className="icon-button" aria-label="Close scenario evidence" onClick={closePanel}><X size={18} /></button></div>
       <div className="panel-scroll">
@@ -70,11 +72,11 @@ export function CorrectnessDemo() {
         </button>)}</div></details>
         {selectedSource ? <section className="demo-source" aria-label="Selected evidence"><small>{selectedSource.id} · {selectedSource.at}</small><blockquote>{selectedSource.text}</blockquote><p>{memberName(selectedSource.author)} · {selectedSource.authority}</p></section> : null}
         <details><summary>Decision sources</summary>{view.sourceIds.length ? view.sourceIds.map((id) => <button className="revision-item" key={id} onClick={() => setSourceId(id)}>{id}</button>) : <p className="demo-mode-note">No decision sources available in this view.</p>}</details>
-        <details><summary>Company and measurement status</summary><p>Rusty Rod serves Atlas Harbor, a fictional logistics client. Three team cabinets organize 18 members’ session files. Each file combines relevant individual, team, and organization context from the 22 internal scopes.</p><p>The client relationship grants no access to private client data. Executive members have no automatic access to other teams. The six BrainBobs depict worker roles, not headcount.</p><p>Model attribution: none; all steps are scripted. Pipeline cost and maintained-memory improvement are not measured here.</p></details>
+        <details><summary>Company and measurement status</summary><p>Rusty Rod serves Atlas Harbor, a fictional logistics client. Three cabinets represent Individual, Team, and Organization. Their drawers separate people, teams, and organizations. Each file combines relevant individual, team, and organization context from the 22 internal scopes.</p><p>The client relationship grants no access to private client data. Executive members have no automatic access to other teams. The six BrainBobs depict worker roles, not headcount.</p><p>Model attribution: none; all steps are scripted. Pipeline cost and maintained-memory improvement are not measured here.</p></details>
       </div><div className="panel-footer"><button onClick={exportView}><Download size={14} />Export this view</button><span>Fixture evidence only</span></div>
     </aside> : null}
     <div className="camera-controls"><button className="icon-button" aria-label="Zoom in" onClick={() => camera.current?.zoom(1.15)}><ZoomIn size={18} /></button><button className="icon-button" aria-label="Zoom out" onClick={() => camera.current?.zoom(1 / 1.15)}><ZoomOut size={18} /></button></div>
-    <div className="bottom-controls demo-controls"><div className="clip-caption" role="status"><span>SCRIPTED SCENARIO · {step + 1} / {demoStepCount}</span><strong>{view.title}</strong><small>{notice || view.detail}</small></div>
+    <div className="bottom-controls demo-controls"><div className="clip-caption" role="status"><span>SCRIPTED SCENARIO · {step + 1} / {demoStepCount}</span><strong>{view.title}</strong><small>{view.detail}</small></div>
       <nav className="scene-dock" aria-label="Correctness walkthrough"><button aria-label="Previous scenario step" disabled={step === 0} onClick={() => go(step - 1)}><ArrowLeft size={17} /></button>
         <select aria-label="Scenario step" value={step} onChange={(event) => go(Number(event.target.value))}>{demoStepTitles.map((title, index) => <option key={title} value={index}>{index + 1}. {title}</option>)}</select>
         <button aria-label={playing ? "Pause animation" : "Replay animation"} disabled={reducedMotion || !view.cue} onClick={() => { if (playing) setPlaying(false); else { setSeek({ value: 0, revision: Date.now() }); setPlaying(true); } }}>{playing ? <Pause size={16} /> : <RotateCcw size={16} />}</button>

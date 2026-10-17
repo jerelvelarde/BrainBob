@@ -1,14 +1,25 @@
 import { describe, expect, it } from "vitest";
 import { demoView } from "./correctness-demo";
 import { buildSessionFile, sessionFileMarkdown } from "./session-memory";
-import { defaultReader, demoMembers, demoTeams } from "./sample-company";
-import { cueForSession, performanceForCue, type SceneCue } from "./scene-animation";
+import { defaultReader, demoMembers, demoTeams, drawersForTier } from "./sample-company";
+import { cueForSession, performanceForCue, scopeCharacters, type SceneCue } from "./scene-animation";
 
-describe("team cabinets and session files", () => {
+describe("tier cabinets and session files", () => {
   it("gives each member a distinct synthetic name without changing their stable ID", () => {
     expect(new Set(demoMembers.map((member) => member.label)).size).toBe(18);
     expect(demoMembers.find((member) => member.id === "sales-01")).toMatchObject({ label: "Maya Flores", path: defaultReader });
     expect(demoMembers.every((member) => member.label.includes(" ") && member.path.endsWith(member.id))).toBe(true);
+  });
+
+  it("opens exactly the member’s own, team, and organization drawers", () => {
+    for (const member of demoMembers) {
+      const tiers = ["individual", "team", "organization"] as const;
+      const drawers = tiers.map((tier) => drawersForTier(tier, member.path));
+      expect(drawers.map((items) => items.length)).toEqual([18, 3, 2]);
+      expect(drawers.flat().filter((drawer) => drawer.accessible).map((drawer) => drawer.path)).toEqual([member.path, `rusty-rod/${member.team}`, "rusty-rod"]);
+    }
+    expect(drawersForTier("team", defaultReader).find((drawer) => drawer.label === "Executive")?.accessible).toBe(false);
+    expect(drawersForTier("organization", "unknown").some((drawer) => drawer.accessible)).toBe(false);
   });
 
   it("assembles all three relevant memory levels and accessible evidence into one file", () => {
@@ -55,14 +66,14 @@ describe("team cabinets and session files", () => {
     expect(after.sections.flatMap((section) => section.records).map((record) => record.id)).not.toContain("atlas-date-r1");
   });
 
-  it("routes every logical scope to the represented member's team cabinet", () => {
+  it("routes each memory to its tier cabinet regardless of the member’s team", () => {
     for (const team of demoTeams) for (const scope of ["individual", "team", "organization"] as const) {
       const member = demoMembers.find((person) => person.team === team.slug)!;
       const cue: SceneCue = { id: "retrieval", action: "retrieved", scope, title: "Retrieve", source: "fixture", records: [{ id: "record", scope }] };
       const projected = cueForSession(cue, member.path)!;
-      expect(projected.scope).toBe(scope); expect(projected.cabinetX).toBe(team.x);
-      expect(projected.records?.[0].cabinetX).toBe(team.x);
-      expect(performanceForCue(projected, 1, .4).x).toBe(team.x);
+      expect(projected.scope).toBe(scope); expect(projected.cabinetX).toBe(scopeCharacters[scope].x);
+      expect(projected.records?.[0].cabinetX).toBe(scopeCharacters[scope].x);
+      expect(performanceForCue(projected, 1, .4).x).toBe(scopeCharacters[scope].x);
       expect(cue.cabinetX).toBeUndefined();
     }
   });

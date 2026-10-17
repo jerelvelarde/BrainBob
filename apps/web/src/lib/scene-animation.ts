@@ -1,5 +1,5 @@
 import type { MemoryAction, MemoryEvent, MemoryScope } from "./memory";
-import { memberForReader, teamForReader } from "./sample-company";
+import { memberForReader } from "./sample-company";
 
 /** Presentation only. These cues never create or change a memory. */
 export type SceneAction = MemoryAction | "arrived" | "rejected" | "answered" | "promoted" | "flagged" | "locked" | "resolved";
@@ -10,12 +10,12 @@ export type SceneCue = { id: string; action: SceneAction; scope: MemoryScope; ti
   evaluation?: { phase: "start" | "check" | "finish"; verdict?: "helpful" | "harmful" | "unchanged" | "unconfirmed" } };
 export type Point = [number, number];
 
-/** A cabinet is a team. Logical scopes stay intact inside the session file. */
+/** A session gathers from three tier cabinets without changing record permissions. */
 export function cueForSession(cue: SceneCue | undefined, reader: string): SceneCue | undefined {
-  const team = teamForReader(reader), member = memberForReader(reader);
-  if (!cue || !team || !member) return undefined;
-  return { ...cue, cabinetX: team.x, sessionLabel: `${member.label.split(" ")[0]}’S SESSION`,
-    records: cue.records?.map((record) => ({ ...record, cabinetX: team.x })) };
+  const member = memberForReader(reader);
+  if (!cue || !member) return undefined;
+  return { ...cue, cabinetX: scopeCharacters[cue.scope].x, sessionLabel: `${member.label.split(" ")[0]}’S SESSION`,
+    records: cue.records?.map((record) => ({ ...record, cabinetX: scopeCharacters[record.scope].x })) };
 }
 export function cueCabinetX(cue: SceneCue) { return cue.cabinetX ?? scopeCharacters[cue.scope].x; }
 export type BobPose = "idle" | "carry" | "write" | "panic" | "inspect" | "present";
