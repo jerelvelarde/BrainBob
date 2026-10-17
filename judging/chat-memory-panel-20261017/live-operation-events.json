@@ -1,0 +1,84 @@
+{
+  "source": "Local backend events.jsonl, copied read-only; synthetic disposable QA record",
+  "events": [
+    {
+      "type": "memory.added",
+      "ts": 1792277624.339995,
+      "seq": 136,
+      "memory": {
+        "id": "m72",
+        "text": "Maya Flores uses a violet notebook for the temporary cabinet animation check.",
+        "author": "sales-01",
+        "origin": "ep-57a23e8a",
+        "date": "2026-10-17",
+        "status": "trial",
+        "scope": "rusty-rod/sales/sales-01",
+        "reason": "",
+        "flagged": false,
+        "supersedes": null,
+        "owner": null,
+        "authority": "discussion",
+        "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+        "conflicts_with": []
+      },
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
+    },
+    {
+      "type": "episode.ingested",
+      "ts": 1792277624.340204,
+      "seq": 137,
+      "episode_id": "ep-57a23e8a",
+      "source": "ui-verification-20261017",
+      "n_memories": 1,
+      "author": "sales-01",
+      "scope": "rusty-rod/sales/sales-01",
+      "authority": "discussion"
+    },
+    {
+      "type": "memory.added",
+      "ts": 1792277860.505733,
+      "seq": 140,
+      "memory": {
+        "id": "m73",
+        "text": "Maya Flores uses a blue notebook for the temporary cabinet animation check.",
+        "author": "sales-01",
+        "origin": "ep-57a23e8a",
+        "date": "2026-10-17",
+        "status": "trial",
+        "scope": "rusty-rod/sales/sales-01",
+        "reason": "",
+        "flagged": false,
+        "supersedes": "m72",
+        "owner": null,
+        "authority": "discussion",
+        "model": null,
+        "conflicts_with": []
+      }
+    },
+    {
+      "type": "memory.retired",
+      "ts": 1792277860.5058959,
+      "seq": 141,
+      "memory_id": "m72",
+      "reason": "superseded by m73",
+      "task_ids": []
+    },
+    {
+      "type": "memory.corrected",
+      "ts": 1792277860.505933,
+      "seq": 142,
+      "memory_id": "m72",
+      "new_id": "m73",
+      "author": "sales-01"
+    },
+    {
+      "type": "memory.retired",
+      "ts": 1792277893.967425,
+      "seq": 143,
+      "memory_id": "m73",
+      "reason": "Remove the temporary UI verification record after testing cabinet animations.",
+      "task_ids": [],
+      "author": "sales-01"
+    }
+  ]
+}

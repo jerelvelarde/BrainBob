@@ -1,0 +1,31 @@
+{
+  "implementation": "bc7fc35eeca827fde08b0d9d96d3f4559c311e40",
+  "latestMainMerged": "373eee2",
+  "frontendTests": {
+    "passed": 40,
+    "files": 8,
+    "command": "npm --prefix apps/web run test"
+  },
+  "productionBuild": {
+    "passed": true,
+    "command": "npm --prefix apps/web run build -- --webpack",
+    "includesTypeScript": true
+  },
+  "browserChecks": [
+    "active team folders only",
+    "Team / Sales breadcrumbs and six files",
+    "two individual files for Leo",
+    "source and history inspection",
+    "real correction m72 -> m73",
+    "real retirement m73",
+    "new person and new session context delivery",
+    "mobile panel and Escape dismissal"
+  ],
+  "notClaimed": [
+    "live evaluator invocation",
+    "model accuracy improvement",
+    "production deployment",
+    "hard deletion"
+  ],
+  "captureProvenance": "Shared development checkout; unrelated teammate docs and generated Next paths present."
+}

@@ -1,0 +1,9 @@
+{
+  "capturedAt": "2026-10-17T22:37:55.662Z",
+  "url": "http://127.0.0.1:3000/",
+  "implementation": "60c10bf130cd47681bd4fe4b726df11e28a41254",
+  "baseUI": "8f2f9863ad32db1dfbfb049873621faca1628d7b",
+  "proxyFix": "09c2c0f",
+  "source": "Live local app; synthetic company records; real backend responses",
+  "note": "Teammate documentation changes and generated Next type paths present; frontend implementation committed."
+}
