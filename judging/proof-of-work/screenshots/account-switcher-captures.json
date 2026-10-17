@@ -1,0 +1,19 @@
+{
+  "note": "Native browser screenshot bytes from the committed frontend; application sources unchanged during capture; timestamps immediately before capture.",
+  "captures": [
+    {
+      "file": "30-scene-account-switcher.jpg",
+      "captured_at": "2026-10-17T21:05:03.730Z",
+      "commit": "2c7770dbe3ccaafcbd852304a1dbe68e705ab872",
+      "url": "http://127.0.0.1:3000/demo",
+      "view": "Maya account menu above the bottom-left scene control; synthetic demo"
+    },
+    {
+      "file": "31-scene-account-switcher-mobile.jpg",
+      "captured_at": "2026-10-17T21:05:10.081Z",
+      "commit": "2c7770dbe3ccaafcbd852304a1dbe68e705ab872",
+      "url": "http://127.0.0.1:3000/demo",
+      "view": "Account switcher at 390 × 844 CSS pixels; synthetic demo"
+    }
+  ]
+}

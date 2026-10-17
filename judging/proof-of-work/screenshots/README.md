@@ -90,3 +90,12 @@ Captured from local frontend commit `af8cf67` on October 17, 2026. Application s
 - [29-personal-session-chat-mobile.jpg](29-personal-session-chat-mobile.jpg): 1:54:44 PM PDT, 390 × 844. Mobile welcome with stacked cards and compact header controls.
 
 Original timestamps: [personal-chat-captures.json](personal-chat-captures.json). Tested behavior and limitations: [verification record](../personal-chat-verification.md).
+
+## Scene account switcher
+
+Captured from local frontend commit `2c7770d` on October 17, 2026, with application sources unchanged. Both native screenshots show synthetic `/demo` identities.
+
+- [30-scene-account-switcher.jpg](30-scene-account-switcher.jpg): 2:05:03 PM PDT, 1280 × 720. Bottom-left account control, current Maya context, New session, and grouped person search.
+- [31-scene-account-switcher-mobile.jpg](31-scene-account-switcher-mobile.jpg): 2:05:10 PM PDT, 390 × 844. Mobile popup above the account row.
+
+Original timestamps: [account-switcher-captures.json](account-switcher-captures.json). Tested behavior: [verification record](../account-switcher-verification.md).
