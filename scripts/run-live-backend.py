@@ -21,7 +21,7 @@ def main():
     from brainbob import llm
     from openai import OpenAI
     checked = set()
-    for role in ([] if args.skip_preflight and not args.check else ['curator', 'agent', 'judge']):
+    for role in ([] if args.skip_preflight and not args.check else ['curator', 'agent', 'judge', 'summarizer']):
         config = llm.configuration()[role]
         key = os.environ.get(f'BRAINBOB_{role.upper()}_API_KEY') or os.environ.get('BRAINBOB_API_KEY')
         if not key:

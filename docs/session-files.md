@@ -20,6 +20,8 @@ Suggestions are deterministic UI recommendations grounded in the loaded records.
 
 ## Inspection and persistence
 
+The full-screen **Memory** panel opens on **Summary**, an overview of current saved memory. Switch to **Memory files** to inspect records and reply evidence. Summary uses its own read-only Crusoe Nano role and never changes the reply snapshot; it is not evidence of what the answering model saw. [Summary behavior](live-workspace.md#memory-summary-and-files).
+
 After Ask completes, the file snapshots its task ID, question, answer, cited IDs, and accessible `/ask.memories`, grouped by Individual, Team, and Organization. Download exports JSON. Later SSE changes do not rewrite this snapshot; the next Ask creates a new current file at that desk. Before an answer, or after failure/cancellation, no completed file is invented.
 
 Source/history controls open the current memory inspector. Source bodies and the exact rendered model prompt are not embedded in the file. Returned retrieval records alone do not establish context completeness. These are browser-local sessions, not a global session registry. Canonical memory, source episodes, and events persist on the backend; durable conversations, historical task files, and complete prompt tracing remain future backend work.

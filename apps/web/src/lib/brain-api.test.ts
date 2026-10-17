@@ -5,6 +5,15 @@ import { defaultReader } from "./sample-company";
 afterEach(() => vi.unstubAllGlobals());
 
 describe("Rusty Rod HTTP identity", () => {
+  it("requests a read-only memory summary with identity and cancellation", async () => {
+    const response = { summary: "A tentative plan.", model: "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B", memory_count: 2, total_count: 3, truncated: true };
+    const fetcher = vi.fn().mockResolvedValue(new Response(JSON.stringify(response)));
+    vi.stubGlobal("fetch", fetcher);
+    const abort = new AbortController();
+    expect(await brainApi.memorySummary("sales-02", abort.signal)).toEqual(response);
+    expect(fetcher).toHaveBeenCalledWith("/api/brainbob/memories/summary", expect.objectContaining({ method: "GET", headers: { "X-BrainBob-Member": "sales-02" }, signal: abort.signal, body: undefined }));
+  });
+
   it("sends the selected member on every read, write, and review request", async () => {
     const memory = { id: "m1", text: "Tentative estimate", author: "sales-01", origin: "ep1", date: "2026-10-17", status: "tentative", scope: "rusty-rod/sales", authority: "tentative", model: "fixture-model", conflicts_with: ["m0"] };
     const replies = [ [memory], { task_id: "t1", answer: "Uncertain", cited_ids: [], memories: [memory] }, { episode_id: "ep1", memories: [{ memory_id: "m1", action: "tentative", reason: "conflicts with m0", text: memory.text }] }, { evidence: [] }, { decisions: [] }, { id: "ep1", text: "Estimate", date: "2026-10-17", source: "test", scope: "rusty-rod/sales" }, { chain: [memory], events: [] }, { memory, retired_id: "m0" }, { memory }, { memory }, { memory } ];

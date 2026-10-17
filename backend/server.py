@@ -397,6 +397,19 @@ def create_app(store, curator, agent, evaluator, judge, *, events=None,
             out.append(d)
         return out
 
+    @app.get("/memories/summary")
+    def get_memory_summary(request: Request):
+        from brainbob.summary import summarize
+        viewer = who(request)
+        memories = [m for m in store.all()
+                    if can_see_mem(viewer, getattr(m, "scope", None))
+                    and getattr(m, "status", None) != "retired"]
+        try:
+            return summarize(memories)
+        except Exception:
+            # Provider errors can contain credentials or private input.
+            raise HTTPException(503, "Memory summary is unavailable. You can still browse Memory files.") from None
+
     @app.get("/report")
     def get_report(request: Request):
         viewer = who(request)
