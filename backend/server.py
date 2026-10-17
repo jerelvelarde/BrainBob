@@ -444,13 +444,21 @@ def main() -> None:
             "Is the response correct? Reply with exactly yes or no."}])
         return r.strip().lower().startswith("yes")
 
-    from brainbob.acl import Org
-    org = Org.load(os.path.join(os.path.dirname(os.path.abspath(__file__)), "fixtures", "rusty_rod", "org.json"))
-    try:
-        from brainbob import maintain
-        ingest_fn = maintain.ingest
-    except Exception:  # noqa: BLE001
-        ingest_fn = None
+    # --legacy: no permissions and no write-time maintenance, i.e. the contract the
+    # frontend was first integrated against (no member header, no tentative status).
+    import sys
+    legacy = "--legacy" in sys.argv
+    org, ingest_fn = None, None
+    if not legacy:
+        from brainbob.acl import Org
+        org = Org.load(os.path.join(os.path.dirname(os.path.abspath(__file__)), "fixtures", "rusty_rod", "org.json"))
+        try:
+            from brainbob import maintain
+            ingest_fn = maintain.ingest
+        except Exception:  # noqa: BLE001
+            ingest_fn = None
+    print("BrainBob backend:", "legacy (no permissions, no maintenance)" if legacy
+          else "Rusty Rod permissions + write-time maintenance")
     app = create_app(store, curator, agent, evaluator, judge, events=events,
                      episode_factory=types.Episode, task_factory=types.Task,
                      episodes_path="episodes.jsonl", org=org, ingest=ingest_fn)

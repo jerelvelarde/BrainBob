@@ -2,7 +2,7 @@
 import json, re
 from . import events, llm
 
-PROMPT = """Below is a chat session between a user and an AI assistant (session date: {date}). Extract atomic, self-contained facts worth remembering long-term: facts about the user, their preferences, events (with dates if mentioned), plans, and specific information the assistant gave (names, numbers, recommendations, lists). One fact per item, include concrete details. Output ONLY a JSON array of strings, no commentary.
+PROMPT = """Below is a conversation, message or note (date: {date}). It may be between teammates, or between a user and an AI assistant. Extract atomic, self-contained facts worth remembering long-term: decisions, commitments and deadlines, plans, owners, events (with dates if mentioned), facts about people and their preferences, and specific information given (names, numbers, recommendations, lists). Keep who said or decided it when that matters. If the text states any fact, extract it. One fact per item, include concrete details. Output ONLY a JSON array of strings, no commentary.
 
 SESSION:
 {s}"""
