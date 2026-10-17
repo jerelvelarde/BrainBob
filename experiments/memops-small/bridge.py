@@ -54,6 +54,7 @@ def local_generator(adapter=None, base=BASE, revision=BASE_REVISION, max_new_tok
         with torch.no_grad():
             out = m.generate(**enc, do_sample=False, max_new_tokens=max_new_tokens, pad_token_id=tok.pad_token_id)
         return tok.decode(out[0, enc["input_ids"].shape[1]:], skip_special_tokens=True)
+    gen.model_id = f"{base}@{revision}" + (f"+{adapter}" if adapter else "")
     return gen
 
 
@@ -72,4 +73,5 @@ def make_judge(model_or_endpoint, *, model=None, api_key=None):
     def judge(cand, mem):
         try: return parse_strict(gen(messages(cand, mem)))
         except Exception: return None
+    judge.model_id = model or getattr(gen, "model_id", None) or "custom:memops-unidentified"
     return judge

@@ -100,6 +100,18 @@ def sentinel_oracle():
     return o
 
 
+def test_run_refuses_existing_artifact_directory(tmp_path):
+    world_path, oracles_dir = write_mini(tmp_path)
+    output = tmp_path / "existing"
+    output.mkdir()
+    trace = output / "traces.jsonl"
+    trace.write_text("original evidence\n")
+    with pytest.raises(FileExistsError):
+        runmod.run_benchmark([world_path], ["always_refuse"], out_dir=str(output),
+                             oracles_dir=oracles_dir, log=lambda *_: None)
+    assert trace.read_text() == "original evidence\n"
+
+
 def test_oracle_never_reaches_adapter(tmp_path):
     Spy.log, Spy.instances = [], []
     world_path, oracles_dir = write_mini(tmp_path, oracle=sentinel_oracle())

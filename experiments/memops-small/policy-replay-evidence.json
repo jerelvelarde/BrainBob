@@ -1,0 +1,384 @@
+{
+  "kind": "saved_response_policy_replay_not_fresh_inference",
+  "checked_date": "2026-10-17",
+  "source_run_id": "20261017-210457",
+  "run_meta_sha256": "edea71f3899bd97321f68877e7b6ba117b7d3c451e4ce73e3b6766cadadaba84",
+  "source_sha256": {
+    "experiments/memops-small/replay_policy.py": "f15ba80994fee52d19675034b01c3a15a706cf3b6de9c96dbadde77a40b0354a",
+    "backend/brainbob/maintain.py": "98f76ffc43ccdf870cd374467cb59b2f0ef2a2db5f76001e0f699708d36cae44",
+    "experiments/memops-small/bridge.py": "2f8e299a4dad4ed321793b442e826c3c1ce4f4df14dbd15395c0e0ea275c7de9"
+  },
+  "validation": {
+    "command": "backend/.venv/bin/python -m pytest backend/tests/test_maintain.py backend/tests/test_memops_bridge.py backend/tests/test_memops_policy_replay.py -q",
+    "passed": 69
+  },
+  "results": {
+    "base": {
+      "kind": "saved_response_policy_replay_not_fresh_inference",
+      "model": "Qwen/Qwen3-0.6B@c1899de289a04d12100db370d81485cdf75e47ca",
+      "limitations": [
+        "Provided candidate facts bypass extraction; this does not evaluate curator quality.",
+        "Single-neighbor isolated stores; four controlled authority/lock interventions.",
+        "Existing benchmark IDs/source IDs differ from live bridge IDs; no new model response is claimed.",
+        "Pair classifier and policy stress diagnostic; not full Bob Benchmark CATS or production rollout."
+      ],
+      "sha256": {
+        "inputs": "68b30f7d0760162f1db5da1ed213aa29b7310093734bdf93463c93f3cb3487bc",
+        "predictions": "94e38bf4d1c32d1a56232ee017eb317214dce13518b40ec7fc5bad4237e0adf1",
+        "gold": "3959d2afe4a95cbb186f6dc23550b64d00615838e75d0de429a17f4f61d8d03e"
+      },
+      "conditions": {
+        "approved_unlocked": {
+          "n": 60,
+          "actions": {
+            "reject": 46,
+            "add": 14
+          },
+          "classification_correct": 32,
+          "false_conflict_count": 0,
+          "false_conflict_overwrites": 0,
+          "false_conflict_overwrite_ids": [],
+          "old_records_retired": 0
+        },
+        "approved_locked": {
+          "n": 60,
+          "actions": {
+            "reject": 46,
+            "add": 14
+          },
+          "classification_correct": 32,
+          "false_conflict_count": 0,
+          "false_conflict_overwrites": 0,
+          "false_conflict_overwrite_ids": [],
+          "old_records_retired": 0
+        },
+        "tentative": {
+          "n": 60,
+          "actions": {
+            "reject": 46,
+            "add": 14
+          },
+          "classification_correct": 32,
+          "false_conflict_count": 0,
+          "false_conflict_overwrites": 0,
+          "false_conflict_overwrite_ids": [],
+          "old_records_retired": 0
+        },
+        "unapproved_author": {
+          "n": 60,
+          "actions": {
+            "reject": 46,
+            "add": 14
+          },
+          "classification_correct": 32,
+          "false_conflict_count": 0,
+          "false_conflict_overwrites": 0,
+          "false_conflict_overwrite_ids": [],
+          "old_records_retired": 0
+        }
+      },
+      "full_trace_sha256": "002ed1183e6aaabae4dc8471e204605915de9db64a55961399420f826e1c8ef1",
+      "full_trace_path": "experiments/memops-small/out/runs/20261017-210457/base-policy-replay.json",
+      "false_conflict_action_traces": []
+    },
+    "tuned": {
+      "kind": "saved_response_policy_replay_not_fresh_inference",
+      "model": "Qwen/Qwen3-0.6B@c1899de289a04d12100db370d81485cdf75e47ca+Guangze/memops-small-qwen3-0.6b-lora@b904e6ec0baea37bf70209093b8c59332d3c450a",
+      "limitations": [
+        "Provided candidate facts bypass extraction; this does not evaluate curator quality.",
+        "Single-neighbor isolated stores; four controlled authority/lock interventions.",
+        "Existing benchmark IDs/source IDs differ from live bridge IDs; no new model response is claimed.",
+        "Pair classifier and policy stress diagnostic; not full Bob Benchmark CATS or production rollout."
+      ],
+      "sha256": {
+        "inputs": "68b30f7d0760162f1db5da1ed213aa29b7310093734bdf93463c93f3cb3487bc",
+        "predictions": "3ffd9d101895200812e52cb7a1e0bcc525e5cbc42c2143bfd1d65fff9bb52a42",
+        "gold": "3959d2afe4a95cbb186f6dc23550b64d00615838e75d0de429a17f4f61d8d03e"
+      },
+      "conditions": {
+        "approved_unlocked": {
+          "n": 60,
+          "actions": {
+            "add": 31,
+            "reject": 14,
+            "supersede": 15
+          },
+          "classification_correct": 42,
+          "false_conflict_count": 5,
+          "false_conflict_overwrites": 5,
+          "false_conflict_overwrite_ids": [
+            "eval-007",
+            "eval-011",
+            "eval-015",
+            "eval-035",
+            "eval-048"
+          ],
+          "old_records_retired": 15
+        },
+        "approved_locked": {
+          "n": 60,
+          "actions": {
+            "add": 31,
+            "reject": 14,
+            "tentative": 15
+          },
+          "classification_correct": 42,
+          "false_conflict_count": 5,
+          "false_conflict_overwrites": 0,
+          "false_conflict_overwrite_ids": [],
+          "old_records_retired": 0
+        },
+        "tentative": {
+          "n": 60,
+          "actions": {
+            "add": 31,
+            "reject": 14,
+            "tentative": 15
+          },
+          "classification_correct": 42,
+          "false_conflict_count": 5,
+          "false_conflict_overwrites": 0,
+          "false_conflict_overwrite_ids": [],
+          "old_records_retired": 0
+        },
+        "unapproved_author": {
+          "n": 60,
+          "actions": {
+            "add": 31,
+            "reject": 14,
+            "tentative": 15
+          },
+          "classification_correct": 42,
+          "false_conflict_count": 5,
+          "false_conflict_overwrites": 0,
+          "false_conflict_overwrite_ids": [],
+          "old_records_retired": 0
+        }
+      },
+      "full_trace_sha256": "06b5628eef6b54996407a1d046cd1f50959f3d4c1dee9181e9be7e2a25f4a8f7",
+      "full_trace_path": "experiments/memops-small/out/runs/20261017-210457/tuned-policy-replay.json",
+      "false_conflict_action_traces": [
+        {
+          "id": "eval-007",
+          "input_sha256": "a261e0329d247a54f836c3e06bc0c38472afff0947fe148114629f2b34494137",
+          "condition": "approved_unlocked",
+          "verdict": "conflict",
+          "action": "supersede",
+          "reason": "approved correction of m1",
+          "old_status": "retired",
+          "new_status": "trial",
+          "decision_model": "saved-response:Qwen/Qwen3-0.6B@c1899de289a04d12100db370d81485cdf75e47ca+Guangze/memops-small-qwen3-0.6b-lora@b904e6ec0baea37bf70209093b8c59332d3c450a"
+        },
+        {
+          "id": "eval-007",
+          "input_sha256": "a261e0329d247a54f836c3e06bc0c38472afff0947fe148114629f2b34494137",
+          "condition": "approved_locked",
+          "verdict": "conflict",
+          "action": "tentative",
+          "reason": "conflicts with m1",
+          "old_status": "locked",
+          "new_status": "tentative",
+          "decision_model": "saved-response:Qwen/Qwen3-0.6B@c1899de289a04d12100db370d81485cdf75e47ca+Guangze/memops-small-qwen3-0.6b-lora@b904e6ec0baea37bf70209093b8c59332d3c450a"
+        },
+        {
+          "id": "eval-007",
+          "input_sha256": "a261e0329d247a54f836c3e06bc0c38472afff0947fe148114629f2b34494137",
+          "condition": "tentative",
+          "verdict": "conflict",
+          "action": "tentative",
+          "reason": "conflicts with m1",
+          "old_status": "trial",
+          "new_status": "tentative",
+          "decision_model": "saved-response:Qwen/Qwen3-0.6B@c1899de289a04d12100db370d81485cdf75e47ca+Guangze/memops-small-qwen3-0.6b-lora@b904e6ec0baea37bf70209093b8c59332d3c450a"
+        },
+        {
+          "id": "eval-007",
+          "input_sha256": "a261e0329d247a54f836c3e06bc0c38472afff0947fe148114629f2b34494137",
+          "condition": "unapproved_author",
+          "verdict": "conflict",
+          "action": "tentative",
+          "reason": "conflicts with m1",
+          "old_status": "trial",
+          "new_status": "tentative",
+          "decision_model": "saved-response:Qwen/Qwen3-0.6B@c1899de289a04d12100db370d81485cdf75e47ca+Guangze/memops-small-qwen3-0.6b-lora@b904e6ec0baea37bf70209093b8c59332d3c450a"
+        },
+        {
+          "id": "eval-011",
+          "input_sha256": "3b378e8a502d7620509c68934520c5113c24d11c6f0c1a9c1dec0e2bee52c152",
+          "condition": "approved_unlocked",
+          "verdict": "conflict",
+          "action": "supersede",
+          "reason": "approved correction of m1",
+          "old_status": "retired",
+          "new_status": "trial",
+          "decision_model": "saved-response:Qwen/Qwen3-0.6B@c1899de289a04d12100db370d81485cdf75e47ca+Guangze/memops-small-qwen3-0.6b-lora@b904e6ec0baea37bf70209093b8c59332d3c450a"
+        },
+        {
+          "id": "eval-011",
+          "input_sha256": "3b378e8a502d7620509c68934520c5113c24d11c6f0c1a9c1dec0e2bee52c152",
+          "condition": "approved_locked",
+          "verdict": "conflict",
+          "action": "tentative",
+          "reason": "conflicts with m1",
+          "old_status": "locked",
+          "new_status": "tentative",
+          "decision_model": "saved-response:Qwen/Qwen3-0.6B@c1899de289a04d12100db370d81485cdf75e47ca+Guangze/memops-small-qwen3-0.6b-lora@b904e6ec0baea37bf70209093b8c59332d3c450a"
+        },
+        {
+          "id": "eval-011",
+          "input_sha256": "3b378e8a502d7620509c68934520c5113c24d11c6f0c1a9c1dec0e2bee52c152",
+          "condition": "tentative",
+          "verdict": "conflict",
+          "action": "tentative",
+          "reason": "conflicts with m1",
+          "old_status": "trial",
+          "new_status": "tentative",
+          "decision_model": "saved-response:Qwen/Qwen3-0.6B@c1899de289a04d12100db370d81485cdf75e47ca+Guangze/memops-small-qwen3-0.6b-lora@b904e6ec0baea37bf70209093b8c59332d3c450a"
+        },
+        {
+          "id": "eval-011",
+          "input_sha256": "3b378e8a502d7620509c68934520c5113c24d11c6f0c1a9c1dec0e2bee52c152",
+          "condition": "unapproved_author",
+          "verdict": "conflict",
+          "action": "tentative",
+          "reason": "conflicts with m1",
+          "old_status": "trial",
+          "new_status": "tentative",
+          "decision_model": "saved-response:Qwen/Qwen3-0.6B@c1899de289a04d12100db370d81485cdf75e47ca+Guangze/memops-small-qwen3-0.6b-lora@b904e6ec0baea37bf70209093b8c59332d3c450a"
+        },
+        {
+          "id": "eval-015",
+          "input_sha256": "042516efc9e42e4a8daf0e541be9803eb32fcb7dd61f08cc7f0518fbb26ef6ef",
+          "condition": "approved_unlocked",
+          "verdict": "conflict",
+          "action": "supersede",
+          "reason": "approved correction of m1",
+          "old_status": "retired",
+          "new_status": "trial",
+          "decision_model": "saved-response:Qwen/Qwen3-0.6B@c1899de289a04d12100db370d81485cdf75e47ca+Guangze/memops-small-qwen3-0.6b-lora@b904e6ec0baea37bf70209093b8c59332d3c450a"
+        },
+        {
+          "id": "eval-015",
+          "input_sha256": "042516efc9e42e4a8daf0e541be9803eb32fcb7dd61f08cc7f0518fbb26ef6ef",
+          "condition": "approved_locked",
+          "verdict": "conflict",
+          "action": "tentative",
+          "reason": "conflicts with m1",
+          "old_status": "locked",
+          "new_status": "tentative",
+          "decision_model": "saved-response:Qwen/Qwen3-0.6B@c1899de289a04d12100db370d81485cdf75e47ca+Guangze/memops-small-qwen3-0.6b-lora@b904e6ec0baea37bf70209093b8c59332d3c450a"
+        },
+        {
+          "id": "eval-015",
+          "input_sha256": "042516efc9e42e4a8daf0e541be9803eb32fcb7dd61f08cc7f0518fbb26ef6ef",
+          "condition": "tentative",
+          "verdict": "conflict",
+          "action": "tentative",
+          "reason": "conflicts with m1",
+          "old_status": "trial",
+          "new_status": "tentative",
+          "decision_model": "saved-response:Qwen/Qwen3-0.6B@c1899de289a04d12100db370d81485cdf75e47ca+Guangze/memops-small-qwen3-0.6b-lora@b904e6ec0baea37bf70209093b8c59332d3c450a"
+        },
+        {
+          "id": "eval-015",
+          "input_sha256": "042516efc9e42e4a8daf0e541be9803eb32fcb7dd61f08cc7f0518fbb26ef6ef",
+          "condition": "unapproved_author",
+          "verdict": "conflict",
+          "action": "tentative",
+          "reason": "conflicts with m1",
+          "old_status": "trial",
+          "new_status": "tentative",
+          "decision_model": "saved-response:Qwen/Qwen3-0.6B@c1899de289a04d12100db370d81485cdf75e47ca+Guangze/memops-small-qwen3-0.6b-lora@b904e6ec0baea37bf70209093b8c59332d3c450a"
+        },
+        {
+          "id": "eval-035",
+          "input_sha256": "1e504881df459cf7b585b04e681675d011c02941ac61b260bcc8d20ec00f962d",
+          "condition": "approved_unlocked",
+          "verdict": "conflict",
+          "action": "supersede",
+          "reason": "approved correction of m1",
+          "old_status": "retired",
+          "new_status": "trial",
+          "decision_model": "saved-response:Qwen/Qwen3-0.6B@c1899de289a04d12100db370d81485cdf75e47ca+Guangze/memops-small-qwen3-0.6b-lora@b904e6ec0baea37bf70209093b8c59332d3c450a"
+        },
+        {
+          "id": "eval-035",
+          "input_sha256": "1e504881df459cf7b585b04e681675d011c02941ac61b260bcc8d20ec00f962d",
+          "condition": "approved_locked",
+          "verdict": "conflict",
+          "action": "tentative",
+          "reason": "conflicts with m1",
+          "old_status": "locked",
+          "new_status": "tentative",
+          "decision_model": "saved-response:Qwen/Qwen3-0.6B@c1899de289a04d12100db370d81485cdf75e47ca+Guangze/memops-small-qwen3-0.6b-lora@b904e6ec0baea37bf70209093b8c59332d3c450a"
+        },
+        {
+          "id": "eval-035",
+          "input_sha256": "1e504881df459cf7b585b04e681675d011c02941ac61b260bcc8d20ec00f962d",
+          "condition": "tentative",
+          "verdict": "conflict",
+          "action": "tentative",
+          "reason": "conflicts with m1",
+          "old_status": "trial",
+          "new_status": "tentative",
+          "decision_model": "saved-response:Qwen/Qwen3-0.6B@c1899de289a04d12100db370d81485cdf75e47ca+Guangze/memops-small-qwen3-0.6b-lora@b904e6ec0baea37bf70209093b8c59332d3c450a"
+        },
+        {
+          "id": "eval-035",
+          "input_sha256": "1e504881df459cf7b585b04e681675d011c02941ac61b260bcc8d20ec00f962d",
+          "condition": "unapproved_author",
+          "verdict": "conflict",
+          "action": "tentative",
+          "reason": "conflicts with m1",
+          "old_status": "trial",
+          "new_status": "tentative",
+          "decision_model": "saved-response:Qwen/Qwen3-0.6B@c1899de289a04d12100db370d81485cdf75e47ca+Guangze/memops-small-qwen3-0.6b-lora@b904e6ec0baea37bf70209093b8c59332d3c450a"
+        },
+        {
+          "id": "eval-048",
+          "input_sha256": "452e493080b99950a70ad9f1709017eb03581cef4c1320d26cb12ac200fb0a45",
+          "condition": "approved_unlocked",
+          "verdict": "conflict",
+          "action": "supersede",
+          "reason": "approved correction of m1",
+          "old_status": "retired",
+          "new_status": "trial",
+          "decision_model": "saved-response:Qwen/Qwen3-0.6B@c1899de289a04d12100db370d81485cdf75e47ca+Guangze/memops-small-qwen3-0.6b-lora@b904e6ec0baea37bf70209093b8c59332d3c450a"
+        },
+        {
+          "id": "eval-048",
+          "input_sha256": "452e493080b99950a70ad9f1709017eb03581cef4c1320d26cb12ac200fb0a45",
+          "condition": "approved_locked",
+          "verdict": "conflict",
+          "action": "tentative",
+          "reason": "conflicts with m1",
+          "old_status": "locked",
+          "new_status": "tentative",
+          "decision_model": "saved-response:Qwen/Qwen3-0.6B@c1899de289a04d12100db370d81485cdf75e47ca+Guangze/memops-small-qwen3-0.6b-lora@b904e6ec0baea37bf70209093b8c59332d3c450a"
+        },
+        {
+          "id": "eval-048",
+          "input_sha256": "452e493080b99950a70ad9f1709017eb03581cef4c1320d26cb12ac200fb0a45",
+          "condition": "tentative",
+          "verdict": "conflict",
+          "action": "tentative",
+          "reason": "conflicts with m1",
+          "old_status": "trial",
+          "new_status": "tentative",
+          "decision_model": "saved-response:Qwen/Qwen3-0.6B@c1899de289a04d12100db370d81485cdf75e47ca+Guangze/memops-small-qwen3-0.6b-lora@b904e6ec0baea37bf70209093b8c59332d3c450a"
+        },
+        {
+          "id": "eval-048",
+          "input_sha256": "452e493080b99950a70ad9f1709017eb03581cef4c1320d26cb12ac200fb0a45",
+          "condition": "unapproved_author",
+          "verdict": "conflict",
+          "action": "tentative",
+          "reason": "conflicts with m1",
+          "old_status": "trial",
+          "new_status": "tentative",
+          "decision_model": "saved-response:Qwen/Qwen3-0.6B@c1899de289a04d12100db370d81485cdf75e47ca+Guangze/memops-small-qwen3-0.6b-lora@b904e6ec0baea37bf70209093b8c59332d3c450a"
+        }
+      ]
+    }
+  }
+}

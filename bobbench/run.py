@@ -234,7 +234,9 @@ def run_benchmark(world_paths: list[str], conditions: list[str], replicates: int
         while os.path.exists(out_dir):
             k += 1
             out_dir = os.path.join(RESULTS_DIR, f"{stamp}-{k}")
-    os.makedirs(out_dir, exist_ok=True)
+    # Run artifacts are evidence. Re-scoring is a separate explicit operation;
+    # a fresh run must never replace an existing trace or candidate state.
+    os.makedirs(out_dir, exist_ok=False)
     factories = dict(factories or {})
     resolved, unsupported = {}, {}
     for c in conditions:
