@@ -14,9 +14,21 @@ pnpm seed:company
 pnpm dev
 ```
 
-`pnpm backend` verifies the configured model endpoints using real provider requests before starting Bonan's unmodified server on port 3001. It stores the running company's JSONL data in ignored `data/workspace/`, separately from benchmark runs. `backend/.venv/bin/python scripts/run-live-backend.py --check` performs only the provider checks. The application launcher defaults to NVIDIA Nemotron Nano for extraction, NVIDIA Nemotron Super for chat, and GPT-OSS-120B for judging. The backend's model environment overrides remain available; benchmark defaults are unchanged.
+`pnpm backend` verifies the configured model endpoints using real provider requests before starting the Python server on port 3001. It stores the running company's JSONL data in ignored `data/workspace/`, separately from benchmark runs. `backend/.venv/bin/python scripts/run-live-backend.py --check` performs only the provider checks. The application launcher defaults to NVIDIA Nemotron Nano for extraction, NVIDIA Nemotron Super for chat, a separate NVIDIA Nemotron Nano role for memory summaries, and GPT-OSS-120B for judging. The backend's model environment overrides remain available; benchmark defaults are unchanged.
 
 Next proxies `/api/brainbob` to `http://127.0.0.1:3001`. Set `BRAINBOB_API_URL` before starting Next to use another backend. There is no fallback answer or synthetic event generator if inference fails.
+
+## Memory summary and files
+
+In full-screen chat, open **Memory** (on mobile, **Brain & memory**, then the folder button). **Summary** opens by default and summarizes current saved memory for the selected person. **Memory files** keeps the original records grouped by personal, team, and organization scope. After an answer, its **Used in reply** and **Saved** filters distinguish the reply snapshot from current memory. Each record still opens Source & history; snapshot download remains on the files tab.
+
+The backend's `GET /memories/summary` endpoint applies member scope checks and excludes retired records before invoking the dedicated `summarizer` role. It receives memory records, not the conversation or a user question, and cannot write memory or emit memory events. The prompt asks the model to preserve uncertainty and flagged conflicts; it is an overview, not an approval or factual-accuracy check. Summary always describes current saved context, not an earlier reply's snapshot.
+
+The default is `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B` on Crusoe, with thinking disabled, temperature 0, and a 768-token output budget. This is smaller than the live app's Super answering model. Existing Crusoe credentials are reused. Configure only this role in the backend environment with `BRAINBOB_SUMMARIZER_MODEL`, `BRAINBOB_SUMMARIZER_BASE_URL`, or `BRAINBOB_SUMMARIZER_API_KEY`; never expose credentials to the browser. The launcher preflight includes the summarizer and deduplicates checks for identical model/endpoint pairs.
+
+Summary requests refresh when accessible memory changes. Identical input and model settings reuse the existing disk cache. Input is limited to 48,000 serialized record characters; the UI discloses partial coverage. Empty memory skips inference. Provider failures show a retry action, while Memory files stays usable. Each inference attempt has a 30-second timeout, with up to two attempts; the browser stops waiting after 75 seconds.
+
+[API details](../backend/FRONTEND.md) · [Live verification and screenshots](../judging/memory-summary-20261017/README.md).
 
 ## Source data
 

@@ -64,6 +64,7 @@ These experiments measure different capabilities and should not be averaged. The
 ## What you can use today
 
 - **Live agent workspace:** three independent desk conversations, CopilotKit chat, suggested actions, and returned session context.
+- **Memory overview:** full-screen chat has a Summary tab powered by a dedicated NVIDIA Nemotron Nano model on Crusoe, plus Memory files for original records and source history.
 - **Scoped memory:** source ingestion, BM25 retrieval, approved corrections, tentative conflicts, owner locks, and retirement.
 - **Inspectable operations:** source/model details, citations, persisted HTTP/SSE events, and read-only retracing.
 - **Reproducible evidence:** published synthetic benchmark, saved predictions, versioned scorecards, and recorded live-app checks.
@@ -82,7 +83,7 @@ uv venv --python 3.12 backend/.venv
 uv pip install --python backend/.venv/bin/python -r backend/requirements.txt
 ```
 
-Save a Crusoe API key privately at `~/.config/crusoe/api.key` with mode `0600`, or set `BRAINBOB_API_KEY` in the backend environment. Keep it out of Git and browser environment variables. Startup checks, source ingestion, and chat make real provider calls.
+Save a Crusoe API key privately at `~/.config/crusoe/api.key` with mode `0600`, or set `BRAINBOB_API_KEY` in the backend environment. Keep it out of Git and browser environment variables. Startup checks, source ingestion, chat, and memory summaries make real provider calls; identical summary inputs can reuse the model cache.
 
 ```sh
 # Terminal 1: verify provider access and start the backend on port 3001
@@ -93,7 +94,7 @@ pnpm seed:company
 pnpm dev
 ```
 
-Open **[http://127.0.0.1:3000](http://127.0.0.1:3000)**. Select a desk, ask for a draft, inspect its cited memories, and use Retrace to follow a correction. `/demo`, `/rehearsal`, and `/character-study` redirect to this workspace.
+Open **[http://127.0.0.1:3000](http://127.0.0.1:3000)**. Select a desk, ask for a draft, and open **Memory**. **Summary** gives an overview of current accessible memory; **Memory files** shows saved records or the sources used in a reply. Open a source for its history, or use Retrace to follow a correction. [Summary setup and behavior](docs/live-workspace.md#memory-summary-and-files). `/demo`, `/rehearsal`, and `/character-study` redirect to this workspace.
 
 The importer covers **29 fictional conversations, 18 people, and 22 scopes**. Repeating it skips previously imported sources. Memory and events persist under ignored `data/workspace/`; desk conversations and returned session files remain browser-local. [Full setup and behavior](docs/live-workspace.md) · [Proxy configuration and offline smoke check](apps/web/README.md).
 
@@ -115,6 +116,7 @@ pnpm build
 | Service | Python / FastAPI; same-origin Next proxy for HTTP and SSE |
 | Memory | JSONL records and events, BM25 retrieval, scope checks, source and supersession links |
 | Live-app extraction / answering | NVIDIA Nemotron Nano / Nemotron Super on Crusoe |
+| Memory summarization | Dedicated NVIDIA Nemotron Nano 30B-A3B role on Crusoe; read-only |
 | Default maintenance and audit judge | `openai/gpt-oss-120b` on Crusoe |
 | Evaluation | Separate source-support audit, task-usefulness evaluator, and benchmark scorers |
 | Optional NemoClaw/OpenClaw adapter | Scoped memory tools and MCP server implemented; sandbox integration and end-to-end validation pending |
@@ -138,4 +140,5 @@ Switchyard, SQL storage, and planner alignment remain roadmap work. GateMem, MUM
 | [Judging guide](judging/README.md) | Reviewer reading path |
 | [Evidence sheet](judging/evidence.md) | Recorded outcomes and remaining submission fields |
 | [Live-workspace verification](judging/live-workspace-20261017/README.md) | Real-provider development demo and access checks |
+| [Memory-summary verification](judging/memory-summary-20261017/README.md) | Live Nano inference, tab behavior, and desktop/mobile evidence |
 | [Proof of work](judging/proof-of-work/index.html) | Commit-linked build milestones and screenshots |

@@ -1,0 +1,33 @@
+{
+  "implementation_commit": "62c05992da468735eef0da7cfbbf722a19290a9f",
+  "checked_at": "2026-10-17T23:16:49.885Z",
+  "mode": "Live local backend and Crusoe-generated summaries (content cache may be reused). Error case alone uses a simulated HTTP 503.",
+  "captures": [
+    {
+      "file": "summary-desktop.png",
+      "captured_at": "2026-10-17T23:16:29.912Z"
+    },
+    {
+      "file": "files-desktop.png",
+      "captured_at": "2026-10-17T23:16:31.289Z"
+    },
+    {
+      "file": "summary-mobile.png",
+      "captured_at": "2026-10-17T23:16:34.225Z"
+    },
+    {
+      "file": "files-mobile.png",
+      "captured_at": "2026-10-17T23:16:35.688Z"
+    }
+  ],
+  "checks": {
+    "default_summary": true,
+    "memory_files": true,
+    "keyboard_arrows_home_end": true,
+    "mobile_no_horizontal_overflow": true,
+    "source_inspection": true,
+    "files_available_on_error": true,
+    "retry_recovers_live": true
+  },
+  "page_errors": []
+}

@@ -26,6 +26,7 @@ backend/
     memory.py          MemoryStore
     curator.py         ingest(episode, store) -> list[Memory]
     agent.py           answer(question, memories, now=None) -> Answer
+    summary.py         summarize(permitted_active_memories) -> overview + coverage
     evaluator.py       Evaluator(store, strategy).observe / review / report
     events.py          emit(type, **data); subscribe() -> queue; events.jsonl
   adapters/
@@ -61,6 +62,7 @@ Decision(memory_id, action: "promote"|"retire"|"flag", reason: str, task_ids: li
 | memory | `MemoryStore(path=None, tombstone_jaccard=0.8)`: `add(text, *, author, origin, date, scope="team", status="trial") -> (Memory or None, reason)`, `search(query, k=40, reader=None) -> list[Memory]` (active only; with `reader` path: scope equals reader or is an ancestor, compared by `/` segments), `get(id)`, `all()`, `set_status(id, status, reason)`, `flag(id, reason)`, `correct(id, text, author) -> (new, old)`, `retire(id, reason, author)`, `lock(id, owner)`, `resolve(id, owner, action, text=None)` (PermissionError if not the owner or the memory is locked and the caller is not its owner) | BM25 index, normalized dedupe, tombstone Jaccard vs retired, jsonl persistence |
 | curator | `ingest(episode, store, author=None, role="curator") -> list[Memory]`; `extract(episode, role) -> list[str]` (model call only, so callers can run extraction in parallel and add in a fixed order) | extraction prompt, JSON/bullet fallback parsing; author defaults to the role |
 | agent | `answer(question, memories, now=None) -> Answer` | answer prompt; memories numbered [m1]..; model ends with `CITED: m3, m7`; parse to memory ids |
+| summary | `summarize(memories) -> {summary, model, memory_count, total_count, truncated}`; caller supplies permitted, non-retired records | summary-only prompt, input budget, empty-result handling; no memory writes |
 | evaluator | `Evaluator(store, strategy=leave_one_out, min_changes=3)`: `observe(task, memories, answer_fn) -> list[Evidence]`, `review(confirm_fn) -> list[Decision]`, `report() -> dict` | strategies (leave_one_out, sample_pct, random_half_hide), flip-only evidence, confirm-before-retire, author ledger |
 | events | `emit(type, **data)`, `subscribe() -> queue.Queue`, `history(after=None) -> list`, `set_log(path)` | in-process bus + append to events.jsonl; every event has a monotonic `seq`, restored from the log on `set_log` |
 
@@ -70,6 +72,7 @@ Roles -> models (llm.py):
 |---|---|---|
 | curator | nvidia/Nemotron-3.5-Lightning-30B-A3B | thinking off |
 | agent | nvidia/Nemotron-3.5-Lightning-30B-A3B | temperature 0, max_tokens >= 1024; Super ($0.30/$2.40) only via env BRAINBOB_AGENT_MODEL, and never mixed across conditions of one comparison |
+| summarizer | nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B | read-only overview; thinking off, temperature 0, max_tokens 768; separate from agent and curator |
 | judge | openai/gpt-oss-120b | temperature 0; different family from agent |
 | curator_sloppy | nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B | stress test only (in progress): a cheap, careless teammate; thinking off, high temperature |
 
@@ -119,6 +122,7 @@ The core emits `memory.*` and `evidence.recorded`. `memory.retrieved` and
 | POST | /feedback | {task_id, correct_answer} | {evidence: [Evidence]}  (grade = judge(question, correct_answer, answer); runs leave_one_out on that task) |
 | POST | /review | {} | {decisions: [Decision]} |
 | GET | /memories | ?status= | [Memory + evidence counts] |
+| GET | /memories/summary | | {summary, model, memory_count, total_count, truncated}; scoped active records, empty store skips inference, provider failure returns 503 |
 | GET | /report | | author ledger + retire reasons |
 | GET | /events | ?after=<seq> or Last-Event-ID | SSE, each message has `id: <seq>`; replays history, then `replay.done {seq}`, then live |
 
