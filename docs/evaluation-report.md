@@ -15,7 +15,7 @@ Status date: 2026-10-17 (Pacific), updated 14:36. Experiments 1 to 5 were writte
 ## Claims we do not make
 
 - **Maintenance beats append-only on the Bob pilot.** maintained 74.4 vs append_only 67.3 macro CATS, +7.1 pts [-6.2, +21.6]; the interval includes zero and per-world results go both ways.
-- **BrainBob beats full history on the Bob pilot.** full_history scored 88.6 macro CATS; the pilot worlds are 28 to 31 events long, so the whole authorized history fits in context.
+- **BrainBob beats full history on the Bob pilot.** full_history scored 88.6 macro CATS; the pilot worlds have 27 to 31 timeline items, so the whole authorized history fits in context.
 - **The tuned 0.6B checker can become the default judge.** It trails both large judges and calls 5 non-conflict pairs "conflict" (base: 0), which raises overwrite risk under authorized corrections.
 - **Scores on GateMem, MUMBench or CoMemBench.** None were run; see [external-benchmark-status.md](external-benchmark-status.md).
 
@@ -193,7 +193,7 @@ Task: label (existing memory, new candidate) as same, conflict or unrelated. Jer
 | `openai/gpt-oss-120b` (production judge) | 53/60 | 0.881 | 14 | 1 |
 | `nvidia/NVIDIA-Nemotron-3-Super-120B-A12B` (teacher) | 56/60 | 0.933 | 20 | 4 |
 
-Tuned vs base: +16.7 pts, template-cluster 95% [+5.0, +28.3]. Training: 144 synthetic pairs from the Nemotron Super teacher (23 labels corrected by hand), LoRA r 16, 1 epoch, 9 steps in 8.4 s on one L4; total cost about $0.12. Recommendation: keep the tuned checker opt-in; it does not meet the issue's gate that harmful overwrites must not increase. The 60 pairs have now been inspected case by case, so any further tuning must be reported on a fresh frozen set. A second training round with more data is in preparation. Artifacts: [runs/20261017-210457](../experiments/memops-small/out/runs/20261017-210457/); public adapter and model card on the Hugging Face Hub.
+Tuned vs base: +16.7 pts, template-cluster 95% [+5.0, +28.3]. Training: 144 synthetic pairs from the Nemotron Super teacher (20 teacher labels corrected and 3 ambiguous pairs dropped by hand), LoRA r 16, 1 epoch, 9 steps, 8.6 s training time per run_meta.json, on one L4; total cost about $0.12. Recommendation: keep the tuned checker opt-in; it does not meet the issue's gate that harmful overwrites must not increase. The 60 pairs have now been inspected case by case, so any further tuning must be reported on a fresh frozen set. A second training round was prepared and then stopped, following the no-retraining scope of issues #6 and #7. Artifacts: [runs/20261017-210457](../experiments/memops-small/out/runs/20261017-210457/); public adapter and model card on the Hugging Face Hub.
 
 ## External benchmarks
 
