@@ -24,7 +24,7 @@ export function sessionPrompts(records: readonly PromptMemory[], reader: string)
   }
   return [
     prompt("draft", project ? (projectName === "Atlas" ? "Draft an Atlas update" : "Draft a client update") : "Draft my next update",
-      `Draft a concise ${project ? projectName + " " : ""}update I can review before sending. Apply my saved writing preferences.`, project ?? style,
+      `Write the actual ${project ? projectName + " " : ""}client update for me to review: begin with a greeting to the client sponsor, then write the message in my voice. Include the current approved delivery commitment, the next step, and one useful question. Apply my saved writing preferences.`, project ?? style,
       "Start with the commitments and writing preferences you have shared."),
     prompt("plan", team === "engineering" ? "Plan the next handoff" : team === "executive" ? "Prepare my decision brief" : "Prepare my next client call",
       team === "engineering" ? "Prepare a short engineering handoff: next steps, owners, blockers, and questions to resolve."
