@@ -1,0 +1,361 @@
+{
+  "version": "synthetic-company-v1",
+  "synthetic": true,
+  "organization": "Rusty Rod",
+  "client": "Atlas Harbor",
+  "members": [
+    {
+      "id": "exec-01",
+      "name": "Mara Ellis",
+      "team": "executive"
+    },
+    {
+      "id": "exec-02",
+      "name": "Theo Bennett",
+      "team": "executive"
+    },
+    {
+      "id": "exec-03",
+      "name": "Nadia Chen",
+      "team": "executive"
+    },
+    {
+      "id": "sales-01",
+      "name": "Maya Flores",
+      "team": "sales"
+    },
+    {
+      "id": "sales-02",
+      "name": "Leo Park",
+      "team": "sales"
+    },
+    {
+      "id": "sales-03",
+      "name": "Priya Shah",
+      "team": "sales"
+    },
+    {
+      "id": "sales-04",
+      "name": "Oscar Reed",
+      "team": "sales"
+    },
+    {
+      "id": "sales-05",
+      "name": "Zoe Brooks",
+      "team": "sales"
+    },
+    {
+      "id": "eng-01",
+      "name": "Iris Tan",
+      "team": "engineering"
+    },
+    {
+      "id": "eng-02",
+      "name": "Owen Patel",
+      "team": "engineering"
+    },
+    {
+      "id": "eng-03",
+      "name": "Ada Morgan",
+      "team": "engineering"
+    },
+    {
+      "id": "eng-04",
+      "name": "Finn Rivera",
+      "team": "engineering"
+    },
+    {
+      "id": "eng-05",
+      "name": "Nora Kim",
+      "team": "engineering"
+    },
+    {
+      "id": "eng-06",
+      "name": "Eli Cooper",
+      "team": "engineering"
+    },
+    {
+      "id": "eng-07",
+      "name": "Lena Ortiz",
+      "team": "engineering"
+    },
+    {
+      "id": "eng-08",
+      "name": "Kai Thompson",
+      "team": "engineering"
+    },
+    {
+      "id": "eng-09",
+      "name": "Ruby Singh",
+      "team": "engineering"
+    },
+    {
+      "id": "eng-10",
+      "name": "Sam Walker",
+      "team": "engineering"
+    }
+  ],
+  "episodes": [
+    {
+      "key": "client-brief",
+      "date": "2026-10-01",
+      "author": "exec-01",
+      "scope": "rusty-rod",
+      "authority": "approved",
+      "source": "synthetic-company-v1/client-brief",
+      "text": "[Synthetic company record — fictional people and business.]\nmeeting notes, 2026-10-01\nMara Ellis: Rusty Rod is consulting for Atlas Harbor, a logistics company. The Atlas pilot creates a shared view of shipment exceptions for their operations team. The client sponsor is Elena Voss. Maya Flores owns the client relationship and Iris Tan leads delivery."
+    },
+    {
+      "key": "initial-commitment",
+      "date": "2026-10-02",
+      "author": "exec-01",
+      "scope": "rusty-rod",
+      "authority": "approved",
+      "source": "synthetic-company-v1/initial-commitment",
+      "text": "[Synthetic company record — fictional people and business.]\nmeeting notes, 2026-10-02\nMara Ellis: The approved Atlas pilot delivery date is November 6, 2026. We will publish any approved date change to the whole company."
+    },
+    {
+      "key": "acceptance",
+      "date": "2026-10-03",
+      "author": "exec-02",
+      "scope": "rusty-rod",
+      "authority": "approved",
+      "source": "synthetic-company-v1/acceptance",
+      "text": "[Synthetic company record — fictional people and business.]\nmeeting notes, 2026-10-03\nTheo Bennett: Atlas pilot acceptance requires CSV import, exception tagging, and a daily summary for dispatch supervisors. Automatic customer emails are outside the pilot scope."
+    },
+    {
+      "key": "engineering-plan",
+      "date": "2026-10-05",
+      "author": "eng-01",
+      "scope": "rusty-rod/engineering",
+      "authority": "approved",
+      "source": "synthetic-company-v1/engineering-plan",
+      "text": "[Synthetic company record — fictional people and business.]\nmeeting notes, 2026-10-05\nIris Tan: Owen owns the CSV ingestion adapter; Ada owns exception tagging. The Atlas engineering handoff needs a tested import, a list of unresolved edge cases, and an owner for each blocker. Finn will review end-to-end tests before the handoff."
+    },
+    {
+      "key": "sales-plan",
+      "date": "2026-10-05",
+      "author": "sales-01",
+      "scope": "rusty-rod/sales",
+      "authority": "approved",
+      "source": "synthetic-company-v1/sales-plan",
+      "text": "[Synthetic company record — fictional people and business.]\nmeeting notes, 2026-10-05\nMaya Flores: For Atlas calls, lead with the approved delivery commitment, then scope, then questions for Elena. Leo will collect the dispatcher training questions. Send the call agenda one working day before the meeting."
+    },
+    {
+      "key": "executive-planning",
+      "date": "2026-10-05",
+      "author": "exec-01",
+      "scope": "rusty-rod/executive",
+      "authority": "approved",
+      "source": "synthetic-company-v1/executive-planning",
+      "text": "[Synthetic company record — fictional people and business.]\nmeeting notes, 2026-10-05\nMara Ellis: Our internal Atlas margin floor is 28 percent. Do not share the private margin target with the client or other teams. Theo will bring an internal capacity estimate to the next executive review."
+    },
+    {
+      "key": "exec-01-working-notes",
+      "date": "2026-10-06",
+      "author": "exec-01",
+      "scope": "rusty-rod/executive/exec-01",
+      "authority": "approved",
+      "source": "synthetic-company-v1/exec-01-working-notes",
+      "text": "[Synthetic company record — fictional people and business.]\npersonal working notes, 2026-10-06\nMara Ellis: I prefer a one-page decision brief with a clear recommendation and unresolved risks. My next task is preparing the Atlas steering review."
+    },
+    {
+      "key": "exec-02-working-notes",
+      "date": "2026-10-06",
+      "author": "exec-02",
+      "scope": "rusty-rod/executive/exec-02",
+      "authority": "approved",
+      "source": "synthetic-company-v1/exec-02-working-notes",
+      "text": "[Synthetic company record — fictional people and business.]\npersonal working notes, 2026-10-06\nTheo Bennett: I prefer tables separating costs, assumptions, and decisions. My next task is checking staffing capacity for the Atlas handoff."
+    },
+    {
+      "key": "exec-03-working-notes",
+      "date": "2026-10-06",
+      "author": "exec-03",
+      "scope": "rusty-rod/executive/exec-03",
+      "authority": "approved",
+      "source": "synthetic-company-v1/exec-03-working-notes",
+      "text": "[Synthetic company record — fictional people and business.]\npersonal working notes, 2026-10-06\nNadia Chen: I prefer a short summary followed by sources. My next task is reviewing the Atlas client escalation process."
+    },
+    {
+      "key": "sales-01-working-notes",
+      "date": "2026-10-06",
+      "author": "sales-01",
+      "scope": "rusty-rod/sales/sales-01",
+      "authority": "approved",
+      "source": "synthetic-company-v1/sales-01-working-notes",
+      "text": "[Synthetic company record — fictional people and business.]\npersonal working notes, 2026-10-06\nMaya Flores: I prefer warm client updates of three sentences: progress, next step, and one clear question. My next task is drafting Elena an Atlas progress update."
+    },
+    {
+      "key": "sales-02-working-notes",
+      "date": "2026-10-06",
+      "author": "sales-02",
+      "scope": "rusty-rod/sales/sales-02",
+      "authority": "approved",
+      "source": "synthetic-company-v1/sales-02-working-notes",
+      "text": "[Synthetic company record — fictional people and business.]\npersonal working notes, 2026-10-06\nLeo Park: I prefer bullet-point agendas and explicit follow-up owners. My next task is preparing Atlas dispatcher training questions."
+    },
+    {
+      "key": "sales-03-working-notes",
+      "date": "2026-10-06",
+      "author": "sales-03",
+      "scope": "rusty-rod/sales/sales-03",
+      "authority": "approved",
+      "source": "synthetic-company-v1/sales-03-working-notes",
+      "text": "[Synthetic company record — fictional people and business.]\npersonal working notes, 2026-10-06\nPriya Shah: I prefer to outline client pain points before proposing solutions. My next task is preparing an Atlas adoption discussion."
+    },
+    {
+      "key": "sales-04-working-notes",
+      "date": "2026-10-06",
+      "author": "sales-04",
+      "scope": "rusty-rod/sales/sales-04",
+      "authority": "approved",
+      "source": "synthetic-company-v1/sales-04-working-notes",
+      "text": "[Synthetic company record — fictional people and business.]\npersonal working notes, 2026-10-06\nOscar Reed: I prefer plain-language summaries without technical acronyms. My next task is drafting the Atlas pilot scope recap."
+    },
+    {
+      "key": "sales-05-working-notes",
+      "date": "2026-10-06",
+      "author": "sales-05",
+      "scope": "rusty-rod/sales/sales-05",
+      "authority": "approved",
+      "source": "synthetic-company-v1/sales-05-working-notes",
+      "text": "[Synthetic company record — fictional people and business.]\npersonal working notes, 2026-10-06\nZoe Brooks: I prefer to group follow-ups by owner and due date. My next task is organizing Atlas client meeting notes."
+    },
+    {
+      "key": "eng-01-working-notes",
+      "date": "2026-10-06",
+      "author": "eng-01",
+      "scope": "rusty-rod/engineering/eng-01",
+      "authority": "approved",
+      "source": "synthetic-company-v1/eng-01-working-notes",
+      "text": "[Synthetic company record — fictional people and business.]\npersonal working notes, 2026-10-06\nIris Tan: I prefer handoffs with decisions, owners, and open assumptions. My next task is reviewing the Atlas CSV import risks with Owen."
+    },
+    {
+      "key": "eng-02-working-notes",
+      "date": "2026-10-06",
+      "author": "eng-02",
+      "scope": "rusty-rod/engineering/eng-02",
+      "authority": "approved",
+      "source": "synthetic-company-v1/eng-02-working-notes",
+      "text": "[Synthetic company record — fictional people and business.]\npersonal working notes, 2026-10-06\nOwen Patel: I prefer reproduction steps and an input example with each bug. My next task is validating Atlas CSV import edge cases."
+    },
+    {
+      "key": "eng-03-working-notes",
+      "date": "2026-10-06",
+      "author": "eng-03",
+      "scope": "rusty-rod/engineering/eng-03",
+      "authority": "approved",
+      "source": "synthetic-company-v1/eng-03-working-notes",
+      "text": "[Synthetic company record — fictional people and business.]\npersonal working notes, 2026-10-06\nAda Morgan: I prefer acceptance criteria before implementation details. My next task is reviewing the Atlas exception-tagging rules."
+    },
+    {
+      "key": "eng-04-working-notes",
+      "date": "2026-10-06",
+      "author": "eng-04",
+      "scope": "rusty-rod/engineering/eng-04",
+      "authority": "approved",
+      "source": "synthetic-company-v1/eng-04-working-notes",
+      "text": "[Synthetic company record — fictional people and business.]\npersonal working notes, 2026-10-06\nFinn Rivera: I prefer short test checklists with a pass or fail for each case. My next task is planning the Atlas end-to-end test review."
+    },
+    {
+      "key": "eng-05-working-notes",
+      "date": "2026-10-06",
+      "author": "eng-05",
+      "scope": "rusty-rod/engineering/eng-05",
+      "authority": "approved",
+      "source": "synthetic-company-v1/eng-05-working-notes",
+      "text": "[Synthetic company record — fictional people and business.]\npersonal working notes, 2026-10-06\nNora Kim: I prefer diagrams and concise interface contracts. My next task is documenting the Atlas adapter boundary."
+    },
+    {
+      "key": "eng-06-working-notes",
+      "date": "2026-10-06",
+      "author": "eng-06",
+      "scope": "rusty-rod/engineering/eng-06",
+      "authority": "approved",
+      "source": "synthetic-company-v1/eng-06-working-notes",
+      "text": "[Synthetic company record — fictional people and business.]\npersonal working notes, 2026-10-06\nEli Cooper: I prefer measurable performance targets over vague speed requests. My next task is planning an Atlas CSV load test."
+    },
+    {
+      "key": "eng-07-working-notes",
+      "date": "2026-10-06",
+      "author": "eng-07",
+      "scope": "rusty-rod/engineering/eng-07",
+      "authority": "approved",
+      "source": "synthetic-company-v1/eng-07-working-notes",
+      "text": "[Synthetic company record — fictional people and business.]\npersonal working notes, 2026-10-06\nLena Ortiz: I prefer a risk log with owners and mitigations. My next task is reviewing the Atlas rollout checklist."
+    },
+    {
+      "key": "eng-08-working-notes",
+      "date": "2026-10-06",
+      "author": "eng-08",
+      "scope": "rusty-rod/engineering/eng-08",
+      "authority": "approved",
+      "source": "synthetic-company-v1/eng-08-working-notes",
+      "text": "[Synthetic company record — fictional people and business.]\npersonal working notes, 2026-10-06\nKai Thompson: I prefer runnable examples in technical documentation. My next task is preparing the Atlas integration guide."
+    },
+    {
+      "key": "eng-09-working-notes",
+      "date": "2026-10-06",
+      "author": "eng-09",
+      "scope": "rusty-rod/engineering/eng-09",
+      "authority": "approved",
+      "source": "synthetic-company-v1/eng-09-working-notes",
+      "text": "[Synthetic company record — fictional people and business.]\npersonal working notes, 2026-10-06\nRuby Singh: I prefer reviewing keyboard navigation before visual polish. My next task is checking the Atlas supervisor summary accessibility."
+    },
+    {
+      "key": "eng-10-working-notes",
+      "date": "2026-10-06",
+      "author": "eng-10",
+      "scope": "rusty-rod/engineering/eng-10",
+      "authority": "approved",
+      "source": "synthetic-company-v1/eng-10-working-notes",
+      "text": "[Synthetic company record — fictional people and business.]\npersonal working notes, 2026-10-06\nSam Walker: I prefer clear runbooks with rollback steps. My next task is drafting the Atlas pilot support handoff."
+    },
+    {
+      "key": "engineering-risk",
+      "date": "2026-10-12",
+      "author": "eng-02",
+      "scope": "rusty-rod/engineering",
+      "authority": "discussion",
+      "source": "synthetic-company-v1/engineering-risk",
+      "text": "[Synthetic company record — fictional people and business.]\nmeeting notes, 2026-10-12\nOwen Patel: The Atlas sample CSV has inconsistent timezone offsets. I need Elena to confirm whether timestamps are in UTC or each depot’s local time. Until then, timezone conversion remains an open assumption."
+    },
+    {
+      "key": "tentative-estimate",
+      "date": "2026-10-13",
+      "author": "eng-01",
+      "scope": "rusty-rod/engineering",
+      "authority": "tentative",
+      "source": "synthetic-company-v1/tentative-estimate",
+      "text": "[Synthetic company record — fictional people and business.]\nmeeting notes, 2026-10-13\nIris Tan: I estimate the Atlas pilot may need until November 13, 2026 because of the CSV timezone questions. This is a tentative engineering estimate, not an approved change to the client commitment."
+    },
+    {
+      "key": "approved-revision",
+      "date": "2026-10-15",
+      "author": "exec-01",
+      "scope": "rusty-rod",
+      "authority": "approved",
+      "source": "synthetic-company-v1/approved-revision",
+      "text": "[Synthetic company record — fictional people and business.]\nmeeting notes, 2026-10-15\nMara Ellis: Approved change: the Atlas pilot delivery date is now November 13, 2026, replacing the prior November 6 commitment. Elena Voss has accepted this date."
+    },
+    {
+      "key": "client-call",
+      "date": "2026-10-16",
+      "author": "sales-01",
+      "scope": "rusty-rod/sales",
+      "authority": "approved",
+      "source": "synthetic-company-v1/client-call",
+      "text": "[Synthetic company record — fictional people and business.]\nmeeting notes, 2026-10-16\nMaya Flores: Elena has scheduled the next Atlas progress call for October 21, 2026 at 10 AM Pacific. The agenda is the revised delivery date, supervisor training, and sample-file readiness."
+    },
+    {
+      "key": "shared-next-step",
+      "date": "2026-10-17",
+      "author": "exec-03",
+      "scope": "rusty-rod",
+      "authority": "approved",
+      "source": "synthetic-company-v1/shared-next-step",
+      "text": "[Synthetic company record — fictional people and business.]\nmeeting notes, 2026-10-17\nNadia Chen: The next shared Atlas checkpoint is October 23, 2026. Bring the tested CSV import and the pilot acceptance checklist. A dispatcher training date is still unconfirmed."
+    }
+  ]
+}

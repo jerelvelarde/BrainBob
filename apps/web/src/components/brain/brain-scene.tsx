@@ -11,6 +11,7 @@ import { clientOrganization, defaultReader, drawersForTier } from "@/lib/sample-
 import { SessionWorker, type DeskSession } from "./session-worker";
 import { BrainBob } from "./brain-bob";
 import type { MemoryEvent, MemoryScope } from "@/lib/memory";
+import { canRead, type BackendMemory } from "@/lib/brain-api";
 
 export type SceneHandle = { reset: () => void; zoom: (factor: number) => void };
 type SceneProps = {
@@ -20,6 +21,7 @@ type SceneProps = {
   flaggedScopes?: MemoryScope[];
   reader?: string;
   sessions?: DeskSession[];
+  memories?: BackendMemory[];
   onSelect: (memoryId: string) => void; onScope: (scope: MemoryScope) => void;
   onWorker: (name: string) => void; onReady: (handle: SceneHandle) => void;
 };
@@ -28,14 +30,6 @@ const banks: { scope: MemoryScope; x: number; color: string; label: string; memo
   { scope: "individual", x: -3.8, color: "#93bac3", label: "INDIVIDUAL", memory: "coffee" },
   { scope: "team", x: -.5, color: "#d7b268", label: "TEAM", memory: "sources" },
   { scope: "organization", x: 3.2, color: "#baa6ce", label: "ORGANIZATION", memory: "launch" },
-];
-const routes: [number, number][][] = [
-  [[-5.2, 3.4], [-5.2, -2.4], [1.65, -2.4], [1.65, 3.4]],
-  [[5.3, 3.4], [1.8, 3.4], [1.8, -2.4], [5.3, -2.4]],
-  [[-1.7, -.7], [-1.7, 3.5], [2.1, 3.5], [2.1, -.7]],
-  [[-5.8, 3.1], [-5.8, -.7], [-5.1, -.7], [-5.1, 3.1]],
-  [[-.6, -2.4], [2.1, -2.4], [2.1, -.5], [-.6, -.5]],
-  [[5.5, 2.7], [5.5, -2.4], [-1.6, -2.4], [-1.6, 2.7]],
 ];
 
 
@@ -96,26 +90,26 @@ function Plant({ position }: { position: [number, number, number] }) {
   </group>;
 }
 
-function Cabinet({ bank, reader, selected, active, onClick }: { bank: typeof banks[number]; reader: string; selected: boolean; active: boolean; onClick: () => void }) {
-  const allDrawers = drawersForTier(bank.scope, reader);
-  const drawers = bank.scope === "individual" ? [...allDrawers.filter((drawer) => drawer.accessible), ...allDrawers.filter((drawer) => !drawer.accessible)].slice(0, 3) : allDrawers;
+function Cabinet({ bank, reader, memories = [], selected, active, onClick }: { bank: typeof banks[number]; reader: string; memories?: BackendMemory[]; selected: boolean; active: boolean; onClick: () => void }) {
+  const drawers = drawersForTier(bank.scope, reader).filter((drawer) => drawer.accessible);
+  const count = (path: string) => memories.filter((memory) => memory.scope === path && canRead(path, reader) && memory.status !== "retired").length;
+  const total = drawers.reduce((sum, drawer) => sum + count(drawer.path), 0);
   return <group position={[bank.x, 0, -3.85]} onClick={(e) => { e.stopPropagation(); onClick(); }}
     onPointerOver={() => { document.body.style.cursor = "pointer"; }} onPointerOut={() => { document.body.style.cursor = "auto"; }}>
     {[-.49, .49].map((x) => <Box key={x} position={[x, .13, 0]} size={[.12, .25, .68]} color={palette.trim} />)}
     <Box position={[0, 1.22, 0]} size={[1.35, 2.15, .8]} color={bank.color} radius={.06} />
     {drawers.map((drawer, i) => {
-      const y = drawers.length === 2 ? 1.65 - i * .9 : 1.8 - i * .65;
-      return <group key={drawer.path} position={[0, 0, active && drawer.accessible ? .2 : 0]}>
-        <Box position={[0, y, .428]} size={[1.15, drawers.length === 2 ? .8 : .56, .05]} color={drawer.accessible ? "#f4d88b" : bank.color} radius={.025} />
-        <Label position={[0, y + .08, .5]} text={drawer.label.toUpperCase()} width={1.03} compact selected={drawer.accessible} onClick={onClick} />
+      const y = drawers.length === 1 ? 1.22 : drawers.length === 2 ? 1.65 - i * .9 : 1.8 - i * .65;
+      return <group key={drawer.path} position={[0, 0, active ? .2 : 0]}>
+        <Box position={[0, y, .428]} size={[1.15, drawers.length === 1 ? 1.85 : drawers.length === 2 ? .8 : .56, .05]} color="#f4d88b" radius={.025} />
+        <Label position={[0, y + .08, .5]} text={`${drawer.label.toUpperCase()} · ${count(drawer.path)}`} width={1.03} compact selected onClick={onClick} />
         <Box position={[-.08, y - .12, .48]} size={[.33, .05, .04]} color="#79664e" radius={.015} />
-        {!drawer.accessible ? <group position={[.37, y - .12, .49]}><mesh position={[0, .04, 0]}><torusGeometry args={[.045, .012, 6, 10, Math.PI]} /><meshStandardMaterial color="#6d6673" /></mesh><Box position={[0, 0, 0]} size={[.1, .08, .03]} color="#6d6673" radius={.01} /></group> : null}
       </group>;
     })}
     <Box position={[0, 2.33, 0]} size={[1.45, .1, .86]} color={palette.trim} />
     {active ? <mesh position={[0, 2.55, 0]}><sphereGeometry args={[.09, 12, 10]} /><meshBasicMaterial color="#f4cf49" /></mesh> : null}
-    <Label position={[0, 2.75, 0]} text={bank.label} width={2.6} selected={selected} onClick={onClick} />
-    {bank.scope === "individual" ? <Label position={[0, .15, .55]} text="18 PEOPLE · INSPECT" width={1.15} onClick={onClick} /> : null}
+    <Label position={[0, 2.75, 0]} text={`${bank.label} · ${total}`} width={2.6} selected={selected} onClick={onClick} />
+    {bank.scope === "individual" ? <Label position={[0, .15, .55]} text="OPEN FILES" width={1.15} onClick={onClick} /> : null}
   </group>;
 }
 
@@ -144,45 +138,6 @@ const Desk = memo(function Desk({ position, rotation = 0, audit = false, occupie
   </group>;
 });
 
-function Walker({ index, playing, speed, reducedMotion, event, onClick }: {
-  index: number; playing: boolean; speed: number; reducedMotion: boolean; event?: MemoryEvent; onClick: () => void;
-}) {
-  const group = useRef<THREE.Group>(null);
-  const travel = useRef(index * 1.8);
-  const oriented = useRef(false);
-  const route = routes[index];
-  const lengths = useMemo(() => route.map((start, i) => {
-    const end = route[(i + 1) % route.length];
-    return Math.hypot(end[0] - start[0], end[1] - start[1]);
-  }), [route]);
-  const total = lengths.reduce((sum, length) => sum + length, 0);
-  useFrame((_, delta) => {
-    if (!group.current) return;
-    if (playing && !reducedMotion) travel.current += Math.min(delta, .05) * speed * .85;
-    let along = travel.current % total;
-    let segment = 0;
-    while (segment < lengths.length - 1 && along >= lengths[segment]) {
-      along -= lengths[segment]; segment++;
-    }
-    const start = route[segment];
-    const end = route[(segment + 1) % route.length];
-    const progress = along / lengths[segment];
-    group.current.position.set(THREE.MathUtils.lerp(start[0], end[0], progress), .05, THREE.MathUtils.lerp(start[1], end[1], progress));
-    const angle = Math.atan2(end[0] - start[0], end[1] - start[1]);
-    const turn = Math.atan2(Math.sin(angle - group.current.rotation.y), Math.cos(angle - group.current.rotation.y));
-    if (!oriented.current) {
-      group.current.rotation.y = angle;
-      oriented.current = true;
-    } else if (playing && !reducedMotion) {
-      group.current.rotation.y = THREE.MathUtils.damp(group.current.rotation.y, group.current.rotation.y + turn, 9, Math.min(delta, .05));
-    }
-  });
-  const active = event && ((["Inspector BrainBob", "Inspector Bob"].includes(event.actor) && index === 4) || (["Curator BrainBob", "Curator Bob"].includes(event.actor) && index === 0) || (["Runner BrainBob", "Runner Bob"].includes(event.actor) && index === 1));
-  return <group ref={group} position={[route[0][0], .05, route[0][1]]} onClick={(e) => { e.stopPropagation(); onClick(); }}>
-    <BrainBob walking={playing && !reducedMotion} carrying={index === 0 || index === 1} inspector={index === 4} phase={index} distance={travel} />
-    {active ? <Label position={[0, 1.85, 0]} width={1.35} text={event.action === "evaluated" ? "Checks out!" : event.action === "updated" ? "New info!" : event.action === "forgotten" ? "Let it go." : "On it!"} /> : null}
-  </group>;
-}
 
 function SceneLighting({ cinematics }: { cinematics: RefObject<SceneCinematics> }) {
   const ambient = useRef<THREE.AmbientLight>(null);
@@ -226,7 +181,7 @@ function CameraRig({ onReady, cinematics }: Pick<SceneProps, "onReady"> & { cine
     }
   });
   useEffect(() => {
-    const fitZoom = Math.max(20, Math.min(size.width / 21, size.height / 13));
+    const fitZoom = Math.max(10, Math.min(size.width / 19, size.height / 13));
     camera.zoom = fitZoom * appliedZoom.current;
     camera.updateProjectionMatrix();
     camera.lookAt(0, .9, 0);
@@ -236,10 +191,10 @@ function CameraRig({ onReady, cinematics }: Pick<SceneProps, "onReady"> & { cine
     invalidate();
     onReady({
       reset: () => { camera.position.set(16, 14, 19); camera.zoom = fitZoom * appliedZoom.current; camera.updateProjectionMatrix(); controls.current?.target.set(0, .9, 0); controls.current?.update(); invalidate(); },
-      zoom: (factor) => { camera.zoom = THREE.MathUtils.clamp(camera.zoom * factor, 18, 85); camera.updateProjectionMatrix(); invalidate(); },
+      zoom: (factor) => { camera.zoom = THREE.MathUtils.clamp(camera.zoom * factor, 10, 85); camera.updateProjectionMatrix(); invalidate(); },
     });
   }, [camera, invalidate, onReady, size]);
-  return <OrbitControls ref={controls} target={[0, .9, 0]} enablePan={false} minZoom={18} maxZoom={85} minPolarAngle={.4} maxPolarAngle={1.15} minAzimuthAngle={-.3} maxAzimuthAngle={1.45} enableDamping dampingFactor={.08} />;
+  return <OrbitControls ref={controls} target={[0, .9, 0]} enablePan={false} minZoom={10} maxZoom={85} minPolarAngle={.4} maxPolarAngle={1.15} minAzimuthAngle={-.3} maxAzimuthAngle={1.45} enableDamping dampingFactor={.08} />;
 }
 
 class SceneBoundary extends Component<{ children: React.ReactNode }, { failed: boolean }> {
@@ -260,12 +215,12 @@ export default function BrainScene(props: SceneProps) {
     gl?.getExtension("WEBGL_lose_context")?.loseContext();
   }, []);
   if (!supported) return <div className="scene-fallback"><h2>Your memories are in good hands.</h2><p>Enable WebGL to visit the 3D brain. Open Memories to explore memory and history.</p></div>;
-  return <SceneBoundary><Canvas orthographic shadows dpr={[1, 1.7]} camera={{ position: [16, 14, 19], zoom: 45, near: .1, far: 100 }} gl={{ antialias: true, powerPreference: "high-performance" }} aria-label={`Interactive isometric brain office with six memory workers${props.sessions?.length ? ` and ${props.sessions.length} seated session Bobs with inspectable files` : ""}`}>
+  return <SceneBoundary><Canvas orthographic shadows dpr={[1, 1.7]} camera={{ position: [16, 14, 19], zoom: 45, near: .1, far: 100 }} gl={{ antialias: true, powerPreference: "high-performance" }} aria-label={`Interactive memory office: click a tier cabinet to browse its files${props.sessions?.length ? `, or one of ${props.sessions.length} seated session Bobs` : ""}`}>
     <SceneLighting cinematics={cinematics} />
     <Room />
     <Label text="RUSTY ROD · CONSULTING" position={[-2.8, 4.25, -4.8]} width={3.4} />
     <Label text={`CLIENT · ${clientOrganization.name.toUpperCase()}`} position={[1.6, 4.25, -4.8]} width={3.4} />
-    {banks.map((bank) => <Cabinet key={bank.scope} bank={bank} reader={reader} selected={props.selectedScope === bank.scope} active={cue?.scope === bank.scope} onClick={() => { props.onScope(bank.scope); props.onSelect(bank.memory); }} />)}
+    {banks.map((bank) => <Cabinet key={bank.scope} bank={bank} reader={reader} memories={props.memories} selected={props.selectedScope === bank.scope} active={cue?.scope === bank.scope} onClick={() => { props.onScope(bank.scope); props.onSelect(bank.memory); }} />)}
     {props.flaggedScopes?.map((scope) => <Label key={scope} text="FLAGGED · OWNER REVIEW" position={[scopeCharacters[scope].x, 3.35, -3.8]} width={2.6} />)}
     {([[-3.6, 0, .9], [.2, 0, .6], [3.8, 0, -1]] as [number, number, number][]).map((position, index) => {
       const session = props.sessions?.[index];
@@ -274,7 +229,12 @@ export default function BrainScene(props: SceneProps) {
         {session ? <SessionWorker session={session} animate={props.playing && !props.reducedMotion} /> : null}
       </group>;
     })}
-    {cue ? <EventStage key={cue.id} cue={cue} playing={props.playing} speed={props.speed} reducedMotion={props.reducedMotion} seek={props.seek} onProgress={props.onProgress} cinematics={cinematics} /> : routes.map((_, index) => <Walker key={index} index={index} playing={props.playing} speed={props.speed} reducedMotion={props.reducedMotion} event={props.event} onClick={() => props.onWorker(index === 4 ? "Inspector BrainBob checks memories against their evidence." : index === 0 ? "Curator BrainBob files new memories and revisions." : "Runner BrainBob delivers a session file to the agent.")} />)}
+    {cue ? <EventStage key={cue.id} cue={cue} playing={props.playing} speed={props.speed} reducedMotion={props.reducedMotion} seek={props.seek} onProgress={props.onProgress} cinematics={cinematics} /> : <group position={[-5.4, 0, 2.5]} rotation={[0, .55, 0]} onClick={(event) => { event.stopPropagation(); props.onWorker("Memory Bob looks after your session file."); }}>
+      <Box position={[0, .55, 0]} size={[.75, .12, .65]} color="#a17d56" />
+      {[-.25, .25].flatMap((x) => [-.2, .2].map((z) => <Box key={`${x}-${z}`} position={[x, .26, z]} size={[.07, .5, .07]} color="#765c42" />))}
+      <group position={[0, .45, 0]}><BrainBob walking={false} /></group>
+      <Label text="MEMORY BOB" position={[0, 2.25, 0]} width={1.8} onClick={() => props.onWorker("Memory Bob looks after your session file.")} />
+    </group>}
     <CameraRig onReady={props.onReady} cinematics={cinematics} />
   </Canvas></SceneBoundary>;
 }

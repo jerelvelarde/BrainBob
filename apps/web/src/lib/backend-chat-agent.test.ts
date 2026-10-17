@@ -21,11 +21,40 @@ describe("CopilotKit backend bridge", () => {
     const answered = vi.fn(), failed = vi.fn(), activity = vi.fn();
     const events = await lastValueFrom(new BackendChatAgent(() => context("ask"), answered, failed, activity).run(input("When do we launch?")).pipe(toArray()));
     expect(fetcher.mock.calls[0][0]).toContain("/ask");
-    expect(JSON.parse(fetcher.mock.calls[0][1].body)).toEqual({ question: "When do we launch?", reader: defaultReader });
-    expect(events.map((e) => e.type)).toEqual(["RUN_STARTED", "TEXT_MESSAGE_START", "TEXT_MESSAGE_CONTENT", "TEXT_MESSAGE_END", "RUN_FINISHED"]);
-    expect(events[2]).toMatchObject({ delta: "November 13, 2026" }); expect(answered).toHaveBeenCalledOnce();
+    expect(JSON.parse(fetcher.mock.calls[0][1].body)).toMatchObject({ question: expect.stringContaining("Current request: When do we launch?"), reader: defaultReader });
+    expect(JSON.parse(fetcher.mock.calls[0][1].body).question).toContain("Maya Flores");
+    expect(events.map((e) => e.type)).toEqual(["RUN_STARTED", "TOOL_CALL_START", "TOOL_CALL_ARGS", "TOOL_CALL_END", "TOOL_CALL_RESULT", "TEXT_MESSAGE_START", "TEXT_MESSAGE_CONTENT", "TEXT_MESSAGE_END", "RUN_FINISHED"]);
+    expect(events.find((event) => event.type === "TEXT_MESSAGE_CONTENT")).toMatchObject({ delta: "November 13, 2026" });
+    const receipt = answered.mock.calls[0][1];
+    expect(receipt).toMatchObject({ requestId: "run-1", question: "When do we launch?" });
+    expect(events.find((event) => event.type === "TEXT_MESSAGE_START")).toMatchObject({ messageId: receipt.messageId });
+    expect(events.find((event) => event.type === "TOOL_CALL_START")).toMatchObject({ toolCallName: "consult_memory" });
+    expect(events.find((event) => event.type === "TOOL_CALL_RESULT")).toMatchObject({ content: expect.stringContaining(receipt.messageId) });
     expect(activity.mock.calls.map(([event]) => event.type)).toEqual(["started", "answered"]);
     expect(activity.mock.calls[0][0]).toMatchObject({ requestId: "run-1", question: "When do we launch?" });
+  });
+
+  it("binds each retrieval receipt to its own reply across follow-ups", async () => {
+    vi.stubGlobal("fetch", vi.fn()
+      .mockResolvedValueOnce(response({ task_id: "first", answer: "First reply", cited_ids: [], memories: [] }))
+      .mockResolvedValueOnce(response({ task_id: "second", answer: "Follow-up reply", cited_ids: [], memories: [] })));
+    const answered = vi.fn();
+    const agent = new BackendChatAgent(() => context("ask"), answered, vi.fn());
+    const runs = [
+      await lastValueFrom(agent.run(input("First question")).pipe(toArray())),
+      await lastValueFrom(agent.run({ ...input("Follow-up"), runId: "run-2" }).pipe(toArray())),
+    ];
+    const first = answered.mock.calls[0][1], second = answered.mock.calls[1][1];
+    expect(first.messageId).not.toBe(second.messageId);
+    expect(first.question).toBe("First question");
+    expect(second.requestId).toBe("run-2");
+    runs.forEach((events, index) => {
+      const tool = events.find((event) => event.type === "TOOL_CALL_START");
+      const result = events.find((event) => event.type === "TOOL_CALL_RESULT");
+      expect(result).toMatchObject({ toolCallId: tool?.toolCallId,
+        content: expect.stringContaining(answered.mock.calls[index][1].messageId) });
+      expect(events.find((event) => event.type === "TEXT_MESSAGE_START")).toMatchObject({ messageId: answered.mock.calls[index][1].messageId });
+    });
   });
 
   it("ends the desk's working state on cancellation and request failure", async () => {
@@ -68,6 +97,36 @@ describe("CopilotKit backend bridge", () => {
     const events = await lastValueFrom(agent.run(input("Review")).pipe(toArray()));
     expect(fetcher.mock.calls[1][0]).toContain("/review"); expect(JSON.parse(fetcher.mock.calls[1][1].body)).toEqual({});
     expect(JSON.stringify(events)).not.toContain("confirmed");
+  });
+
+  it("keeps follow-ups in this desk and excludes evaluation gold from answering context", async () => {
+    const fetcher = vi.fn()
+      .mockResolvedValueOnce(response({ task_id: "t1", answer: "Draft for Elena: pilot is November 13.", cited_ids: [], memories: [] }))
+      .mockResolvedValueOnce(response({ evidence: [] }))
+      .mockResolvedValueOnce(response({ task_id: "t2", answer: "Shorter draft.", cited_ids: [], memories: [] }))
+      .mockResolvedValueOnce(response({ task_id: "t3", answer: "A fresh answer.", cited_ids: [], memories: [] }));
+    vi.stubGlobal("fetch", fetcher);
+    let mode: ChatContext["mode"] = "ask";
+    const agent = new BackendChatAgent(() => context(mode), vi.fn(), vi.fn());
+    await lastValueFrom(agent.run(input("Draft an Atlas update")).pipe(toArray()));
+    mode = "feedback";
+    await lastValueFrom(agent.run(input("SECRET EVALUATION GOLD")).pipe(toArray()));
+    mode = "ask";
+    await lastValueFrom(agent.run(input("Make it shorter")).pipe(toArray()));
+    const followup = JSON.parse(fetcher.mock.calls[2][1].body).question;
+    expect(followup).toContain("Draft for Elena");
+    expect(followup).not.toContain("SECRET EVALUATION GOLD");
+    await lastValueFrom(new BackendChatAgent(() => context("ask"), vi.fn(), vi.fn()).run(input("Hello")).pipe(toArray()));
+    expect(JSON.parse(fetcher.mock.calls[3][1].body).question).not.toContain("Draft for Elena");
+  });
+
+  it("fails an empty provider answer without recording a successful desk file", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(response({ task_id: "empty", answer: "", cited_ids: [], memories: [] })));
+    const answered = vi.fn(), activity = vi.fn();
+    const events = await lastValueFrom(new BackendChatAgent(() => context("ask"), answered, vi.fn(), activity).run(input("Hello")).pipe(toArray()));
+    expect(events.at(-1)?.type).toBe("RUN_ERROR");
+    expect(answered).not.toHaveBeenCalled();
+    expect(activity.mock.calls.at(-1)?.[0].type).toBe("failed");
   });
 
   it("blocks retrace writes and feedback without a task, with no HTTP request", async () => {

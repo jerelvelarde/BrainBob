@@ -59,41 +59,6 @@ function Performer({ index, cue, clock }: { index: number; cue: SceneCue; clock:
   </group>;
 }
 
-function EvaluatorEntrance({ cue, clock }: { cue: SceneCue; clock: Clock }) {
-  const stage = useRef<THREE.Group>(null);
-  const cone = useRef<THREE.MeshBasicMaterial>(null);
-  const spotlight = useRef<THREE.SpotLight>(null);
-  const target = useMemo(() => new THREE.Object3D(), []);
-  useFrame(() => {
-    const p = clock.current.progress;
-    const bob = performanceForCue(cue, 4, p);
-    const envelope = smooth(0, .09, p) * (1 - smooth(.88, 1, p));
-    if (stage.current) {
-      stage.current.position.set(bob.x, 0, bob.z);
-      stage.current.visible = envelope > .001;
-    }
-    target.position.set(bob.x, .4, bob.z);
-    target.updateMatrixWorld();
-    if (cone.current) cone.current.opacity = envelope * .1;
-    if (spotlight.current) {
-      spotlight.current.position.set(bob.x, 7, bob.z);
-      spotlight.current.intensity = envelope * 110;
-    }
-  });
-  return <>
-    <primitive object={target} />
-    <spotLight ref={spotlight} target={target} color="#ede5ff" angle={.24} penumbra={.6} distance={14} intensity={0} decay={1.4} />
-    <group ref={stage}>
-      <mesh position={[0, 3.5, 0]}><coneGeometry args={[1.6, 6.8, 40, 1, true]} />
-        <meshBasicMaterial ref={cone} color="#d8caff" transparent opacity={0} depthWrite={false} side={THREE.DoubleSide} />
-      </mesh>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, .08, 0]}>
-        <ringGeometry args={[.85, .9, 48]} /><meshBasicMaterial color="#e7d6ff" transparent opacity={.8} />
-      </mesh>
-    </group>
-  </>;
-}
-
 function TransferPaper({ cue, clock }: { cue: SceneCue; clock: Clock }) {
   const group = useRef<THREE.Group>(null);
   const x = cueCabinetX(cue);
@@ -106,7 +71,7 @@ function TransferPaper({ cue, clock }: { cue: SceneCue; clock: Clock }) {
     if (cue.action === "retrieved") {
       group.current.visible = p > .31;
       const move = smooth(.38, .88, p);
-      px = lerp(x, .6, move); pz = lerp(-3, .9, move); py = lerp(1.3, 1.13, move) + Math.sin(move * Math.PI) * 1.1;
+      px = lerp(x, cue.destination?.[0] ?? .6, move); pz = lerp(-3, cue.destination?.[1] ?? .9, move); py = lerp(1.3, 1.13, move) + Math.sin(move * Math.PI) * 1.1;
       group.current.rotation.x = -Math.PI / 2 * smooth(.78, .95, p);
     } else if (cue.action === "created" || cue.action === "updated") {
       const rewrite = cue.action === "updated";
@@ -138,7 +103,7 @@ function TransferPaper({ cue, clock }: { cue: SceneCue; clock: Clock }) {
     group.current.scale.setScalar(cue.action === "answered" ? 1.65 : 1.2);
   });
   return <group ref={group}>{cue.sessionLabel && ["retrieved", "answered", "created", "updated"].includes(cue.action) ? <SessionFolder /> : <Paper color={cue.action === "flagged" ? "#f7bbbb" : cue.action === "promoted" ? "#ffe095" : undefined} />}
-    {cue.action === "flagged" ? <Label text="LOCKED · REVIEW" position={[0, .55, 0]} width={1.8} /> : null}
+    {cue.action === "flagged" ? <Label text={cue.noticeLabel ?? "LOCKED · REVIEW"} position={[0, .55, 0]} width={1.8} /> : null}
     {cue.action === "rejected" ? <Label text="RETURN TO SENDER" position={[0, .5, 0]} width={1.8} /> : null}
     {cue.action === "answered" && !cue.sessionLabel ? <Label text="ANSWER + SOURCES" position={[0, .55, 0]} width={1.8} /> : null}
   </group>;
@@ -157,12 +122,12 @@ function AuditRecords({ cue, clock }: { cue: SceneCue; clock: Clock }) {
       if (!sheet) return;
       const u = smooth(.12 + i * .045, .56 + i * .045, p);
       const x = cue.records?.[i] ? (cue.records[i].cabinetX ?? scopeCharacters[cue.records[i].scope].x) : [-3.8, -.5, 3.2][i % 3];
-      sheet.position.set(checking ? x : lerp(x, 3.2 + (i % 3) * .33, u), checking ? 1.5 : 1.45 + Math.sin(u * Math.PI) * 1.5 + (i > 2 ? .07 : 0), checking ? -2.8 : lerp(-3, -.35 + Math.floor(i / 3) * .45, u));
+      sheet.position.set(checking ? 4.1 + (i % 3) * .33 : lerp(x, 4.1 + (i % 3) * .33, u), checking ? 1.5 : 1.45 + Math.sin(u * Math.PI) * 1.5 + (i > 2 ? .07 : 0), checking ? 2.2 + Math.floor(i / 3) * .45 : lerp(-3, 2.2 + Math.floor(i / 3) * .45, u));
       sheet.rotation.set(checking ? 0 : -u * Math.PI / 2, 0, .12 * Math.sin(i));
       sheet.visible = checking || p > .1 + i * .04;
     });
     if (lens.current) {
-      lens.current.position.set((checking ? cueCabinetX(cue) : 3.55) + Math.sin(clock.current.time * 1.6) * .4, 2.05, (checking ? -2.7 : -.15) + Math.cos(clock.current.time * 1.6) * .15);
+      lens.current.position.set(4.35 + Math.sin(clock.current.time * 1.6) * .4, 2.05, 2.2 + Math.cos(clock.current.time * 1.6) * .15);
       lens.current.rotation.z = -.4;
     }
   });
@@ -284,6 +249,7 @@ function ScopeSpotlight({ cue, clock }: { cue: SceneCue; clock: Clock }) {
 
 export function EventStage({ cue, playing, reducedMotion, speed, seek, onProgress, cinematics }: StageProps) {
   const duration = cue.seconds ?? sceneClips[cue.action].seconds;
+  const operator = cue.action === "evaluated" ? 4 : cue.action === "retrieved" || cue.action === "answered" ? 1 : 0;
   const clock = useRef({ time: 0, progress: 0 });
   const lastReported = useRef(-1);
   useEffect(() => {
@@ -302,9 +268,9 @@ export function EventStage({ cue, playing, reducedMotion, speed, seek, onProgres
   }, -2);
   return <group>
     <ScopeSpotlight cue={cue} clock={clock} />
-    {Array.from({ length: 6 }, (_, index) => <Performer key={index} index={index} cue={cue} clock={clock} />)}
+    <Performer index={operator} cue={cue} clock={clock} />
     <TransferPaper cue={cue} clock={clock} />
-    {cue.action === "evaluated" ? <><EvaluatorEntrance cue={cue} clock={clock} /><AuditRecords cue={cue} clock={clock} /></> : null}
+    {cue.action === "evaluated" ? <AuditRecords cue={cue} clock={clock} /> : null}
     {cue.action === "forgotten" ? <OfficeChaos clock={clock} /> : null}
     {cue.action === "locked" || cue.action === "resolved" ? <group position={[cueCabinetX(cue), 2.7, -3.1]}>
       <mesh position={[0, .25, 0]}><torusGeometry args={[.2, .045, 8, 20, Math.PI]} /><meshStandardMaterial color="#7962b2" /></mesh>

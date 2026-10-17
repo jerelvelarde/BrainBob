@@ -1,3 +1,3 @@
-import { BrainWorkspace } from "@/components/brain-workspace";
+import { redirect } from "next/navigation";
 
-export default function Rehearsal() { return <BrainWorkspace />; }
+export default function PreviousWorkspace() { redirect("/"); }

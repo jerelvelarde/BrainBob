@@ -9,6 +9,7 @@ export function useBrainBackend(member: string, onLive: (event: StoredEvent, sta
   const [state, setState] = useState(emptyBackendState);
   const [connection, setConnection] = useState<"connecting" | "syncing" | "live" | "offline">("connecting");
   const [error, setError] = useState("");
+  const [contextLoaded, setContextLoaded] = useState(false);
   const store = useRef(state);
   const listener = useRef(onLive);
   useEffect(() => { listener.current = onLive; }, [onLive]);
@@ -20,6 +21,7 @@ export function useBrainBackend(member: string, onLive: (event: StoredEvent, sta
     for (const memory of snapshot) if (!memories[memory.id]) memories[memory.id] = memory;
     store.current = { ...store.current, memories };
     setState(store.current);
+    setContextLoaded(true);
   }, [member]);
 
   useEffect(() => {
@@ -62,5 +64,5 @@ export function useBrainBackend(member: string, onLive: (event: StoredEvent, sta
     connect();
     return () => { closed = true; source?.close(); clearTimeout(retry); cancelAnimationFrame(frame); abort.abort(); };
   }, [member, synchronizeMissing, enabled]);
-  return { state, connection, error };
+  return { state, connection, error, contextLoaded };
 }
