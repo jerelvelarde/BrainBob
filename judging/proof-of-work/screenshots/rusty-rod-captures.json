@@ -1,0 +1,26 @@
+[
+  {
+    "file": "17-rusty-rod-tentative-estimate.jpg",
+    "capturedAt": "2026-10-17T19:51:08.803Z",
+    "commit": "6c84f787a24a8ed35eeaa51b1cef106e42aba470",
+    "url": "http://127.0.0.1:3000/demo",
+    "mode": "scripted browser fixture; no inference or server authorization",
+    "caption": "Engineering’s tentative November 13 estimate leaves the approved November 6 organization commitment unchanged."
+  },
+  {
+    "file": "18-rusty-rod-fresh-sales.jpg",
+    "capturedAt": "2026-10-17T19:51:17.585Z",
+    "commit": "6c84f787a24a8ed35eeaa51b1cef106e42aba470",
+    "url": "http://127.0.0.1:3000/demo",
+    "mode": "scripted browser fixture; no inference or server authorization",
+    "caption": "A scripted fresh Sales agent cites the corrected November 13 organization revision and the preserved reporting goal."
+  },
+  {
+    "file": "19-rusty-rod-audit-coverage.jpg",
+    "capturedAt": "2026-10-17T19:51:22.365Z",
+    "commit": "6c84f787a24a8ed35eeaa51b1cef106e42aba470",
+    "url": "http://127.0.0.1:3000/demo",
+    "mode": "scripted browser fixture; no inference or server authorization",
+    "caption": "Seed 17 misses the decisive approval in its latest-50 sample; coverage and judgment are distinct and the valid record is retained."
+  }
+]

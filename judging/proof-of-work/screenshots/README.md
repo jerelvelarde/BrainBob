@@ -61,3 +61,11 @@ Captured from committed frontend `9b36d2c` on October 17, 2026. App sources were
 - [16-contract-chat-citations.jpg](16-contract-chat-citations.jpg): 12:32:59 PM PDT. CopilotKit renders the fixture response and citations while SSE drives retrieval. The canned answer does not assess corrected facts.
 
 See [verification observations](../frontend-integration-verification.md) for the tested flows and remaining live validation.
+
+## Rusty Rod memory correctness
+
+Captured from committed frontend `6c84f78` on October 17, 2026. App sources were unchanged; only new evidence files were present. These are authored browser fixtures with no inference or server authorization claim. Original timestamps are in [rusty-rod-captures.json](rusty-rod-captures.json).
+
+- [17-rusty-rod-tentative-estimate.jpg](17-rusty-rod-tentative-estimate.jpg): 12:51:08 PM PDT. Engineering’s tentative November 13 estimate leaves the approved November 6 organization commitment unchanged.
+- [18-rusty-rod-fresh-sales.jpg](18-rusty-rod-fresh-sales.jpg): 12:51:17 PM PDT. A scripted fresh Sales agent cites the corrected November 13 organization revision and the preserved reporting goal.
+- [19-rusty-rod-audit-coverage.jpg](19-rusty-rod-audit-coverage.jpg): 12:51:22 PM PDT. Seed 17 misses the decisive approval in its latest-50 sample; coverage and judgment are distinct and the valid record is retained.
