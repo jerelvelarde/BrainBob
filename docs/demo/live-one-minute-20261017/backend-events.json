@@ -1,0 +1,178 @@
+{
+  "source": "Read-only excerpt of the local backend event log",
+  "events": [
+    {
+      "type": "memory.retrieved",
+      "ts": 1792278957.326545,
+      "seq": 144,
+      "task_id": "t-f7d74e09",
+      "memory_ids": [
+        "m19",
+        "m6",
+        "m31",
+        "m9",
+        "m4",
+        "m10",
+        "m30",
+        "m71",
+        "m64",
+        "m5",
+        "m68",
+        "m1",
+        "m65",
+        "m7",
+        "m3",
+        "m67",
+        "m21",
+        "m66",
+        "m12",
+        "m2",
+        "m70",
+        "m11",
+        "m69",
+        "m20"
+      ],
+      "viewer": "sales-01"
+    },
+    {
+      "type": "answer.produced",
+      "ts": 1792278959.9442089,
+      "seq": 145,
+      "task_id": "t-f7d74e09",
+      "answer": "Hi Elena,\n\nThe Atlas pilot delivery date has been approved for November 13, 2026. As next step, I\u2019ll share the progress update by end of day.\n\nBest,  \nMaya",
+      "cited_ids": [
+        "m31",
+        "m30",
+        "m64",
+        "m65"
+      ],
+      "viewer": "sales-01"
+    },
+    {
+      "type": "memory.retrieved",
+      "ts": 1792279012.139668,
+      "seq": 146,
+      "task_id": "t-10ca9a94",
+      "memory_ids": [
+        "m19",
+        "m9",
+        "m4",
+        "m6",
+        "m64",
+        "m10",
+        "m30",
+        "m71",
+        "m7",
+        "m68",
+        "m67",
+        "m5",
+        "m1",
+        "m21",
+        "m31",
+        "m65",
+        "m2",
+        "m3",
+        "m12",
+        "m70",
+        "m66",
+        "m11",
+        "m69",
+        "m20"
+      ],
+      "viewer": "sales-01"
+    },
+    {
+      "type": "answer.produced",
+      "ts": 1792279016.447354,
+      "seq": 147,
+      "task_id": "t-10ca9a94",
+      "answer": "The approved Atlas delivery date is November 13, 2026, approved by Mara Ellis.",
+      "cited_ids": [
+        "m64",
+        "m65"
+      ],
+      "viewer": "sales-01"
+    },
+    {
+      "type": "memory.added",
+      "ts": 1792279058.398023,
+      "seq": 148,
+      "memory": {
+        "id": "m74",
+        "text": "Maya Flores now prefers three short bullets in client updates: progress, next step, and one clear question.",
+        "author": "sales-01",
+        "origin": "ep-9528a007",
+        "date": "2026-10-06",
+        "status": "trial",
+        "scope": "rusty-rod/sales/sales-01",
+        "reason": "",
+        "flagged": false,
+        "supersedes": "m30",
+        "owner": null,
+        "authority": "discussion",
+        "model": null,
+        "conflicts_with": []
+      }
+    },
+    {
+      "type": "memory.retired",
+      "ts": 1792279058.398345,
+      "seq": 149,
+      "memory_id": "m30",
+      "reason": "superseded by m74",
+      "task_ids": []
+    },
+    {
+      "type": "memory.corrected",
+      "ts": 1792279058.3984141,
+      "seq": 150,
+      "memory_id": "m30",
+      "new_id": "m74",
+      "author": "sales-01"
+    },
+    {
+      "type": "memory.retrieved",
+      "ts": 1792279089.663701,
+      "seq": 151,
+      "task_id": "t-64f87c68",
+      "memory_ids": [
+        "m74",
+        "m6",
+        "m4",
+        "m19",
+        "m1",
+        "m10",
+        "m68",
+        "m21",
+        "m7",
+        "m5",
+        "m31",
+        "m71",
+        "m9",
+        "m3",
+        "m64",
+        "m67",
+        "m65",
+        "m12",
+        "m2",
+        "m11",
+        "m66",
+        "m70",
+        "m69",
+        "m20"
+      ],
+      "viewer": "sales-01"
+    },
+    {
+      "type": "answer.produced",
+      "ts": 1792279091.103252,
+      "seq": 152,
+      "task_id": "t-64f87c68",
+      "answer": "Maya Flores prefers three short bullets in client updates: progress, next step, and one clear question.",
+      "cited_ids": [
+        "m74"
+      ],
+      "viewer": "sales-01"
+    }
+  ]
+}

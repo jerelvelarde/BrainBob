@@ -1,0 +1,61 @@
+{
+  "duration": 60,
+  "speed": 1,
+  "cuts": [
+    {
+      "label": "office-and-new-session",
+      "sourceOffset": 0,
+      "start": 0,
+      "end": 4
+    },
+    {
+      "label": "fresh-session-final",
+      "sourceOffset": 0,
+      "start": 4,
+      "end": 15
+    },
+    {
+      "label": "approved-date-final",
+      "sourceOffset": 0,
+      "start": 15,
+      "end": 27
+    },
+    {
+      "label": "source-evidence-final",
+      "sourceOffset": 0,
+      "start": 27,
+      "end": 36
+    },
+    {
+      "label": "open-personal-preference",
+      "sourceOffset": 0,
+      "start": 36,
+      "end": 38
+    },
+    {
+      "label": "save-correction-final",
+      "sourceOffset": 0,
+      "start": 38,
+      "end": 48
+    },
+    {
+      "label": "correction-history-final",
+      "sourceOffset": 0,
+      "start": 48,
+      "end": 52
+    },
+    {
+      "label": "new-session-reuses-correction",
+      "sourceOffset": 2,
+      "start": 52,
+      "end": 58
+    },
+    {
+      "label": "office-outro",
+      "sourceOffset": 0,
+      "start": 58,
+      "end": 60
+    }
+  ],
+  "unusedTake": "ask-atlas-live: initial drafting prompt, replaced with factual question"
+}

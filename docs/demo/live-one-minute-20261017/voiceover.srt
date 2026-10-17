@@ -1,0 +1,27 @@
+1
+00:00:00,000 --> 00:00:04,000
+One stale memory can put a whole team out of sync.
+
+2
+00:00:04,000 --> 00:00:15,000
+BrainBob gives each agent the context it can access: individual notes, team knowledge, and company decisions. Here’s Maya starting a fresh session.
+
+3
+00:00:15,000 --> 00:00:27,000
+She asks for the approved Atlas deadline. NVIDIA models on Crusoe answer from saved context, while Bob retrieves the files beside the conversation.
+
+4
+00:00:27,000 --> 00:00:36,000
+Open the citation. There’s the original approval, its author, and its source. You can inspect the evidence behind the answer.
+
+5
+00:00:36,000 --> 00:00:48,000
+Now Maya changes a preference: three short bullets instead of three sentences. Save the correction, and Bob files the new version.
+
+6
+00:00:48,000 --> 00:00:52,000
+The previous memory stays in history.
+
+7
+00:00:52,000 --> 00:01:00,000
+A fresh session uses the correction immediately. BrainBob: shared memory you can see, inspect, and improve.

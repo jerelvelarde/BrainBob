@@ -1,0 +1,33 @@
+{
+  "video": "output/brainbob-live-60s.mp4",
+  "sha256": "874c31bd9165d137ece66c1511dcd8d9285d9603f8672e203ce3dfc31f47a435",
+  "media": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "width": 1920,
+        "height": 1080,
+        "r_frame_rate": "30/1"
+      }
+    ],
+    "format": {
+      "duration": "60.000000",
+      "size": "1924398"
+    }
+  },
+  "sourceCapture": "Browser content only, timestamped CUA frames, approximately 8\u201310 fps, encoded at 30 fps with frame repetition",
+  "speed": "Real time; cuts between actions",
+  "backendTasks": [
+    "t-10ca9a94",
+    "t-64f87c68"
+  ],
+  "correction": {
+    "old": "m30",
+    "new": "m74",
+    "operation": "manual correction of synthetic personal preference"
+  },
+  "workingTree": "Shared live development checkout; unrelated frontend/backend summary and recording-explainer changes were present. Not represented as a clean deployed build.",
+  "outtake": "Initial drafting prompt (t-f7d74e09) invented an end-of-day commitment; excluded from the final cut, preserved in the event excerpt. Final factual prompt produced the approved date and approver."
+}

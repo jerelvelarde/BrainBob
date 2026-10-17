@@ -1,0 +1,37 @@
+[
+  {
+    "start": 0,
+    "end": 4,
+    "text": "One stale memory can put a whole team out of sync."
+  },
+  {
+    "start": 4,
+    "end": 15,
+    "text": "BrainBob gives each agent the context it can access: individual notes, team knowledge, and company decisions. Here\u2019s Maya starting a fresh session."
+  },
+  {
+    "start": 15,
+    "end": 27,
+    "text": "She asks for the approved Atlas deadline. NVIDIA models on Crusoe answer from saved context, while Bob retrieves the files beside the conversation."
+  },
+  {
+    "start": 27,
+    "end": 36,
+    "text": "Open the citation. There\u2019s the original approval, its author, and its source. You can inspect the evidence behind the answer."
+  },
+  {
+    "start": 36,
+    "end": 48,
+    "text": "Now Maya changes a preference: three short bullets instead of three sentences. Save the correction, and Bob files the new version."
+  },
+  {
+    "start": 48,
+    "end": 52,
+    "text": "The previous memory stays in history."
+  },
+  {
+    "start": 52,
+    "end": 60,
+    "text": "A fresh session uses the correction immediately. BrainBob: shared memory you can see, inspect, and improve."
+  }
+]

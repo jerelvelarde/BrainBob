@@ -1,0 +1,4 @@
+raw/
+frames.ffconcat
+output/voiceover.*
+output/*-vo.mp4
