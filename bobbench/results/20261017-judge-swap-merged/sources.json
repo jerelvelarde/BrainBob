@@ -1,0 +1,132 @@
+{
+ "hub_repo": "Guangze/memops-small-qwen3-0.6b-lora",
+ "missing_worlds": [],
+ "sources": [
+  {
+   "run": "20261017-215312-fast",
+   "worlds": [
+    "w2-authority-corrections"
+   ],
+   "bob_commit": "d8c571e43b405c56cf7c6899b860599c32a1b655",
+   "conditions": [
+    "append_only",
+    "maintained",
+    "maintained_teacher",
+    "maintained_tuned",
+    "maintained_small_base"
+   ],
+   "replicates": 1,
+   "hf_job_id": null,
+   "returncode": 0,
+   "flavor": "l4x1",
+   "elapsed_s": 871.0,
+   "hub_path": "bob-runs/20261017-215312-fast",
+   "merged_into": "20261017-judge-swap-merged"
+  },
+  {
+   "run": "20261017-220856-fast",
+   "worlds": [
+    "w1-scoped-assembly"
+   ],
+   "bob_commit": "d8c571e43b405c56cf7c6899b860599c32a1b655",
+   "conditions": [
+    "append_only",
+    "maintained",
+    "maintained_teacher",
+    "maintained_tuned",
+    "maintained_small_base"
+   ],
+   "replicates": 1,
+   "hf_job_id": null,
+   "returncode": 0,
+   "flavor": "l4x1",
+   "elapsed_s": 1307.4,
+   "hub_path": "bob-runs/20261017-220856-fast",
+   "merged_into": "20261017-judge-swap-merged"
+  },
+  {
+   "run": "20261017-220857-fast",
+   "worlds": [
+    "w3-cross-org-publication"
+   ],
+   "bob_commit": "d8c571e43b405c56cf7c6899b860599c32a1b655",
+   "conditions": [
+    "append_only",
+    "maintained",
+    "maintained_teacher",
+    "maintained_tuned",
+    "maintained_small_base"
+   ],
+   "replicates": 1,
+   "hf_job_id": null,
+   "returncode": 0,
+   "flavor": "l4x1",
+   "elapsed_s": 536.9,
+   "hub_path": "bob-runs/20261017-220857-fast",
+   "merged_into": "20261017-judge-swap-merged"
+  },
+  {
+   "run": "20261017-220902-fast",
+   "worlds": [
+    "w4-membership-grants"
+   ],
+   "bob_commit": "d8c571e43b405c56cf7c6899b860599c32a1b655",
+   "conditions": [
+    "append_only",
+    "maintained",
+    "maintained_teacher",
+    "maintained_tuned",
+    "maintained_small_base"
+   ],
+   "replicates": 1,
+   "hf_job_id": null,
+   "returncode": 0,
+   "flavor": "l4x1",
+   "elapsed_s": 712.8,
+   "hub_path": "bob-runs/20261017-220902-fast",
+   "merged_into": "20261017-judge-swap-merged"
+  },
+  {
+   "run": "20261017-221038-fast",
+   "worlds": [
+    "w5-conflict-retention"
+   ],
+   "bob_commit": "d8c571e43b405c56cf7c6899b860599c32a1b655",
+   "conditions": [
+    "append_only",
+    "maintained",
+    "maintained_teacher",
+    "maintained_tuned",
+    "maintained_small_base"
+   ],
+   "replicates": 1,
+   "hf_job_id": null,
+   "returncode": 0,
+   "flavor": "l4x1",
+   "elapsed_s": 1152.4,
+   "hub_path": "bob-runs/20261017-221038-fast",
+   "merged_into": "20261017-judge-swap-merged"
+  },
+  {
+   "run": "20261017-221040-fast",
+   "worlds": [
+    "w6-correction-propagation"
+   ],
+   "bob_commit": "d8c571e43b405c56cf7c6899b860599c32a1b655",
+   "conditions": [
+    "append_only",
+    "maintained",
+    "maintained_teacher",
+    "maintained_tuned",
+    "maintained_small_base"
+   ],
+   "replicates": 1,
+   "hf_job_id": null,
+   "returncode": 0,
+   "flavor": "l4x1",
+   "elapsed_s": 1144.9,
+   "hub_path": "bob-runs/20261017-221040-fast",
+   "merged_into": "20261017-judge-swap-merged"
+  }
+ ]
+}
