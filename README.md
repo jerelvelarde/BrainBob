@@ -2,11 +2,24 @@
 
 A shared memory layer for an agent team, visualized as a 3D isometric brain office full of working SpongeBobs.
 
-Think of the SpongeBobs working inside a brain: some plan, some file memories, some retrieve information, and others check that the filing cabinets still contain the truth. We're bringing that metaphor to life with a fun 3D animation connected to the agents' actual work.
+**Shared Brain** is our primary problem: every agent should read the team's project memory before working and update it afterward. BrainBob aims to keep that knowledge current, lean, and conflict-free. Self-improvement comes from better memory.
 
-**Focus: Shared Brain.** Every agent reads the team's living project memory before working and updates it afterward. We want to keep shared knowledge current, lean, and conflict-free, then demonstrate measurable gains in output quality.
+The current build is an interactive frontend preview. The 3D room fills the screen, with floating **Chat** and **Memories** panels and a compact demo/retrace dock. Warm sand, cream, and yellow keep the room and characters at the center.
 
-**Status:** The first 3D frontend is implemented. It includes six walking SpongeBobs, memory cabinets, a revision/evidence inspector, timeline retracing, and CopilotKit scene controls. It uses clearly labeled scripted memory events and browser-local history. The NemoClaw harness, Switchyard routing, Crusoe inference, SQL persistence, and live memory evaluation are planned integrations; no live-model results are claimed yet.
+![BrainBob's 3D workspace with a floating memory inspector](docs/assets/brainbob-preview.png)
+
+## What Works Today
+
+| Capability | Current implementation |
+| --- | --- |
+| 3D brain office | Six animated SpongeBob workers, desks, filing cabinets, orbit and zoom controls. |
+| Floating panels | CopilotKit chat and memory inspection open over the room. Chat survives closing and reopening its panel. |
+| Memory operations | Scripted create, retrieve, check, update, and archive actions with evidence and revision history. |
+| Retracing | Project earlier memory states from recorded events; return to the current state without replaying actions. |
+| Local persistence | Validated browser-local history, JSON export, and demo reset. |
+| Agent UI protocol | A local CopilotKit/AG-UI controller turns supported chat commands into scripted scene events. |
+
+**Still planned:** NemoClaw agents, NVIDIA NeMo Switchyard routing, Crusoe inference, SQL-backed shared memory, role enforcement, conflict handling, and live memory evaluation. The preview makes no model calls and does not yet demonstrate cross-agent memory or measured quality gains.
 
 ## Run the Frontend
 
@@ -36,11 +49,9 @@ pnpm build
 
 The source for this first frontend is in [apps/web](apps/web).
 
-![BrainBob's first 3D isometric memory office](docs/assets/brainbob-preview.png)
+## Architecture and Stack
 
-## Chosen Stack
-
-| Component | Choice | Responsibility |
+| Component | Choice | Intended responsibility |
 | --- | --- | --- |
 | Agent harness | [NVIDIA NemoClaw](https://github.com/NVIDIA/NemoClaw) | Run the agent team inside OpenShell sandboxes. |
 | Model routing | [NVIDIA NeMo Switchyard](https://github.com/NVIDIA-NeMo/Switchyard) | Route requests between specialized models from our configured pool. |
@@ -68,9 +79,9 @@ Our goal is a coordinated team that shares context, organizes memories, and cont
 
 ![A team of SpongeBobs working at desks inside a brain with organized filing cabinets](docs/assets/brain-memory-team.png)
 
-These supplied images are visual references for the planned animation.
+These user-supplied images inspired the brain office and its SpongeBob workers.
 
-## Planning and Human Alignment
+## Planned: Planning and Human Alignment
 
 Before agents act, a planning component turns the user's goal into a proposed plan and definition of success.
 
@@ -129,7 +140,18 @@ The initial proposal samples **10 of the latest 50 eligible conversations** afte
 
 ## The 3D Brain Experience
 
-A playful 3D brain office will show SpongeBob workers walking between desks, carrying records, and managing individual, team, and organization filing cabinets. Live animations will reflect committed memory events. The first frontend preview uses clearly labeled scripted events to develop and test these interactions.
+The scene uses **Three.js**, rendered through **React Three Fiber** in a **Next.js / React** app. **Drei** provides orbit controls, rounded geometry, and billboard labels.
+
+- **Isometric view:** An orthographic camera with a responsive fit, orbit, zoom, and reset.
+- **Procedural characters:** SpongeBobs are assembled from 3D meshes in code, with articulated arms and legs.
+- **Animation:** React Three Fiber's frame loop moves workers along waypoint routes and animates their limbs. Pause and reduced-motion preferences are respected.
+- **Current event feedback:** Scripted memory events change cabinet indicators and worker callouts. Walking routes are ambient animation; they do not represent completed backend tasks.
+- **Inspection:** Click a cabinet to open a floating memory inspector. Evidence and history stay available while the room remains visible.
+- **Retracing:** The timeline reconstructs recorded memory state; it does not rewind the characters' physical positions or rerun inference.
+
+Scene implementation: [brain-scene.tsx](apps/web/src/components/brain/brain-scene.tsx), [sponge-bob.tsx](apps/web/src/components/brain/sponge-bob.tsx), and [brain-workspace.tsx](apps/web/src/components/brain-workspace.tsx).
+
+The planned live integration will connect committed memory operations to these visual actions:
 
 | System event | Planned visual |
 | --- | --- |
@@ -141,7 +163,7 @@ A playful 3D brain office will show SpongeBob workers walking between desks, car
 | Memory evaluation | An inspector checks records against sampled conversation evidence. |
 | Contradiction detected | A confused worker flags conflicting records for resolution. |
 
-The core demonstration is the working agent system and its evaluation loop. The brain animation makes that behavior visible and fun.
+The target demonstration is a working shared-memory system with measured evaluation results, made inspectable through the brain animation.
 
 Click a memory to inspect its evidence and revisions. Scrub the timeline to retrace its history without repeating tool calls or inference. Individual workers represent the task agent, memory curator, and evaluator.
 
@@ -164,4 +186,16 @@ Built for **The Recursive Agents Hackathon**, October 17, 2026, with **Crusoe Ma
 - **Secondary outcome — self-improvement:** Demonstrate that maintained memory helps new agents produce better results on tasks they have not seen.
 - **Supporting behavior — Done Means Done:** Plans, explicit success checks, and human alignment before execution.
 
-See [competition details](docs/competition-details.md) for the official problem statements, rules, schedule, judging criteria, and submission requirements. The README will be updated with setup instructions, demo links, measured results, and an explicit account of work built during the event as implementation progresses.
+## Project Documents
+
+| Document | Contents |
+| --- | --- |
+| [Architecture](docs/architecture.md) | Harness integration, SQL-backed Markdown, model routing, and event design. |
+| [Memory benchmarks](docs/benchmarks.md) | Proposed experiments, baselines, metrics, and evaluation targets. |
+| [Competition details](docs/competition-details.md) | Participant-guide problem statements, rules, schedule, and submission requirements. |
+| [Judging guide](judging/README.md) | Entry point for reviewers. |
+| [Demo runbook](judging/demo-runbook.md) | Intended presentation flow. |
+| [Evidence sheet](judging/evidence.md) | Integration evidence and measured results to record before submission. |
+| [Proof-of-work timeline](judging/proof-of-work/index.html) | Build milestones and screenshots; open the HTML file in a browser. |
+
+Benchmark targets and planned demo steps are proposals. Verified results belong in the evidence sheet.
