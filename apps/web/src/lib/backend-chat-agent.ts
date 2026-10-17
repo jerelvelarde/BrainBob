@@ -2,11 +2,14 @@ import { AbstractAgent, EventType, type BaseEvent, type RunAgentInput } from "@c
 import { Observable } from "rxjs";
 import { brainApi, scopeLabel, type BackendAnswer } from "./brain-api";
 import type { SessionActivity } from "./active-session";
+import { memberForReader, teamForReader } from "./sample-company";
 
 export type ChatMode = "ask" | "remember" | "feedback" | "review";
 export type ChatContext = { mode: ChatMode; reader: string; author: string; taskId?: string; readOnly: boolean };
 
 export class BackendChatAgent extends AbstractAgent {
+  // Only successful Ask turns enter follow-up context. Evaluation gold and write commands never do.
+  private turns: { question: string; answer: string }[] = [];
   constructor(private context: () => ChatContext, private answered: (answer: BackendAnswer) => void, private failed: (error: string) => void, private sessionActivity?: (event: SessionActivity) => void) {
     super({ agentId: "brainbob", description: "BrainBob shared memory on Crusoe", threadId: "brainbob-chat" });
   }
@@ -28,11 +31,17 @@ export class BackendChatAgent extends AbstractAgent {
           case "ask": {
             asking = true;
             this.sessionActivity?.({ type: "started", requestId: input.runId, question: text });
-            const answer = await brainApi.ask(text, context.reader, abort.signal);
+            const person = memberForReader(context.reader);
+            const history = this.turns.slice(-4).map((turn) => `User: ${turn.question.slice(0, 2000)}\nAssistant: ${turn.answer.slice(0, 4000)}`).join("\n\n");
+            const question = `Requester: ${person?.label ?? "this member"} (${teamForReader(context.reader)?.label ?? "their team"}, Rusty Rod). The requester is not necessarily the person asked about. Help complete their requested work, including drafting and planning. Use their saved preferences where relevant. Drafts are for review; do not claim to have sent messages or completed external actions.\n${history ? `\nPrevious conversation (reference only, not verified facts; current memory takes precedence):\n${history}\n` : ""}\nCurrent request: ${text}`;
+            const answer = await brainApi.ask(question, context.reader, abort.signal);
             if (abort.signal.aborted) return;
+            if (!answer.answer.trim()) throw new Error("The inference provider returned no answer. Check the Crusoe connection and retry.");
+            this.turns.push({ question: text, answer: answer.answer });
+            this.turns = this.turns.slice(-4);
             finishAsk({ type: "answered", requestId: input.runId, answer });
             this.answered(answer);
-            reply = answer.answer || "The backend returned an empty answer.";
+            reply = answer.answer;
             break;
           }
           case "remember": {

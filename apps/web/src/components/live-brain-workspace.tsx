@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Clapperboard, FolderClosed, FolderOpen, History, Maximize2, MessageCircle, Pause, Play, SkipForward, ZoomIn, ZoomOut } from "lucide-react";
+import { FolderClosed, FolderOpen, History, Maximize2, MessageCircle, Pause, Play, SkipForward, ZoomIn, ZoomOut } from "lucide-react";
 import { canRead, sceneScope, scopeLabel, type BackendAnswer, type StoredEvent } from "@/lib/brain-api";
 import { memberForReader, memberId, teamForReader } from "@/lib/sample-company";
 import { sessionStatus, type SessionActivity } from "@/lib/active-session";
@@ -108,7 +108,7 @@ function MemberWorkspace({ desk, active, sessions, openRequest, onReaderChange, 
     <header className="floating-header"><a className="brand" href="/" aria-label="BrainBob home"><span className="bob-mark" aria-hidden="true"><i /><i /><b /><em /></span><span>BrainBob</span></a>
       <span className={`connection-state ${backend.connection}`} role="status">{backend.connection === "live" ? "Connected" : backend.connection === "syncing" ? "Loading history…" : backend.connection === "offline" ? "Backend offline" : "Connecting…"}</span>
     </header>
-    <div className="panel-launchers"><a className="rehearsal-link" href="/demo" aria-label="Open Rusty Rod correctness demo"><Clapperboard size={18} /><span>Demo</span></a>
+    <div className="panel-launchers">
       <button ref={sessionButton} aria-label="Open active session file" aria-expanded={panel === "chat" && chatInspection === "session"} onClick={() => openChat(true)}><FolderOpen size={18} /><span>Session</span></button>
       <button ref={chatButton} aria-label="Chat" aria-haspopup="dialog" aria-expanded={panel === "chat"} className={panel === "chat" ? "selected" : ""} onClick={() => openChat()}><MessageCircle size={18} /><span>Chat</span></button>
       <button ref={memoryButton} aria-label="Memories" aria-expanded={panel === "memory"} className={panel === "memory" ? "selected" : ""} onClick={() => panel === "memory" ? closePanel() : inspect()}><FolderClosed size={18} /><span>Memories</span></button>
@@ -119,7 +119,7 @@ function MemberWorkspace({ desk, active, sessions, openRequest, onReaderChange, 
       onFile={() => setChatInspection(chatInspection === "session" ? null : "session")}
       inspection={chatInspection === "session" ? <LiveSessionPanel reader={reader} session={session} onClose={() => setChatInspection(null)} onChat={() => setChatInspection(null)} onInspect={inspectInChat} />
         : chatInspection === "memory" ? <LiveMemoryPanel actor={memberId(reader)} memories={visibleMemories} selected={selected} events={backend.state.events.filter((e) => cursor === null || e.seq <= cursor)} readOnly={cursor !== null} citedIds={citations} onSelect={setSelected} onClose={() => setChatInspection(null)} onRetrace={(seq) => { closePanel(); retrace(seq); }} /> : null}>
-      {chatLoaded ? <SceneChat key={reader} reader={reader} readOnly={cursor !== null} memories={backend.state.memories} onAnswer={onAnswer} onInspect={inspectInChat} onSessionActivity={onSessionActivity} /> : null}
+      {chatLoaded ? <SceneChat key={reader} reader={reader} connected={backend.connection === "live"} readOnly={cursor !== null} memories={backend.state.memories} onAnswer={onAnswer} onInspect={inspectInChat} onSessionActivity={onSessionActivity} /> : null}
     </SessionChatDialog>
     {panel === "memory" ? <LiveMemoryPanel key={reader} actor={memberId(reader)} memories={visibleMemories} selected={selected} events={backend.state.events.filter((e) => cursor === null || e.seq <= cursor)} readOnly={cursor !== null} citedIds={citations} onSelect={setSelected} onClose={closePanel} onRetrace={retrace} /> : null}
     <div className="camera-controls"><button className="icon-button" aria-label="Zoom in" onClick={() => camera.current?.zoom(1.15)}><ZoomIn size={18} /></button><button className="icon-button" aria-label="Zoom out" onClick={() => camera.current?.zoom(1 / 1.15)}><ZoomOut size={18} /></button><button className="icon-button" aria-label="Reset isometric camera" onClick={() => camera.current?.reset()}><Maximize2 size={18} /></button></div>

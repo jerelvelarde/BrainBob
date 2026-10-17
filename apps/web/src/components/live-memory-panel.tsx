@@ -84,7 +84,7 @@ function MemoryDetail({ initialActor, memory, events, readOnly, onSelect, onRetr
       {history?.events.filter((e): e is StoredEvent => e.type !== "replay.done").map((event) => <button className="revision-item" key={event.seq} onClick={() => onRetrace(event.seq)}><span><strong>{eventDescription(event)}</strong><small>{new Date(event.ts * 1000).toLocaleString()}</small></span></button>)}
     </details>
     <details><summary>Manage memory</summary>
-      <label className="memory-field">Acting as (demo)<input value={actor} readOnly /></label>
+      <label className="memory-field">Acting as<input value={actor} readOnly /></label>
       <p className="empty-state">Demo identity only. Read access does not establish authority to approve or change a record.</p>
       {locked && !owner ? <p className="empty-state">Only {memory.owner} can resolve this locked record.</p> : null}
       <label className="memory-field">Correction<textarea value={text} onChange={(e) => setText(e.target.value)} /></label>

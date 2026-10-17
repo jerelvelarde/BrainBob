@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, forwardRef, useContext, type ButtonHTMLAttributes, type ComponentProps } from "react";
-import { ArrowUpRight, BriefcaseBusiness, Building2, UserRound } from "lucide-react";
+import { ArrowUpRight, ListChecks, PencilLine, Search } from "lucide-react";
 import { CopilotChatInput, CopilotChatView, useConfigureSuggestions, type CopilotChatSuggestionViewProps } from "@copilotkit/react-core/v2";
 import type { SessionPrompt } from "@/lib/session-prompts";
 
@@ -31,16 +31,17 @@ export function SessionWelcome({ input, suggestionView }: ComponentProps<typeof 
   </div>;
 }
 
-const icons = { individual: UserRound, team: BriefcaseBusiness, organization: Building2 };
+const icons = { draft: PencilLine, plan: ListChecks, clarify: Search };
+const labels = { draft: "Draft", plan: "Prepare", clarify: "Refine" };
 export const SessionPromptCards = forwardRef<HTMLDivElement, CopilotChatSuggestionViewProps>(function SessionPromptCards({ suggestions, onSelectSuggestion }, ref) {
   const { prompts, disabled } = useContext(SessionWelcomeContext);
   if (!suggestions.length) return null;
-  return <div ref={ref} className="session-prompt-grid" aria-label="Memory-based starter prompts">{suggestions.slice(0, 3).map((suggestion, index) => {
+  return <div ref={ref} className="session-prompt-grid" aria-label="Suggested next actions">{suggestions.slice(0, 3).map((suggestion, index) => {
     const prompt = prompts.find((item) => item.message === suggestion.message);
     if (!prompt) return null;
-    const Icon = icons[prompt.tier];
-    return <button key={prompt.tier} className="session-prompt" data-tier={prompt.tier} disabled={disabled || !onSelectSuggestion} onClick={() => onSelectSuggestion?.(suggestion, index)}>
-      <span className="prompt-top"><span><Icon size={15} />{prompt.memoryId ? `${prompt.tier} memory` : "Explore " + prompt.tier}</span><ArrowUpRight size={16} /></span>
+    const Icon = icons[prompt.action];
+    return <button key={prompt.action} className="session-prompt" data-action={prompt.action} disabled={disabled || !onSelectSuggestion} onClick={() => onSelectSuggestion?.(suggestion, index)}>
+      <span className="prompt-top"><span><Icon size={15} />{labels[prompt.action]}</span><ArrowUpRight size={16} /></span>
       <strong>{prompt.title}</strong><span className="prompt-context">{prompt.context}</span>
     </button>;
   })}</div>;

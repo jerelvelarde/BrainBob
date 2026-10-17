@@ -1,20 +1,19 @@
 import { describe, expect, it } from "vitest";
-import { initialTrace, makeEvent, projectMemories, scopes } from "./memory";
+import { projectMemories, scopes, type MemoryEvent } from "./memory";
 import { backendSceneActions, cinematicsAt, cueFromMemory, samplePath, sceneClips, workerPerformance, type SceneAction } from "./scene-animation";
 
 describe("scene choreography", () => {
   it("replays a recorded action without changing its memory projection", () => {
-    const seed = initialTrace();
-    const event = makeEvent("forgotten", seed, "coffee");
-    const trace = [...seed, event];
+    const event: MemoryEvent = { id: "retirement", sequence: 1, action: "forgotten", memoryId: "record", title: "Retirement", scope: "team", actor: "owner", explanation: "Archived", evidence: "Source", timestamp: "2026-10-17T12:00:00Z" };
+    const trace = [event];
     const before = JSON.stringify(trace);
     const cue = cueFromMemory(event)!;
     const first = workerPerformance(cue.action, cue.scope, 0, .6);
     workerPerformance(cue.action, cue.scope, 0, .9);
     expect(workerPerformance(cue.action, cue.scope, 0, .6)).toEqual(first);
     expect(JSON.stringify(trace)).toBe(before);
-    expect(projectMemories(trace).find((m) => m.id === "coffee")?.status).toBe("forgotten");
-    expect(cueFromMemory(seed[0])).toBeUndefined();
+    expect(projectMemories(trace)).toEqual([]);
+    expect(cueFromMemory()).toBeUndefined();
   });
 
   it("directs retrieval to the selected scope before returning to the task desk", () => {

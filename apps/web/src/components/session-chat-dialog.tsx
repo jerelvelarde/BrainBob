@@ -4,9 +4,9 @@ import { useEffect, useRef, useState, type ReactNode, type RefObject } from "rea
 import { ArrowLeft, FolderOpen } from "lucide-react";
 import { memberForReader, teamForReader } from "@/lib/sample-company";
 
-export function SessionChatDialog({ open, reader, onClose, onFile, fileOpen, inspection, children, returnFocus, preview = false }: {
+export function SessionChatDialog({ open, reader, onClose, onFile, fileOpen, inspection, children, returnFocus }: {
   open: boolean; reader: string; onClose: () => void; onFile: () => void; fileOpen: boolean;
-  inspection?: ReactNode; children: ReactNode; returnFocus: RefObject<HTMLButtonElement | null>; preview?: boolean;
+  inspection?: ReactNode; children: ReactNode; returnFocus: RefObject<HTMLButtonElement | null>;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const fileButton = useRef<HTMLButtonElement>(null);
@@ -31,7 +31,7 @@ export function SessionChatDialog({ open, reader, onClose, onFile, fileOpen, ins
   return <dialog ref={dialog} className="session-chat-dialog" aria-label={`${member?.label ?? "Your"}’s session chat`} onCancel={(event) => { event.preventDefault(); onClose(); }}>
     <header className="session-chat-header">
       <button className="back-to-brain" aria-label="Back to brain" onClick={onClose}><ArrowLeft size={18} /><span>Back to brain</span></button>
-      <div className="session-identity"><span className="member-avatar" aria-hidden="true">{member?.label.split(" ").map((name) => name[0]).join("")}</span><div><strong>{member?.label}</strong><small>{teamForReader(reader)?.label} · Rusty Rod{preview ? " · Scripted demo" : ""}</small></div></div>
+      <div className="session-identity"><span className="member-avatar" aria-hidden="true">{member?.label.split(" ").map((name) => name[0]).join("")}</span><div><strong>{member?.label}</strong><small>{teamForReader(reader)?.label} · Rusty Rod</small></div></div>
       <button ref={fileButton} className="session-file-toggle" aria-label="Session file" aria-expanded={fileOpen} onClick={onFile}><FolderOpen size={18} /><span>Session file</span></button>
     </header>
     <div className="session-chat-workspace" data-inspecting={Boolean(inspection)}>
