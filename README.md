@@ -1,4 +1,4 @@
-# Brain Bob
+# BrainBob
 
 An agent team that manages what it knows, learns how to work better, and checks whether its memories and skills still hold up.
 

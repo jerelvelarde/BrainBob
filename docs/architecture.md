@@ -1,4 +1,4 @@
-# Brain Bob — Architecture and Tech Stack
+# BrainBob — Architecture and Tech Stack
 
 Proposed implementation plan for the Recursive Agents Hackathon, October 17, 2026. This document describes intended behavior; implementation has not started.
 
@@ -131,7 +131,7 @@ CRUSOE_API_KEY=<server-only secret>
 CRUSOE_BASE_URL=https://api.inference.crusoecloud.com/v1
 CRUSOE_MODEL=<verified model id>
 CRUSOE_EVAL_MODEL=<verified model id; may match CRUSOE_MODEL>
-DATABASE_PATH=./data/brain-bob.sqlite
+DATABASE_PATH=./data/brainbob.sqlite
 # Optional planning research; leave disabled without credentials.
 YOU_SEARCH_ENABLED=false
 YOU_API_KEY=
