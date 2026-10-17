@@ -8,7 +8,7 @@ Meet the **BrainBobs**: our SpongeBob-inspired memory crew, with bright yellow r
 
 **Shared Brain** is our primary track, and **memory correctness is the core problem we're solving**. We aim to validate facts against source evidence, apply justified corrections, preserve valid memories, and surface unresolved conflicts or uncertainty before other agents rely on them. Lean storage and self-improvement support that goal; measured task outcomes must show whether maintaining correct memory actually helps.
 
-The current build is an interactive frontend preview. The 3D room fills the screen, with floating **Chat** and **Memories** panels and a compact demo/retrace dock. Warm sand, cream, and yellow keep the room and characters at the center.
+The current build has a live frontend/backend path and a separate scripted preview at `/demo`. The 3D room fills the screen, with chat, scoped memory inspection, and session files. See the [readiness assessment](docs/readiness.md) for verified capabilities, benchmark gaps, and remaining release gates; the longer roadmap below includes planned features.
 
 ![BrainBob's 3D workspace with rounded rectangular BrainBobs](docs/assets/brainbob-preview.jpg)
 
@@ -23,7 +23,7 @@ The current build is an interactive frontend preview. The 3D room fills the scre
 | Local persistence | Validated browser-local history, JSON export, and demo reset. |
 | Chat controls | A local controller turns supported chat commands into scripted scene events. |
 
-**Still planned:** NemoClaw agents, NVIDIA NeMo Switchyard routing, Crusoe inference, SQL-backed shared memory, role enforcement, conflict handling, and live memory evaluation. The preview makes no model calls and does not yet demonstrate cross-agent memory or measured quality gains.
+The table above describes the **scripted preview**. The live Python backend additionally implements JSONL persistence, scoped retrieval, write-time maintenance, recent-conversation audits, and direct Crusoe inference; historical evaluation results are in the [evaluation report](docs/evaluation-report.md). The backend uses a demo member identity supplied by the client, not production authentication. NemoClaw, Switchyard, and SQL storage remain planned. Connecting an inference service and running the fine-tuned model still require the [model handoff](docs/finetune-handoff.md).
 
 ## Run the Frontend
 
@@ -34,7 +34,7 @@ pnpm install
 pnpm dev
 ```
 
-Open [the local preview](http://127.0.0.1:3000). No API key is needed for the scripted scene.
+Open [the live app](http://127.0.0.1:3000) after starting the backend using the [integration runbook](apps/web/README.md). For the scripted scene without an API key or backend, open [the demo](http://127.0.0.1:3000/demo).
 
 The [character study](http://127.0.0.1:3000/character-study) compares circular, rounded rectangular, and gently slanted bodies with a movement preview. The room currently uses the rounded rectangle. See the [design research and animation plan](docs/character-design.md) for the reasoning and future actions.
 

@@ -7,7 +7,7 @@ We can validate GateMem data offline and export model predictions through an inc
 | GateMem | Not measured | Full released data validated; incremental prediction export and append-only extraction baseline implemented | Test the deployed model; implement application-equivalent contextual ACL/deletion adapter; run official judging on complete domain predictions |
 | MUMBench (AIM) | Not measured | Primary paper, schema, and metrics identified | Obtain/version the actual dataset and evaluator; implement chronological multi-user CRUD operation traces |
 | CoMemBench | Not measured | Primary project release and evaluation requirements identified | Domain-native workflow executors, typed handoff integration, and evaluator/oracle access |
-| “MUM” | Identity unresolved | Treat as shorthand for MUMBench provisionally | A separate intended benchmark needs a canonical source; do not report a duplicate score |
+| “MUM” | Same target as MUMBench | Confirmed by Bonan through Jerel | Count once; no separate MUM score |
 | Bob Benchmark | See Bob pilot artifacts separately | Internal benchmark work has separate ownership | Bob Benchmark and the existing Rusty Rod suite must retain their separate identities |
 
 ## Exact benchmark identities
@@ -87,7 +87,7 @@ The fetched backend now has dynamic multi-organization policy primitives. The re
 
 ## Work queue before a scorecard can be called complete
 
-1. **Model owner / Bonan:** provide exact checkpoint/model ID, serving endpoint, intended role, and contamination statement against frozen held-out data. Run base and tuned conditions on identical cases with fixed judge/prompt settings.
+1. **Model owner / Bonan:** the local LoRA maintenance checker and frozen-pair predictions have been supplied; use confirmed canonical revision `b904e6ec0baea37bf70209093b8c59332d3c450a` and arrange private Hub/GPU access for repeat inference. A permanent endpoint is not required. Use the opt-in callable bridge and fixed judge/prompt settings, then evaluate downstream maintenance effects. See [fine-tuning handoff](finetune-handoff.md).
 2. **Backend evaluation owner:** implement a production-equivalent GateMem adapter for contextual principals, scope changes, and explicit forgetting; retain the current extraction baseline as a named control. Run one pilot then complete four-domain inference and official judging.
 3. **MUMBench owner:** resolve release access/revision, preserve domain chronology and shared user state, capture predicted CRUD/payload/visibility independently of expected actions, and reproduce the paper's distinct metric definitions.
 4. **CoMemBench owner:** establish evaluator access, native tool environments, typed/versioned receipts and pollution pairing; report unregistered/unsupported cells blank until real runs exist.
