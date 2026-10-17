@@ -387,7 +387,7 @@ Decisions to settle during review: benchmark name, Core budgets, provider-neutra
 
 ## 17. Relationship to the current BrainBob project
 
-This specification complements [the existing evaluation plan](benchmarks.md) and [session-file design](session-files.md). It does not update the backend contract, claim live permission enforcement, or turn the scripted demo into benchmark evidence.
+This specification complements [the existing evaluation plan](benchmarks.md) and defines an implementation-independent session-context contract. It does not update the backend contract, claim live permission enforcement, or turn the scripted demo into benchmark evidence.
 
 BrainBob can supply one candidate adapter and the Rusty Rod public example. Its three-tier cabinet visualization can replay benchmark traces for explanation, but the score is computed from source evidence, actual delivered context, actions, and resulting state. Memory correctness and leave-one-out usefulness remain separate.
 
