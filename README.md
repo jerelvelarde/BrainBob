@@ -6,7 +6,7 @@ An agent can finish its task and leave behind a wrong fact. The next agent inher
 
 Built by **Jerel Velarde and Bonan Kou** for the **Shared Brain** track at The Recursive Agents Hackathon, October 17, 2026. Model calls run through **Crusoe Managed Inference**.
 
-> **Hackathon build in progress.** The memory backend, evaluation experiments, and interactive app are implemented. Jerel is completing the end-to-end app experience; Bonan is working on a smaller fine-tuned memory checker. The trained checker and the final integrated submission are not yet verified results.
+> **Hackathon build in progress.** The memory backend, evaluation experiments, and interactive app are implemented. Jerel is completing the end-to-end app experience. Bonan's [0.6B fine-tuned memory checker](https://huggingface.co/Guangze/memops-small-qwen3-0.6b-lora) is published with synthetic diagnostic results; it remains experimental and opt-in. Final integrated submission verification is pending.
 
 ![BrainBob's three-tier memory office and an inspectable agent session file](judging/proof-of-work/screenshots/23-tier-session-file.jpg)
 
@@ -32,7 +32,7 @@ The demo company, **Rusty Rod**, has 18 members across Executive, Sales, and Eng
 | Interactive app | Next.js 3D office, CopilotKit chat, HTTP/SSE integration, source inspection, tiered memory views, and event retracing. Final live integration is in progress. |
 | Evaluation evidence | Published conversational benchmarks, the synthetic Rusty Rod correctness run, and two recorded backend demo runs. |
 | Bob Benchmark | Six organizational pilot worlds and oracle labels on `main`; an executable diagnostic pilot and small-model evaluation handoff are tracked in [PR #9](https://github.com/jerelvelarde/BrainBob/pull/9). |
-| Smaller checker | Bonan's bounded [0.6B fine-tuning experiment](https://github.com/jerelvelarde/BrainBob/issues/7) is in progress. Base-versus-tuned results and promotion remain pending. |
+| Smaller checker | Published [Qwen3-0.6B LoRA adapter](https://huggingface.co/Guangze/memops-small-qwen3-0.6b-lora): reported 32/60 base → 42/60 tuned on public synthetic checker pairs. Integration and promotion checks remain tracked in [#7](https://github.com/jerelvelarde/BrainBob/issues/7). |
 
 The recorded backend demo uses legacy identities and disables organization permissions/write-time maintenance. It is a verified **usefulness** demonstration, not proof of the complete organizational app flow. Jerel is connecting that experience to the current app; see the [integration boundary](docs/frontend-integration.md).
 
@@ -54,6 +54,7 @@ Results below describe specific runs, not general accuracy guarantees. Full setu
 | LoCoMo: 760 held-out questions | No memory **85/760**; ordinary and audited memory both **404/760**. | Retrieved memory helps this task; the audit adds no measured gain. |
 | LongMemEval: 50-question subset | Answer context **2,681 vs 108,946 tokens**; extracted-memory accuracy **35/50** versus full history **39/50**. | A context-size tradeoff, not accuracy parity or total pipeline savings. |
 | BANKING77: 300 held-out tasks | Ordinary and audited memory both **202/300**; paired audit difference **0.0 percentage points**, 95% interval **[-1.3, +1.3]**. | A null result for the frozen usefulness-audit policy. |
+| Small-checker Bob diagnostic: 60 public synthetic pairs | Published base → tuned accuracy: **32/60 → 42/60** (53.3% → 70.0%); macro-F1 **0.437 → 0.694**; **0 invalid outputs** for both. | A measured semantic-classification gain on this pilot, with false-conflict risk; not end-to-end memory safety or independent benchmark validation. |
 
 In the Rusty Rod run, the recent audit changed no answers beyond write-time maintenance. Its short scenarios fit entirely inside the sampling window, and its scored judgments were overwhelmingly supported examples. It does not establish robust contradiction detection or performance when sampling misses decisive evidence. Scope leakage there measures filtered retrieval, not complete application security. The report also documents coarse string-grading errors.
 
@@ -67,9 +68,15 @@ Bob evaluates organizational memory through changing facts, permissions, and age
 
 Source events and oracle labels are separate. The Atlas walkthrough is explicitly public development data. Oracle files are public evaluation assets that must stay outside the tested model's inputs and training data; they are not an independently secret test set. Labels have not received independent human adjudication.
 
-The [executable diagnostic pilot in PR #9](https://github.com/jerelvelarde/BrainBob/pull/9) is a separate, smaller slice: 60 balanced checker pairs plus 12 development pairs, and reference controls over 18 workflow checkpoints. Reference-control scores validate the harness; they are not BrainBob or fine-tuned-model results. The next evidence is a measured real-system and base-versus-tuned comparison.
+The [executable diagnostic pilot in PR #9](https://github.com/jerelvelarde/BrainBob/pull/9) is a separate, smaller slice: 60 balanced checker pairs plus 12 development pairs, and reference controls over 18 workflow checkpoints. Reference-control scores validate the harness; they are not BrainBob or fine-tuned-model results. The published checker predictions below are a separate real-model run; an integrated real-system comparison remains pending.
 
 Bob is a **proposed public benchmark**, informed by GateMem, MUMBench, CoMemBench, and other prior work documented in the [specification](docs/bob-benchmark-spec.md). These pilots are not official results on those external benchmarks.
+
+## Published small memory checker
+
+Bonan's [memops-small Qwen3-0.6B LoRA](https://huggingface.co/Guangze/memops-small-qwen3-0.6b-lora/tree/8f832dbfecddc028d130c0eee321111f4e34404c) classifies candidate/existing fact pairs as strict JSON `same`, `conflict`, or `unrelated`. It was trained on 144 synthetic pairs for one epoch on an NVIDIA L4. The release includes adapter weights, training code, provenance, and base/tuned predictions. Its [run metadata](https://huggingface.co/Guangze/memops-small-qwen3-0.6b-lora/blob/8f832dbfecddc028d130c0eee321111f4e34404c/runs/20261017-210457/run_meta.json) records a saved-adapter reload check matching three tuned predictions.
+
+The [model card](https://huggingface.co/Guangze/memops-small-qwen3-0.6b-lora/blob/8f832dbfecddc028d130c0eee321111f4e34404c/README.md) reports a **+16.7 percentage-point accuracy gain**, but also **five non-conflict pairs mislabeled as conflict** (base: zero), and half of true conflicts still missed as unrelated. These 60 public, single-annotator synthetic pairs have no independent label review or same-set large-judge comparison yet. The result supports further testing, not automatic promotion. Deterministic policy retains control of memory changes; the existing checker remains the default.
 
 ## Run locally
 
@@ -125,7 +132,7 @@ Use [recorded results](docs/evaluation-report.md) for existing scores. Keep deve
 | Memory | JSONL persistence, BM25 retrieval, source IDs, supersession links, event history |
 | Extraction and default answering | `nvidia/Nemotron-3.5-Lightning-30B-A3B` on Crusoe |
 | Current maintenance/audit checker | `openai/gpt-oss-120b` on Crusoe |
-| Experimental checker | Qwen3-0.6B fine-tuning work; not the current default |
+| Experimental checker | Published Qwen3-0.6B LoRA semantic-relation classifier; opt-in, not the current default |
 
 NemoClaw, Switchyard, and SQL storage appear in earlier architecture plans but are not integrated into this build. Model roles and experimental overrides are recorded in the evaluation artifacts.
 
@@ -136,6 +143,6 @@ The member selector supplies a **demo identity**, not authentication. Retired re
 - **Jerel Velarde** — end-to-end app, interaction design, visualization, and independent evaluation presentation.
 - **Bonan Kou** — agents, shared memory, maintenance/evaluation backend, and the smaller-checker experiment.
 
-Final P0 work: verify the connected organizational app flow, publish the actual checker experiment outcome, reconcile the benchmark/run artifacts, and complete the demo/video/submission links. A neutral or unsuccessful fine-tuning result should be reported honestly; the working default checker remains available.
+Final P0 work: verify the connected organizational app flow, independently rescore the published checker predictions and check its integration/policy behavior, reconcile the benchmark/run artifacts, and complete the demo/video/submission links. Report the accuracy gain alongside false-conflict risk; the working default checker remains available.
 
 [Judging guide](judging/README.md) · [Evidence sheet](judging/evidence.md) · [Proof of work](judging/proof-of-work/index.html) · [Competition details](docs/competition-details.md)
