@@ -1,0 +1,8136 @@
+{
+ "suite": "rusty_rod_correctness",
+ "fixture": "rusty-rod-correctness-v1",
+ "split": "heldout",
+ "fast": false,
+ "n_scenarios": 30,
+ "n_questions": 76,
+ "seed": 7,
+ "retrieval_top_k": 10,
+ "models": {
+  "curator": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+  "judge": "openai/gpt-oss-120b",
+  "agent": "nvidia/Nemotron-3.5-Lightning-30B-A3B"
+ },
+ "prompt_versions": {
+  "agent": "93e213d5b877",
+  "maintain": "e0343d98fecd",
+  "audit": "d213a3f72ae7",
+  "curator": "a64d5eefed57"
+ },
+ "metrics": {
+  "none": {
+   "accuracy": "10/76",
+   "stale_usage": "0/24",
+   "abstention": "9/10",
+   "uncertainty": "0/3",
+   "leakage": 0,
+   "avg_ctx_tokens": 0,
+   "by_group": {
+    "Extraction": "3/14",
+    "Updates": "1/12",
+    "Retention": "0/13",
+    "Forgetting": "1/11",
+    "Shared handoff": "3/14",
+    "Insufficient evidence": "2/12"
+   },
+   "correct_update": "-",
+   "unjustified_forgetting": "-"
+  },
+  "append_only": {
+   "accuracy": "67/76",
+   "stale_usage": "4/24",
+   "abstention": "7/10",
+   "uncertainty": "1/3",
+   "leakage": 0,
+   "avg_ctx_tokens": 117,
+   "by_group": {
+    "Extraction": "13/14",
+    "Updates": "11/12",
+    "Retention": "12/13",
+    "Forgetting": "11/11",
+    "Shared handoff": "12/14",
+    "Insufficient evidence": "8/12"
+   },
+   "correct_update": "0/13",
+   "unjustified_forgetting": "0/32",
+   "n_memories": 230,
+   "n_tentative": 0,
+   "n_retired": 0
+  },
+  "maintained_no_audit": {
+   "accuracy": "68/76",
+   "stale_usage": "1/24",
+   "abstention": "7/10",
+   "uncertainty": "0/3",
+   "leakage": 0,
+   "avg_ctx_tokens": 106,
+   "by_group": {
+    "Extraction": "13/14",
+    "Updates": "12/12",
+    "Retention": "13/13",
+    "Forgetting": "11/11",
+    "Shared handoff": "13/14",
+    "Insufficient evidence": "6/12"
+   },
+   "correct_update": "12/13",
+   "unjustified_forgetting": "0/32",
+   "n_memories": 225,
+   "n_tentative": 10,
+   "n_retired": 18
+  },
+  "maintained": {
+   "accuracy": "68/76",
+   "stale_usage": "1/24",
+   "abstention": "7/10",
+   "uncertainty": "0/3",
+   "leakage": 0,
+   "avg_ctx_tokens": 106,
+   "by_group": {
+    "Extraction": "13/14",
+    "Updates": "12/12",
+    "Retention": "13/13",
+    "Forgetting": "11/11",
+    "Shared handoff": "13/14",
+    "Insufficient evidence": "6/12"
+   },
+   "correct_update": "12/13",
+   "unjustified_forgetting": "0/32",
+   "n_memories": 225,
+   "n_tentative": 10,
+   "n_retired": 18
+  },
+  "full_history": {
+   "accuracy": "73/76",
+   "stale_usage": "1/24",
+   "abstention": "9/10",
+   "uncertainty": "2/3",
+   "leakage": 0,
+   "avg_ctx_tokens": 88,
+   "by_group": {
+    "Extraction": "13/14",
+    "Updates": "12/12",
+    "Retention": "13/13",
+    "Forgetting": "11/11",
+    "Shared handoff": "13/14",
+    "Insufficient evidence": "11/12"
+   },
+   "correct_update": "-",
+   "unjustified_forgetting": "-"
+  }
+ },
+ "bootstrap": {
+  "maintained_no_audit - append_only": {
+   "accuracy": [
+    1.3,
+    -5.3,
+    7.9
+   ],
+   "stale": [
+    -3.9,
+    -9.2,
+    0.0
+   ]
+  },
+  "maintained - maintained_no_audit": {
+   "accuracy": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "stale": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "append_only - none": {
+   "accuracy": [
+    75.0,
+    63.2,
+    85.5
+   ],
+   "stale": [
+    5.3,
+    1.3,
+    10.5
+   ]
+  }
+ },
+ "audit": {
+  "seed": 7,
+  "latest": 50,
+  "sample": 10,
+  "episodes_sampled": 97,
+  "checks": 464,
+  "proposed": 25,
+  "evidence_coverage": "13/13",
+  "judgment_accuracy": "193/194",
+  "confusion": {
+   "supported->supported": 192,
+   "contradicted->contradicted": 1,
+   "supported->contradicted": 1
+  },
+  "per_scenario": {
+   "ex-1": {
+    "sampled": [
+     "ex-1-e2",
+     "ex-1-e1",
+     "ex-1-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 0,
+     "supported": 13,
+     "insufficient": 2
+    }
+   },
+   "ex-2": {
+    "sampled": [
+     "ex-2-e2",
+     "ex-2-e1",
+     "ex-2-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 0,
+     "supported": 8,
+     "insufficient": 7
+    }
+   },
+   "ex-3": {
+    "sampled": [
+     "ex-3-e2",
+     "ex-3-e1",
+     "ex-3-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 2,
+     "supported": 6,
+     "insufficient": 7
+    }
+   },
+   "ex-4": {
+    "sampled": [
+     "ex-4-e2",
+     "ex-4-e1",
+     "ex-4-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 0,
+     "supported": 14,
+     "insufficient": 1
+    }
+   },
+   "ex-5": {
+    "sampled": [
+     "ex-5-e2",
+     "ex-5-e1",
+     "ex-5-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 0,
+     "supported": 5,
+     "insufficient": 10
+    }
+   },
+   "up-1-atlas": {
+    "sampled": [
+     "up-1-atlas-e3",
+     "up-1-atlas-e1",
+     "up-1-atlas-e2",
+     "up-1-atlas-e4"
+    ],
+    "counts": {
+     "checked": 20,
+     "contradicted": 2,
+     "supported": 14,
+     "insufficient": 4
+    }
+   },
+   "up-2": {
+    "sampled": [
+     "up-2-e2",
+     "up-2-e1",
+     "up-2-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 0,
+     "supported": 11,
+     "insufficient": 4
+    }
+   },
+   "up-3": {
+    "sampled": [
+     "up-3-e1",
+     "up-3-e3",
+     "up-3-e2"
+    ],
+    "counts": {
+     "checked": 9,
+     "contradicted": 1,
+     "supported": 4,
+     "insufficient": 4
+    }
+   },
+   "up-4": {
+    "sampled": [
+     "up-4-e2",
+     "up-4-e1",
+     "up-4-e3"
+    ],
+    "counts": {
+     "checked": 6,
+     "contradicted": 2,
+     "supported": 3,
+     "insufficient": 1
+    }
+   },
+   "up-5": {
+    "sampled": [
+     "up-5-e2",
+     "up-5-e1",
+     "up-5-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 2,
+     "supported": 10,
+     "insufficient": 3
+    }
+   },
+   "re-1": {
+    "sampled": [
+     "re-1-e3",
+     "re-1-e1",
+     "re-1-e2",
+     "re-1-e4"
+    ],
+    "counts": {
+     "checked": 20,
+     "contradicted": 0,
+     "supported": 8,
+     "insufficient": 12
+    }
+   },
+   "re-2": {
+    "sampled": [
+     "re-2-e3",
+     "re-2-e1",
+     "re-2-e2",
+     "re-2-e4"
+    ],
+    "counts": {
+     "checked": 20,
+     "contradicted": 2,
+     "supported": 9,
+     "insufficient": 9
+    }
+   },
+   "re-3": {
+    "sampled": [
+     "re-3-e3",
+     "re-3-e2",
+     "re-3-e4",
+     "re-3-e1",
+     "re-3-e5"
+    ],
+    "counts": {
+     "checked": 25,
+     "contradicted": 5,
+     "supported": 7,
+     "insufficient": 13
+    }
+   },
+   "re-4": {
+    "sampled": [
+     "re-4-e3",
+     "re-4-e1",
+     "re-4-e2",
+     "re-4-e4"
+    ],
+    "counts": {
+     "checked": 20,
+     "contradicted": 0,
+     "supported": 8,
+     "insufficient": 12
+    }
+   },
+   "re-5": {
+    "sampled": [
+     "re-5-e3",
+     "re-5-e1",
+     "re-5-e2",
+     "re-5-e4"
+    ],
+    "counts": {
+     "checked": 20,
+     "contradicted": 1,
+     "supported": 8,
+     "insufficient": 11
+    }
+   },
+   "fo-1": {
+    "sampled": [
+     "fo-1-e2",
+     "fo-1-e1",
+     "fo-1-e3"
+    ],
+    "counts": {
+     "checked": 12,
+     "contradicted": 1,
+     "supported": 4,
+     "insufficient": 7
+    }
+   },
+   "fo-2": {
+    "sampled": [
+     "fo-2-e2",
+     "fo-2-e1",
+     "fo-2-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 2,
+     "supported": 6,
+     "insufficient": 7
+    }
+   },
+   "fo-3": {
+    "sampled": [
+     "fo-3-e2",
+     "fo-3-e1",
+     "fo-3-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 4,
+     "supported": 4,
+     "insufficient": 7
+    }
+   },
+   "fo-4": {
+    "sampled": [
+     "fo-4-e2",
+     "fo-4-e1",
+     "fo-4-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 1,
+     "supported": 7,
+     "insufficient": 7
+    }
+   },
+   "fo-5": {
+    "sampled": [
+     "fo-5-e2",
+     "fo-5-e1",
+     "fo-5-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 2,
+     "supported": 9,
+     "insufficient": 4
+    }
+   },
+   "sh-1": {
+    "sampled": [
+     "sh-1-e2",
+     "sh-1-e1",
+     "sh-1-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 1,
+     "supported": 6,
+     "insufficient": 8
+    }
+   },
+   "sh-2": {
+    "sampled": [
+     "sh-2-e2",
+     "sh-2-e1",
+     "sh-2-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 1,
+     "supported": 8,
+     "insufficient": 6
+    }
+   },
+   "sh-3": {
+    "sampled": [
+     "sh-3-e2",
+     "sh-3-e1",
+     "sh-3-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 0,
+     "supported": 9,
+     "insufficient": 6
+    }
+   },
+   "sh-4": {
+    "sampled": [
+     "sh-4-e2",
+     "sh-4-e1",
+     "sh-4-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 4,
+     "supported": 8,
+     "insufficient": 3
+    }
+   },
+   "sh-5": {
+    "sampled": [
+     "sh-5-e2",
+     "sh-5-e1",
+     "sh-5-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 0,
+     "supported": 8,
+     "insufficient": 7
+    }
+   },
+   "in-1": {
+    "sampled": [
+     "in-1-e2",
+     "in-1-e1",
+     "in-1-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 2,
+     "supported": 8,
+     "insufficient": 5
+    }
+   },
+   "in-2": {
+    "sampled": [
+     "in-2-e2",
+     "in-2-e1",
+     "in-2-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 0,
+     "supported": 5,
+     "insufficient": 10
+    }
+   },
+   "in-3": {
+    "sampled": [
+     "in-3-e2",
+     "in-3-e1",
+     "in-3-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 1,
+     "supported": 7,
+     "insufficient": 7
+    }
+   },
+   "in-4": {
+    "sampled": [
+     "in-4-e2",
+     "in-4-e1",
+     "in-4-e3"
+    ],
+    "counts": {
+     "checked": 12,
+     "contradicted": 0,
+     "supported": 6,
+     "insufficient": 6
+    }
+   },
+   "in-5": {
+    "sampled": [
+     "in-5-e2",
+     "in-5-e1",
+     "in-5-e3"
+    ],
+    "counts": {
+     "checked": 15,
+     "contradicted": 2,
+     "supported": 6,
+     "insufficient": 7
+    }
+   }
+  }
+ },
+ "state": {
+  "append_only": {
+   "ex-1": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "us east 2",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "whitfield",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "ex-2": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "postgres",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "ex-3": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "210",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "ex-4": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "40",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "ex-5": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "raman",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "up-1-atlas": {
+    "updates": [
+     {
+      "new": "november 13",
+      "old": "november 6",
+      "correct": false,
+      "new_present": true,
+      "old_active": [
+       "m1"
+      ]
+     }
+    ],
+    "keeps": [
+     {
+      "value": "picking error",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "up-2": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "480",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "up-3": {
+    "updates": [
+     {
+      "new": "175",
+      "old": "150",
+      "correct": false,
+      "new_present": true,
+      "old_active": [
+       "m1",
+       "m4"
+      ]
+     }
+    ],
+    "keeps": []
+   },
+   "up-4": {
+    "updates": [
+     {
+      "new": "grpc",
+      "old": "rest v2",
+      "correct": false,
+      "new_present": true,
+      "old_active": [
+       "m1",
+       "m3"
+      ]
+     }
+    ],
+    "keeps": [
+     {
+      "value": "5 minute",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "up-5": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "november 24",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "re-1": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "dwell",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "lena",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "re-2": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "7 years",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "customer managed",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "re-3": {
+    "updates": [
+     {
+      "new": "october 2",
+      "old": "september 18",
+      "correct": false,
+      "new_present": true,
+      "old_active": [
+       "m3",
+       "m4"
+      ]
+     }
+    ],
+    "keeps": [
+     {
+      "value": "induction",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "becker",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "re-4": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "2x",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "delaware",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "re-5": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "memo",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "48 hours",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "fo-1": {
+    "updates": [
+     {
+      "new": "email",
+      "old": "thursday",
+      "correct": false,
+      "new_present": true,
+      "old_active": [
+       "m1"
+      ]
+     }
+    ],
+    "keeps": []
+   },
+   "fo-2": {
+    "updates": [
+     {
+      "new": "k8s",
+      "old": "stage umber 01",
+      "correct": false,
+      "new_present": true,
+      "old_active": [
+       "m1"
+      ]
+     },
+     {
+      "new": "github actions",
+      "old": "jenkins",
+      "correct": false,
+      "new_present": true,
+      "old_active": [
+       "m2"
+      ]
+     }
+    ],
+    "keeps": [
+     {
+      "value": "2 gb",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "fo-3": {
+    "updates": [
+     {
+      "new": "sofia",
+      "old": "ian cho",
+      "correct": false,
+      "new_present": true,
+      "old_active": [
+       "m1"
+      ]
+     }
+    ],
+    "keeps": []
+   },
+   "fo-4": {
+    "updates": [
+     {
+      "new": "okta",
+      "old": "vpn",
+      "correct": false,
+      "new_present": true,
+      "old_active": [
+       "m1"
+      ]
+     }
+    ],
+    "keeps": [
+     {
+      "value": "5k",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "fo-5": {
+    "updates": [
+     {
+      "new": "11 000",
+      "old": "9 500",
+      "correct": false,
+      "new_present": true,
+      "old_active": [
+       "m1"
+      ]
+     }
+    ],
+    "keeps": []
+   },
+   "sh-1": {
+    "updates": [
+     {
+      "new": "october 29",
+      "old": "october 15",
+      "correct": false,
+      "new_present": true,
+      "old_active": [
+       "m1"
+      ]
+     }
+    ],
+    "keeps": [
+     {
+      "value": "soc 2",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "sh-2": {
+    "updates": [
+     {
+      "new": "4 weeks",
+      "old": "3 weeks",
+      "correct": false,
+      "new_present": true,
+      "old_active": [
+       "m1"
+      ]
+     }
+    ],
+    "keeps": [
+     {
+      "value": "feast",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "sh-3": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "premium",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "january 31",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "sh-4": {
+    "updates": [
+     {
+      "new": "10",
+      "old": "8",
+      "correct": false,
+      "new_present": true,
+      "old_active": [
+       "m4"
+      ]
+     }
+    ],
+    "keeps": [
+     {
+      "value": "november 12",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "sh-5": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "40",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "hls",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "in-1": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "genomics",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "in-2": {
+    "updates": [],
+    "keeps": []
+   },
+   "in-3": {
+    "updates": [],
+    "keeps": []
+   },
+   "in-4": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "3 month",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "in-5": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "december 8",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   }
+  },
+  "maintained_no_audit": {
+   "ex-1": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "us east 2",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "whitfield",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "ex-2": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "postgres",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "ex-3": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "210",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "ex-4": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "40",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "ex-5": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "raman",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "up-1-atlas": {
+    "updates": [
+     {
+      "new": "november 13",
+      "old": "november 6",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     }
+    ],
+    "keeps": [
+     {
+      "value": "picking error",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "up-2": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "480",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "up-3": {
+    "updates": [
+     {
+      "new": "175",
+      "old": "150",
+      "correct": false,
+      "new_present": true,
+      "old_active": [
+       "m1"
+      ]
+     }
+    ],
+    "keeps": []
+   },
+   "up-4": {
+    "updates": [
+     {
+      "new": "grpc",
+      "old": "rest v2",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     }
+    ],
+    "keeps": [
+     {
+      "value": "5 minute",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "up-5": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "november 24",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "re-1": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "dwell",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "lena",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "re-2": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "7 years",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "customer managed",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "re-3": {
+    "updates": [
+     {
+      "new": "october 2",
+      "old": "september 18",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     }
+    ],
+    "keeps": [
+     {
+      "value": "induction",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "becker",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "re-4": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "2x",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "delaware",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "re-5": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "memo",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "48 hours",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "fo-1": {
+    "updates": [
+     {
+      "new": "email",
+      "old": "thursday",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     }
+    ],
+    "keeps": []
+   },
+   "fo-2": {
+    "updates": [
+     {
+      "new": "k8s",
+      "old": "stage umber 01",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     },
+     {
+      "new": "github actions",
+      "old": "jenkins",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     }
+    ],
+    "keeps": [
+     {
+      "value": "2 gb",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "fo-3": {
+    "updates": [
+     {
+      "new": "sofia",
+      "old": "ian cho",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     }
+    ],
+    "keeps": []
+   },
+   "fo-4": {
+    "updates": [
+     {
+      "new": "okta",
+      "old": "vpn",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     }
+    ],
+    "keeps": [
+     {
+      "value": "5k",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "fo-5": {
+    "updates": [
+     {
+      "new": "11 000",
+      "old": "9 500",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     }
+    ],
+    "keeps": []
+   },
+   "sh-1": {
+    "updates": [
+     {
+      "new": "october 29",
+      "old": "october 15",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     }
+    ],
+    "keeps": [
+     {
+      "value": "soc 2",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "sh-2": {
+    "updates": [
+     {
+      "new": "4 weeks",
+      "old": "3 weeks",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     }
+    ],
+    "keeps": [
+     {
+      "value": "feast",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "sh-3": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "premium",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "january 31",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "sh-4": {
+    "updates": [
+     {
+      "new": "10",
+      "old": "8",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     }
+    ],
+    "keeps": [
+     {
+      "value": "november 12",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "sh-5": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "40",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "hls",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "in-1": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "genomics",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "in-2": {
+    "updates": [],
+    "keeps": []
+   },
+   "in-3": {
+    "updates": [],
+    "keeps": []
+   },
+   "in-4": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "3 month",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "in-5": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "december 8",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   }
+  },
+  "maintained": {
+   "ex-1": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "us east 2",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "whitfield",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "ex-2": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "postgres",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "ex-3": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "210",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "ex-4": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "40",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "ex-5": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "raman",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "up-1-atlas": {
+    "updates": [
+     {
+      "new": "november 13",
+      "old": "november 6",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     }
+    ],
+    "keeps": [
+     {
+      "value": "picking error",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "up-2": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "480",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "up-3": {
+    "updates": [
+     {
+      "new": "175",
+      "old": "150",
+      "correct": false,
+      "new_present": true,
+      "old_active": [
+       "m1"
+      ]
+     }
+    ],
+    "keeps": []
+   },
+   "up-4": {
+    "updates": [
+     {
+      "new": "grpc",
+      "old": "rest v2",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     }
+    ],
+    "keeps": [
+     {
+      "value": "5 minute",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "up-5": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "november 24",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "re-1": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "dwell",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "lena",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "re-2": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "7 years",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "customer managed",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "re-3": {
+    "updates": [
+     {
+      "new": "october 2",
+      "old": "september 18",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     }
+    ],
+    "keeps": [
+     {
+      "value": "induction",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "becker",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "re-4": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "2x",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "delaware",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "re-5": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "memo",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "48 hours",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "fo-1": {
+    "updates": [
+     {
+      "new": "email",
+      "old": "thursday",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     }
+    ],
+    "keeps": []
+   },
+   "fo-2": {
+    "updates": [
+     {
+      "new": "k8s",
+      "old": "stage umber 01",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     },
+     {
+      "new": "github actions",
+      "old": "jenkins",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     }
+    ],
+    "keeps": [
+     {
+      "value": "2 gb",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "fo-3": {
+    "updates": [
+     {
+      "new": "sofia",
+      "old": "ian cho",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     }
+    ],
+    "keeps": []
+   },
+   "fo-4": {
+    "updates": [
+     {
+      "new": "okta",
+      "old": "vpn",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     }
+    ],
+    "keeps": [
+     {
+      "value": "5k",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "fo-5": {
+    "updates": [
+     {
+      "new": "11 000",
+      "old": "9 500",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     }
+    ],
+    "keeps": []
+   },
+   "sh-1": {
+    "updates": [
+     {
+      "new": "october 29",
+      "old": "october 15",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     }
+    ],
+    "keeps": [
+     {
+      "value": "soc 2",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "sh-2": {
+    "updates": [
+     {
+      "new": "4 weeks",
+      "old": "3 weeks",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     }
+    ],
+    "keeps": [
+     {
+      "value": "feast",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "sh-3": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "premium",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "january 31",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "sh-4": {
+    "updates": [
+     {
+      "new": "10",
+      "old": "8",
+      "correct": true,
+      "new_present": true,
+      "old_active": []
+     }
+    ],
+    "keeps": [
+     {
+      "value": "november 12",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "sh-5": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "40",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     },
+     {
+      "value": "hls",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "in-1": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "genomics",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "in-2": {
+    "updates": [],
+    "keeps": []
+   },
+   "in-3": {
+    "updates": [],
+    "keeps": []
+   },
+   "in-4": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "3 month",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   },
+   "in-5": {
+    "updates": [],
+    "keeps": [
+     {
+      "value": "december 8",
+      "active": true,
+      "forgotten": false,
+      "retired_ids": []
+     }
+    ]
+   }
+  }
+ },
+ "cost_by_stage": {
+  "extraction": {
+   "curator": {
+    "calls": 97,
+    "cached": 0,
+    "pt": 17318,
+    "ct": 4503,
+    "usd": 0.00177,
+    "usd_all": 0.00177
+   }
+  },
+  "ingest_append_only": {
+   "curator": {
+    "calls": 97,
+    "cached": 97,
+    "pt": 17318,
+    "ct": 4503,
+    "usd": 0.0,
+    "usd_all": 0.00177
+   }
+  },
+  "ingest_maintained": {
+   "curator": {
+    "calls": 97,
+    "cached": 97,
+    "pt": 17318,
+    "ct": 4503,
+    "usd": 0.0,
+    "usd_all": 0.00177
+   },
+   "judge": {
+    "calls": 391,
+    "cached": 0,
+    "pt": 101424,
+    "ct": 51733,
+    "usd": 0.018,
+    "usd_all": 0.018
+   }
+  },
+  "audit": {
+   "curator": {
+    "calls": 25,
+    "cached": 25,
+    "pt": 4358,
+    "ct": 941,
+    "usd": 0.0,
+    "usd_all": 0.00041
+   },
+   "judge": {
+    "calls": 625,
+    "cached": 65,
+    "pt": 142654,
+    "ct": 88268,
+    "usd": 0.02615,
+    "usd_all": 0.0292
+   }
+  },
+  "answer_none": {
+   "agent": {
+    "calls": 76,
+    "cached": 0,
+    "pt": 19081,
+    "ct": 942,
+    "usd": 0.00114,
+    "usd_all": 0.00114
+   }
+  },
+  "answer_append_only": {
+   "agent": {
+    "calls": 76,
+    "cached": 3,
+    "pt": 39705,
+    "ct": 1771,
+    "usd": 0.0023,
+    "usd_all": 0.00234
+   }
+  },
+  "answer_maintained_no_audit": {
+   "agent": {
+    "calls": 76,
+    "cached": 39,
+    "pt": 37820,
+    "ct": 1790,
+    "usd": 0.00113,
+    "usd_all": 0.00225
+   }
+  },
+  "answer_maintained": {
+   "agent": {
+    "calls": 76,
+    "cached": 76,
+    "pt": 37820,
+    "ct": 1790,
+    "usd": 0.0,
+    "usd_all": 0.00225
+   }
+  },
+  "answer_full_history": {
+   "agent": {
+    "calls": 76,
+    "cached": 3,
+    "pt": 31259,
+    "ct": 1700,
+    "usd": 0.00186,
+    "usd_all": 0.0019
+   }
+  }
+ },
+ "wall_by_stage": {
+  "extraction": 10.7,
+  "ingest_append_only": 0.2,
+  "ingest_maintained": 24.0,
+  "audit": 42.4,
+  "answer_none": 25.8,
+  "answer_append_only": 98.2,
+  "answer_maintained_no_audit": 4.6,
+  "answer_maintained": 0.2,
+  "answer_full_history": 21.8
+ },
+ "cost_usd_fresh": 0.0523,
+ "cost_usd_incl_cached": 0.0826,
+ "wall_s": 228.9,
+ "rows": [
+  {
+   "id": "ex-1-q1",
+   "scenario": "ex-1",
+   "group": "Extraction",
+   "condition": "none",
+   "member": "sales-04",
+   "question": "Which AWS region does Kestrel Health need their deployment in?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-1-q2",
+   "scenario": "ex-1",
+   "group": "Extraction",
+   "condition": "none",
+   "member": "sales-01",
+   "question": "Who is our main contact at Kestrel Health?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-2-q1",
+   "scenario": "ex-2",
+   "group": "Extraction",
+   "condition": "none",
+   "member": "eng-06",
+   "question": "What database are we using for the Lumen Retail inventory sync?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-2-q2",
+   "scenario": "ex-2",
+   "group": "Extraction",
+   "condition": "none",
+   "member": "eng-02",
+   "question": "When does the Lumen Retail nightly batch run?",
+   "answer": "The Lumen Retail nightly batch runs at 2:00 AM UTC.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-2-q3",
+   "scenario": "ex-2",
+   "group": "Extraction",
+   "condition": "none",
+   "member": "eng-06",
+   "question": "When does eng-01's parking pass need renewing?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "ex-3-q1",
+   "scenario": "ex-3",
+   "group": "Extraction",
+   "condition": "none",
+   "member": "sales-02",
+   "question": "What hourly rate did we agree with Meridian Bank?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-3-q2",
+   "scenario": "ex-3",
+   "group": "Extraction",
+   "condition": "none",
+   "member": "sales-04",
+   "question": "When does the Meridian Bank engagement start?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-3-q3",
+   "scenario": "ex-3",
+   "group": "Extraction",
+   "condition": "none",
+   "member": "sales-04",
+   "question": "What time of day does Meridian's procurement contact prefer for calls?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-4-q1",
+   "scenario": "ex-4",
+   "group": "Extraction",
+   "condition": "none",
+   "member": "sales-05",
+   "question": "How many warehouses is the Nimbus Logistics deal sized for?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-4-q2",
+   "scenario": "ex-4",
+   "group": "Extraction",
+   "condition": "none",
+   "member": "eng-09",
+   "question": "How many warehouses can a single cluster handle before latency gets too high?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-4-q3",
+   "scenario": "ex-4",
+   "group": "Extraction",
+   "condition": "none",
+   "member": "sales-05",
+   "question": "What p95 latency did the Nimbus load test hit?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "ex-5-q1",
+   "scenario": "ex-5",
+   "group": "Extraction",
+   "condition": "none",
+   "member": "sales-01",
+   "question": "Who is the executive sponsor at Orchid Pharma?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-5-q2",
+   "scenario": "ex-5",
+   "group": "Extraction",
+   "condition": "none",
+   "member": "sales-03",
+   "question": "When does Orchid Pharma's steering committee meet?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-5-q3",
+   "scenario": "ex-5",
+   "group": "Extraction",
+   "condition": "none",
+   "member": "sales-01",
+   "question": "Are we proposing an analytics retainer to Orchid, and for how much?",
+   "answer": "No, we are not proposing an analytics retainer to Orchid. The current proposal is for a $15,000 marketing retainer.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "up-1-atlas-q1",
+   "scenario": "up-1-atlas",
+   "group": "Updates",
+   "condition": "none",
+   "member": "sales-02",
+   "question": "I'm drafting a client update for Atlas. What pilot due date should I give them?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-1-atlas-q2",
+   "scenario": "up-1-atlas",
+   "group": "Updates",
+   "condition": "none",
+   "member": "sales-02",
+   "question": "What are the goals of the Atlas pilot?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-1-atlas-q3",
+   "scenario": "up-1-atlas",
+   "group": "Updates",
+   "condition": "none",
+   "member": "eng-07",
+   "question": "What is the committed due date for the Atlas pilot?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-2-q1",
+   "scenario": "up-2",
+   "group": "Updates",
+   "condition": "none",
+   "member": "eng-05",
+   "question": "What's the approved Cobalt Insurance renewal value for 2027?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-2-q2",
+   "scenario": "up-2",
+   "group": "Updates",
+   "condition": "none",
+   "member": "sales-01",
+   "question": "What is the Cobalt renewal price for 2027?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-3-q1",
+   "scenario": "up-3",
+   "group": "Updates",
+   "condition": "none",
+   "member": "sales-03",
+   "question": "What's the current approved budget for Delphi Media?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-3-q2",
+   "scenario": "up-3",
+   "group": "Updates",
+   "condition": "none",
+   "member": "eng-04",
+   "question": "What did Delphi Media add to the project scope?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-4-q1",
+   "scenario": "up-4",
+   "group": "Updates",
+   "condition": "none",
+   "member": "eng-10",
+   "question": "Which Ember Foods API are we integrating with?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-4-q2",
+   "scenario": "up-4",
+   "group": "Updates",
+   "condition": "none",
+   "member": "eng-01",
+   "question": "How often do Ember webhook retries run?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-4-q3",
+   "scenario": "up-4",
+   "group": "Updates",
+   "condition": "none",
+   "member": "sales-02",
+   "question": "Which API is the Ember Foods integration using?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "up-5-q1",
+   "scenario": "up-5",
+   "group": "Updates",
+   "condition": "none",
+   "member": "eng-08",
+   "question": "When does Fjord Telecom go live?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-5-q2",
+   "scenario": "up-5",
+   "group": "Updates",
+   "condition": "none",
+   "member": "sales-01",
+   "question": "Why did Fjord ask to move their go-live?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-1-q1",
+   "scenario": "re-1",
+   "group": "Retention",
+   "condition": "none",
+   "member": "sales-04",
+   "question": "What's the main objective of the Harbor Shipping engagement?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-1-q2",
+   "scenario": "re-1",
+   "group": "Retention",
+   "condition": "none",
+   "member": "eng-03",
+   "question": "Who receives the weekly Harbor Shipping status reports?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-1-q3",
+   "scenario": "re-1",
+   "group": "Retention",
+   "condition": "none",
+   "member": "eng-06",
+   "question": "When does Harbor phase two start?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-2-q1",
+   "scenario": "re-2",
+   "group": "Retention",
+   "condition": "none",
+   "member": "eng-08",
+   "question": "How long do we have to retain logs for Iris Clinics?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-2-q2",
+   "scenario": "re-2",
+   "group": "Retention",
+   "condition": "none",
+   "member": "eng-01",
+   "question": "Who manages the encryption keys for Iris Clinics patient data?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-3-q1",
+   "scenario": "re-3",
+   "group": "Retention",
+   "condition": "none",
+   "member": "sales-02",
+   "question": "What do our staff have to do before visiting a Juniper Hotels property?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-3-q2",
+   "scenario": "re-3",
+   "group": "Retention",
+   "condition": "none",
+   "member": "sales-01",
+   "question": "When was the Juniper Hotels demo held?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-4-q1",
+   "scenario": "re-4",
+   "group": "Retention",
+   "condition": "none",
+   "member": "sales-01",
+   "question": "What's the liability cap in our agreement with Quarry Materials?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-4-q2",
+   "scenario": "re-4",
+   "group": "Retention",
+   "condition": "none",
+   "member": "eng-04",
+   "question": "Which state's law governs the Quarry Materials agreement?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-4-q3",
+   "scenario": "re-4",
+   "group": "Retention",
+   "condition": "none",
+   "member": "eng-09",
+   "question": "What SFTP timeout did we set for Quarry?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-5-q1",
+   "scenario": "re-5",
+   "group": "Retention",
+   "condition": "none",
+   "member": "sales-02",
+   "question": "What format should I use when presenting to Redwood's CTO?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-5-q2",
+   "scenario": "re-5",
+   "group": "Retention",
+   "condition": "none",
+   "member": "sales-02",
+   "question": "How far ahead should the Redwood agenda go out?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-5-q3",
+   "scenario": "re-5",
+   "group": "Retention",
+   "condition": "none",
+   "member": "sales-03",
+   "question": "Which references did we send Redwood?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-1-q1",
+   "scenario": "fo-1",
+   "group": "Forgetting",
+   "condition": "none",
+   "member": "sales-05",
+   "question": "How should we send Tundra Mining project updates?",
+   "answer": "Based on the available records, there are no approved, active memories that specify how to send Tundra Mining project updates. The memory set is empty, so I cannot provide a definitive answer from the provided data.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-1-q2",
+   "scenario": "fo-1",
+   "group": "Forgetting",
+   "condition": "none",
+   "member": "sales-02",
+   "question": "On what day does Tundra expect their update?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-2-q1",
+   "scenario": "fo-2",
+   "group": "Forgetting",
+   "condition": "none",
+   "member": "eng-05",
+   "question": "Which staging host does Umber Studios use?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-2-q2",
+   "scenario": "fo-2",
+   "group": "Forgetting",
+   "condition": "none",
+   "member": "eng-01",
+   "question": "What do Umber deploys run through?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-2-q3",
+   "scenario": "fo-2",
+   "group": "Forgetting",
+   "condition": "none",
+   "member": "eng-05",
+   "question": "What upload limit did we set for Umber's art team?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-3-q1",
+   "scenario": "fo-3",
+   "group": "Forgetting",
+   "condition": "none",
+   "member": "sales-01",
+   "question": "Who's our contact at Vega Robotics?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-3-q2",
+   "scenario": "fo-3",
+   "group": "Forgetting",
+   "condition": "none",
+   "member": "exec-02",
+   "question": "Who is our contact at Vega Robotics?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "fo-4-q1",
+   "scenario": "fo-4",
+   "group": "Forgetting",
+   "condition": "none",
+   "member": "eng-02",
+   "question": "How do we access Willow Schools systems?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-4-q2",
+   "scenario": "fo-4",
+   "group": "Forgetting",
+   "condition": "none",
+   "member": "sales-04",
+   "question": "What's the travel budget for Willow Schools?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-5-q1",
+   "scenario": "fo-5",
+   "group": "Forgetting",
+   "condition": "none",
+   "member": "sales-04",
+   "question": "What's the monthly price of the data pipeline package for Xenon Labs?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-5-q2",
+   "scenario": "fo-5",
+   "group": "Forgetting",
+   "condition": "none",
+   "member": "sales-01",
+   "question": "Which pricing sheet version is current for Xenon?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-1-q1",
+   "scenario": "sh-1",
+   "group": "Shared handoff",
+   "condition": "none",
+   "member": "sales-05",
+   "question": "When does Zephyr Air expect to make their decision?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-1-q2",
+   "scenario": "sh-1",
+   "group": "Shared handoff",
+   "condition": "none",
+   "member": "sales-05",
+   "question": "What certification does Zephyr require?",
+   "answer": "Zephyr requires the Zephyr Certification.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-1-q3",
+   "scenario": "sh-1",
+   "group": "Shared handoff",
+   "condition": "none",
+   "member": "sales-05",
+   "question": "Do we know which vendor Zephyr's buyer currently favors?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "sh-2-q1",
+   "scenario": "sh-2",
+   "group": "Shared handoff",
+   "condition": "none",
+   "member": "eng-10",
+   "question": "How long is the Aurora Bank retrain expected to take?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-2-q2",
+   "scenario": "sh-2",
+   "group": "Shared handoff",
+   "condition": "none",
+   "member": "eng-10",
+   "question": "Which feature store does the Aurora project use?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-2-q3",
+   "scenario": "sh-2",
+   "group": "Shared handoff",
+   "condition": "none",
+   "member": "eng-10",
+   "question": "How many GPUs does the Aurora retrain need?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-3-q1",
+   "scenario": "sh-3",
+   "group": "Shared handoff",
+   "condition": "none",
+   "member": "sales-04",
+   "question": "When is the Cedar Logistics renewal?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-3-q2",
+   "scenario": "sh-3",
+   "group": "Shared handoff",
+   "condition": "none",
+   "member": "sales-04",
+   "question": "Did we offer Cedar any loyalty credit?",
+   "answer": "No. I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "sh-3-q3",
+   "scenario": "sh-3",
+   "group": "Shared handoff",
+   "condition": "none",
+   "member": "eng-02",
+   "question": "Which support tier is Cedar Logistics on?",
+   "answer": "Cedar Logistics is on the Gold support tier.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-4-q1",
+   "scenario": "sh-4",
+   "group": "Shared handoff",
+   "condition": "none",
+   "member": "exec-03",
+   "question": "What's the maximum discount we've approved for Dune Solar?",
+   "answer": "The maximum approved discount for Dune Solar is 20%.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-4-q2",
+   "scenario": "sh-4",
+   "group": "Shared handoff",
+   "condition": "none",
+   "member": "exec-03",
+   "question": "When does Dune Solar's board meet?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-4-q3",
+   "scenario": "sh-4",
+   "group": "Shared handoff",
+   "condition": "none",
+   "member": "sales-02",
+   "question": "What discount cap applies to Dune Solar?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "sh-5-q1",
+   "scenario": "sh-5",
+   "group": "Shared handoff",
+   "condition": "none",
+   "member": "eng-05",
+   "question": "What's the current max number of concurrent transcoding jobs for Echo Media?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-5-q2",
+   "scenario": "sh-5",
+   "group": "Shared handoff",
+   "condition": "none",
+   "member": "eng-05",
+   "question": "What output format does the Echo pipeline produce?",
+   "answer": "The Echo pipeline produces JSON output.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-1-q1",
+   "scenario": "in-1",
+   "group": "Insufficient evidence",
+   "condition": "none",
+   "member": "eng-10",
+   "question": "Which cloud will Helix Bio's genomics pipeline run on?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "uncertain"
+  },
+  {
+   "id": "in-1-q2",
+   "scenario": "in-1",
+   "group": "Insufficient evidence",
+   "condition": "none",
+   "member": "eng-10",
+   "question": "What kind of pipeline are we building for Helix Bio?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-2-q1",
+   "scenario": "in-2",
+   "group": "Insufficient evidence",
+   "condition": "none",
+   "member": "sales-02",
+   "question": "What renewal amount are we expecting from Ivory Retail?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "in-2-q2",
+   "scenario": "in-2",
+   "group": "Insufficient evidence",
+   "condition": "none",
+   "member": "sales-02",
+   "question": "Who is leading the Ivory Retail renewal?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-2-q3",
+   "scenario": "in-2",
+   "group": "Insufficient evidence",
+   "condition": "none",
+   "member": "eng-04",
+   "question": "What's the rule for pricing on big renewals?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-3-q1",
+   "scenario": "in-3",
+   "group": "Insufficient evidence",
+   "condition": "none",
+   "member": "eng-02",
+   "question": "How long will the Kite Energy billing migration take?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "uncertain"
+  },
+  {
+   "id": "in-3-q2",
+   "scenario": "in-3",
+   "group": "Insufficient evidence",
+   "condition": "none",
+   "member": "sales-01",
+   "question": "What timeline have we given Kite Energy?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-4-q1",
+   "scenario": "in-4",
+   "group": "Insufficient evidence",
+   "condition": "none",
+   "member": "sales-05",
+   "question": "What's the contract value for the Mosaic Health pilot?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "in-4-q2",
+   "scenario": "in-4",
+   "group": "Insufficient evidence",
+   "condition": "none",
+   "member": "eng-06",
+   "question": "Which languages does the Mosaic chatbot need at launch?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-4-q3",
+   "scenario": "in-4",
+   "group": "Insufficient evidence",
+   "condition": "none",
+   "member": "sales-05",
+   "question": "How long is the Mosaic Health pilot?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-5-q1",
+   "scenario": "in-5",
+   "group": "Insufficient evidence",
+   "condition": "none",
+   "member": "eng-03",
+   "question": "When is the Opal Insurance portal launching?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "uncertain"
+  },
+  {
+   "id": "in-5-q2",
+   "scenario": "in-5",
+   "group": "Insufficient evidence",
+   "condition": "none",
+   "member": "sales-05",
+   "question": "Who has to confirm any change to the Opal launch date?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-1-q1",
+   "scenario": "ex-1",
+   "group": "Extraction",
+   "condition": "append_only",
+   "member": "sales-04",
+   "question": "Which AWS region does Kestrel Health need their deployment in?",
+   "answer": "us-east-2",
+   "ctx": 210,
+   "n_mem": 10,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-1-q2",
+   "scenario": "ex-1",
+   "group": "Extraction",
+   "condition": "append_only",
+   "member": "sales-01",
+   "question": "Who is our main contact at Kestrel Health?",
+   "answer": "Dana Whitfield",
+   "ctx": 210,
+   "n_mem": 10,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-2-q1",
+   "scenario": "ex-2",
+   "group": "Extraction",
+   "condition": "append_only",
+   "member": "eng-06",
+   "question": "What database are we using for the Lumen Retail inventory sync?",
+   "answer": "Postgres 16",
+   "ctx": 133,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-2-q2",
+   "scenario": "ex-2",
+   "group": "Extraction",
+   "condition": "append_only",
+   "member": "eng-02",
+   "question": "When does the Lumen Retail nightly batch run?",
+   "answer": "The Lumen Retail nightly batch runs at 02:00 UTC.",
+   "ctx": 133,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-2-q3",
+   "scenario": "ex-2",
+   "group": "Extraction",
+   "condition": "append_only",
+   "member": "eng-06",
+   "question": "When does eng-01's parking pass need renewing?",
+   "answer": "I don't know.",
+   "ctx": 133,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "ex-3-q1",
+   "scenario": "ex-3",
+   "group": "Extraction",
+   "condition": "append_only",
+   "member": "sales-02",
+   "question": "What hourly rate did we agree with Meridian Bank?",
+   "answer": "$210/hour",
+   "ctx": 69,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-3-q2",
+   "scenario": "ex-3",
+   "group": "Extraction",
+   "condition": "append_only",
+   "member": "sales-04",
+   "question": "When does the Meridian Bank engagement start?",
+   "answer": "October 5, 2026",
+   "ctx": 106,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-3-q3",
+   "scenario": "ex-3",
+   "group": "Extraction",
+   "condition": "append_only",
+   "member": "sales-04",
+   "question": "What time of day does Meridian's procurement contact prefer for calls?",
+   "answer": "Meridian's procurement contact prefers morning calls.",
+   "ctx": 106,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-4-q1",
+   "scenario": "ex-4",
+   "group": "Extraction",
+   "condition": "append_only",
+   "member": "sales-05",
+   "question": "How many warehouses is the Nimbus Logistics deal sized for?",
+   "answer": "The Nimbus Logistics deal is sized for 40 warehouses.",
+   "ctx": 151,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-4-q2",
+   "scenario": "ex-4",
+   "group": "Extraction",
+   "condition": "append_only",
+   "member": "eng-09",
+   "question": "How many warehouses can a single cluster handle before latency gets too high?",
+   "answer": "A single cluster can handle about 25 warehouses before p95 latency exceeds 800ms.",
+   "ctx": 97,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-4-q3",
+   "scenario": "ex-4",
+   "group": "Extraction",
+   "condition": "append_only",
+   "member": "sales-05",
+   "question": "What p95 latency did the Nimbus load test hit?",
+   "answer": "I don't know.",
+   "ctx": 151,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "ex-5-q1",
+   "scenario": "ex-5",
+   "group": "Extraction",
+   "condition": "append_only",
+   "member": "sales-01",
+   "question": "Who is the executive sponsor at Orchid Pharma?",
+   "answer": "Priya Raman is the executive sponsor at Orchid Pharma.",
+   "ctx": 65,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-5-q2",
+   "scenario": "ex-5",
+   "group": "Extraction",
+   "condition": "append_only",
+   "member": "sales-03",
+   "question": "When does Orchid Pharma's steering committee meet?",
+   "answer": "Orchid Pharma's steering committee meets on the first Tuesday of every month.",
+   "ctx": 65,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-5-q3",
+   "scenario": "ex-5",
+   "group": "Extraction",
+   "condition": "append_only",
+   "member": "sales-01",
+   "question": "Are we proposing an analytics retainer to Orchid, and for how much?",
+   "answer": "No, we are not proposing an analytics retainer to Orchid. The available memories do not contain any information about an analytics retainer proposal or pricing.",
+   "ctx": 65,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "up-1-atlas-q1",
+   "scenario": "up-1-atlas",
+   "group": "Updates",
+   "condition": "append_only",
+   "member": "sales-02",
+   "question": "I'm drafting a client update for Atlas. What pilot due date should I give them?",
+   "answer": "November 13, 2026",
+   "ctx": 172,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-1-atlas-q2",
+   "scenario": "up-1-atlas",
+   "group": "Updates",
+   "condition": "append_only",
+   "member": "sales-02",
+   "question": "What are the goals of the Atlas pilot?",
+   "answer": "The goals of the Atlas pilot are to cut warehouse picking errors by 30% and sync stock levels with the SAP system every hour.",
+   "ctx": 172,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-1-atlas-q3",
+   "scenario": "up-1-atlas",
+   "group": "Updates",
+   "condition": "append_only",
+   "member": "eng-07",
+   "question": "What is the committed due date for the Atlas pilot?",
+   "answer": "November 13, 2026",
+   "ctx": 225,
+   "n_mem": 10,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-2-q1",
+   "scenario": "up-2",
+   "group": "Updates",
+   "condition": "append_only",
+   "member": "eng-05",
+   "question": "What's the approved Cobalt Insurance renewal value for 2027?",
+   "answer": "$480k",
+   "ctx": 138,
+   "n_mem": 10,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-2-q2",
+   "scenario": "up-2",
+   "group": "Updates",
+   "condition": "append_only",
+   "member": "sales-01",
+   "question": "What is the Cobalt renewal price for 2027?",
+   "answer": "$480k",
+   "ctx": 152,
+   "n_mem": 10,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-3-q1",
+   "scenario": "up-3",
+   "group": "Updates",
+   "condition": "append_only",
+   "member": "sales-03",
+   "question": "What's the current approved budget for Delphi Media?",
+   "answer": "$150k",
+   "ctx": 67,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": true,
+   "kind": "fact"
+  },
+  {
+   "id": "up-3-q2",
+   "scenario": "up-3",
+   "group": "Updates",
+   "condition": "append_only",
+   "member": "eng-04",
+   "question": "What did Delphi Media add to the project scope?",
+   "answer": "Delphi Media expanded scope to include archive migration.",
+   "ctx": 67,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-4-q1",
+   "scenario": "up-4",
+   "group": "Updates",
+   "condition": "append_only",
+   "member": "eng-10",
+   "question": "Which Ember Foods API are we integrating with?",
+   "answer": "We are integrating with the gRPC API.",
+   "ctx": 104,
+   "n_mem": 6,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-4-q2",
+   "scenario": "up-4",
+   "group": "Updates",
+   "condition": "append_only",
+   "member": "eng-01",
+   "question": "How often do Ember webhook retries run?",
+   "answer": "Webhook retries run every 5 minutes.",
+   "ctx": 104,
+   "n_mem": 6,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-4-q3",
+   "scenario": "up-4",
+   "group": "Updates",
+   "condition": "append_only",
+   "member": "sales-02",
+   "question": "Which API is the Ember Foods integration using?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "up-5-q1",
+   "scenario": "up-5",
+   "group": "Updates",
+   "condition": "append_only",
+   "member": "eng-08",
+   "question": "When does Fjord Telecom go live?",
+   "answer": "November 24, 2026",
+   "ctx": 109,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-5-q2",
+   "scenario": "up-5",
+   "group": "Updates",
+   "condition": "append_only",
+   "member": "sales-01",
+   "question": "Why did Fjord ask to move their go-live?",
+   "answer": "Fjord requested to move their go-live to December 1 due to a change freeze starting after November 24.",
+   "ctx": 109,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-1-q1",
+   "scenario": "re-1",
+   "group": "Retention",
+   "condition": "append_only",
+   "member": "sales-04",
+   "question": "What's the main objective of the Harbor Shipping engagement?",
+   "answer": "The main objective of the Harbor Shipping engagement is to cut container dwell time at Oakland terminal by 15%.",
+   "ctx": 135,
+   "n_mem": 6,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-1-q2",
+   "scenario": "re-1",
+   "group": "Retention",
+   "condition": "append_only",
+   "member": "eng-03",
+   "question": "Who receives the weekly Harbor Shipping status reports?",
+   "answer": "COO Lena Park",
+   "ctx": 121,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-1-q3",
+   "scenario": "re-1",
+   "group": "Retention",
+   "condition": "append_only",
+   "member": "eng-06",
+   "question": "When does Harbor phase two start?",
+   "answer": "October 28, 2026",
+   "ctx": 121,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-2-q1",
+   "scenario": "re-2",
+   "group": "Retention",
+   "condition": "append_only",
+   "member": "eng-08",
+   "question": "How long do we have to retain logs for Iris Clinics?",
+   "answer": "7 years",
+   "ctx": 149,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-2-q2",
+   "scenario": "re-2",
+   "group": "Retention",
+   "condition": "append_only",
+   "member": "eng-01",
+   "question": "Who manages the encryption keys for Iris Clinics patient data?",
+   "answer": "Customer-managed keys.",
+   "ctx": 149,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-3-q1",
+   "scenario": "re-3",
+   "group": "Retention",
+   "condition": "append_only",
+   "member": "sales-02",
+   "question": "What do our staff have to do before visiting a Juniper Hotels property?",
+   "answer": "Anyone sent on site to Juniper Hotels must complete a safety induction before visiting a property.",
+   "ctx": 158,
+   "n_mem": 9,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-3-q2",
+   "scenario": "re-3",
+   "group": "Retention",
+   "condition": "append_only",
+   "member": "sales-01",
+   "question": "When was the Juniper Hotels demo held?",
+   "answer": "The Juniper Hotels demo was held on September 25, 2026.",
+   "ctx": 158,
+   "n_mem": 9,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": true,
+   "kind": "fact"
+  },
+  {
+   "id": "re-4-q1",
+   "scenario": "re-4",
+   "group": "Retention",
+   "condition": "append_only",
+   "member": "sales-01",
+   "question": "What's the liability cap in our agreement with Quarry Materials?",
+   "answer": "The liability cap in the Quarry Materials agreement is 2x annual fees.",
+   "ctx": 160,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-4-q2",
+   "scenario": "re-4",
+   "group": "Retention",
+   "condition": "append_only",
+   "member": "eng-04",
+   "question": "Which state's law governs the Quarry Materials agreement?",
+   "answer": "Delaware",
+   "ctx": 164,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-4-q3",
+   "scenario": "re-4",
+   "group": "Retention",
+   "condition": "append_only",
+   "member": "eng-09",
+   "question": "What SFTP timeout did we set for Quarry?",
+   "answer": "120 seconds.",
+   "ctx": 164,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-5-q1",
+   "scenario": "re-5",
+   "group": "Retention",
+   "condition": "append_only",
+   "member": "sales-02",
+   "question": "What format should I use when presenting to Redwood's CTO?",
+   "answer": "Use written memos instead of slide decks. Redwood's CTO prefers written memos and is the decision-maker regarding presentation formats.",
+   "ctx": 151,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-5-q2",
+   "scenario": "re-5",
+   "group": "Retention",
+   "condition": "append_only",
+   "member": "sales-02",
+   "question": "How far ahead should the Redwood agenda go out?",
+   "answer": "48 hours ahead of meetings.",
+   "ctx": 151,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-5-q3",
+   "scenario": "re-5",
+   "group": "Retention",
+   "condition": "append_only",
+   "member": "sales-03",
+   "question": "Which references did we send Redwood?",
+   "answer": "We sent Redwood references from Sunrise CU and Pacific CU.",
+   "ctx": 88,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-1-q1",
+   "scenario": "fo-1",
+   "group": "Forgetting",
+   "condition": "append_only",
+   "member": "sales-05",
+   "question": "How should we send Tundra Mining project updates?",
+   "answer": "Send written updates by email every Friday.",
+   "ctx": 92,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-1-q2",
+   "scenario": "fo-1",
+   "group": "Forgetting",
+   "condition": "append_only",
+   "member": "sales-02",
+   "question": "On what day does Tundra expect their update?",
+   "answer": "Tundra expects a written update by email every Friday.",
+   "ctx": 92,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-2-q1",
+   "scenario": "fo-2",
+   "group": "Forgetting",
+   "condition": "append_only",
+   "member": "eng-05",
+   "question": "Which staging host does Umber Studios use?",
+   "answer": "stage-umber-k8s",
+   "ctx": 133,
+   "n_mem": 9,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-2-q2",
+   "scenario": "fo-2",
+   "group": "Forgetting",
+   "condition": "append_only",
+   "member": "eng-01",
+   "question": "What do Umber deploys run through?",
+   "answer": "Umber deploys run through GitHub Actions.",
+   "ctx": 133,
+   "n_mem": 9,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-2-q3",
+   "scenario": "fo-2",
+   "group": "Forgetting",
+   "condition": "append_only",
+   "member": "eng-05",
+   "question": "What upload limit did we set for Umber's art team?",
+   "answer": "2 GB",
+   "ctx": 133,
+   "n_mem": 9,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-3-q1",
+   "scenario": "fo-3",
+   "group": "Forgetting",
+   "condition": "append_only",
+   "member": "sales-01",
+   "question": "Who's our contact at Vega Robotics?",
+   "answer": "Sofia Brandt is the interim head of operations at Vega Robotics.",
+   "ctx": 121,
+   "n_mem": 6,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-3-q2",
+   "scenario": "fo-3",
+   "group": "Forgetting",
+   "condition": "append_only",
+   "member": "exec-02",
+   "question": "Who is our contact at Vega Robotics?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "fo-4-q1",
+   "scenario": "fo-4",
+   "group": "Forgetting",
+   "condition": "append_only",
+   "member": "eng-02",
+   "question": "How do we access Willow Schools systems?",
+   "answer": "Access Willow Schools systems through Okta zero-trust SSO, no VPN required.",
+   "ctx": 116,
+   "n_mem": 6,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": true,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-4-q2",
+   "scenario": "fo-4",
+   "group": "Forgetting",
+   "condition": "append_only",
+   "member": "sales-04",
+   "question": "What's the travel budget for Willow Schools?",
+   "answer": "$5k per quarter",
+   "ctx": 94,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-5-q1",
+   "scenario": "fo-5",
+   "group": "Forgetting",
+   "condition": "append_only",
+   "member": "sales-04",
+   "question": "What's the monthly price of the data pipeline package for Xenon Labs?",
+   "answer": "$11,000 a month",
+   "ctx": 152,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-5-q2",
+   "scenario": "fo-5",
+   "group": "Forgetting",
+   "condition": "append_only",
+   "member": "sales-01",
+   "question": "Which pricing sheet version is current for Xenon?",
+   "answer": "v4 is the current live version for Xenon Labs. The pricing sheet v3 is obsolete and should be discarded.",
+   "ctx": 152,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-1-q1",
+   "scenario": "sh-1",
+   "group": "Shared handoff",
+   "condition": "append_only",
+   "member": "sales-05",
+   "question": "When does Zephyr Air expect to make their decision?",
+   "answer": "October 15",
+   "ctx": 96,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": true,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-1-q2",
+   "scenario": "sh-1",
+   "group": "Shared handoff",
+   "condition": "append_only",
+   "member": "sales-05",
+   "question": "What certification does Zephyr require?",
+   "answer": "SOC 2 Type II compliance",
+   "ctx": 96,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-1-q3",
+   "scenario": "sh-1",
+   "group": "Shared handoff",
+   "condition": "append_only",
+   "member": "sales-05",
+   "question": "Do we know which vendor Zephyr's buyer currently favors?",
+   "answer": "No, we do not know which vendor Zephyr's buyer currently favors. The most recent approved, active memory (m2) only states that Zephyr pushed their decision to October 29, but does not indicate a favored vendor. Memory m4 mentions a decision expected on October 15, but that date has passed and no favored vendor is specified. Memory m1 identifies SOC 2 Type II compliance as a must-have requirement, but does not name a preferred vendor.",
+   "ctx": 96,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "sh-2-q1",
+   "scenario": "sh-2",
+   "group": "Shared handoff",
+   "condition": "append_only",
+   "member": "eng-10",
+   "question": "How long is the Aurora Bank retrain expected to take?",
+   "answer": "4 weeks (re-estimated after data audit).",
+   "ctx": 127,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-2-q2",
+   "scenario": "sh-2",
+   "group": "Shared handoff",
+   "condition": "append_only",
+   "member": "eng-10",
+   "question": "Which feature store does the Aurora project use?",
+   "answer": "Feast",
+   "ctx": 127,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-2-q3",
+   "scenario": "sh-2",
+   "group": "Shared handoff",
+   "condition": "append_only",
+   "member": "eng-10",
+   "question": "How many GPUs does the Aurora retrain need?",
+   "answer": "2 A100 GPUs",
+   "ctx": 127,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-3-q1",
+   "scenario": "sh-3",
+   "group": "Shared handoff",
+   "condition": "append_only",
+   "member": "sales-04",
+   "question": "When is the Cedar Logistics renewal?",
+   "answer": "January 31, 2027",
+   "ctx": 101,
+   "n_mem": 6,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-3-q2",
+   "scenario": "sh-3",
+   "group": "Shared handoff",
+   "condition": "append_only",
+   "member": "sales-04",
+   "question": "Did we offer Cedar any loyalty credit?",
+   "answer": "No, the memories do not mention any loyalty credit being offered to Cedar.",
+   "ctx": 101,
+   "n_mem": 6,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "sh-3-q3",
+   "scenario": "sh-3",
+   "group": "Shared handoff",
+   "condition": "append_only",
+   "member": "eng-02",
+   "question": "Which support tier is Cedar Logistics on?",
+   "answer": "Cedar is on the Premium support tier.",
+   "ctx": 51,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-4-q1",
+   "scenario": "sh-4",
+   "group": "Shared handoff",
+   "condition": "append_only",
+   "member": "exec-03",
+   "question": "What's the maximum discount we've approved for Dune Solar?",
+   "answer": "10%",
+   "ctx": 157,
+   "n_mem": 9,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-4-q2",
+   "scenario": "sh-4",
+   "group": "Shared handoff",
+   "condition": "append_only",
+   "member": "exec-03",
+   "question": "When does Dune Solar's board meet?",
+   "answer": "November 12",
+   "ctx": 157,
+   "n_mem": 9,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-4-q3",
+   "scenario": "sh-4",
+   "group": "Shared handoff",
+   "condition": "append_only",
+   "member": "sales-02",
+   "question": "What discount cap applies to Dune Solar?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "sh-5-q1",
+   "scenario": "sh-5",
+   "group": "Shared handoff",
+   "condition": "append_only",
+   "member": "eng-05",
+   "question": "What's the current max number of concurrent transcoding jobs for Echo Media?",
+   "answer": "The current max number of concurrent transcoding jobs for Echo Media is 40.",
+   "ctx": 190,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-5-q2",
+   "scenario": "sh-5",
+   "group": "Shared handoff",
+   "condition": "append_only",
+   "member": "eng-05",
+   "question": "What output format does the Echo pipeline produce?",
+   "answer": "HLS format.",
+   "ctx": 190,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-1-q1",
+   "scenario": "in-1",
+   "group": "Insufficient evidence",
+   "condition": "append_only",
+   "member": "eng-10",
+   "question": "Which cloud will Helix Bio's genomics pipeline run on?",
+   "answer": "The cloud platform for Helix Bio's genomics pipeline remains unresolved. While AWS Batch is currently used by the data team, the IT lead is pushing for a move to Google Cloud and GCP Batch, and a contradiction exists with prior statements from the data team. The conflict is unresolved, and the Helix meeting has been postponed.",
+   "ctx": 169,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "uncertain"
+  },
+  {
+   "id": "in-1-q2",
+   "scenario": "in-1",
+   "group": "Insufficient evidence",
+   "condition": "append_only",
+   "member": "eng-10",
+   "question": "What kind of pipeline are we building for Helix Bio?",
+   "answer": "We are building a genomics pipeline for Helix Bio. The pipeline is planned for AWS Batch, as the data team already uses this platform, though there is an unresolved conflict with the IT lead's stated intent to move to Google Cloud and GCP Batch.",
+   "ctx": 169,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-2-q1",
+   "scenario": "in-2",
+   "group": "Insufficient evidence",
+   "condition": "append_only",
+   "member": "sales-02",
+   "question": "What renewal amount are we expecting from Ivory Retail?",
+   "answer": "The conversation history does not specify a renewal amount for Ivory Retail. The only related memory is [m1], which mentions that renewal conversations start next month, but it does not state the expected amount.",
+   "ctx": 66,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "in-2-q2",
+   "scenario": "in-2",
+   "group": "Insufficient evidence",
+   "condition": "append_only",
+   "member": "sales-02",
+   "question": "Who is leading the Ivory Retail renewal?",
+   "answer": "I don't know.",
+   "ctx": 66,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-2-q3",
+   "scenario": "in-2",
+   "group": "Insufficient evidence",
+   "condition": "append_only",
+   "member": "eng-04",
+   "question": "What's the rule for pricing on big renewals?",
+   "answer": "Any renewal over $100k requires exec sign-off before pricing goes to the client.",
+   "ctx": 24,
+   "n_mem": 1,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-3-q1",
+   "scenario": "in-3",
+   "group": "Insufficient evidence",
+   "condition": "append_only",
+   "member": "eng-02",
+   "question": "How long will the Kite Energy billing migration take?",
+   "answer": "The Kite Energy billing migration is estimated to take 10 weeks. This is based on eng-09's assessment that the legacy COBOL component is larger than it initially appears.",
+   "ctx": 77,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "uncertain"
+  },
+  {
+   "id": "in-3-q2",
+   "scenario": "in-3",
+   "group": "Insufficient evidence",
+   "condition": "append_only",
+   "member": "sales-01",
+   "question": "What timeline have we given Kite Energy?",
+   "answer": "We have not given Kite Energy a specific timeline. Sales-01 indicated that a timeline would be confirmed once engineering finishes its review.",
+   "ctx": 41,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-4-q1",
+   "scenario": "in-4",
+   "group": "Insufficient evidence",
+   "condition": "append_only",
+   "member": "sales-05",
+   "question": "What's the contract value for the Mosaic Health pilot?",
+   "answer": "The contract value for the Mosaic Health pilot is not specified in the approved, active memories. The records confirm the engagement was approved as a 3-month pilot starting October 1, 2026, but no dollar amount or pricing details are included.",
+   "ctx": 85,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "in-4-q2",
+   "scenario": "in-4",
+   "group": "Insufficient evidence",
+   "condition": "append_only",
+   "member": "eng-06",
+   "question": "Which languages does the Mosaic chatbot need at launch?",
+   "answer": "English and Spanish.",
+   "ctx": 76,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-4-q3",
+   "scenario": "in-4",
+   "group": "Insufficient evidence",
+   "condition": "append_only",
+   "member": "sales-05",
+   "question": "How long is the Mosaic Health pilot?",
+   "answer": "The Mosaic Health pilot is 3 months long, starting October 1.",
+   "ctx": 85,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-5-q1",
+   "scenario": "in-5",
+   "group": "Insufficient evidence",
+   "condition": "append_only",
+   "member": "eng-03",
+   "question": "When is the Opal Insurance portal launching?",
+   "answer": "December 8",
+   "ctx": 78,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "uncertain"
+  },
+  {
+   "id": "in-5-q2",
+   "scenario": "in-5",
+   "group": "Insufficient evidence",
+   "condition": "append_only",
+   "member": "sales-05",
+   "question": "Who has to confirm any change to the Opal launch date?",
+   "answer": "The portal launch date change requires written confirmation from exec-01 before any changes are made.",
+   "ctx": 130,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-1-q1",
+   "scenario": "ex-1",
+   "group": "Extraction",
+   "condition": "maintained_no_audit",
+   "member": "sales-04",
+   "question": "Which AWS region does Kestrel Health need their deployment in?",
+   "answer": "us-east-2",
+   "ctx": 210,
+   "n_mem": 10,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-1-q2",
+   "scenario": "ex-1",
+   "group": "Extraction",
+   "condition": "maintained_no_audit",
+   "member": "sales-01",
+   "question": "Who is our main contact at Kestrel Health?",
+   "answer": "Dana Whitfield",
+   "ctx": 210,
+   "n_mem": 10,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-2-q1",
+   "scenario": "ex-2",
+   "group": "Extraction",
+   "condition": "maintained_no_audit",
+   "member": "eng-06",
+   "question": "What database are we using for the Lumen Retail inventory sync?",
+   "answer": "Postgres 16",
+   "ctx": 133,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-2-q2",
+   "scenario": "ex-2",
+   "group": "Extraction",
+   "condition": "maintained_no_audit",
+   "member": "eng-02",
+   "question": "When does the Lumen Retail nightly batch run?",
+   "answer": "The Lumen Retail nightly batch runs at 02:00 UTC.",
+   "ctx": 133,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-2-q3",
+   "scenario": "ex-2",
+   "group": "Extraction",
+   "condition": "maintained_no_audit",
+   "member": "eng-06",
+   "question": "When does eng-01's parking pass need renewing?",
+   "answer": "I don't know.",
+   "ctx": 133,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "ex-3-q1",
+   "scenario": "ex-3",
+   "group": "Extraction",
+   "condition": "maintained_no_audit",
+   "member": "sales-02",
+   "question": "What hourly rate did we agree with Meridian Bank?",
+   "answer": "$210/hour",
+   "ctx": 69,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-3-q2",
+   "scenario": "ex-3",
+   "group": "Extraction",
+   "condition": "maintained_no_audit",
+   "member": "sales-04",
+   "question": "When does the Meridian Bank engagement start?",
+   "answer": "October 5, 2026",
+   "ctx": 106,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-3-q3",
+   "scenario": "ex-3",
+   "group": "Extraction",
+   "condition": "maintained_no_audit",
+   "member": "sales-04",
+   "question": "What time of day does Meridian's procurement contact prefer for calls?",
+   "answer": "Meridian's procurement contact prefers morning calls.",
+   "ctx": 106,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-4-q1",
+   "scenario": "ex-4",
+   "group": "Extraction",
+   "condition": "maintained_no_audit",
+   "member": "sales-05",
+   "question": "How many warehouses is the Nimbus Logistics deal sized for?",
+   "answer": "The Nimbus Logistics deal is sized for 40 warehouses.",
+   "ctx": 151,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-4-q2",
+   "scenario": "ex-4",
+   "group": "Extraction",
+   "condition": "maintained_no_audit",
+   "member": "eng-09",
+   "question": "How many warehouses can a single cluster handle before latency gets too high?",
+   "answer": "A single cluster can handle about 25 warehouses before p95 latency exceeds 800ms.",
+   "ctx": 97,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-4-q3",
+   "scenario": "ex-4",
+   "group": "Extraction",
+   "condition": "maintained_no_audit",
+   "member": "sales-05",
+   "question": "What p95 latency did the Nimbus load test hit?",
+   "answer": "I don't know.",
+   "ctx": 151,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "ex-5-q1",
+   "scenario": "ex-5",
+   "group": "Extraction",
+   "condition": "maintained_no_audit",
+   "member": "sales-01",
+   "question": "Who is the executive sponsor at Orchid Pharma?",
+   "answer": "Priya Raman is the executive sponsor at Orchid Pharma.",
+   "ctx": 65,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-5-q2",
+   "scenario": "ex-5",
+   "group": "Extraction",
+   "condition": "maintained_no_audit",
+   "member": "sales-03",
+   "question": "When does Orchid Pharma's steering committee meet?",
+   "answer": "Orchid Pharma's steering committee meets on the first Tuesday of every month.",
+   "ctx": 65,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-5-q3",
+   "scenario": "ex-5",
+   "group": "Extraction",
+   "condition": "maintained_no_audit",
+   "member": "sales-01",
+   "question": "Are we proposing an analytics retainer to Orchid, and for how much?",
+   "answer": "No, we are not proposing an analytics retainer to Orchid. The available memories do not contain any information about an analytics retainer proposal or pricing.",
+   "ctx": 65,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "up-1-atlas-q1",
+   "scenario": "up-1-atlas",
+   "group": "Updates",
+   "condition": "maintained_no_audit",
+   "member": "sales-02",
+   "question": "I'm drafting a client update for Atlas. What pilot due date should I give them?",
+   "answer": "November 13, 2026",
+   "ctx": 157,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-1-atlas-q2",
+   "scenario": "up-1-atlas",
+   "group": "Updates",
+   "condition": "maintained_no_audit",
+   "member": "sales-02",
+   "question": "What are the goals of the Atlas pilot?",
+   "answer": "The goals of the Atlas pilot are to cut warehouse picking errors by 30% and sync stock levels with the SAP system every hour.",
+   "ctx": 157,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-1-atlas-q3",
+   "scenario": "up-1-atlas",
+   "group": "Updates",
+   "condition": "maintained_no_audit",
+   "member": "eng-07",
+   "question": "What is the committed due date for the Atlas pilot?",
+   "answer": "November 13, 2026",
+   "ctx": 210,
+   "n_mem": 9,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-2-q1",
+   "scenario": "up-2",
+   "group": "Updates",
+   "condition": "maintained_no_audit",
+   "member": "eng-05",
+   "question": "What's the approved Cobalt Insurance renewal value for 2027?",
+   "answer": "$480k",
+   "ctx": 138,
+   "n_mem": 10,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-2-q2",
+   "scenario": "up-2",
+   "group": "Updates",
+   "condition": "maintained_no_audit",
+   "member": "sales-01",
+   "question": "What is the Cobalt renewal price for 2027?",
+   "answer": "$480k",
+   "ctx": 152,
+   "n_mem": 10,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-3-q1",
+   "scenario": "up-3",
+   "group": "Updates",
+   "condition": "maintained_no_audit",
+   "member": "sales-03",
+   "question": "What's the current approved budget for Delphi Media?",
+   "answer": "$175k. The approved budget for Delphi Media includes the archive migration scope, which was expanded to $175k.",
+   "ctx": 50,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-3-q2",
+   "scenario": "up-3",
+   "group": "Updates",
+   "condition": "maintained_no_audit",
+   "member": "eng-04",
+   "question": "What did Delphi Media add to the project scope?",
+   "answer": "Delphi Media expanded scope to include archive migration.",
+   "ctx": 50,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-4-q1",
+   "scenario": "up-4",
+   "group": "Updates",
+   "condition": "maintained_no_audit",
+   "member": "eng-10",
+   "question": "Which Ember Foods API are we integrating with?",
+   "answer": "We are integrating with the gRPC API.",
+   "ctx": 38,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-4-q2",
+   "scenario": "up-4",
+   "group": "Updates",
+   "condition": "maintained_no_audit",
+   "member": "eng-01",
+   "question": "How often do Ember webhook retries run?",
+   "answer": "Every 5 minutes.",
+   "ctx": 38,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-4-q3",
+   "scenario": "up-4",
+   "group": "Updates",
+   "condition": "maintained_no_audit",
+   "member": "sales-02",
+   "question": "Which API is the Ember Foods integration using?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "up-5-q1",
+   "scenario": "up-5",
+   "group": "Updates",
+   "condition": "maintained_no_audit",
+   "member": "eng-08",
+   "question": "When does Fjord Telecom go live?",
+   "answer": "November 24, 2026",
+   "ctx": 109,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-5-q2",
+   "scenario": "up-5",
+   "group": "Updates",
+   "condition": "maintained_no_audit",
+   "member": "sales-01",
+   "question": "Why did Fjord ask to move their go-live?",
+   "answer": "Fjord Telecom requested to move their go-live to December 1 due to a change freeze starting after the original November 24 date.",
+   "ctx": 109,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-1-q1",
+   "scenario": "re-1",
+   "group": "Retention",
+   "condition": "maintained_no_audit",
+   "member": "sales-04",
+   "question": "What's the main objective of the Harbor Shipping engagement?",
+   "answer": "The main objective of the Harbor Shipping engagement is to cut container dwell time at Oakland terminal by 15%.",
+   "ctx": 135,
+   "n_mem": 6,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-1-q2",
+   "scenario": "re-1",
+   "group": "Retention",
+   "condition": "maintained_no_audit",
+   "member": "eng-03",
+   "question": "Who receives the weekly Harbor Shipping status reports?",
+   "answer": "COO Lena Park",
+   "ctx": 121,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-1-q3",
+   "scenario": "re-1",
+   "group": "Retention",
+   "condition": "maintained_no_audit",
+   "member": "eng-06",
+   "question": "When does Harbor phase two start?",
+   "answer": "October 28, 2026",
+   "ctx": 121,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-2-q1",
+   "scenario": "re-2",
+   "group": "Retention",
+   "condition": "maintained_no_audit",
+   "member": "eng-08",
+   "question": "How long do we have to retain logs for Iris Clinics?",
+   "answer": "7 years",
+   "ctx": 149,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-2-q2",
+   "scenario": "re-2",
+   "group": "Retention",
+   "condition": "maintained_no_audit",
+   "member": "eng-01",
+   "question": "Who manages the encryption keys for Iris Clinics patient data?",
+   "answer": "Customer-managed keys.",
+   "ctx": 149,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-3-q1",
+   "scenario": "re-3",
+   "group": "Retention",
+   "condition": "maintained_no_audit",
+   "member": "sales-02",
+   "question": "What do our staff have to do before visiting a Juniper Hotels property?",
+   "answer": "Anyone sent on site to Juniper Hotels must complete a safety induction before visiting a property.",
+   "ctx": 124,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-3-q2",
+   "scenario": "re-3",
+   "group": "Retention",
+   "condition": "maintained_no_audit",
+   "member": "sales-01",
+   "question": "When was the Juniper Hotels demo held?",
+   "answer": "The Juniper Hotels demo was held on October 2, 2026.",
+   "ctx": 124,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-4-q1",
+   "scenario": "re-4",
+   "group": "Retention",
+   "condition": "maintained_no_audit",
+   "member": "sales-01",
+   "question": "What's the liability cap in our agreement with Quarry Materials?",
+   "answer": "The liability cap in the Quarry Materials agreement is 2x annual fees.",
+   "ctx": 160,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-4-q2",
+   "scenario": "re-4",
+   "group": "Retention",
+   "condition": "maintained_no_audit",
+   "member": "eng-04",
+   "question": "Which state's law governs the Quarry Materials agreement?",
+   "answer": "Delaware",
+   "ctx": 164,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-4-q3",
+   "scenario": "re-4",
+   "group": "Retention",
+   "condition": "maintained_no_audit",
+   "member": "eng-09",
+   "question": "What SFTP timeout did we set for Quarry?",
+   "answer": "120 seconds.",
+   "ctx": 164,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-5-q1",
+   "scenario": "re-5",
+   "group": "Retention",
+   "condition": "maintained_no_audit",
+   "member": "sales-02",
+   "question": "What format should I use when presenting to Redwood's CTO?",
+   "answer": "Use written memos instead of slide decks. Redwood's CTO prefers written memos and is the decision-maker regarding presentation formats.",
+   "ctx": 151,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-5-q2",
+   "scenario": "re-5",
+   "group": "Retention",
+   "condition": "maintained_no_audit",
+   "member": "sales-02",
+   "question": "How far ahead should the Redwood agenda go out?",
+   "answer": "48 hours ahead of meetings.",
+   "ctx": 151,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-5-q3",
+   "scenario": "re-5",
+   "group": "Retention",
+   "condition": "maintained_no_audit",
+   "member": "sales-03",
+   "question": "Which references did we send Redwood?",
+   "answer": "We sent Redwood references from Sunrise CU and Pacific CU.",
+   "ctx": 88,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-1-q1",
+   "scenario": "fo-1",
+   "group": "Forgetting",
+   "condition": "maintained_no_audit",
+   "member": "sales-05",
+   "question": "How should we send Tundra Mining project updates?",
+   "answer": "Send a written update by email every Friday.",
+   "ctx": 69,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-1-q2",
+   "scenario": "fo-1",
+   "group": "Forgetting",
+   "condition": "maintained_no_audit",
+   "member": "sales-02",
+   "question": "On what day does Tundra expect their update?",
+   "answer": "Tundra expects a written update by email every Friday.",
+   "ctx": 69,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-2-q1",
+   "scenario": "fo-2",
+   "group": "Forgetting",
+   "condition": "maintained_no_audit",
+   "member": "eng-05",
+   "question": "Which staging host does Umber Studios use?",
+   "answer": "Umber Studios uses stage-umber-k8s as their staging host.",
+   "ctx": 100,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-2-q2",
+   "scenario": "fo-2",
+   "group": "Forgetting",
+   "condition": "maintained_no_audit",
+   "member": "eng-01",
+   "question": "What do Umber deploys run through?",
+   "answer": "GitHub Actions",
+   "ctx": 100,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-2-q3",
+   "scenario": "fo-2",
+   "group": "Forgetting",
+   "condition": "maintained_no_audit",
+   "member": "eng-05",
+   "question": "What upload limit did we set for Umber's art team?",
+   "answer": "2 GB",
+   "ctx": 100,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-3-q1",
+   "scenario": "fo-3",
+   "group": "Forgetting",
+   "condition": "maintained_no_audit",
+   "member": "sales-01",
+   "question": "Who's our contact at Vega Robotics?",
+   "answer": "Sofia Brandt is the new contact for Vega Robotics.",
+   "ctx": 98,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-3-q2",
+   "scenario": "fo-3",
+   "group": "Forgetting",
+   "condition": "maintained_no_audit",
+   "member": "exec-02",
+   "question": "Who is our contact at Vega Robotics?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "fo-4-q1",
+   "scenario": "fo-4",
+   "group": "Forgetting",
+   "condition": "maintained_no_audit",
+   "member": "eng-02",
+   "question": "How do we access Willow Schools systems?",
+   "answer": "Okta is used for all access to Willow Schools systems, as the VPN requirement has been dropped and zero-trust SSO is now in place.",
+   "ctx": 94,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": true,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-4-q2",
+   "scenario": "fo-4",
+   "group": "Forgetting",
+   "condition": "maintained_no_audit",
+   "member": "sales-04",
+   "question": "What's the travel budget for Willow Schools?",
+   "answer": "$5k per quarter",
+   "ctx": 72,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-5-q1",
+   "scenario": "fo-5",
+   "group": "Forgetting",
+   "condition": "maintained_no_audit",
+   "member": "sales-04",
+   "question": "What's the monthly price of the data pipeline package for Xenon Labs?",
+   "answer": "$11,000",
+   "ctx": 129,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-5-q2",
+   "scenario": "fo-5",
+   "group": "Forgetting",
+   "condition": "maintained_no_audit",
+   "member": "sales-01",
+   "question": "Which pricing sheet version is current for Xenon?",
+   "answer": "v4 is the current live pricing sheet for Xenon Labs.",
+   "ctx": 129,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-1-q1",
+   "scenario": "sh-1",
+   "group": "Shared handoff",
+   "condition": "maintained_no_audit",
+   "member": "sales-05",
+   "question": "When does Zephyr Air expect to make their decision?",
+   "answer": "October 29",
+   "ctx": 68,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-1-q2",
+   "scenario": "sh-1",
+   "group": "Shared handoff",
+   "condition": "maintained_no_audit",
+   "member": "sales-05",
+   "question": "What certification does Zephyr require?",
+   "answer": "SOC 2 Type II compliance",
+   "ctx": 68,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-1-q3",
+   "scenario": "sh-1",
+   "group": "Shared handoff",
+   "condition": "maintained_no_audit",
+   "member": "sales-05",
+   "question": "Do we know which vendor Zephyr's buyer currently favors?",
+   "answer": "No, the memories do not contain information about which vendor Zephyr's buyer currently favors. The available records only cover Zephyr Air's compliance requirements, internal handoffs, and a delayed decision date.",
+   "ctx": 68,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "sh-2-q1",
+   "scenario": "sh-2",
+   "group": "Shared handoff",
+   "condition": "maintained_no_audit",
+   "member": "eng-10",
+   "question": "How long is the Aurora Bank retrain expected to take?",
+   "answer": "4 weeks (using 2 A100 GPUs)",
+   "ctx": 107,
+   "n_mem": 6,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-2-q2",
+   "scenario": "sh-2",
+   "group": "Shared handoff",
+   "condition": "maintained_no_audit",
+   "member": "eng-10",
+   "question": "Which feature store does the Aurora project use?",
+   "answer": "Feast",
+   "ctx": 107,
+   "n_mem": 6,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-2-q3",
+   "scenario": "sh-2",
+   "group": "Shared handoff",
+   "condition": "maintained_no_audit",
+   "member": "eng-10",
+   "question": "How many GPUs does the Aurora retrain need?",
+   "answer": "2 A100 GPUs (4 weeks duration).",
+   "ctx": 107,
+   "n_mem": 6,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-3-q1",
+   "scenario": "sh-3",
+   "group": "Shared handoff",
+   "condition": "maintained_no_audit",
+   "member": "sales-04",
+   "question": "When is the Cedar Logistics renewal?",
+   "answer": "January 31, 2027",
+   "ctx": 88,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-3-q2",
+   "scenario": "sh-3",
+   "group": "Shared handoff",
+   "condition": "maintained_no_audit",
+   "member": "sales-04",
+   "question": "Did we offer Cedar any loyalty credit?",
+   "answer": "No, there is no record of a loyalty credit being offered to Cedar. The available approved and active memories confirm Cedar's support tier, renewal date, and account reassignment, but none mention a loyalty credit.",
+   "ctx": 88,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "sh-3-q3",
+   "scenario": "sh-3",
+   "group": "Shared handoff",
+   "condition": "maintained_no_audit",
+   "member": "eng-02",
+   "question": "Which support tier is Cedar Logistics on?",
+   "answer": "Cedar is on the Premium support tier.",
+   "ctx": 51,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-4-q1",
+   "scenario": "sh-4",
+   "group": "Shared handoff",
+   "condition": "maintained_no_audit",
+   "member": "exec-03",
+   "question": "What's the maximum discount we've approved for Dune Solar?",
+   "answer": "The maximum approved discount for Dune Solar is 10%.",
+   "ctx": 127,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-4-q2",
+   "scenario": "sh-4",
+   "group": "Shared handoff",
+   "condition": "maintained_no_audit",
+   "member": "exec-03",
+   "question": "When does Dune Solar's board meet?",
+   "answer": "November 12",
+   "ctx": 127,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-4-q3",
+   "scenario": "sh-4",
+   "group": "Shared handoff",
+   "condition": "maintained_no_audit",
+   "member": "sales-02",
+   "question": "What discount cap applies to Dune Solar?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "sh-5-q1",
+   "scenario": "sh-5",
+   "group": "Shared handoff",
+   "condition": "maintained_no_audit",
+   "member": "eng-05",
+   "question": "What's the current max number of concurrent transcoding jobs for Echo Media?",
+   "answer": "The current max number of concurrent transcoding jobs for Echo Media is 40.",
+   "ctx": 190,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-5-q2",
+   "scenario": "sh-5",
+   "group": "Shared handoff",
+   "condition": "maintained_no_audit",
+   "member": "eng-05",
+   "question": "What output format does the Echo pipeline produce?",
+   "answer": "HLS format.",
+   "ctx": 190,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-1-q1",
+   "scenario": "in-1",
+   "group": "Insufficient evidence",
+   "condition": "maintained_no_audit",
+   "member": "eng-10",
+   "question": "Which cloud will Helix Bio's genomics pipeline run on?",
+   "answer": "Helix Bio's genomics pipeline runs on AWS Batch.",
+   "ctx": 156,
+   "n_mem": 6,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "uncertain"
+  },
+  {
+   "id": "in-1-q2",
+   "scenario": "in-1",
+   "group": "Insufficient evidence",
+   "condition": "maintained_no_audit",
+   "member": "eng-10",
+   "question": "What kind of pipeline are we building for Helix Bio?",
+   "answer": "We are building an AWS Batch pipeline for Helix Bio. This is supported by the active memory that AWS Batch is the platform already used by Helix Bio's data team (m3), and the active memory confirming the pipeline is planned for AWS Batch (m1). The tentative memory suggesting a move to Google Cloud (m2) conflicts with the active AWS Batch usage, and the tentative memory contradicting the IT lead's statement (m6) further reinforces that the pipeline remains on AWS.",
+   "ctx": 156,
+   "n_mem": 6,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-2-q1",
+   "scenario": "in-2",
+   "group": "Insufficient evidence",
+   "condition": "maintained_no_audit",
+   "member": "sales-02",
+   "question": "What renewal amount are we expecting from Ivory Retail?",
+   "answer": "The conversation history does not specify a renewal amount for Ivory Retail. The only related memory is [m1], which mentions that renewal conversations start next month, but it does not state the expected amount.",
+   "ctx": 66,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "in-2-q2",
+   "scenario": "in-2",
+   "group": "Insufficient evidence",
+   "condition": "maintained_no_audit",
+   "member": "sales-02",
+   "question": "Who is leading the Ivory Retail renewal?",
+   "answer": "I don't know.",
+   "ctx": 66,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-2-q3",
+   "scenario": "in-2",
+   "group": "Insufficient evidence",
+   "condition": "maintained_no_audit",
+   "member": "eng-04",
+   "question": "What's the rule for pricing on big renewals?",
+   "answer": "Any renewal over $100k requires exec sign-off before pricing goes to the client.",
+   "ctx": 24,
+   "n_mem": 1,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-3-q1",
+   "scenario": "in-3",
+   "group": "Insufficient evidence",
+   "condition": "maintained_no_audit",
+   "member": "eng-02",
+   "question": "How long will the Kite Energy billing migration take?",
+   "answer": "The Kite Energy billing migration is estimated to take 6 weeks.",
+   "ctx": 77,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "uncertain"
+  },
+  {
+   "id": "in-3-q2",
+   "scenario": "in-3",
+   "group": "Insufficient evidence",
+   "condition": "maintained_no_audit",
+   "member": "sales-01",
+   "question": "What timeline have we given Kite Energy?",
+   "answer": "We have not given Kite Energy a specific timeline. Sales-01 indicated that a timeline would be confirmed once engineering finishes its review.",
+   "ctx": 41,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-4-q1",
+   "scenario": "in-4",
+   "group": "Insufficient evidence",
+   "condition": "maintained_no_audit",
+   "member": "sales-05",
+   "question": "What's the contract value for the Mosaic Health pilot?",
+   "answer": "The contract value for the Mosaic Health pilot is not specified in the approved, active memories. The records confirm the engagement was approved as a 3-month pilot starting October 1, 2026, but no dollar amount or pricing details are included.",
+   "ctx": 85,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "in-4-q2",
+   "scenario": "in-4",
+   "group": "Insufficient evidence",
+   "condition": "maintained_no_audit",
+   "member": "eng-06",
+   "question": "Which languages does the Mosaic chatbot need at launch?",
+   "answer": "English and Spanish.",
+   "ctx": 76,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-4-q3",
+   "scenario": "in-4",
+   "group": "Insufficient evidence",
+   "condition": "maintained_no_audit",
+   "member": "sales-05",
+   "question": "How long is the Mosaic Health pilot?",
+   "answer": "The Mosaic Health pilot is 3 months long, starting October 1.",
+   "ctx": 85,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-5-q1",
+   "scenario": "in-5",
+   "group": "Insufficient evidence",
+   "condition": "maintained_no_audit",
+   "member": "eng-03",
+   "question": "When is the Opal Insurance portal launching?",
+   "answer": "December 8",
+   "ctx": 78,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "uncertain"
+  },
+  {
+   "id": "in-5-q2",
+   "scenario": "in-5",
+   "group": "Insufficient evidence",
+   "condition": "maintained_no_audit",
+   "member": "sales-05",
+   "question": "Who has to confirm any change to the Opal launch date?",
+   "answer": "The portal launch date change requires written confirmation from exec-01 before any changes are made. The approved, active memory [m5] confirms the launch date as December 8, and [m3] specifies that sales-05 must hold off on informing the Opal team until exec-01 confirms.",
+   "ctx": 130,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-1-q1",
+   "scenario": "ex-1",
+   "group": "Extraction",
+   "condition": "maintained",
+   "member": "sales-04",
+   "question": "Which AWS region does Kestrel Health need their deployment in?",
+   "answer": "us-east-2",
+   "ctx": 210,
+   "n_mem": 10,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-1-q2",
+   "scenario": "ex-1",
+   "group": "Extraction",
+   "condition": "maintained",
+   "member": "sales-01",
+   "question": "Who is our main contact at Kestrel Health?",
+   "answer": "Dana Whitfield",
+   "ctx": 210,
+   "n_mem": 10,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-2-q1",
+   "scenario": "ex-2",
+   "group": "Extraction",
+   "condition": "maintained",
+   "member": "eng-06",
+   "question": "What database are we using for the Lumen Retail inventory sync?",
+   "answer": "Postgres 16",
+   "ctx": 133,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-2-q2",
+   "scenario": "ex-2",
+   "group": "Extraction",
+   "condition": "maintained",
+   "member": "eng-02",
+   "question": "When does the Lumen Retail nightly batch run?",
+   "answer": "The Lumen Retail nightly batch runs at 02:00 UTC.",
+   "ctx": 133,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-2-q3",
+   "scenario": "ex-2",
+   "group": "Extraction",
+   "condition": "maintained",
+   "member": "eng-06",
+   "question": "When does eng-01's parking pass need renewing?",
+   "answer": "I don't know.",
+   "ctx": 133,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "ex-3-q1",
+   "scenario": "ex-3",
+   "group": "Extraction",
+   "condition": "maintained",
+   "member": "sales-02",
+   "question": "What hourly rate did we agree with Meridian Bank?",
+   "answer": "$210/hour",
+   "ctx": 69,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-3-q2",
+   "scenario": "ex-3",
+   "group": "Extraction",
+   "condition": "maintained",
+   "member": "sales-04",
+   "question": "When does the Meridian Bank engagement start?",
+   "answer": "October 5, 2026",
+   "ctx": 106,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-3-q3",
+   "scenario": "ex-3",
+   "group": "Extraction",
+   "condition": "maintained",
+   "member": "sales-04",
+   "question": "What time of day does Meridian's procurement contact prefer for calls?",
+   "answer": "Meridian's procurement contact prefers morning calls.",
+   "ctx": 106,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-4-q1",
+   "scenario": "ex-4",
+   "group": "Extraction",
+   "condition": "maintained",
+   "member": "sales-05",
+   "question": "How many warehouses is the Nimbus Logistics deal sized for?",
+   "answer": "The Nimbus Logistics deal is sized for 40 warehouses.",
+   "ctx": 151,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-4-q2",
+   "scenario": "ex-4",
+   "group": "Extraction",
+   "condition": "maintained",
+   "member": "eng-09",
+   "question": "How many warehouses can a single cluster handle before latency gets too high?",
+   "answer": "A single cluster can handle about 25 warehouses before p95 latency exceeds 800ms.",
+   "ctx": 97,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-4-q3",
+   "scenario": "ex-4",
+   "group": "Extraction",
+   "condition": "maintained",
+   "member": "sales-05",
+   "question": "What p95 latency did the Nimbus load test hit?",
+   "answer": "I don't know.",
+   "ctx": 151,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "ex-5-q1",
+   "scenario": "ex-5",
+   "group": "Extraction",
+   "condition": "maintained",
+   "member": "sales-01",
+   "question": "Who is the executive sponsor at Orchid Pharma?",
+   "answer": "Priya Raman is the executive sponsor at Orchid Pharma.",
+   "ctx": 65,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-5-q2",
+   "scenario": "ex-5",
+   "group": "Extraction",
+   "condition": "maintained",
+   "member": "sales-03",
+   "question": "When does Orchid Pharma's steering committee meet?",
+   "answer": "Orchid Pharma's steering committee meets on the first Tuesday of every month.",
+   "ctx": 65,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-5-q3",
+   "scenario": "ex-5",
+   "group": "Extraction",
+   "condition": "maintained",
+   "member": "sales-01",
+   "question": "Are we proposing an analytics retainer to Orchid, and for how much?",
+   "answer": "No, we are not proposing an analytics retainer to Orchid. The available memories do not contain any information about an analytics retainer proposal or pricing.",
+   "ctx": 65,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "up-1-atlas-q1",
+   "scenario": "up-1-atlas",
+   "group": "Updates",
+   "condition": "maintained",
+   "member": "sales-02",
+   "question": "I'm drafting a client update for Atlas. What pilot due date should I give them?",
+   "answer": "November 13, 2026",
+   "ctx": 157,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-1-atlas-q2",
+   "scenario": "up-1-atlas",
+   "group": "Updates",
+   "condition": "maintained",
+   "member": "sales-02",
+   "question": "What are the goals of the Atlas pilot?",
+   "answer": "The goals of the Atlas pilot are to cut warehouse picking errors by 30% and sync stock levels with the SAP system every hour.",
+   "ctx": 157,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-1-atlas-q3",
+   "scenario": "up-1-atlas",
+   "group": "Updates",
+   "condition": "maintained",
+   "member": "eng-07",
+   "question": "What is the committed due date for the Atlas pilot?",
+   "answer": "November 13, 2026",
+   "ctx": 210,
+   "n_mem": 9,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-2-q1",
+   "scenario": "up-2",
+   "group": "Updates",
+   "condition": "maintained",
+   "member": "eng-05",
+   "question": "What's the approved Cobalt Insurance renewal value for 2027?",
+   "answer": "$480k",
+   "ctx": 138,
+   "n_mem": 10,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-2-q2",
+   "scenario": "up-2",
+   "group": "Updates",
+   "condition": "maintained",
+   "member": "sales-01",
+   "question": "What is the Cobalt renewal price for 2027?",
+   "answer": "$480k",
+   "ctx": 152,
+   "n_mem": 10,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-3-q1",
+   "scenario": "up-3",
+   "group": "Updates",
+   "condition": "maintained",
+   "member": "sales-03",
+   "question": "What's the current approved budget for Delphi Media?",
+   "answer": "$175k. The approved budget for Delphi Media includes the archive migration scope, which was expanded to $175k.",
+   "ctx": 50,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-3-q2",
+   "scenario": "up-3",
+   "group": "Updates",
+   "condition": "maintained",
+   "member": "eng-04",
+   "question": "What did Delphi Media add to the project scope?",
+   "answer": "Delphi Media expanded scope to include archive migration.",
+   "ctx": 50,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-4-q1",
+   "scenario": "up-4",
+   "group": "Updates",
+   "condition": "maintained",
+   "member": "eng-10",
+   "question": "Which Ember Foods API are we integrating with?",
+   "answer": "We are integrating with the gRPC API.",
+   "ctx": 38,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-4-q2",
+   "scenario": "up-4",
+   "group": "Updates",
+   "condition": "maintained",
+   "member": "eng-01",
+   "question": "How often do Ember webhook retries run?",
+   "answer": "Every 5 minutes.",
+   "ctx": 38,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-4-q3",
+   "scenario": "up-4",
+   "group": "Updates",
+   "condition": "maintained",
+   "member": "sales-02",
+   "question": "Which API is the Ember Foods integration using?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "up-5-q1",
+   "scenario": "up-5",
+   "group": "Updates",
+   "condition": "maintained",
+   "member": "eng-08",
+   "question": "When does Fjord Telecom go live?",
+   "answer": "November 24, 2026",
+   "ctx": 109,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-5-q2",
+   "scenario": "up-5",
+   "group": "Updates",
+   "condition": "maintained",
+   "member": "sales-01",
+   "question": "Why did Fjord ask to move their go-live?",
+   "answer": "Fjord Telecom requested to move their go-live to December 1 due to a change freeze starting after the original November 24 date.",
+   "ctx": 109,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-1-q1",
+   "scenario": "re-1",
+   "group": "Retention",
+   "condition": "maintained",
+   "member": "sales-04",
+   "question": "What's the main objective of the Harbor Shipping engagement?",
+   "answer": "The main objective of the Harbor Shipping engagement is to cut container dwell time at Oakland terminal by 15%.",
+   "ctx": 135,
+   "n_mem": 6,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-1-q2",
+   "scenario": "re-1",
+   "group": "Retention",
+   "condition": "maintained",
+   "member": "eng-03",
+   "question": "Who receives the weekly Harbor Shipping status reports?",
+   "answer": "COO Lena Park",
+   "ctx": 121,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-1-q3",
+   "scenario": "re-1",
+   "group": "Retention",
+   "condition": "maintained",
+   "member": "eng-06",
+   "question": "When does Harbor phase two start?",
+   "answer": "October 28, 2026",
+   "ctx": 121,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-2-q1",
+   "scenario": "re-2",
+   "group": "Retention",
+   "condition": "maintained",
+   "member": "eng-08",
+   "question": "How long do we have to retain logs for Iris Clinics?",
+   "answer": "7 years",
+   "ctx": 149,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-2-q2",
+   "scenario": "re-2",
+   "group": "Retention",
+   "condition": "maintained",
+   "member": "eng-01",
+   "question": "Who manages the encryption keys for Iris Clinics patient data?",
+   "answer": "Customer-managed keys.",
+   "ctx": 149,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-3-q1",
+   "scenario": "re-3",
+   "group": "Retention",
+   "condition": "maintained",
+   "member": "sales-02",
+   "question": "What do our staff have to do before visiting a Juniper Hotels property?",
+   "answer": "Anyone sent on site to Juniper Hotels must complete a safety induction before visiting a property.",
+   "ctx": 124,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-3-q2",
+   "scenario": "re-3",
+   "group": "Retention",
+   "condition": "maintained",
+   "member": "sales-01",
+   "question": "When was the Juniper Hotels demo held?",
+   "answer": "The Juniper Hotels demo was held on October 2, 2026.",
+   "ctx": 124,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-4-q1",
+   "scenario": "re-4",
+   "group": "Retention",
+   "condition": "maintained",
+   "member": "sales-01",
+   "question": "What's the liability cap in our agreement with Quarry Materials?",
+   "answer": "The liability cap in the Quarry Materials agreement is 2x annual fees.",
+   "ctx": 160,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-4-q2",
+   "scenario": "re-4",
+   "group": "Retention",
+   "condition": "maintained",
+   "member": "eng-04",
+   "question": "Which state's law governs the Quarry Materials agreement?",
+   "answer": "Delaware",
+   "ctx": 164,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-4-q3",
+   "scenario": "re-4",
+   "group": "Retention",
+   "condition": "maintained",
+   "member": "eng-09",
+   "question": "What SFTP timeout did we set for Quarry?",
+   "answer": "120 seconds.",
+   "ctx": 164,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-5-q1",
+   "scenario": "re-5",
+   "group": "Retention",
+   "condition": "maintained",
+   "member": "sales-02",
+   "question": "What format should I use when presenting to Redwood's CTO?",
+   "answer": "Use written memos instead of slide decks. Redwood's CTO prefers written memos and is the decision-maker regarding presentation formats.",
+   "ctx": 151,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-5-q2",
+   "scenario": "re-5",
+   "group": "Retention",
+   "condition": "maintained",
+   "member": "sales-02",
+   "question": "How far ahead should the Redwood agenda go out?",
+   "answer": "48 hours ahead of meetings.",
+   "ctx": 151,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-5-q3",
+   "scenario": "re-5",
+   "group": "Retention",
+   "condition": "maintained",
+   "member": "sales-03",
+   "question": "Which references did we send Redwood?",
+   "answer": "We sent Redwood references from Sunrise CU and Pacific CU.",
+   "ctx": 88,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-1-q1",
+   "scenario": "fo-1",
+   "group": "Forgetting",
+   "condition": "maintained",
+   "member": "sales-05",
+   "question": "How should we send Tundra Mining project updates?",
+   "answer": "Send a written update by email every Friday.",
+   "ctx": 69,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-1-q2",
+   "scenario": "fo-1",
+   "group": "Forgetting",
+   "condition": "maintained",
+   "member": "sales-02",
+   "question": "On what day does Tundra expect their update?",
+   "answer": "Tundra expects a written update by email every Friday.",
+   "ctx": 69,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-2-q1",
+   "scenario": "fo-2",
+   "group": "Forgetting",
+   "condition": "maintained",
+   "member": "eng-05",
+   "question": "Which staging host does Umber Studios use?",
+   "answer": "Umber Studios uses stage-umber-k8s as their staging host.",
+   "ctx": 100,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-2-q2",
+   "scenario": "fo-2",
+   "group": "Forgetting",
+   "condition": "maintained",
+   "member": "eng-01",
+   "question": "What do Umber deploys run through?",
+   "answer": "GitHub Actions",
+   "ctx": 100,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-2-q3",
+   "scenario": "fo-2",
+   "group": "Forgetting",
+   "condition": "maintained",
+   "member": "eng-05",
+   "question": "What upload limit did we set for Umber's art team?",
+   "answer": "2 GB",
+   "ctx": 100,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-3-q1",
+   "scenario": "fo-3",
+   "group": "Forgetting",
+   "condition": "maintained",
+   "member": "sales-01",
+   "question": "Who's our contact at Vega Robotics?",
+   "answer": "Sofia Brandt is the new contact for Vega Robotics.",
+   "ctx": 98,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-3-q2",
+   "scenario": "fo-3",
+   "group": "Forgetting",
+   "condition": "maintained",
+   "member": "exec-02",
+   "question": "Who is our contact at Vega Robotics?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "fo-4-q1",
+   "scenario": "fo-4",
+   "group": "Forgetting",
+   "condition": "maintained",
+   "member": "eng-02",
+   "question": "How do we access Willow Schools systems?",
+   "answer": "Okta is used for all access to Willow Schools systems, as the VPN requirement has been dropped and zero-trust SSO is now in place.",
+   "ctx": 94,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": true,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-4-q2",
+   "scenario": "fo-4",
+   "group": "Forgetting",
+   "condition": "maintained",
+   "member": "sales-04",
+   "question": "What's the travel budget for Willow Schools?",
+   "answer": "$5k per quarter",
+   "ctx": 72,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-5-q1",
+   "scenario": "fo-5",
+   "group": "Forgetting",
+   "condition": "maintained",
+   "member": "sales-04",
+   "question": "What's the monthly price of the data pipeline package for Xenon Labs?",
+   "answer": "$11,000",
+   "ctx": 129,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-5-q2",
+   "scenario": "fo-5",
+   "group": "Forgetting",
+   "condition": "maintained",
+   "member": "sales-01",
+   "question": "Which pricing sheet version is current for Xenon?",
+   "answer": "v4 is the current live pricing sheet for Xenon Labs.",
+   "ctx": 129,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-1-q1",
+   "scenario": "sh-1",
+   "group": "Shared handoff",
+   "condition": "maintained",
+   "member": "sales-05",
+   "question": "When does Zephyr Air expect to make their decision?",
+   "answer": "October 29",
+   "ctx": 68,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-1-q2",
+   "scenario": "sh-1",
+   "group": "Shared handoff",
+   "condition": "maintained",
+   "member": "sales-05",
+   "question": "What certification does Zephyr require?",
+   "answer": "SOC 2 Type II compliance",
+   "ctx": 68,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-1-q3",
+   "scenario": "sh-1",
+   "group": "Shared handoff",
+   "condition": "maintained",
+   "member": "sales-05",
+   "question": "Do we know which vendor Zephyr's buyer currently favors?",
+   "answer": "No, the memories do not contain information about which vendor Zephyr's buyer currently favors. The available records only cover Zephyr Air's compliance requirements, internal handoffs, and a delayed decision date.",
+   "ctx": 68,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "sh-2-q1",
+   "scenario": "sh-2",
+   "group": "Shared handoff",
+   "condition": "maintained",
+   "member": "eng-10",
+   "question": "How long is the Aurora Bank retrain expected to take?",
+   "answer": "4 weeks (using 2 A100 GPUs)",
+   "ctx": 107,
+   "n_mem": 6,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-2-q2",
+   "scenario": "sh-2",
+   "group": "Shared handoff",
+   "condition": "maintained",
+   "member": "eng-10",
+   "question": "Which feature store does the Aurora project use?",
+   "answer": "Feast",
+   "ctx": 107,
+   "n_mem": 6,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-2-q3",
+   "scenario": "sh-2",
+   "group": "Shared handoff",
+   "condition": "maintained",
+   "member": "eng-10",
+   "question": "How many GPUs does the Aurora retrain need?",
+   "answer": "2 A100 GPUs (4 weeks duration).",
+   "ctx": 107,
+   "n_mem": 6,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-3-q1",
+   "scenario": "sh-3",
+   "group": "Shared handoff",
+   "condition": "maintained",
+   "member": "sales-04",
+   "question": "When is the Cedar Logistics renewal?",
+   "answer": "January 31, 2027",
+   "ctx": 88,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-3-q2",
+   "scenario": "sh-3",
+   "group": "Shared handoff",
+   "condition": "maintained",
+   "member": "sales-04",
+   "question": "Did we offer Cedar any loyalty credit?",
+   "answer": "No, there is no record of a loyalty credit being offered to Cedar. The available approved and active memories confirm Cedar's support tier, renewal date, and account reassignment, but none mention a loyalty credit.",
+   "ctx": 88,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "sh-3-q3",
+   "scenario": "sh-3",
+   "group": "Shared handoff",
+   "condition": "maintained",
+   "member": "eng-02",
+   "question": "Which support tier is Cedar Logistics on?",
+   "answer": "Cedar is on the Premium support tier.",
+   "ctx": 51,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-4-q1",
+   "scenario": "sh-4",
+   "group": "Shared handoff",
+   "condition": "maintained",
+   "member": "exec-03",
+   "question": "What's the maximum discount we've approved for Dune Solar?",
+   "answer": "The maximum approved discount for Dune Solar is 10%.",
+   "ctx": 127,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-4-q2",
+   "scenario": "sh-4",
+   "group": "Shared handoff",
+   "condition": "maintained",
+   "member": "exec-03",
+   "question": "When does Dune Solar's board meet?",
+   "answer": "November 12",
+   "ctx": 127,
+   "n_mem": 7,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-4-q3",
+   "scenario": "sh-4",
+   "group": "Shared handoff",
+   "condition": "maintained",
+   "member": "sales-02",
+   "question": "What discount cap applies to Dune Solar?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "sh-5-q1",
+   "scenario": "sh-5",
+   "group": "Shared handoff",
+   "condition": "maintained",
+   "member": "eng-05",
+   "question": "What's the current max number of concurrent transcoding jobs for Echo Media?",
+   "answer": "The current max number of concurrent transcoding jobs for Echo Media is 40.",
+   "ctx": 190,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-5-q2",
+   "scenario": "sh-5",
+   "group": "Shared handoff",
+   "condition": "maintained",
+   "member": "eng-05",
+   "question": "What output format does the Echo pipeline produce?",
+   "answer": "HLS format.",
+   "ctx": 190,
+   "n_mem": 8,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-1-q1",
+   "scenario": "in-1",
+   "group": "Insufficient evidence",
+   "condition": "maintained",
+   "member": "eng-10",
+   "question": "Which cloud will Helix Bio's genomics pipeline run on?",
+   "answer": "Helix Bio's genomics pipeline runs on AWS Batch.",
+   "ctx": 156,
+   "n_mem": 6,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "uncertain"
+  },
+  {
+   "id": "in-1-q2",
+   "scenario": "in-1",
+   "group": "Insufficient evidence",
+   "condition": "maintained",
+   "member": "eng-10",
+   "question": "What kind of pipeline are we building for Helix Bio?",
+   "answer": "We are building an AWS Batch pipeline for Helix Bio. This is supported by the active memory that AWS Batch is the platform already used by Helix Bio's data team (m3), and the active memory confirming the pipeline is planned for AWS Batch (m1). The tentative memory suggesting a move to Google Cloud (m2) conflicts with the active AWS Batch usage, and the tentative memory contradicting the IT lead's statement (m6) further reinforces that the pipeline remains on AWS.",
+   "ctx": 156,
+   "n_mem": 6,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-2-q1",
+   "scenario": "in-2",
+   "group": "Insufficient evidence",
+   "condition": "maintained",
+   "member": "sales-02",
+   "question": "What renewal amount are we expecting from Ivory Retail?",
+   "answer": "The conversation history does not specify a renewal amount for Ivory Retail. The only related memory is [m1], which mentions that renewal conversations start next month, but it does not state the expected amount.",
+   "ctx": 66,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "in-2-q2",
+   "scenario": "in-2",
+   "group": "Insufficient evidence",
+   "condition": "maintained",
+   "member": "sales-02",
+   "question": "Who is leading the Ivory Retail renewal?",
+   "answer": "I don't know.",
+   "ctx": 66,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-2-q3",
+   "scenario": "in-2",
+   "group": "Insufficient evidence",
+   "condition": "maintained",
+   "member": "eng-04",
+   "question": "What's the rule for pricing on big renewals?",
+   "answer": "Any renewal over $100k requires exec sign-off before pricing goes to the client.",
+   "ctx": 24,
+   "n_mem": 1,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-3-q1",
+   "scenario": "in-3",
+   "group": "Insufficient evidence",
+   "condition": "maintained",
+   "member": "eng-02",
+   "question": "How long will the Kite Energy billing migration take?",
+   "answer": "The Kite Energy billing migration is estimated to take 6 weeks.",
+   "ctx": 77,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "uncertain"
+  },
+  {
+   "id": "in-3-q2",
+   "scenario": "in-3",
+   "group": "Insufficient evidence",
+   "condition": "maintained",
+   "member": "sales-01",
+   "question": "What timeline have we given Kite Energy?",
+   "answer": "We have not given Kite Energy a specific timeline. Sales-01 indicated that a timeline would be confirmed once engineering finishes its review.",
+   "ctx": 41,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-4-q1",
+   "scenario": "in-4",
+   "group": "Insufficient evidence",
+   "condition": "maintained",
+   "member": "sales-05",
+   "question": "What's the contract value for the Mosaic Health pilot?",
+   "answer": "The contract value for the Mosaic Health pilot is not specified in the approved, active memories. The records confirm the engagement was approved as a 3-month pilot starting October 1, 2026, but no dollar amount or pricing details are included.",
+   "ctx": 85,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "in-4-q2",
+   "scenario": "in-4",
+   "group": "Insufficient evidence",
+   "condition": "maintained",
+   "member": "eng-06",
+   "question": "Which languages does the Mosaic chatbot need at launch?",
+   "answer": "English and Spanish.",
+   "ctx": 76,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-4-q3",
+   "scenario": "in-4",
+   "group": "Insufficient evidence",
+   "condition": "maintained",
+   "member": "sales-05",
+   "question": "How long is the Mosaic Health pilot?",
+   "answer": "The Mosaic Health pilot is 3 months long, starting October 1.",
+   "ctx": 85,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-5-q1",
+   "scenario": "in-5",
+   "group": "Insufficient evidence",
+   "condition": "maintained",
+   "member": "eng-03",
+   "question": "When is the Opal Insurance portal launching?",
+   "answer": "December 8",
+   "ctx": 78,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "uncertain"
+  },
+  {
+   "id": "in-5-q2",
+   "scenario": "in-5",
+   "group": "Insufficient evidence",
+   "condition": "maintained",
+   "member": "sales-05",
+   "question": "Who has to confirm any change to the Opal launch date?",
+   "answer": "The portal launch date change requires written confirmation from exec-01 before any changes are made. The approved, active memory [m5] confirms the launch date as December 8, and [m3] specifies that sales-05 must hold off on informing the Opal team until exec-01 confirms.",
+   "ctx": 130,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-1-q1",
+   "scenario": "ex-1",
+   "group": "Extraction",
+   "condition": "full_history",
+   "member": "sales-04",
+   "question": "Which AWS region does Kestrel Health need their deployment in?",
+   "answer": "us-east-2",
+   "ctx": 181,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-1-q2",
+   "scenario": "ex-1",
+   "group": "Extraction",
+   "condition": "full_history",
+   "member": "sales-01",
+   "question": "Who is our main contact at Kestrel Health?",
+   "answer": "Dana Whitfield is the main contact at Kestrel Health.",
+   "ctx": 181,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-2-q1",
+   "scenario": "ex-2",
+   "group": "Extraction",
+   "condition": "full_history",
+   "member": "eng-06",
+   "question": "What database are we using for the Lumen Retail inventory sync?",
+   "answer": "Postgres 16",
+   "ctx": 96,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-2-q2",
+   "scenario": "ex-2",
+   "group": "Extraction",
+   "condition": "full_history",
+   "member": "eng-02",
+   "question": "When does the Lumen Retail nightly batch run?",
+   "answer": "The nightly batch runs at 02:00 UTC.",
+   "ctx": 96,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-2-q3",
+   "scenario": "ex-2",
+   "group": "Extraction",
+   "condition": "full_history",
+   "member": "eng-06",
+   "question": "When does eng-01's parking pass need renewing?",
+   "answer": "I don't know.",
+   "ctx": 96,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "ex-3-q1",
+   "scenario": "ex-3",
+   "group": "Extraction",
+   "condition": "full_history",
+   "member": "sales-02",
+   "question": "What hourly rate did we agree with Meridian Bank?",
+   "answer": "$210/hour",
+   "ctx": 37,
+   "n_mem": 1,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-3-q2",
+   "scenario": "ex-3",
+   "group": "Extraction",
+   "condition": "full_history",
+   "member": "sales-04",
+   "question": "When does the Meridian Bank engagement start?",
+   "answer": "October 5, 2026",
+   "ctx": 70,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-3-q3",
+   "scenario": "ex-3",
+   "group": "Extraction",
+   "condition": "full_history",
+   "member": "sales-04",
+   "question": "What time of day does Meridian's procurement contact prefer for calls?",
+   "answer": "Morning calls are preferred.",
+   "ctx": 70,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-4-q1",
+   "scenario": "ex-4",
+   "group": "Extraction",
+   "condition": "full_history",
+   "member": "sales-05",
+   "question": "How many warehouses is the Nimbus Logistics deal sized for?",
+   "answer": "40 warehouses.",
+   "ctx": 98,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-4-q2",
+   "scenario": "ex-4",
+   "group": "Extraction",
+   "condition": "full_history",
+   "member": "eng-09",
+   "question": "How many warehouses can a single cluster handle before latency gets too high?",
+   "answer": "A single cluster can handle about 25 warehouses before p95 latency exceeds 800ms.",
+   "ctx": 73,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-4-q3",
+   "scenario": "ex-4",
+   "group": "Extraction",
+   "condition": "full_history",
+   "member": "sales-05",
+   "question": "What p95 latency did the Nimbus load test hit?",
+   "answer": "I don't know.",
+   "ctx": 98,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "ex-5-q1",
+   "scenario": "ex-5",
+   "group": "Extraction",
+   "condition": "full_history",
+   "member": "sales-01",
+   "question": "Who is the executive sponsor at Orchid Pharma?",
+   "answer": "Priya Raman, VP of Clinical Ops",
+   "ctx": 87,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-5-q2",
+   "scenario": "ex-5",
+   "group": "Extraction",
+   "condition": "full_history",
+   "member": "sales-03",
+   "question": "When does Orchid Pharma's steering committee meet?",
+   "answer": "The steering committee meets on the first Tuesday of every month.",
+   "ctx": 87,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "ex-5-q3",
+   "scenario": "ex-5",
+   "group": "Extraction",
+   "condition": "full_history",
+   "member": "sales-01",
+   "question": "Are we proposing an analytics retainer to Orchid, and for how much?",
+   "answer": "No, we are not proposing an analytics retainer to Orchid. The steering committee is now on the first Tuesday of every month, and the sponsor, Priya Raman, requests a one-page summary before each meeting. No retainer amount is mentioned in the available records.",
+   "ctx": 87,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": false,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "up-1-atlas-q1",
+   "scenario": "up-1-atlas",
+   "group": "Updates",
+   "condition": "full_history",
+   "member": "sales-02",
+   "question": "I'm drafting a client update for Atlas. What pilot due date should I give them?",
+   "answer": "The pilot is due November 13, 2026.",
+   "ctx": 165,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-1-atlas-q2",
+   "scenario": "up-1-atlas",
+   "group": "Updates",
+   "condition": "full_history",
+   "member": "sales-02",
+   "question": "What are the goals of the Atlas pilot?",
+   "answer": "The Atlas pilot goals are to cut warehouse picking errors by 30% and to sync stock levels with their SAP system every hour.",
+   "ctx": 165,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-1-atlas-q3",
+   "scenario": "up-1-atlas",
+   "group": "Updates",
+   "condition": "full_history",
+   "member": "eng-07",
+   "question": "What is the committed due date for the Atlas pilot?",
+   "answer": "November 13, 2026",
+   "ctx": 190,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-2-q1",
+   "scenario": "up-2",
+   "group": "Updates",
+   "condition": "full_history",
+   "member": "eng-05",
+   "question": "What's the approved Cobalt Insurance renewal value for 2027?",
+   "answer": "$480k",
+   "ctx": 25,
+   "n_mem": 1,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-2-q2",
+   "scenario": "up-2",
+   "group": "Updates",
+   "condition": "full_history",
+   "member": "sales-01",
+   "question": "What is the Cobalt renewal price for 2027?",
+   "answer": "$480k",
+   "ctx": 97,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-3-q1",
+   "scenario": "up-3",
+   "group": "Updates",
+   "condition": "full_history",
+   "member": "sales-03",
+   "question": "What's the current approved budget for Delphi Media?",
+   "answer": "$175k",
+   "ctx": 87,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-3-q2",
+   "scenario": "up-3",
+   "group": "Updates",
+   "condition": "full_history",
+   "member": "eng-04",
+   "question": "What did Delphi Media add to the project scope?",
+   "answer": "Delphi Media added archive migration to the project scope. The approved budget was updated to $175k.",
+   "ctx": 87,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-4-q1",
+   "scenario": "up-4",
+   "group": "Updates",
+   "condition": "full_history",
+   "member": "eng-10",
+   "question": "Which Ember Foods API are we integrating with?",
+   "answer": "We are integrating with the gRPC API.",
+   "ctx": 108,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-4-q2",
+   "scenario": "up-4",
+   "group": "Updates",
+   "condition": "full_history",
+   "member": "eng-01",
+   "question": "How often do Ember webhook retries run?",
+   "answer": "Every 5 minutes.",
+   "ctx": 108,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-4-q3",
+   "scenario": "up-4",
+   "group": "Updates",
+   "condition": "full_history",
+   "member": "sales-02",
+   "question": "Which API is the Ember Foods integration using?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "up-5-q1",
+   "scenario": "up-5",
+   "group": "Updates",
+   "condition": "full_history",
+   "member": "eng-08",
+   "question": "When does Fjord Telecom go live?",
+   "answer": "November 24.",
+   "ctx": 101,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "up-5-q2",
+   "scenario": "up-5",
+   "group": "Updates",
+   "condition": "full_history",
+   "member": "sales-01",
+   "question": "Why did Fjord ask to move their go-live?",
+   "answer": "Fjord asked to move their go-live because of their change freeze.",
+   "ctx": 101,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-1-q1",
+   "scenario": "re-1",
+   "group": "Retention",
+   "condition": "full_history",
+   "member": "sales-04",
+   "question": "What's the main objective of the Harbor Shipping engagement?",
+   "answer": "The main objective is to cut container dwell time at Harbor Shipping's Oakland terminal by 15%.",
+   "ctx": 103,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-1-q2",
+   "scenario": "re-1",
+   "group": "Retention",
+   "condition": "full_history",
+   "member": "eng-03",
+   "question": "Who receives the weekly Harbor Shipping status reports?",
+   "answer": "Lena Park",
+   "ctx": 100,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-1-q3",
+   "scenario": "re-1",
+   "group": "Retention",
+   "condition": "full_history",
+   "member": "eng-06",
+   "question": "When does Harbor phase two start?",
+   "answer": "October 28 (per m2).",
+   "ctx": 100,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-2-q1",
+   "scenario": "re-2",
+   "group": "Retention",
+   "condition": "full_history",
+   "member": "eng-08",
+   "question": "How long do we have to retain logs for Iris Clinics?",
+   "answer": "7 years",
+   "ctx": 111,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-2-q2",
+   "scenario": "re-2",
+   "group": "Retention",
+   "condition": "full_history",
+   "member": "eng-01",
+   "question": "Who manages the encryption keys for Iris Clinics patient data?",
+   "answer": "The encryption keys for Iris Clinics patient data are customer-managed, as stated in the approved requirement.",
+   "ctx": 111,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-3-q1",
+   "scenario": "re-3",
+   "group": "Retention",
+   "condition": "full_history",
+   "member": "sales-02",
+   "question": "What do our staff have to do before visiting a Juniper Hotels property?",
+   "answer": "Our staff must complete the safety induction before visiting a Juniper Hotels property.",
+   "ctx": 130,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-3-q2",
+   "scenario": "re-3",
+   "group": "Retention",
+   "condition": "full_history",
+   "member": "sales-01",
+   "question": "When was the Juniper Hotels demo held?",
+   "answer": "The Juniper Hotels demo was held on October 2, 2026.",
+   "ctx": 130,
+   "n_mem": 5,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-4-q1",
+   "scenario": "re-4",
+   "group": "Retention",
+   "condition": "full_history",
+   "member": "sales-01",
+   "question": "What's the liability cap in our agreement with Quarry Materials?",
+   "answer": "2x annual fees",
+   "ctx": 82,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-4-q2",
+   "scenario": "re-4",
+   "group": "Retention",
+   "condition": "full_history",
+   "member": "eng-04",
+   "question": "Which state's law governs the Quarry Materials agreement?",
+   "answer": "Delaware.",
+   "ctx": 83,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-4-q3",
+   "scenario": "re-4",
+   "group": "Retention",
+   "condition": "full_history",
+   "member": "eng-09",
+   "question": "What SFTP timeout did we set for Quarry?",
+   "answer": "120 seconds.",
+   "ctx": 83,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-5-q1",
+   "scenario": "re-5",
+   "group": "Retention",
+   "condition": "full_history",
+   "member": "sales-02",
+   "question": "What format should I use when presenting to Redwood's CTO?",
+   "answer": "Use a written memo instead of a slide deck, and always send the agenda 48 hours ahead.",
+   "ctx": 103,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-5-q2",
+   "scenario": "re-5",
+   "group": "Retention",
+   "condition": "full_history",
+   "member": "sales-02",
+   "question": "How far ahead should the Redwood agenda go out?",
+   "answer": "48 hours ahead.",
+   "ctx": 103,
+   "n_mem": 4,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "re-5-q3",
+   "scenario": "re-5",
+   "group": "Retention",
+   "condition": "full_history",
+   "member": "sales-03",
+   "question": "Which references did we send Redwood?",
+   "answer": "We sent Redwood references from Sunrise CU and Pacific CU.",
+   "ctx": 66,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-1-q1",
+   "scenario": "fo-1",
+   "group": "Forgetting",
+   "condition": "full_history",
+   "member": "sales-05",
+   "question": "How should we send Tundra Mining project updates?",
+   "answer": "We should send Tundra Mining project updates via email every Friday, as the Thursday standing call has been cancelled. Note that Tundra's site manager is currently out on leave until November (m3).",
+   "ctx": 76,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": true,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-1-q2",
+   "scenario": "fo-1",
+   "group": "Forgetting",
+   "condition": "full_history",
+   "member": "sales-02",
+   "question": "On what day does Tundra expect their update?",
+   "answer": "Friday",
+   "ctx": 76,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-2-q1",
+   "scenario": "fo-2",
+   "group": "Forgetting",
+   "condition": "full_history",
+   "member": "eng-05",
+   "question": "Which staging host does Umber Studios use?",
+   "answer": "Umber Studios uses stage-umber-k8s as its staging host.",
+   "ctx": 96,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-2-q2",
+   "scenario": "fo-2",
+   "group": "Forgetting",
+   "condition": "full_history",
+   "member": "eng-01",
+   "question": "What do Umber deploys run through?",
+   "answer": "Deploys now go through GitHub Actions.",
+   "ctx": 96,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-2-q3",
+   "scenario": "fo-2",
+   "group": "Forgetting",
+   "condition": "full_history",
+   "member": "eng-05",
+   "question": "What upload limit did we set for Umber's art team?",
+   "answer": "2 GB",
+   "ctx": 96,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-3-q1",
+   "scenario": "fo-3",
+   "group": "Forgetting",
+   "condition": "full_history",
+   "member": "sales-01",
+   "question": "Who's our contact at Vega Robotics?",
+   "answer": "Sofia Brandt is the current contact at Vega Robotics.",
+   "ctx": 86,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-3-q2",
+   "scenario": "fo-3",
+   "group": "Forgetting",
+   "condition": "full_history",
+   "member": "exec-02",
+   "question": "Who is our contact at Vega Robotics?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "fo-4-q1",
+   "scenario": "fo-4",
+   "group": "Forgetting",
+   "condition": "full_history",
+   "member": "eng-02",
+   "question": "How do we access Willow Schools systems?",
+   "answer": "Use Okta for all access. Travel budget is $5k per quarter.",
+   "ctx": 97,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-4-q2",
+   "scenario": "fo-4",
+   "group": "Forgetting",
+   "condition": "full_history",
+   "member": "sales-04",
+   "question": "What's the travel budget for Willow Schools?",
+   "answer": "$5k per quarter",
+   "ctx": 80,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-5-q1",
+   "scenario": "fo-5",
+   "group": "Forgetting",
+   "condition": "full_history",
+   "member": "sales-04",
+   "question": "What's the monthly price of the data pipeline package for Xenon Labs?",
+   "answer": "$11,000 a month. The approved pricing sheet v3 is obsolete, and v4 is the current live price.",
+   "ctx": 90,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "fo-5-q2",
+   "scenario": "fo-5",
+   "group": "Forgetting",
+   "condition": "full_history",
+   "member": "sales-01",
+   "question": "Which pricing sheet version is current for Xenon?",
+   "answer": "v4 is the current pricing sheet for Xenon Labs, priced at $11,000 a month.",
+   "ctx": 90,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-1-q1",
+   "scenario": "sh-1",
+   "group": "Shared handoff",
+   "condition": "full_history",
+   "member": "sales-05",
+   "question": "When does Zephyr Air expect to make their decision?",
+   "answer": "October 29, 2026",
+   "ctx": 64,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-1-q2",
+   "scenario": "sh-1",
+   "group": "Shared handoff",
+   "condition": "full_history",
+   "member": "sales-05",
+   "question": "What certification does Zephyr require?",
+   "answer": "SOC 2 Type II",
+   "ctx": 64,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-1-q3",
+   "scenario": "sh-1",
+   "group": "Shared handoff",
+   "condition": "full_history",
+   "member": "sales-05",
+   "question": "Do we know which vendor Zephyr's buyer currently favors?",
+   "answer": "No, we do not know which vendor Zephyr's buyer currently favors. The most recent memory (m2) only notes that the decision was pushed to October 29, but does not indicate a favored vendor.",
+   "ctx": 64,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "sh-2-q1",
+   "scenario": "sh-2",
+   "group": "Shared handoff",
+   "condition": "full_history",
+   "member": "eng-10",
+   "question": "How long is the Aurora Bank retrain expected to take?",
+   "answer": "4 weeks (2 A100 GPUs).",
+   "ctx": 87,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-2-q2",
+   "scenario": "sh-2",
+   "group": "Shared handoff",
+   "condition": "full_history",
+   "member": "eng-10",
+   "question": "Which feature store does the Aurora project use?",
+   "answer": "Feast (from m1)",
+   "ctx": 87,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-2-q3",
+   "scenario": "sh-2",
+   "group": "Shared handoff",
+   "condition": "full_history",
+   "member": "eng-10",
+   "question": "How many GPUs does the Aurora retrain need?",
+   "answer": "2 A100 GPUs",
+   "ctx": 87,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-3-q1",
+   "scenario": "sh-3",
+   "group": "Shared handoff",
+   "condition": "full_history",
+   "member": "sales-04",
+   "question": "When is the Cedar Logistics renewal?",
+   "answer": "October 1, 2026",
+   "ctx": 75,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-3-q2",
+   "scenario": "sh-3",
+   "group": "Shared handoff",
+   "condition": "full_history",
+   "member": "sales-04",
+   "question": "Did we offer Cedar any loyalty credit?",
+   "answer": "No, there is no record of a loyalty credit being offered to Cedar. The approved, active memory [m1] confirms the account transfer and renewal details, but does not mention any credit. Memory [m2] confirms the handover but also lacks any reference to a loyalty credit.",
+   "ctx": 75,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "sh-3-q3",
+   "scenario": "sh-3",
+   "group": "Shared handoff",
+   "condition": "full_history",
+   "member": "eng-02",
+   "question": "Which support tier is Cedar Logistics on?",
+   "answer": "Premium support tier.",
+   "ctx": 47,
+   "n_mem": 1,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-4-q1",
+   "scenario": "sh-4",
+   "group": "Shared handoff",
+   "condition": "full_history",
+   "member": "exec-03",
+   "question": "What's the maximum discount we've approved for Dune Solar?",
+   "answer": "The maximum approved discount for Dune Solar is 10%.",
+   "ctx": 106,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-4-q2",
+   "scenario": "sh-4",
+   "group": "Shared handoff",
+   "condition": "full_history",
+   "member": "exec-03",
+   "question": "When does Dune Solar's board meet?",
+   "answer": "November 12.",
+   "ctx": 106,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-4-q3",
+   "scenario": "sh-4",
+   "group": "Shared handoff",
+   "condition": "full_history",
+   "member": "sales-02",
+   "question": "What discount cap applies to Dune Solar?",
+   "answer": "I don't know.",
+   "ctx": 0,
+   "n_mem": 0,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "sh-5-q1",
+   "scenario": "sh-5",
+   "group": "Shared handoff",
+   "condition": "full_history",
+   "member": "eng-05",
+   "question": "What's the current max number of concurrent transcoding jobs for Echo Media?",
+   "answer": "The current max is 40 concurrent jobs.",
+   "ctx": 96,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "sh-5-q2",
+   "scenario": "sh-5",
+   "group": "Shared handoff",
+   "condition": "full_history",
+   "member": "eng-05",
+   "question": "What output format does the Echo pipeline produce?",
+   "answer": "HLS",
+   "ctx": 96,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-1-q1",
+   "scenario": "in-1",
+   "group": "Insufficient evidence",
+   "condition": "full_history",
+   "member": "eng-10",
+   "question": "Which cloud will Helix Bio's genomics pipeline run on?",
+   "answer": "The cloud for Helix Bio's pipeline is currently undetermined. The data team uses AWS Batch, but the IT lead is moving everything to Google Cloud, and the conflicting plans remain unresolved.",
+   "ctx": 114,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "uncertain"
+  },
+  {
+   "id": "in-1-q2",
+   "scenario": "in-1",
+   "group": "Insufficient evidence",
+   "condition": "full_history",
+   "member": "eng-10",
+   "question": "What kind of pipeline are we building for Helix Bio?",
+   "answer": "We are building a genomics pipeline for Helix Bio. The data team uses AWS Batch, but their IT lead is migrating to GCP Batch, creating a conflict that needs resolution.",
+   "ctx": 114,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-2-q1",
+   "scenario": "in-2",
+   "group": "Insufficient evidence",
+   "condition": "full_history",
+   "member": "sales-02",
+   "question": "What renewal amount are we expecting from Ivory Retail?",
+   "answer": "The renewal amount for Ivory Retail is not specified in the approved, active memories. The only related memory is a discussion from September 12th about starting renewal conversations next month, but no dollar figure is provided.",
+   "ctx": 69,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "in-2-q2",
+   "scenario": "in-2",
+   "group": "Insufficient evidence",
+   "condition": "full_history",
+   "member": "sales-02",
+   "question": "Who is leading the Ivory Retail renewal?",
+   "answer": "sales-03 is leading the Ivory Retail renewal.",
+   "ctx": 69,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-2-q3",
+   "scenario": "in-2",
+   "group": "Insufficient evidence",
+   "condition": "full_history",
+   "member": "eng-04",
+   "question": "What's the rule for pricing on big renewals?",
+   "answer": "Any renewal over $100k needs exec sign-off before pricing goes to the client.",
+   "ctx": 31,
+   "n_mem": 1,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-3-q1",
+   "scenario": "in-3",
+   "group": "Insufficient evidence",
+   "condition": "full_history",
+   "member": "eng-02",
+   "question": "How long will the Kite Energy billing migration take?",
+   "answer": "The Kite Energy billing migration is estimated to take between 6 and 10 weeks, based on conflicting estimates from the engineering team. One estimate (m1) suggests 6 weeks, while another (m2) suggests 10 weeks due to the complexity of the legacy COBOL component. As noted in m1, the team intended to reconcile these numbers before quoting, but no final reconciled estimate is recorded in the active memories.",
+   "ctx": 70,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "uncertain"
+  },
+  {
+   "id": "in-3-q2",
+   "scenario": "in-3",
+   "group": "Insufficient evidence",
+   "condition": "full_history",
+   "member": "sales-01",
+   "question": "What timeline have we given Kite Energy?",
+   "answer": "We haven't given a specific timeline yet; we only said we'd confirm once engineering finishes its review.",
+   "ctx": 31,
+   "n_mem": 1,
+   "leaks": [],
+   "has_forbid": true,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-4-q1",
+   "scenario": "in-4",
+   "group": "Insufficient evidence",
+   "condition": "full_history",
+   "member": "sales-05",
+   "question": "What's the contract value for the Mosaic Health pilot?",
+   "answer": "I don't know.",
+   "ctx": 56,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "abstain"
+  },
+  {
+   "id": "in-4-q2",
+   "scenario": "in-4",
+   "group": "Insufficient evidence",
+   "condition": "full_history",
+   "member": "eng-06",
+   "question": "Which languages does the Mosaic chatbot need at launch?",
+   "answer": "The Mosaic chatbot needs English and Spanish at launch.",
+   "ctx": 51,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-4-q3",
+   "scenario": "in-4",
+   "group": "Insufficient evidence",
+   "condition": "full_history",
+   "member": "sales-05",
+   "question": "How long is the Mosaic Health pilot?",
+   "answer": "The Mosaic Health pilot is 3 months long, starting October 1.",
+   "ctx": 56,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  },
+  {
+   "id": "in-5-q1",
+   "scenario": "in-5",
+   "group": "Insufficient evidence",
+   "condition": "full_history",
+   "member": "eng-03",
+   "question": "When is the Opal Insurance portal launching?",
+   "answer": "December 8.",
+   "ctx": 71,
+   "n_mem": 2,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": false,
+   "stale": false,
+   "kind": "uncertain"
+  },
+  {
+   "id": "in-5-q2",
+   "scenario": "in-5",
+   "group": "Insufficient evidence",
+   "condition": "full_history",
+   "member": "sales-05",
+   "question": "Who has to confirm any change to the Opal launch date?",
+   "answer": "exec-01 must confirm any change to the Opal launch date.",
+   "ctx": 103,
+   "n_mem": 3,
+   "leaks": [],
+   "has_forbid": false,
+   "correct": true,
+   "stale": false,
+   "kind": "fact"
+  }
+ ]
+}

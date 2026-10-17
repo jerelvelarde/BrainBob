@@ -327,6 +327,164 @@ def stream_main(a):
               open(os.path.join(rd, "summary.json"), "w"), indent=1, default=str)
 
 
+CONDITIONS = ["none", "append_only", "maintained_no_audit", "maintained", "full_history"]
+PAIRS = [("maintained_no_audit", "append_only"), ("maintained", "maintained_no_audit"), ("append_only", "none")]
+
+
+def _udiff(before, after):
+    """Usage of one stage: per-role difference of llm.usage() snapshots."""
+    out = {}
+    for r, v in after.items():
+        b = before.get(r, {})
+        d = {k: v[k] - b.get(k, 0) for k in ("calls", "cached", "pt", "ct", "usd", "usd_all")}
+        if d["calls"]: out[r] = {k: (round(x, 5) if isinstance(x, float) else x) for k, x in d.items()}
+    return out
+
+
+def _boot(xs, ys, n=2000, seed=0):
+    import random as _r
+    d = [int(a_) - int(b_) for a_, b_ in zip(xs, ys)]; rg = _r.Random(seed); m = len(d)
+    if not m: return 0.0, 0.0, 0.0
+    bs = sorted(sum(d[rg.randrange(m)] for _ in range(m)) / m for _ in range(n))
+    return sum(d) / m, bs[int(0.025 * n)], bs[int(0.975 * n) - 1]
+
+
+def correctness_main(a):
+    """Rusty Rod correctness suite (SPEC-correctness.md). One fresh store per scenario per condition; one fresh agent
+    per question; retrieval top 10 over the member's readable scopes only; deterministic grading in adapters/rusty_rod."""
+    import hashlib
+    from adapters import rusty_rod as rr
+    from brainbob import acl as acl_mod, audit as audit_mod, maintain
+    org = acl_mod.Org.load(rr.ORG_JSON)
+    scs = rr.scenarios(a.split, a.fast)
+    ts = datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + f"-correctness-{a.split}" + ("-fast" if a.fast else "")
+    rd = os.path.join(HERE, "results", ts); os.makedirs(rd)
+    events.set_log(os.path.join(rd, "events.jsonl"))
+    events.emit("bench.started", suite="rusty_rod_correctness", split=a.split, fast=a.fast, seed=a.seed, scenarios=[s["id"] for s in scs])
+    eps = {s["id"]: rr.episodes(s) for s in scs}
+    sids = [s["id"] for s in scs]
+    stages, walls, t_all = {}, {}, time.time()
+
+    def stage(name, fn):
+        u0, t0 = llm.usage(), time.time(); r = fn()
+        stages[name], walls[name] = _udiff(u0, llm.usage()), round(time.time() - t0, 1)
+        return r
+
+    def par(fn):  # scenario-level parallelism; episodes inside a scenario stay in order
+        with ThreadPoolExecutor(len(scs)) as ex: return [f.result() for f in [ex.submit(fn, s) for s in scs]]
+
+    def build(sid, how):
+        store = MemoryStore()
+        for e in eps[sid]:
+            if how == "append": curator.ingest(e, store)
+            else: maintain.ingest(e, store, org)
+        return store
+
+    stage("extraction", lambda: pmap(curator.extract, [e for s in scs for e in eps[s["id"]]]))
+    stores = {"append_only": dict(zip(sids, stage("ingest_append_only", lambda: par(lambda s: build(s["id"], "append"))))),
+              "maintained_no_audit": dict(zip(sids, stage("ingest_maintained", lambda: par(lambda s: build(s["id"], "maintain")))))}
+    # maintained = the same maintain.ingest (identical cached calls, separate store) + recent-conversation audit before
+    # answering; contradicted memories with approved evidence are proposed back through maintain (audit default)
+    stores["maintained"] = dict(zip(sids, par(lambda s: build(s["id"], "maintain"))))
+    audits = dict(zip(sids, stage("audit", lambda: par(lambda s: audit_mod.audit_recent(
+        stores["maintained"][s["id"]], eps[s["id"]], latest=50, sample=10, seed=a.seed, acl=org)))))
+
+    def ask(job):
+        sc, qi, q, cond = job
+        readable = set(org.readable_scopes(q["member"]))
+        if cond == "none": mems = []
+        elif cond == "full_history": mems = rr.as_memories(rr.readable_episodes(sc, q["member"], org))
+        else:
+            st = stores[cond][sc["id"]]
+            mems = [m for m in st.search(q["question"], k=max(1, len(st.all()))) if m.scope in readable][:10]
+        qid = f"{sc['id']}-q{qi}"
+        events.emit("memory.retrieved", task_id=qid, condition=cond, member=q["member"], memory_ids=[m.id for m in mems])
+        ans = agent.answer(q["question"], mems, now=sc["now"])
+        g = rr.grade(q, ans.text)
+        leak = [m.id for m in mems if m.scope in set(q.get("must_not_retrieve", [])) or m.scope not in readable]
+        events.emit("answer.produced", task_id=qid, condition=cond, answer=ans.text, cited_ids=ans.cited_ids, **g)
+        return dict(id=qid, scenario=sc["id"], group=sc["group"], condition=cond, member=q["member"], question=q["question"],
+                    answer=ans.text, ctx=tok(mems), n_mem=len(mems), leaks=leak, has_forbid=bool(q.get("forbid")), **g)
+    jobs = [(s, i, q, c) for c in CONDITIONS for s in scs for i, q in enumerate(s["questions"], 1)]
+    rows = {c: stage(f"answer_{c}", lambda c=c: pmap(ask, [j for j in jobs if j[3] == c])) for c in CONDITIONS}
+
+    state = {c: {s["id"]: rr.state_check(s, stores[c][s["id"]]) for s in scs} for c in stores}
+    # audit: evidence coverage (decisive episode sampled) kept apart from judgment accuracy (verdict vs fixture gold)
+    dec_all, dec_hit, scored, right, conf = 0, 0, 0, 0, collections.Counter()
+    for s in scs:
+        rep = audits[s["id"]]; d = rr.decisive_ids(s); dec_all += len(d); dec_hit += sum(i in rep.sampled_ids for i in d)
+        st = stores["maintained"][s["id"]]
+        for ch in rep.checks:
+            gold = rr.audit_gold(s, st.get(ch["memory_id"]), ch["episode_id"])
+            if gold is None: continue
+            scored += 1; right += ch["verdict"] == gold; conf[f"{gold}->{ch['verdict']}"] += 1
+    audit_sum = dict(seed=a.seed, latest=50, sample=10, episodes_sampled=sum(len(r.sampled_ids) for r in audits.values()),
+                     checks=sum(len(r.checks) for r in audits.values()), proposed=sum(c["proposed"] for r in audits.values() for c in r.checks),
+                     evidence_coverage=f"{dec_hit}/{dec_all}", judgment_accuracy=f"{right}/{scored}", confusion=dict(conf),
+                     per_scenario={k: dict(sampled=r.sampled_ids, counts=r.counts) for k, r in audits.items()})
+
+    fr = lambda xs: f"{sum(xs)}/{len(xs)}" if xs else "-"
+
+    def metrics(c):
+        rs = rows[c]
+        m = dict(accuracy=fr([r["correct"] for r in rs]), stale_usage=fr([r["stale"] for r in rs if r["has_forbid"] and r["kind"] != "abstain"]),
+                 abstention=fr([r["correct"] for r in rs if r["kind"] == "abstain"]), uncertainty=fr([r["correct"] for r in rs if r["kind"] == "uncertain"]),
+                 leakage=sum(len(r["leaks"]) for r in rs), avg_ctx_tokens=round(sum(r["ctx"] for r in rs) / max(1, len(rs))),
+                 by_group={g: fr([r["correct"] for r in rs if r["group"] == g]) for g in rr.GROUPS}, correct_update="-", unjustified_forgetting="-")
+        if c in state:
+            ups = [u for v in state[c].values() for u in v["updates"]]; ks = [k for v in state[c].values() for k in v["keeps"]]
+            allm = [x for st in stores[c].values() for x in st.all()]
+            m.update(correct_update=fr([u["correct"] for u in ups]), unjustified_forgetting=f"{sum(k['forgotten'] for k in ks)}/{len(ks)}",
+                     n_memories=len(allm), n_tentative=sum(x.status == "tentative" for x in allm), n_retired=sum(x.status == "retired" for x in allm))
+        return m
+    M = {c: metrics(c) for c in CONDITIONS}
+    boots = {}
+    for x, y in PAIRS:
+        X, Y = sorted(rows[x], key=lambda r: r["id"]), sorted(rows[y], key=lambda r: r["id"])
+        boots[f"{x} - {y}"] = dict(accuracy=_boot([r["correct"] for r in X], [r["correct"] for r in Y]),
+                                   stale=_boot([r["stale"] for r in X], [r["stale"] for r in Y]))
+    u, usd, usd_all = cost_total()
+    roles = llm._roles()
+    phash = lambda s: hashlib.sha256(s.encode()).hexdigest()[:12]
+    summary = dict(suite="rusty_rod_correctness", fixture=rr.load()["version"], split=a.split, fast=a.fast, n_scenarios=len(scs),
+                   n_questions=len(rows["none"]), seed=a.seed, retrieval_top_k=10, models={r: roles[r]["model"] for r in ("curator", "judge", "agent")},
+                   prompt_versions=dict(agent=phash(agent.PROMPT), maintain=phash(maintain.PROMPT), audit=phash(audit_mod.PROMPT), curator=phash(curator.PROMPT)),
+                   metrics=M, bootstrap={k: {kk: [round(100 * x, 1) for x in vv] for kk, vv in v.items()} for k, v in boots.items()},
+                   audit=audit_sum, state=state, cost_by_stage=stages, wall_by_stage=walls, cost_usd_fresh=round(usd, 4),
+                   cost_usd_incl_cached=round(usd_all, 4), wall_s=round(time.time() - t_all, 1), rows=[r for c in CONDITIONS for r in rows[c]])
+    json.dump(summary, open(os.path.join(rd, "summary.json"), "w", encoding="utf-8"), indent=1, ensure_ascii=False, default=str)
+    cols = ["accuracy", "stale_usage", "correct_update", "unjustified_forgetting", "abstention", "uncertainty", "leakage", "avg_ctx_tokens"]
+    L = [f"# BrainBob correctness suite: Rusty Rod ({a.split}{', fast' if a.fast else ''}, {ts})", "",
+         f"{len(scs)} scenarios, {len(rows['none'])} questions per condition. Answering {roles['agent']['model']}; extraction {roles['curator']['model']}; "
+         f"judge {roles['judge']['model']}. Retrieval top 10 over the asking member's readable scopes; full_history gets every readable raw episode in date order, no retrieval. Audit seed {a.seed}.", "",
+         "| condition | " + " | ".join(cols) + " |", "|---" * (len(cols) + 1) + "|"]
+    for c in CONDITIONS: L.append(f"| {c} | " + " | ".join(str(M[c][k]) for k in cols) + " |")
+    L += ["", "| condition | " + " | ".join(rr.GROUPS) + " |", "|---" * (len(rr.GROUPS) + 1) + "|"]
+    for c in CONDITIONS: L.append(f"| {c} | " + " | ".join(M[c]["by_group"][g] for g in rr.GROUPS) + " |")
+    L += ["", "## Paired bootstrap (2000 resamples over the same questions), percentage points"]
+    for k, v in summary["bootstrap"].items():
+        L.append(f"- {k}: accuracy {v['accuracy'][0]:+.1f} [{v['accuracy'][1]:+.1f}, {v['accuracy'][2]:+.1f}]; stale-fact usage {v['stale'][0]:+.1f} [{v['stale'][1]:+.1f}, {v['stale'][2]:+.1f}]")
+    L += ["", "## Recent-conversation audit (maintained condition, run before answering)",
+          f"- seed {a.seed}; sampled {audit_sum['episodes_sampled']} episodes, {audit_sum['checks']} memory checks, {audit_sum['proposed']} corrections proposed through maintain.",
+          f"- Evidence coverage (decisive episode sampled): {audit_sum['evidence_coverage']}. Each scenario has at most 8 episodes, so a sample of 10 takes all of them; coverage is complete by construction here.",
+          f"- Judgment accuracy (verdict matches fixture gold, only pairs the fixture decides): {audit_sum['judgment_accuracy']}; {dict(conf)}",
+          "", "## Cost and latency by stage", "", "| stage | role | calls | cached | prompt tok | completion tok | USD fresh | wall s |", "|---|---|---|---|---|---|---|---|"]
+    for sname, rs_ in stages.items():
+        for r, v in rs_.items(): L.append(f"| {sname} | {r} | {v['calls']} | {v['cached']} | {v['pt']} | {v['ct']} | {v['usd']:.4f} | {walls[sname]} |")
+    L += ["", f"Total fresh ${usd:.4f} (incl. cached ${usd_all:.4f}); wall {summary['wall_s']}s. Prompt hashes {summary['prompt_versions']}.", "",
+          "## Grading rules (deterministic, fixed before running)",
+          "- Text is lowercased to alphanumerics; a phrase matches with a word boundary on the left and no digit on the right.",
+          "- Fact question: correct if any accepted string appears. Stale-fact usage: a forbid value appears (counted separately even when the right value is also present; abstain questions excluded).",
+          "- abstain: an 'I don't know'-type phrase and no forbid value. uncertain: every listed value appears, or a conflict/unresolved phrase appears.",
+          "- Access leakage: retrieved memories whose scope is in must_not_retrieve or outside the member's readable scopes (must be 0).",
+          "- Correct update: an active non-tentative memory has the new value and no active memory states the old value without the new one. Unjustified forgetting: a keep value survives only in retired memories.",
+          "", "## Failures (maintained)"]
+    for r in rows["maintained"]:
+        if not r["correct"] or r["stale"]: L.append(f"- {r['id']} [{r['kind']}{', stale' if r['stale'] else ''}] {r['member']}: {r['question']} -> {r['answer'][:220]!r}")
+    open(os.path.join(rd, "results.md"), "w", encoding="utf-8").write("\n".join(L))
+    print("\n".join(L[:12 + 2 * len(CONDITIONS)])); print(rd)
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); sp = ap.add_subparsers(dest="cmd", required=True)
     l = sp.add_parser("locomo"); l.add_argument("--convs", type=int, default=2); l.add_argument("--fast", action="store_true"); l.add_argument("--writers", default="careful"); l.set_defaults(limit=None)
@@ -334,6 +492,7 @@ if __name__ == "__main__":
     st = sp.add_parser("stream"); st.add_argument("adapter"); st.add_argument("--fast", action="store_true"); st.add_argument("--n-train", type=int, default=60)
     st.add_argument("--n-heldout", type=int, default=60); st.add_argument("--conc", type=int, default=32); st.add_argument("--seed", type=int, default=42); st.add_argument("--batch", type=int, default=1)
     m = sp.add_parser("longmemeval"); m.add_argument("--n", type=int, default=50); m.add_argument("--conditions", default="brainbob")
+    co = sp.add_parser("correctness"); co.add_argument("--split", choices=["heldout", "dev"], default="heldout"); co.add_argument("--fast", action="store_true"); co.add_argument("--seed", type=int, default=7)
     a = ap.parse_args()
-    {"locomo": locomo_main, "diag": diag_main, "longmemeval": lme_main, "stream": stream_main}[a.cmd](a)
+    {"locomo": locomo_main, "diag": diag_main, "longmemeval": lme_main, "stream": stream_main, "correctness": correctness_main}[a.cmd](a)
     sys.stdout.flush(); os._exit(0)
