@@ -1,0 +1,23 @@
+{"world_id": "scoped-assembly", "seq": 1, "event": {"type": "fact", "id": "s1", "key": "launch", "value": "2026-11-06", "scope": "org", "actor": "exec", "approved": true, "depends_on": []}}
+{"world_id": "scoped-assembly", "seq": 2, "event": {"type": "fact", "id": "s2", "key": "format", "value": "bullets", "scope": "personal", "actor": "sales", "approved": true, "depends_on": []}}
+{"world_id": "scoped-assembly", "seq": 3, "event": {"type": "fact", "id": "s3", "key": "tone", "value": "concise", "scope": "sales", "actor": "sales", "approved": true, "depends_on": []}}
+{"world_id": "scoped-assembly", "seq": 4, "event": {"type": "fact", "id": "s4", "key": "private-code", "value": "cedar-731", "scope": "eng", "actor": "eng", "approved": true, "depends_on": []}}
+{"world_id": "authority-change", "seq": 1, "event": {"type": "fact", "id": "a1", "key": "launch", "value": "2026-11-06", "scope": "org", "actor": "exec", "approved": true, "depends_on": []}}
+{"world_id": "authority-change", "seq": 2, "event": {"type": "fact", "id": "a2", "key": "launch", "value": "2026-11-13", "scope": "org", "actor": "eng", "approved": false, "depends_on": []}}
+{"world_id": "authority-change", "seq": 4, "event": {"type": "fact", "id": "a3", "key": "launch", "value": "2026-11-13", "scope": "org", "actor": "sales", "approved": true, "depends_on": []}}
+{"world_id": "authority-change", "seq": 6, "event": {"type": "fact", "id": "a4", "key": "launch", "value": "2026-11-13", "scope": "org", "actor": "exec", "approved": true, "depends_on": []}}
+{"world_id": "cross-org-publication", "seq": 1, "event": {"type": "fact", "id": "p1", "key": "launch", "value": "2026-11-13", "scope": "org", "actor": "exec", "approved": true, "depends_on": []}}
+{"world_id": "cross-org-publication", "seq": 2, "event": {"type": "fact", "id": "p2", "key": "margin", "value": "42 percent", "scope": "sales", "actor": "sales", "approved": true, "depends_on": []}}
+{"world_id": "cross-org-publication", "seq": 4, "event": {"type": "fact", "id": "p3", "key": "launch", "value": "2026-11-13", "scope": "client", "actor": "publisher", "approved": true, "depends_on": ["p1"]}}
+{"world_id": "revocation", "seq": 1, "event": {"type": "fact", "id": "r1", "key": "contact", "value": "support@atlas.example", "scope": "org", "actor": "exec", "approved": true, "depends_on": []}}
+{"world_id": "revocation", "seq": 2, "event": {"type": "fact", "id": "r2", "key": "sales-code", "value": "violet-204", "scope": "sales", "actor": "sales", "approved": true, "depends_on": []}}
+{"world_id": "revocation", "seq": 4, "event": {"type": "revoke", "scope": "sales", "principal": "sales"}}
+{"world_id": "conflict-retention", "seq": 1, "event": {"type": "fact", "id": "c1", "key": "goal", "value": "reduce response time", "scope": "org", "actor": "exec", "approved": true, "depends_on": []}}
+{"world_id": "conflict-retention", "seq": 2, "event": {"type": "fact", "id": "c2", "key": "budget", "value": "USD 12000", "scope": "org", "actor": "exec", "approved": true, "depends_on": []}}
+{"world_id": "conflict-retention", "seq": 3, "event": {"type": "fact", "id": "c3", "key": "budget", "value": "USD 15000", "scope": "org", "actor": "eng", "approved": false, "depends_on": []}}
+{"world_id": "conflict-retention", "seq": 4, "event": {"type": "audit", "source_ids": ["c3"]}}
+{"world_id": "conflict-retention", "seq": 7, "event": {"type": "fact", "id": "c4", "key": "forecast", "value": "USD 9000", "scope": "eng", "actor": "eng", "approved": false, "depends_on": []}}
+{"world_id": "correction-propagation", "seq": 1, "event": {"type": "fact", "id": "d1", "key": "launch", "value": "2026-11-06", "scope": "org", "actor": "exec", "approved": true, "depends_on": []}}
+{"world_id": "correction-propagation", "seq": 2, "event": {"type": "fact", "id": "d2", "key": "summary-launch", "value": "2026-11-06", "scope": "client", "actor": "publisher", "approved": true, "depends_on": ["d1"]}}
+{"world_id": "correction-propagation", "seq": 4, "event": {"type": "fact", "id": "d3", "key": "launch", "value": "2026-11-13", "scope": "org", "actor": "exec", "approved": true, "depends_on": []}}
+{"world_id": "correction-propagation", "seq": 6, "event": {"type": "fact", "id": "d4", "key": "summary-launch", "value": "2026-11-13", "scope": "client", "actor": "publisher", "approved": true, "depends_on": ["d3"]}}

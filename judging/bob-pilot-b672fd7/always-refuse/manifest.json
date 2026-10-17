@@ -1,0 +1,14 @@
+{
+  "benchmark": "Bob public diagnostic pilot v0.1",
+  "split": null,
+  "created_at": "2026-10-17T20:50:26.206410+00:00",
+  "commit": "b672fd744ef31d3cc5ac49cf29460ba673a3fc0c",
+  "benchmark_worktree_dirty": false,
+  "sha256": {
+    "benchmark.py": "9699fd12887095ff49c88c100cb72b65061d3c983c10c79137d20b042cb454f6",
+    "worlds.json": "1cc01a74015aa8f0af95bd5e113bf4227eda8be17a4464b826d0fb614757fc54",
+    "eval.jsonl": "3959d2afe4a95cbb186f6dc23550b64d00615838e75d0de429a17f4f61d8d03e",
+    "dev.jsonl": "7f1a90e293aad1d2ce994417777d2f283d043d442b982d78287de615f966595b"
+  },
+  "status": "public synthetic non-Core; no hidden-test or production conformance claim"
+}

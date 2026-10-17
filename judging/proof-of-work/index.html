@@ -76,6 +76,7 @@
         <nav class="timeline-nav" aria-label="Changelog timeline">
           <h2>OCT 17 / TIMELINE</h2>
           <ul>
+            <li><a href="#2026-10-17-135006-bob-executable-pilot"><time datetime="2026-10-17T13:50:06-07:00">1:50:06 PM PDT</time>Executable Bob benchmark pilot</a></li>
             <li><a aria-current="location" href="#2026-10-17-132422-bob-benchmark-spec"><time datetime="2026-10-17T13:24:22-07:00">1:24:22 PM PDT</time>BOB Benchmark specification</a></li>
             <li><a href="#2026-10-17-132344-org-mode-alignment"><time datetime="2026-10-17T13:23:44-07:00">1:23:44 PM PDT</time>Backend / frontend alignment</a></li>
             <li><a href="#2026-10-17-131957-shared-brain-benchmark-spec"><time datetime="2026-10-17T13:19:57-07:00">1:19:57 PM PDT</time>Benchmark specification</a></li>
@@ -102,6 +103,18 @@
       <h2 class="date-heading">October 17, 2026 <span aria-hidden="true">/</span> Shared Brain <span aria-hidden="true">/</span> Pacific Time (PDT)</h2>
 
       <!-- Add new entries here, newest first. Use real timestamps and link the evidence. -->
+
+      <article class="entry" id="2026-10-17-135006-bob-executable-pilot">
+        <div class="time"><time datetime="2026-10-17T13:50:06-07:00">1:50:06 PM PDT</time><span>Implementation commit</span></div>
+        <div><h2>Executable Bob benchmark and small-model handoff</h2>
+          <ul><li><span class="label">Built</span> a dependency-free scorer, 60 balanced memory-pair evaluation cases, 12 separate development cases, and six structured worlds with 18 checkpoints.</li>
+          <li><span class="label">Verified</span> 18 tests covering missing/duplicate predictions, input hashes, stale answers, citation fidelity, protected context, and negative controls.</li>
+          <li><span class="label">Measured</span> deterministic controls: maintained rules 18/18, append-only 15/18, no-memory/always-refuse 6/18; unfiltered rules disclosed protected information on 4/18 checkpoints.</li></ul>
+          <p class="note">Prepared for Jerel; Bonan owns the separate fine-tuning experiment. Public synthetic non-Core diagnostics, not BrainBob or trained-model results. No API calls. Independent annotation and base/tuned model measurements remain pending.</p>
+          <p class="commit"><a href="https://github.com/jerelvelarde/BrainBob/commit/b672fd744ef31d3cc5ac49cf29460ba673a3fc0c">Implementation b672fd7</a> · <a href="../bob-pilot-b672fd7/README.md">Run evidence and limitations</a> · <a href="../../benchmarks/bob/README.md">Reproduction and training handoff</a></p>
+          <details><summary>Verification artifacts</summary><p><a href="../bob-pilot-b672fd7/tests.txt">18-test transcript</a> · <a href="../bob-pilot-b672fd7/maintained/metrics.json">Maintained reference metrics</a> · <a href="../bob-pilot-b672fd7/unfiltered/metrics.json">Unfiltered negative control</a> · <a href="../bob-pilot-b672fd7/constant-same.metrics.json">Constant-label pair control</a></p></details>
+        </div>
+      </article>
 
       <article class="entry" id="2026-10-17-132422-bob-benchmark-spec">
         <div class="time"><time datetime="2026-10-17T13:24:22-07:00">1:24:22 PM PDT</time><span>Specification commit</span></div>
