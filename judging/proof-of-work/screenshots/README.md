@@ -32,3 +32,5 @@ and no image establishes live model inference or measured memory accuracy.
 App sources were committed and unchanged during these captures; only new evidence files were present.
 The character study is now a retained design page at `/character-study`, including a movement toggle.
 Neither screenshot establishes the planned filing, writing, burning-paper, or teaching animations.
+
+The approved version 1 appearance, palette, proportions, and animation requirements are documented in the [final character specification](../../../docs/character-design.md). It embeds the same original captures above; no new screenshot or later capture time is implied.
