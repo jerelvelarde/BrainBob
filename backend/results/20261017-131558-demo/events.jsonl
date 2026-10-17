@@ -1,0 +1,52 @@
+{"type": "memory.added", "ts": 1792268159.28629, "seq": 1, "memory": {"id": "m1", "text": "Mr. Krabs (owner) stated that The Krusty Krab closes at 10 PM every weekday, Monday through Friday.", "author": "Krusty Krab", "origin": "ep-a297cfd7", "date": "2026-10-01", "status": "trial", "scope": "krusty-krab", "reason": "", "flagged": false, "supersedes": null, "owner": null, "authority": "discussion", "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B", "conflicts_with": []}, "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B"}
+{"type": "episode.ingested", "ts": 1792268159.28629, "seq": 2, "episode_id": "ep-a297cfd7", "source": "synthetic-seed", "n_memories": 1}
+{"type": "memory.added", "ts": 1792268159.7163966, "seq": 3, "memory": {"id": "m2", "text": "Krusty Krab changed its weekday hours, now closes at 6 PM instead of 10 PM", "author": "Sales Team", "origin": "ep-20073529", "date": "2026-10-15", "status": "trial", "scope": "krusty-krab/sales", "reason": "", "flagged": false, "supersedes": null, "owner": null, "authority": "discussion", "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B", "conflicts_with": []}, "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B"}
+{"type": "memory.added", "ts": 1792268159.717585, "seq": 4, "memory": {"id": "m3", "text": "Catering orders need 48 hours' notice", "author": "Sales Team", "origin": "ep-20073529", "date": "2026-10-15", "status": "trial", "scope": "krusty-krab/sales", "reason": "", "flagged": false, "supersedes": null, "owner": null, "authority": "discussion", "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B", "conflicts_with": []}, "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B"}
+{"type": "episode.ingested", "ts": 1792268159.717585, "seq": 5, "episode_id": "ep-20073529", "source": "synthetic-seed", "n_memories": 2}
+{"type": "memory.retrieved", "ts": 1792268159.7215834, "seq": 6, "task_id": "t-29d41ee2", "memory_ids": ["m1", "m2", "m3"]}
+{"type": "answer.produced", "ts": 1792268160.0843065, "seq": 7, "task_id": "t-29d41ee2", "answer": "No. The Krusty Krab closes at 6 PM on weekdays, so it is closed at 7 PM on a Tuesday.", "cited_ids": ["m2"]}
+{"type": "evaluation.started", "ts": 1792268160.6082172, "seq": 8, "task_id": "t-29d41ee2", "memory_ids": ["m2"]}
+{"type": "memory.checked", "ts": 1792268161.650577, "seq": 9, "task_id": "t-29d41ee2", "memory_id": "m2", "with_correct": false, "without_correct": true, "flipped": true}
+{"type": "evidence.recorded", "ts": 1792268161.6510816, "seq": 10, "memory_id": "m2", "author": "Sales Team", "shown": true, "correct": false, "task_id": "t-29d41ee2"}
+{"type": "evidence.recorded", "ts": 1792268161.6510816, "seq": 11, "memory_id": "m2", "author": "Sales Team", "shown": false, "correct": true, "task_id": "t-29d41ee2"}
+{"type": "evaluation.finished", "ts": 1792268161.6510816, "seq": 12, "task_id": "t-29d41ee2", "checked": 1, "flips": 1}
+{"type": "memory.retrieved", "ts": 1792268161.6540866, "seq": 13, "task_id": "t-d30d4266", "memory_ids": ["m1", "m2", "m3"]}
+{"type": "answer.produced", "ts": 1792268162.184481, "seq": 14, "task_id": "t-d30d4266", "answer": "No. The Krusty Krab closes at 6 PM on weekdays, so it is closed at 8 PM on a Monday.", "cited_ids": ["m2"]}
+{"type": "evaluation.started", "ts": 1792268163.1849499, "seq": 15, "task_id": "t-d30d4266", "memory_ids": ["m2"]}
+{"type": "memory.checked", "ts": 1792268164.1071327, "seq": 16, "task_id": "t-d30d4266", "memory_id": "m2", "with_correct": false, "without_correct": true, "flipped": true}
+{"type": "evidence.recorded", "ts": 1792268164.1081352, "seq": 17, "memory_id": "m2", "author": "Sales Team", "shown": true, "correct": false, "task_id": "t-d30d4266"}
+{"type": "evidence.recorded", "ts": 1792268164.1081352, "seq": 18, "memory_id": "m2", "author": "Sales Team", "shown": false, "correct": true, "task_id": "t-d30d4266"}
+{"type": "evaluation.finished", "ts": 1792268164.1081352, "seq": 19, "task_id": "t-d30d4266", "checked": 1, "flips": 1}
+{"type": "memory.retrieved", "ts": 1792268164.1101346, "seq": 20, "task_id": "t-c40929e9", "memory_ids": ["m3", "m1", "m2"]}
+{"type": "answer.produced", "ts": 1792268164.5544205, "seq": 21, "task_id": "t-c40929e9", "answer": "48 hours' notice", "cited_ids": ["m3"]}
+{"type": "evaluation.started", "ts": 1792268165.865842, "seq": 22, "task_id": "t-c40929e9", "memory_ids": ["m3"]}
+{"type": "memory.checked", "ts": 1792268169.7241967, "seq": 23, "task_id": "t-c40929e9", "memory_id": "m3", "with_correct": true, "without_correct": false, "flipped": true}
+{"type": "evidence.recorded", "ts": 1792268169.7241967, "seq": 24, "memory_id": "m3", "author": "Sales Team", "shown": true, "correct": true, "task_id": "t-c40929e9"}
+{"type": "evidence.recorded", "ts": 1792268169.72527, "seq": 25, "memory_id": "m3", "author": "Sales Team", "shown": false, "correct": false, "task_id": "t-c40929e9"}
+{"type": "evaluation.finished", "ts": 1792268169.72527, "seq": 26, "task_id": "t-c40929e9", "checked": 1, "flips": 1}
+{"type": "memory.retrieved", "ts": 1792268169.7273078, "seq": 27, "task_id": "t-55310685", "memory_ids": ["m3", "m1", "m2"]}
+{"type": "answer.produced", "ts": 1792268170.2982001, "seq": 28, "task_id": "t-55310685", "answer": "No. Catering orders require 48 hours' notice, and the Krusty Krab's current weekday closing time is 6 PM. A catering order for tomorrow would not meet the notice requirement.", "cited_ids": ["m3", "m2"]}
+{"type": "evaluation.started", "ts": 1792268172.7871816, "seq": 29, "task_id": "t-55310685", "memory_ids": ["m3", "m2"]}
+{"type": "memory.checked", "ts": 1792268174.1488702, "seq": 30, "task_id": "t-55310685", "memory_id": "m3", "with_correct": true, "without_correct": false, "flipped": true}
+{"type": "memory.checked", "ts": 1792268175.51852, "seq": 31, "task_id": "t-55310685", "memory_id": "m2", "with_correct": true, "without_correct": true, "flipped": false}
+{"type": "evidence.recorded", "ts": 1792268175.5205247, "seq": 32, "memory_id": "m3", "author": "Sales Team", "shown": true, "correct": true, "task_id": "t-55310685"}
+{"type": "evidence.recorded", "ts": 1792268175.5235238, "seq": 33, "memory_id": "m3", "author": "Sales Team", "shown": false, "correct": false, "task_id": "t-55310685"}
+{"type": "evaluation.finished", "ts": 1792268175.525518, "seq": 34, "task_id": "t-55310685", "checked": 2, "flips": 1}
+{"type": "memory.retrieved", "ts": 1792268175.5356088, "seq": 35, "task_id": "t-36d91831", "memory_ids": ["m3", "m1", "m2"]}
+{"type": "answer.produced", "ts": 1792268175.7698321, "seq": 36, "task_id": "t-36d91831", "answer": "48 hours", "cited_ids": ["m3"]}
+{"type": "evaluation.started", "ts": 1792268176.025915, "seq": 37, "task_id": "t-36d91831", "memory_ids": ["m3"]}
+{"type": "memory.checked", "ts": 1792268176.7687218, "seq": 38, "task_id": "t-36d91831", "memory_id": "m3", "with_correct": true, "without_correct": false, "flipped": true}
+{"type": "evidence.recorded", "ts": 1792268176.7687218, "seq": 39, "memory_id": "m3", "author": "Sales Team", "shown": true, "correct": true, "task_id": "t-36d91831"}
+{"type": "evidence.recorded", "ts": 1792268176.7687218, "seq": 40, "memory_id": "m3", "author": "Sales Team", "shown": false, "correct": false, "task_id": "t-36d91831"}
+{"type": "evaluation.finished", "ts": 1792268176.7697186, "seq": 41, "task_id": "t-36d91831", "checked": 1, "flips": 1}
+{"type": "memory.retrieved", "ts": 1792268176.9626298, "seq": 42, "task_id": "t-c8c12cbf", "memory_ids": ["m1", "m2", "m3"]}
+{"type": "answer.produced", "ts": 1792268177.2769437, "seq": 43, "task_id": "t-c8c12cbf", "answer": "6 PM", "cited_ids": ["m2"]}
+{"type": "evaluation.started", "ts": 1792268177.6659544, "seq": 44, "task_id": "t-c8c12cbf", "memory_ids": ["m2"]}
+{"type": "memory.checked", "ts": 1792268187.866774, "seq": 45, "task_id": "t-c8c12cbf", "memory_id": "m2", "with_correct": false, "without_correct": true, "flipped": true}
+{"type": "evidence.recorded", "ts": 1792268187.868, "seq": 46, "memory_id": "m2", "author": "Sales Team", "shown": true, "correct": false, "task_id": "t-c8c12cbf"}
+{"type": "evidence.recorded", "ts": 1792268187.868, "seq": 47, "memory_id": "m2", "author": "Sales Team", "shown": false, "correct": true, "task_id": "t-c8c12cbf"}
+{"type": "evaluation.finished", "ts": 1792268187.868, "seq": 48, "task_id": "t-c8c12cbf", "checked": 1, "flips": 1}
+{"type": "memory.retired", "ts": 1792268188.3251784, "seq": 49, "memory_id": "m2", "reason": "harmful on ['t-29d41ee2', 't-d30d4266', 't-c8c12cbf']", "task_ids": ["t-29d41ee2", "t-d30d4266", "t-c8c12cbf"], "confirmed": true}
+{"type": "memory.promoted", "ts": 1792268188.3251784, "seq": 50, "memory_id": "m3", "reason": "helpful on ['t-c40929e9', 't-55310685', 't-36d91831']"}
+{"type": "memory.retrieved", "ts": 1792268188.328407, "seq": 51, "task_id": "t-636fd536", "memory_ids": ["m1", "m3"]}
+{"type": "answer.produced", "ts": 1792268188.7704062, "seq": 52, "task_id": "t-636fd536", "answer": "The Krusty Krab closes at 10 PM on Thursdays, so a customer can walk in up until 10 PM.", "cited_ids": ["m1"]}
