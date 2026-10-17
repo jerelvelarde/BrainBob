@@ -4,10 +4,13 @@ import assert from "node:assert/strict";
 
 const base = `${process.env.UI_URL ?? "http://127.0.0.1:3000"}/api/brainbob`;
 const member = "sales-01";
+const auth = process.env.BRAINBOB_DEMO_PASSWORD ? {
+  Authorization: `Basic ${Buffer.from(`brainbob:${process.env.BRAINBOB_DEMO_PASSWORD}`).toString("base64")}`,
+} : {};
 async function request(path, body, acting = member) {
   const response = await fetch(`${base}${path}`, {
     method: body === undefined ? "GET" : "POST",
-    headers: { "X-BrainBob-Member": acting, "Content-Type": "application/json" },
+    headers: { ...auth, "X-BrainBob-Member": acting, "Content-Type": "application/json" },
     body: body === undefined ? undefined : JSON.stringify(body),
     signal: AbortSignal.timeout(15000),
   });
@@ -35,7 +38,7 @@ async function replay(after = 0) {
   const abort = new AbortController();
   const timer = setTimeout(() => abort.abort(), 15000);
   try {
-    const response = await fetch(`${base}/events?member=${member}&after=${after}`, { signal: abort.signal });
+    const response = await fetch(`${base}/events?member=${member}&after=${after}`, { headers: auth, signal: abort.signal });
     assert.equal(response.status, 200);
     assert.match(response.headers.get("content-type"), /text\/event-stream/);
     let buffer = "";

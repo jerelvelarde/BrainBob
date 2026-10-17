@@ -7,6 +7,8 @@ from pathlib import Path
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
 import argparse
+import base64
+import os
 import hashlib
 import json
 import sys
@@ -31,8 +33,15 @@ def validate(data):
     assert dates == sorted(dates), 'Import sources in chronological order'
     assert len({ep['scope'] for ep in data['episodes']}) == 22
 
+def auth_headers():
+    password = os.environ.get('BRAINBOB_DEMO_PASSWORD')
+    if not password:
+        return {}
+    return {'Authorization': 'Basic ' + base64.b64encode(f'brainbob:{password}'.encode()).decode()}
+
+
 def request(base, member, path, body=None):
-    req = Request(base.rstrip('/') + path, headers={'X-BrainBob-Member':member, 'Content-Type':'application/json'},
+    req = Request(base.rstrip('/') + path, headers={**auth_headers(), 'X-BrainBob-Member':member, 'Content-Type':'application/json'},
                   data=json.dumps(body).encode() if body is not None else None)
     try:
         with urlopen(req, timeout=600) as response:
@@ -41,7 +50,7 @@ def request(base, member, path, body=None):
         raise RuntimeError(f'{path}: HTTP {error.code}') from None
 
 def receipts(base, member):
-    req = Request(base.rstrip('/') + '/events?member=' + member, headers={'X-BrainBob-Member':member})
+    req = Request(base.rstrip('/') + '/events?member=' + member, headers={**auth_headers(), 'X-BrainBob-Member':member})
     found = {}
     with urlopen(req, timeout=30) as response:
         for raw in response:

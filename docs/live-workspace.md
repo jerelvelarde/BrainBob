@@ -14,9 +14,9 @@ pnpm seed:company
 pnpm dev
 ```
 
-`pnpm backend` verifies the configured model endpoints using real provider requests before starting Bonan's unmodified server on port 3001. It stores the running company's JSONL data in ignored `data/workspace/`, separately from benchmark runs. `backend/.venv/bin/python scripts/run-live-backend.py --check` performs only the provider checks. The application launcher defaults to NVIDIA Nemotron Nano for extraction, NVIDIA Nemotron Super for chat, and GPT-OSS-120B for judging. The backend's model environment overrides remain available; benchmark defaults are unchanged.
+`pnpm backend` verifies the configured model endpoints using real provider requests before starting the backend server on port 3001. It stores the running company's JSONL data in ignored `data/workspace/`, separately from benchmark runs. `backend/.venv/bin/python scripts/run-live-backend.py --check` performs only the provider checks. The application launcher defaults to NVIDIA Nemotron Nano for extraction, NVIDIA Nemotron Super for chat, and GPT-OSS-120B for judging. The backend's model environment overrides remain available; benchmark defaults are unchanged.
 
-Next proxies `/api/brainbob` to `http://127.0.0.1:3001`. Set `BRAINBOB_API_URL` before starting Next to use another backend. There is no fallback answer or synthetic event generator if inference fails.
+Next proxies `/api/brainbob` to `http://127.0.0.1:3001`. Set server-side `BRAINBOB_API_URL` to use another backend. See [deployment instructions](deployment.md) for Vercel, the persistent backend and demo access protection. There is no fallback answer or synthetic event generator if inference fails.
 
 ## Source data
 
