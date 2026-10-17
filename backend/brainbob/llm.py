@@ -5,21 +5,23 @@ from openai import OpenAI
 
 CACHE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "cache")
 LIGHT = "nvidia/Nemotron-3.5-Lightning-30B-A3B"
+NANO = "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
 NOTHINK = {"chat_template_kwargs": {"enable_thinking": False}}
-PRICE = {LIGHT: (0.05, 0.20), "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B": (0.30, 2.40), "openai/gpt-oss-120b": (0.05, 0.25)}
+PRICE = {LIGHT: (0.05, 0.20), "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B": (0.30, 2.40), "openai/gpt-oss-120b": (0.05, 0.25), NANO: (0.05, 0.20)}
 _OVR = {}  # role -> default overrides (configure)
 
 
 def _roles():
     r = {
         "curator": dict(model=LIGHT, max_tokens=4096, temperature=0, extra_body=NOTHINK),
+        "curator_sloppy": dict(model=NANO, max_tokens=4096, temperature=float(os.environ.get("BRAINBOB_SLOPPY_TEMP", "1.2")), extra_body=NOTHINK),
         "agent": dict(model=os.environ.get("BRAINBOB_AGENT_MODEL", LIGHT), max_tokens=2048, temperature=0, extra_body=NOTHINK),
         "judge": dict(model="openai/gpt-oss-120b", max_tokens=2048, temperature=0, extra_body=None),
     }
     return {k: {**v, **_OVR.get(k, {})} for k, v in r.items()}
 
 
-_SEM = {"curator": threading.Semaphore(24), "agent": threading.Semaphore(16), "judge": threading.Semaphore(16)}
+_SEM = {"curator": threading.Semaphore(24), "curator_sloppy": threading.Semaphore(24), "agent": threading.Semaphore(16), "judge": threading.Semaphore(16)}
 _USAGE, _LOCK, _client = [], threading.Lock(), None
 
 
@@ -41,12 +43,13 @@ def _get_client():
     return _client
 
 
-def complete(role, messages, **kw):
+def complete(role, messages, fresh=False, **kw):
+    """fresh=True skips reading the cache (the result is still written to it)."""
     cfg = {**_roles()[role], **kw}  # kw overrides; None drops the param
     model = cfg["model"]
     payload = json.dumps([model, messages, cfg.get("max_tokens"), cfg.get("temperature"), cfg.get("extra_body")], sort_keys=True)
     path = os.path.join(CACHE, hashlib.sha256(payload.encode()).hexdigest() + ".json")
-    if os.path.exists(path):
+    if not fresh and os.path.exists(path):
         try:
             d = json.load(open(path))
             with _LOCK: _USAGE.append((role, model, d["pt"], d["ct"], True))

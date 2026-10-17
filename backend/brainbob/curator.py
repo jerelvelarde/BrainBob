@@ -9,11 +9,11 @@ SESSION:
 
 
 def _parse(txt):
-    m = re.search(r"\[.*\]", txt, re.S)
-    if m:
+    i = txt.find("[")
+    if i >= 0:
         try:
             out = []
-            for a in json.loads(m.group(0)):
+            for a in json.JSONDecoder().raw_decode(txt[i:])[0]:  # tolerates trailing garbage
                 if isinstance(a, str): out.append(a)
                 elif isinstance(a, dict): out.append(" ".join(str(v) for v in a.values()))
             if out: return out
@@ -28,18 +28,22 @@ def _parse(txt):
                 out += [str(x) for x in v] if isinstance(v, list) else [str(v)]
             return out
         except Exception: pass
-    return []
+    # last resort for truncated / garbled JSON: salvage clean quoted sentences
+    return [x for x in re.findall(r'"((?:[^"\
+]){15,300})"', txt) if x.isascii()]
 
 
-def extract(episode):
+def extract(episode, role="curator"):
     """The model call only (cached); lets callers prefetch many episodes in parallel and then ingest in order."""
-    c = llm.complete("curator", [{"role": "user", "content": PROMPT.format(date=episode.date, s=episode.text[:60000])}])
+    c = llm.complete(role, [{"role": "user", "content": PROMPT.format(date=episode.date, s=episode.text[:60000])}])
     return _parse(c)
 
 
-def ingest(episode, store, author="curator"):
+def ingest(episode, store, author=None, role="curator"):
+    """The author name defaults to the role that wrote the memories."""
+    author = author or role
     added = []
-    for f in extract(episode):
+    for f in extract(episode, role):
         m, _ = store.add(f, author=author, origin=episode.source, date=episode.date)
         if m: added.append(m)
     events.emit("episode.ingested", episode_id=episode.id, source=episode.source, n_memories=len(added))

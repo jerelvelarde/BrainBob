@@ -14,9 +14,9 @@ Question: {q}
 Answer concisely. Then, on the final line, list the memories you actually used in the form `CITED: m3, m7` (or `CITED: none`)."""
 
 
-def answer(question, memories, now=None):
+def answer(question, memories, now=None, fresh=False):
     mems = "\n".join(f"[m{i}] ({m.date}) {m.text}" for i, m in enumerate(memories, 1)) or "(no memories)"
-    c = llm.complete("agent", [{"role": "user", "content": PROMPT.format(mems=mems, now=now or "unknown", q=question)}])
+    c = llm.complete("agent", [{"role": "user", "content": PROMPT.format(mems=mems, now=now or "unknown", q=question)}], fresh=fresh)
     cited, text = [], c
     mt = re.search(r"CITED:\s*(.*)\s*$", c, re.I)
     if mt:

@@ -100,11 +100,11 @@ class Evaluator:
         return out
 
     def report(self):
-        authors = defaultdict(lambda: {"written": 0, "promoted": 0, "retired": 0, "flagged": 0, "harm_changes": 0})
+        authors = defaultdict(lambda: {"written": 0, "promoted": 0, "retired": 0, "flagged": 0, "helped": 0, "harmed": 0})
         for m in self.store.all():
             a = authors[m.author]; a["written"] += 1; a["promoted"] += m.status == "promoted"
             a["retired"] += m.status == "retired"; a["flagged"] += m.flagged
-            a["harm_changes"] += len(self.stats(m.id)["harmed"])
+            st = self.stats(m.id); a["helped"] += len(st["helped"]); a["harmed"] += len(st["harmed"])
         return {"authors": dict(authors),
                 "retired": [{"memory_id": m.id, "text": m.text, "author": m.author, "origin": m.origin, "reason": m.reason,
                              "task_ids": self.stats(m.id)["harmed"]} for m in self.store.all() if m.status == "retired"],
