@@ -12,7 +12,7 @@ import uuid
 from dataclasses import dataclass
 from typing import Any, Callable
 
-from fastapi import FastAPI, Header, HTTPException, Query
+from fastapi import FastAPI, Header, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from sse_starlette.sse import EventSourceResponse
 
@@ -104,11 +104,14 @@ class Task:
 
 def create_app(store, curator, agent, evaluator, judge, *, events=None,
                episode_factory=Episode, task_factory=Task, sse_once=False,
-               episodes_path=None) -> FastAPI:
+               episodes_path=None, org=None, ingest=None) -> FastAPI:
     """events: object with emit(type, **data), subscribe(), history(after=None); defaults to a local Bus.
     The core (curator/evaluator/store) is expected to emit memory.* / evidence.* itself via the
     same bus; the server emits episode.ingested, memory.retrieved, answer.produced.
-    episodes_path: jsonl file where every posted episode is appended (and reloaded from at start)."""
+    episodes_path: jsonl file where every posted episode is appended (and reloaded from at start).
+    org: brainbob.acl.Org or None. None = no permission checks. With an org, the viewer comes from header
+    X-BrainBob-Member (or ?member=, for EventSource): a demo identity, NOT authentication.
+    ingest: optional fn(episode, store, org) -> decisions, used instead of curator.ingest (maintain.ingest)."""
     bus = events or Bus()
     app = FastAPI(title="BrainBob")
     app.add_middleware(CORSMiddleware, allow_origins=ORIGINS, allow_methods=["*"], allow_headers=["*"])
@@ -123,6 +126,65 @@ def create_app(store, curator, agent, evaluator, judge, *, events=None,
                     d = json.loads(line)
                     episodes[d["id"]] = d
 
+    def who(request: Request, required: bool = True):
+        if org is None:
+            return None
+        m = request.headers.get("x-brainbob-member") or request.query_params.get("member")
+        if not m or m not in org.members:
+            if required:
+                raise HTTPException(401, "X-BrainBob-Member header required (demo identity)")
+            return None
+        return m
+
+    def mem_scopes() -> dict:
+        return {m.id: getattr(m, "scope", None) for m in store.all()}
+
+    def can_see_mem(viewer, scope) -> bool:
+        return org is None or (isinstance(scope, str) and org.can_read(viewer, scope))
+
+    def visible_mem(viewer, mid) -> bool:
+        return org is None or can_see_mem(viewer, mem_scopes().get(mid))
+
+    def need_mem(viewer, mid):
+        if org is not None and not visible_mem(viewer, mid):
+            raise HTTPException(404, "unknown memory id")
+
+    def need_write(viewer, mid):
+        need_mem(viewer, mid)
+        if org is not None and not org.can_write(viewer, mem_scopes().get(mid)):
+            raise HTTPException(403, "no write permission")
+
+    def event_visible(viewer, ev, ms=None) -> bool:
+        if org is None:
+            return True
+        ms = ms if ms is not None else mem_scopes()
+        mids = [ev.get(k) for k in ("memory_id", "new_id", "old_id")]
+        mids.append(ev["memory"].get("id") if isinstance(ev.get("memory"), dict) else None)
+        mids += list(ev.get("memory_ids") or []) + list(ev.get("cited_ids") or [])
+        for r in mids:
+            if r and not can_see_mem(viewer, ms.get(r)):
+                return False
+        eid = ev.get("episode_id")
+        if eid:
+            rec = episodes.get(eid)
+            if rec is None or not org.can_read(viewer, rec.get("scope") or ""):
+                return False
+        return True
+
+    def filter_report(o, viewer, ms):
+        if isinstance(o, list):
+            out = []
+            for x in o:
+                if isinstance(x, dict):
+                    mid = x.get("memory_id") or (x.get("id") if x.get("id") in ms else None)
+                    if mid and not can_see_mem(viewer, ms.get(mid)):
+                        continue
+                out.append(filter_report(x, viewer, ms))
+            return out
+        if isinstance(o, dict):
+            return {k: filter_report(v, viewer, ms) for k, v in o.items() if not (k in ms and not can_see_mem(viewer, ms[k]))}
+        return o
+
     def guarded(fn, *a):
         try:
             return fn(*a)
@@ -134,49 +196,81 @@ def create_app(store, curator, agent, evaluator, judge, *, events=None,
             raise HTTPException(422, str(e))
 
     @app.post("/episodes")
-    def post_episode(body: dict):
+    def post_episode(body: dict, request: Request):
+        if org is not None:
+            viewer = who(request, required=False) or (body.get("author") if body.get("author") in org.members else None)
+            if viewer is None:
+                raise HTTPException(401, "X-BrainBob-Member header required (demo identity)")
+            if body.get("author") and body["author"] != viewer:
+                raise HTTPException(403, "author must be the acting member")
+            body = dict(body, author=viewer, scope=body.get("scope") or org.member_path(viewer))
+            if not org.can_write(viewer, body["scope"]):
+                raise HTTPException(403, "no write permission for scope")
+            if body.get("authority") == "approved" and not org.can_approve(viewer, body["scope"]):
+                raise HTTPException(403, "no approve permission for scope")
         text = body.get("text")
         if not isinstance(text, str) or not text.strip():
             raise HTTPException(422, "text required")
         eid = "ep-" + uuid.uuid4().hex[:8]
         rec = {"id": eid, "text": text, "date": body.get("date") or time.strftime("%Y-%m-%d"),
                "source": body.get("source") or "api", "scope": body.get("scope") or "team",
-               "author": body.get("author")}
+               "author": body.get("author"), "authority": body.get("authority") or "discussion"}
         episodes[eid] = rec
         if episodes_path:
             with open(episodes_path, "a", encoding="utf8") as f:
                 f.write(json.dumps(rec, ensure_ascii=False) + "\n")
         ep = episode_factory(id=eid, text=text, date=rec["date"], source=rec["source"])
-        mems = curator.ingest(ep, _Scoped(store, body.get("scope"), body.get("author")))
+        scoped = _Scoped(store, body.get("scope"), body.get("author"))
+        if org is not None and ingest is not None:
+            for k in ("author", "scope", "authority"):
+                try:
+                    setattr(ep, k, rec[k])
+                except Exception:  # noqa: BLE001
+                    pass
+            res = ingest(ep, scoped, org)
+            mems = [getattr(d, "memory", d) for d in (res or []) if getattr(d, "memory", d) is not None]
+        else:
+            mems = curator.ingest(ep, scoped)
         if not any(e.get("type") == "episode.ingested" and e.get("episode_id") == eid for e in bus.history()):
             bus.emit("episode.ingested", episode_id=eid, source=rec["source"], n_memories=len(mems))  # curator did not
         return {"episode_id": eid, "memories": to_dict(mems)}
 
     @app.get("/episodes/{eid}")
-    def get_episode(eid: str):
+    def get_episode(eid: str, request: Request):
+        viewer = who(request)
         rec = episodes.get(eid)
-        if rec is None:
+        if rec is None or (org is not None and not org.can_read(viewer, rec.get("scope") or "")):
             raise HTTPException(404, "unknown episode id")
-        return {k: rec.get(k) for k in ("id", "text", "date", "source", "scope")}
+        keys = ("id", "text", "date", "source", "scope") + (("author", "authority") if org is not None else ())
+        return {k: rec.get(k) for k in keys}
 
     @app.post("/ask")
-    def post_ask(body: dict):
+    def post_ask(body: dict, request: Request):
+        viewer = who(request)
         q = body.get("question")
         if not isinstance(q, str) or not q.strip():
             raise HTTPException(422, "question required")
         tid = "t-" + uuid.uuid4().hex[:8]
         reader = body.get("reader")
-        mems = store.search(q, reader=reader) if reader else store.search(q)
+        if org is not None:
+            try:
+                mems = store.search(q, k=200)
+            except TypeError:
+                mems = store.search(q)
+            mems = [m for m in mems if can_see_mem(viewer, getattr(m, "scope", None))]
+        else:
+            mems = store.search(q, reader=reader) if reader else store.search(q)
         bus.emit("memory.retrieved", task_id=tid, memory_ids=[m.id for m in mems])
         ans = agent.answer(q, mems, body.get("now"))
         bus.emit("answer.produced", task_id=tid, answer=ans.text, cited_ids=list(ans.cited_ids))
-        tasks[tid] = {"question": q, "now": body.get("now"), "memories": mems, "answer": ans}
+        tasks[tid] = {"viewer": viewer, "question": q, "now": body.get("now"), "memories": mems, "answer": ans}
         return {"task_id": tid, "answer": ans.text, "cited_ids": list(ans.cited_ids), "memories": to_dict(mems)}
 
     @app.post("/feedback")
-    def post_feedback(body: dict):
+    def post_feedback(body: dict, request: Request):
+        viewer = who(request)
         rec = tasks.get(body.get("task_id"))
-        if rec is None:
+        if rec is None or (org is not None and rec.get("viewer") != viewer):
             raise HTTPException(404, "unknown task_id")
         correct = body.get("correct_answer")
         if not isinstance(correct, str):
@@ -191,7 +285,8 @@ def create_app(store, curator, agent, evaluator, judge, *, events=None,
         return {"evidence": out}
 
     @app.post("/review")
-    def post_review(body: dict | None = None):
+    def post_review(request: Request, body: dict | None = None):
+        viewer = who(request)
         def confirm(mid):
             """Remove the memory, re-answer a task it harmed with fresh=True, grade with the same judge."""
             for tid in evaluator.stats(mid)["harmed"]:
@@ -203,10 +298,14 @@ def create_app(store, curator, agent, evaluator, judge, *, events=None,
                     return True
             return False
         decisions = evaluator.review(confirm)
-        return {"decisions": to_dict(decisions)}
+        out = to_dict(decisions)
+        if org is not None:
+            out = filter_report(out, viewer, mem_scopes())
+        return {"decisions": out}
 
     @app.post("/memories/{mid}/correct")
-    def post_correct(mid: str, body: dict):
+    def post_correct(mid: str, body: dict, request: Request):
+        need_write(who(request), mid)
         text = body.get("text")
         if not isinstance(text, str) or not text.strip():
             raise HTTPException(422, "text required")
@@ -214,28 +313,32 @@ def create_app(store, curator, agent, evaluator, judge, *, events=None,
         return {"memory": to_dict(new), "retired_id": old.id}
 
     @app.post("/memories/{mid}/retire")
-    def post_retire(mid: str, body: dict | None = None):
+    def post_retire(mid: str, request: Request, body: dict | None = None):
+        need_write(who(request), mid)
         body = body or {}
         return {"memory": to_dict(guarded(store.retire, mid, body.get("reason") or "", body.get("author")))}
 
     @app.post("/memories/{mid}/lock")
-    def post_lock(mid: str, body: dict):
+    def post_lock(mid: str, body: dict, request: Request):
+        need_write(who(request), mid)
         owner = body.get("owner")
         if not isinstance(owner, str) or not owner.strip():
             raise HTTPException(422, "owner required")
         return {"memory": to_dict(guarded(store.lock, mid, owner))}
 
     @app.post("/memories/{mid}/resolve")
-    def post_resolve(mid: str, body: dict):
+    def post_resolve(mid: str, body: dict, request: Request):
+        need_write(who(request), mid)
         owner = body.get("owner")
         if not isinstance(owner, str) or not owner.strip():
             raise HTTPException(422, "owner required")
         return {"memory": to_dict(guarded(store.resolve, mid, owner, body.get("action"), body.get("text")))}
 
     @app.get("/memories/{mid}/history")
-    def get_history(mid: str):
+    def get_history(mid: str, request: Request):
+        viewer = who(request)
         by_id = {m.id: m for m in store.all()}
-        if mid not in by_id:
+        if mid not in by_id or not visible_mem(viewer, mid):
             raise HTTPException(404, "unknown memory id")
         chain = [by_id[mid]]
         while chain[0].supersedes in by_id:  # back to the root
@@ -245,17 +348,23 @@ def create_app(store, curator, agent, evaluator, judge, *, events=None,
             if not nxt or nxt[0] in chain:
                 break
             chain.append(nxt[0])
+        if org is not None:  # unreadable revisions are cut out of the chain
+            chain = [m for m in chain if can_see_mem(viewer, getattr(m, "scope", None))]
         ids = {m.id for m in chain}
+        ms = mem_scopes()
 
         def related(ev):
             refs = [ev.get("memory_id"), ev.get("new_id"), (ev.get("memory") or {}).get("id")]
             return any(r in ids for r in refs if r)
-        return {"chain": to_dict(chain), "events": [e for e in bus.history() if related(e)]}
+        return {"chain": to_dict(chain), "events": [e for e in bus.history() if related(e) and event_visible(viewer, e, ms)]}
 
     @app.get("/memories")
-    def get_memories(status: str | None = Query(None)):
+    def get_memories(request: Request, status: str | None = Query(None)):
+        viewer = who(request)
         out = []
         for m in store.all():
+            if not can_see_mem(viewer, getattr(m, "scope", None)):
+                continue
             d = to_dict(m)
             if status and d.get("status") != status:
                 continue
@@ -266,11 +375,14 @@ def create_app(store, curator, agent, evaluator, judge, *, events=None,
         return out
 
     @app.get("/report")
-    def get_report():
-        return to_dict(evaluator.report())
+    def get_report(request: Request):
+        viewer = who(request)
+        data = to_dict(evaluator.report())
+        return filter_report(data, viewer, mem_scopes()) if org is not None else data
 
     @app.get("/events")
-    async def get_events(after: int | None = Query(None), last_event_id: str | None = Header(None)):
+    async def get_events(request: Request, after: int | None = Query(None), last_event_id: str | None = Header(None)):
+        viewer = who(request)
         if after is None and last_event_id and last_event_id.strip().isdigit():
             after = int(last_event_id)
 
@@ -280,6 +392,8 @@ def create_app(store, curator, agent, evaluator, judge, *, events=None,
                 hist = bus.history(after)
                 last = hist[-1]["seq"] if hist else (after or 0)
                 for ev in hist:
+                    if not event_visible(viewer, ev):
+                        continue
                     yield {"id": str(ev["seq"]), "data": json.dumps(ev)}
                 yield {"id": str(last), "data": json.dumps({"type": "replay.done", "seq": last})}
                 if sse_once:
@@ -293,6 +407,8 @@ def create_app(store, curator, agent, evaluator, judge, *, events=None,
                     if ev["seq"] <= last:  # already replayed
                         continue
                     last = ev["seq"]
+                    if not event_visible(viewer, ev):
+                        continue
                     yield {"id": str(ev["seq"]), "data": json.dumps(ev)}
             finally:
                 if hasattr(bus, "unsubscribe"):
@@ -328,9 +444,24 @@ def main() -> None:
             "Is the response correct? Reply with exactly yes or no."}])
         return r.strip().lower().startswith("yes")
 
+    # --legacy: no permissions and no write-time maintenance, i.e. the contract the
+    # frontend was first integrated against (no member header, no tentative status).
+    import sys
+    legacy = "--legacy" in sys.argv
+    org, ingest_fn = None, None
+    if not legacy:
+        from brainbob.acl import Org
+        org = Org.load(os.path.join(os.path.dirname(os.path.abspath(__file__)), "fixtures", "rusty_rod", "org.json"))
+        try:
+            from brainbob import maintain
+            ingest_fn = maintain.ingest
+        except Exception:  # noqa: BLE001
+            ingest_fn = None
+    print("BrainBob backend:", "legacy (no permissions, no maintenance)" if legacy
+          else "Rusty Rod permissions + write-time maintenance")
     app = create_app(store, curator, agent, evaluator, judge, events=events,
                      episode_factory=types.Episode, task_factory=types.Task,
-                     episodes_path="episodes.jsonl")
+                     episodes_path="episodes.jsonl", org=org, ingest=ingest_fn)
     uvicorn.run(app, host="127.0.0.1", port=3001)
 
 

@@ -1,0 +1,145 @@
+# BrainBob Evaluation Report
+
+Status date: 2026-10-17 (Pacific). Build: `21260c4` (HEAD when this report was written; the working tree also held uncommitted Rusty Rod and benchmark files, see "Provenance"). All numbers below are copied from the `results.md` / `summary.json` files linked in each section. Nothing here was re-run for this report.
+
+## Supported headlines
+
+1. **Memory makes a small model answer LoCoMo questions it otherwise cannot: held-out accuracy rose from 85/760 (11%) with no memory to 404/760 (53%) with BrainBob memory** (10 conversations, Nemotron-3.5-Lightning-30B answering). Source: [LoCoMo run](../backend/results/20261017-112134-locomo/results.md).
+2. **On a 50-question LongMemEval subset, BrainBob's answer context averaged 2,681 tokens against 108,946 for the full history (about 1/40), at a cost of 4 questions: 35/50 (70%) vs 39/50 (78%).** The 8-point gap is 4 questions out of 50 and we treat it as within noise at this n; we computed no interval and do not claim equivalence. Source: [LongMemEval subset run](../bench/results/20261017-110432/results.md).
+3. **In the one evaluation whose rules were frozen before the run (BANKING77, n=300 held-out, same tasks and same answering model in every condition), the change-and-observe audit changed accuracy by +0.0 points, paired 95% bootstrap interval [-1.3, +1.3]: 202/300 with all memories vs 202/300 audited.** This is a null result and is reported as one. Source: [BANKING77 stream run](../backend/results/20261017-122228-stream-banking77/results.md).
+
+## Claims we do not make
+
+- **The evaluator (audit) improves accuracy.** The frozen-rule paired result is +0.0 pts [-1.3, +1.3] (BANKING77), and on LoCoMo the audited and unaudited groups are identical at 404/760 (the audit retired 0 memories and promoted 2). The exploratory threshold variants below show no interval that excludes zero.
+- **BrainBob is more accurate than reading the whole history.** On the LongMemEval subset it was 4 questions lower (35/50 vs 39/50). The claim is about context size, not accuracy.
+- **Memory correctness has been proven.** Every experiment here measures whether a memory changed a graded answer. None measures whether the stored fact is true. The correctness suite is pending (see below).
+- **Results are leaderboard scores.** LongMemEval is a 50-question subset judged by gpt-oss-120b (the official protocol uses GPT-4o). LoCoMo and BANKING77 use our own splits and prompts. None is comparable to published numbers.
+- **Memory always helps.** On BANKING77, "all" was worse than "none" on 26 held-out tasks (and better on others); net effect was 202/300 vs 189/300 and we computed no interval for that comparison.
+- **Statistical power on LoCoMo conditions or the noisy-writer test.** No paired interval was computed for those runs.
+
+## Usefulness vs truth
+
+BrainBob's change-and-observe evaluator ("改了再看") removes one memory, re-asks the task, and records whether the graded answer flipped. That measures **usefulness**: did this memory change correctness on a task. It does not measure **truth**. A false memory can help an answer by luck, and a true memory can look harmful when the model misuses it. The LoCoMo run recorded 54 harm-changes and the noisy run retired 7 memories at the most aggressive threshold on single-question harm evidence; those are usefulness signals, not verdicts that the facts were wrong.
+
+Factual correctness is handled by other mechanisms, which are not scored in the experiments below: write-time maintenance (tentative evidence never overwrites approved memory, commit `0346089`) and a seeded audit of recent conversations with coverage reported apart from judgment (commit `b82fde7`). Their quantitative evaluation is the pending suite.
+
+## Demo examples vs held-out results
+
+- The demo script and the proof-of-work screenshots use **hand-picked, scripted or fixture scenarios**. They show what the system does, not how often it is right. The frontend integration entry in [proof-of-work](../judging/proof-of-work/index.html) is explicitly labeled as verified against a local contract fixture, with no Crusoe inference claimed.
+- Only the held-out numbers in the sections below are evaluation results. Train/audit tasks (used to propose changes) and held-out tasks (used to score) are disjoint in every run.
+- No recorded live-model demo trajectory is attached yet; see [judging/evidence.md](../judging/evidence.md).
+
+## Integration status
+
+- Inference goes **directly to Crusoe Managed Inference** (OpenAI-compatible client in `backend/brainbob/llm.py`). Model ids by role (from `llm.py` and the result files):
+
+| Role | Model id | Used in |
+| --- | --- | --- |
+| Answering agent (default) | `nvidia/Nemotron-3.5-Lightning-30B-A3B` | LoCoMo, noisy LoCoMo, BANKING77 |
+| Answering agent (LongMemEval) | `nvidia/NVIDIA-Nemotron-3-Super-120B-A12B` | LongMemEval subset |
+| Memory writer ("curator", "curator_careful") | `nvidia/Nemotron-3.5-Lightning-30B-A3B` | all runs |
+| Sloppy writer ("curator_sloppy", temp 1.2) | `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B` | noisy LoCoMo, BANKING77 |
+| Third writer ("curator_qwen") | `Qwen/Qwen3.8-27B` (not NVIDIA) | BANKING77 |
+| Judge (LongMemEval, LoCoMo) | `openai/gpt-oss-120b` (not NVIDIA) | LongMemEval, LoCoMo, audit checks |
+
+  BANKING77 grading is deterministic exact label match, no judge. The BANKING77 `summary.json` does not record model ids; they are the role defaults in `llm.py` at commit `833911b`, assuming `BRAINBOB_AGENT_MODEL` was unset.
+- **NVIDIA NemoClaw: not integrated. NVIDIA Switchyard: not integrated.** No harness or routing evidence exists.
+
+## Experiment 1: LongMemEval subset (50 questions)
+
+- **Setup.** Fixed 50-question subset ([subset_ids.json](../bench/subset_ids.json)). Conditions: `full` (entire history in context) vs `brainbob` (facts extracted from the history, BM25 top-40 retrieved). Same 50 questions and same answering model in both.
+- **Models.** Answer: Nemotron-3-Super-120B. Extraction: Nemotron-3.5-Lightning-30B (thinking off). Judge: openai/gpt-oss-120b at temperature 0 with the official LongMemEval prompts (official uses GPT-4o).
+- **Result.** full 39/50 (78%); brainbob 35/50 (70%). Average context 108,946 vs 2,681 tokens. Per type, brainbob vs full: knowledge-update 8/8 vs 7/8, multi-session 7/13 vs 10/13, temporal-reasoning 8/13 vs 9/13, single-session-user 5/7 vs 6/7, abstention 4/4 vs 4/4, single-session-assistant 6/6 vs 6/6, single-session-preference 1/3 vs 1/3. The biggest loss is multi-session (3 questions).
+- **Paired difference / interval.** Not computed. The difference is -4 questions.
+- **Cost.** $2.299 total for the whole run: answer $1.859, extraction $0.437, judge $0.003. Wall time 404 s. Cost counts replayed cached calls too.
+- **Limitations.** n=50. Judge differs from the official one. Extraction failed to parse or returned empty on 76 episodes (`extract_parse_fail` 76, `extract_empty` 76; 61 extraction retries), so some histories are under-remembered. Retries: 26 answer, 8 judge. This run exercises extraction and retrieval only; the audit was not part of it. Produced by `bench/run.py` at commit `b86c109`.
+- **Artifacts.** [results.md](../bench/results/20261017-110432/results.md), [summary.json](../bench/results/20261017-110432/summary.json), predictions and judgments in the same folder.
+
+## Experiment 2: LoCoMo, 10 conversations
+
+- **Setup.** 10 conversations (conv-26, 30, 41, 42, 43, 44, 47, 48, 49, 50). 760 held-out questions scored; a separate 780-question audit split drove the evaluator (2,377 memories written, 267 flips). Groups: `none` (no memory), `all` (all written memories), `audited` (after the evaluator's retire/promote decisions). Same questions and answering model per group. Evaluator at its default `min_changes=3`.
+- **Models.** Agent, writer: Nemotron-3.5-Lightning-30B-A3B. Judge: openai/gpt-oss-120b.
+- **Result.**
+
+| group | correct / total | avg ctx tokens (est.) |
+| --- | --- | --- |
+| none | 85/760 (11%) | 0 |
+| all | 404/760 (53%) | 1,199 |
+| audited | 404/760 (53%) | 1,199 |
+
+  By category (none / all / audited): single-hop 63/418, 292/418, 292/418; multi-hop 12/138, 48/138, 48/138; open-domain 9/45, 20/45, 20/45; temporal 1/159, 44/159, 44/159. The audit retired 0, promoted 2, flagged 0 (54 harm-changes observed), so `audited` equals `all`.
+- **Paired difference / interval.** Not computed.
+- **Cost.** $0.3701 fresh ($0.5229 including cached replays). Wall time 524 s. Calls: curator 544, agent 4,193, judge 4,193.
+- **Limitations.** The model never saw the question's source conversation in `none`, so the 11% to 53% gap shows memory is useful for this task, not that the memories are true. Judge is an LLM. Own split of LoCoMo, not the published protocol. The audit had no effect here, so this run says nothing in favor of the audit.
+- **Artifacts.** [results.md](../backend/results/20261017-112134-locomo/results.md), [summary.json](../backend/results/20261017-112134-locomo/summary.json), events.jsonl. Code commit `e2b4cf5`.
+
+## Experiment 3: LoCoMo stress test with a careless writer
+
+- **Setup.** 2 conversations (conv-26, conv-30), 115 held-out questions, 118 audit questions. Two writers: the normal curator (319 memories) and a deliberately noisy one (`curator_sloppy`, Nemotron-3-Nano-30B at temperature 1.2, 389 memories). 34 flips.
+- **Result.**
+
+| group | correct / total |
+| --- | --- |
+| none | 11/115 (10%) |
+| careful_only | 49/115 (43%) |
+| all | 56/115 (49%) |
+| audited_min3 | 56/115 (49%) |
+| audited_min2 | 56/115 (49%) |
+| audited_min1 | 59/115 (51%) |
+
+  `min_changes=3`: retired 0, promoted 0. `min_changes=2` (exploratory): promoted 1. `min_changes=1` (exploratory): retired 7, promoted 21. Author ledger at min 3: curator helped 18 / harmed 8; curator_sloppy helped 5 / harmed 3.
+- **Cost.** $0.0687 fresh ($0.1468 including cached). Wall time 1,006 s.
+- **Limitations.** n=115 on two conversations. The min_changes=2 and 1 tiers are post hoc. The +3 questions at min 1 is not an interval-backed effect. The noisy writer's memories did not hurt overall (`all` > `careful_only`), so this test did not demonstrate that the audit rescues a bad writer. Retired memories were retired for one-question harm, which is a usefulness signal (see above). Code commit `f308bab`.
+- **Artifacts.** [results.md](../backend/results/20261017-113727-locomo/results.md), [summary.json](../backend/results/20261017-113727-locomo/summary.json).
+
+## Experiment 4: Frozen-rule paired evaluation on BANKING77 (issue #4)
+
+This is the paired evaluation required by issue #4: rules fixed before the run, held-out tasks, identical tasks and answering setup across conditions.
+
+- **Frozen before the run.** `min_changes=3` (the evaluator default in `backend/brainbob/evaluator.py`), the held-out split (seed 42, label-stratified), top-8 retrieval, and the main metric (`audited_min3` minus `all`, paired bootstrap, 2,000 resamples).
+- **Setup.** BANKING77 77-way intent classification, 600 training tasks streamed in batches of 25 (writers learn lessons; training accuracy 364/600), then 300 held-out tasks. 600 memories, three writers at 200 each. The evaluator ran 833 checks and saw 98 flips. Grading is exact label match.
+- **Models.** Agent: Nemotron-3.5-Lightning-30B-A3B. Writers: Nemotron-3.5-Lightning-30B (`curator_careful`), Nemotron-3-Nano-30B at temp 1.2 (`curator_sloppy`), Qwen3.8-27B (`curator_qwen`). See the caveat under Integration status.
+- **Result (held-out, 300 tasks).**
+
+| condition | correct / total | avg ctx tokens (est.) |
+| --- | --- | --- |
+| none | 189/300 (63%) | 0 |
+| all (no audit, ordinary memory) | 202/300 (67%) | 547 |
+| audited_min3 (pre-frozen rule) | 202/300 (67%) | 544 |
+| only curator_careful | 179/300 (60%) | 481 |
+| only curator_sloppy | 176/300 (59%) | 621 |
+| only curator_qwen | 191/300 (64%) | 506 |
+
+- **Primary paired difference.** `audited_min3 - all`: **+0.0 pts, 95% CI [-1.3, +1.3]**. At min 3 the evaluator retired 3 memories and promoted 2, and it changed no held-out outcome net.
+- **Exploratory (added after seeing the data; not part of the frozen protocol).**
+
+| variant | correct / total | audited minus all (95% CI) |
+| --- | --- | --- |
+| audited_min2 | 203/300 | +0.3 pts [-2.0, +2.3] |
+| audited_min1 | 203/300 | +0.3 pts [-3.0, +3.7] |
+| audited_author | 203/300 | +0.3 pts [-3.0, +3.7] |
+
+  `audited_author - none` was +4.7 pts [-0.3, +9.3]. Retirements at min 1: 28 memories (30 with the author rule). Of the 248 held-out tasks that retrieved a retired-at-min-1 memory, accuracy was 162/248 with `all` and 163/248 audited. Every exploratory interval contains zero. Not evidence that any threshold works.
+- **Cost.** $0.2215 fresh ($0.2927 including cached) for the whole pipeline (writing, evaluator checks, answering). Wall time 479 s.
+- **Conclusion.** Memory helped on average (202 vs 189 correct; no interval computed for that comparison, and `all` was worse than `none` on 26 tasks). The audit did not measurably change accuracy. No evidence of benefit or harm at n=300.
+- **Limitations.** Single seed (42). One dataset, one answering model. BANKING77 labels are largely lexical, so retrieved lessons help less than conversational recall. The CI covers sampling of held-out tasks, not run-to-run model nondeterminism or different seeds. Per-writer helped/harmed counts (careful 15/19, sloppy 17/15, qwen 18/14) show writers add about as much harm as help at the task level.
+- **Artifacts.** [results.md](../backend/results/20261017-122228-stream-banking77/results.md), [summary.json](../backend/results/20261017-122228-stream-banking77/summary.json). Code: `833911b` (stream benchmark). The results folder is gitignored by `backend/.gitignore`, so it is on the authors' disk, not in the pushed repository, unless force-added.
+
+## Pending: Rusty Rod correctness suite
+
+**Not yet run to completion; no results exist.** The suite measures whether memories are supported, current and authorized, which the experiments above do not. Its design:
+
+- [docs/benchmarks.md](benchmarks.md), "Custom BrainBob Suite": 30 held-out scenarios, five in each of six groups (extraction, updates, retention, forgetting, shared handoff, insufficient evidence), plus deterministic checks for scope isolation, stale concurrent writes, duplicate operations, atomic state/event commits and read-only replay. Expected outcomes are written before the run; development examples are kept separate from held-out ones.
+- [backend/SPEC-correctness.md](../backend/SPEC-correctness.md): the Rusty Rod organization, permissions (`can_read` / `can_write` / `can_approve`), write-time maintenance, the recent-conversation audit, and the conditions compared (including a full-history baseline).
+- Until results are published, no statement about factual correctness, freshness or unauthorized-retrieval rate is made.
+
+## Provenance
+
+| Experiment | Results folder | Code commit |
+| --- | --- | --- |
+| LongMemEval subset | `bench/results/20261017-110432` | `b86c109` (`bench/run.py`) |
+| LoCoMo 10 conversations | `backend/results/20261017-112134-locomo` | `e2b4cf5` |
+| LoCoMo noisy writer | `backend/results/20261017-113727-locomo` | `f308bab` |
+| BANKING77 frozen-rule | `backend/results/20261017-122228-stream-banking77` | `833911b` (uncommitted edits to `backend/bench.py` made after that run touch only code after `stream_main`) |
+
+Build at report time: `21260c4` ("fix(backend): extract team facts, and add --legacy mode for the current frontend"). Result folders under `backend/results/` are gitignored; `bench/results/20261017-110432` is committed.

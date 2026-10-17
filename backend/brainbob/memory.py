@@ -5,7 +5,7 @@ from rank_bm25 import BM25Okapi
 from . import events
 from .types import Memory
 
-STATUSES = ("trial", "promoted", "retired", "locked")
+STATUSES = ("trial", "promoted", "retired", "locked", "tentative")
 
 
 def _norm(t): return re.sub(r"\s+", " ", re.sub(r"[^\w\s]", " ", t.lower())).strip()
@@ -40,30 +40,51 @@ class MemoryStore:
             with open(self.path, "w", encoding="utf8") as f:
                 for m in self._m.values(): f.write(json.dumps(asdict(m), ensure_ascii=False) + "\n")
 
-    def add(self, text, *, author, origin, date, scope="team", status="trial"):
+    def add(self, text, *, author, origin, date, scope="team", status="trial", authority="discussion", model=None,
+            supersedes=None, conflicts_with=None):
+        """Dedupe (exact normalized text) and tombstones are checked within the same scope only, so a record in
+        another scope never blocks or reveals anything."""
+        mx = {"model": model} if model else {}
         with self._lock:
             n = _norm(text)
             for m in self._m.values():
-                if m.status != "retired" and _norm(m.text) == n:
-                    events.emit("memory.rejected", text=text, reason="duplicate"); return None, f"duplicate of {m.id}"
+                if m.status != "retired" and m.scope == scope and _norm(m.text) == n:
+                    events.emit("memory.rejected", text=text, reason="duplicate", **mx); return None, f"duplicate of {m.id}"
             for m in self._m.values():
-                if m.status == "retired" and _jac(m.text, text) >= self.tj:
-                    events.emit("memory.rejected", text=text, reason="tombstone"); return None, f"tombstone: similar to retired {m.id}"
-            m = Memory(f"m{next(self._n)}", text, author, origin, date, status, scope)
+                if m.status == "retired" and m.scope == scope and _jac(m.text, text) >= self.tj:
+                    events.emit("memory.rejected", text=text, reason="tombstone", **mx); return None, f"tombstone: similar to retired {m.id}"
+            m = Memory(f"m{next(self._n)}", text, author, origin, date, status, scope, supersedes=supersedes,
+                       authority=authority, model=model, conflicts_with=list(conflicts_with or []))
             self._m[m.id] = m; self._bm = None
             if self.path:
                 with open(self.path, "a", encoding="utf8") as f: f.write(json.dumps(asdict(m), ensure_ascii=False) + "\n")
-        events.emit("memory.added", memory=asdict(m))
+        events.emit("memory.added", memory=asdict(m), **mx)
         return m, "ok"
 
-    def search(self, query, k=40, reader=None):
+    def supersede(self, new_id, old_ids, *, author=None, model=None):
+        """Retire each old memory with reason `superseded by <new_id>` (the new memory's `supersedes` is set at add time).
+        Emits memory.retired + memory.corrected per old memory. A locked old memory raises PermissionError and nothing changes."""
+        with self._lock:
+            olds = [self._m[o] for o in old_ids]
+            for o in olds:
+                if o.status == "locked": raise PermissionError(f"{o.id} is locked; its owner must resolve it")
+            for o in olds: self._retire(o, f"superseded by {new_id}")
+            self._save()
+        for o in olds:
+            events.emit("memory.retired", memory_id=o.id, reason=o.reason, task_ids=[], author=author, model=model)
+            events.emit("memory.corrected", memory_id=o.id, new_id=new_id, author=author, model=model)
+        return olds
+
+    def search(self, query, k=40, reader=None, include_tentative=True):
+        """Retired memories are never returned; tentative ones are, unless include_tentative=False."""
         with self._lock:
             if self._bm is None:
                 self._act = [m for m in self._m.values() if m.status != "retired"]
                 self._bm = BM25Okapi([_tok(m.text) or ["_"] for m in self._act]) if self._act else False
             if not self._bm: return []
             sc = self._bm.get_scores(_tok(query)); act = self._act
-        idx = range(len(act)) if reader is None else [i for i in range(len(act)) if _visible(act[i].scope, reader)]
+        idx = [i for i in range(len(act)) if (reader is None or _visible(act[i].scope, reader))
+               and (include_tentative or act[i].status != "tentative")]
         top = sorted(idx, key=lambda i: -sc[i])[:k]
         return [act[i] for i in top]
 

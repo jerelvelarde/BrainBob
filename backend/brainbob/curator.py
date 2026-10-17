@@ -2,7 +2,7 @@
 import json, re
 from . import events, llm
 
-PROMPT = """Below is a chat session between a user and an AI assistant (session date: {date}). Extract atomic, self-contained facts worth remembering long-term: facts about the user, their preferences, events (with dates if mentioned), plans, and specific information the assistant gave (names, numbers, recommendations, lists). One fact per item, include concrete details. Output ONLY a JSON array of strings, no commentary.
+PROMPT = """Below is a conversation, message or note (date: {date}). It may be between teammates, or between a user and an AI assistant. Extract atomic, self-contained facts worth remembering long-term: decisions, commitments and deadlines, plans, owners, events (with dates if mentioned), facts about people and their preferences, and specific information given (names, numbers, recommendations, lists). Keep who said or decided it when that matters. If the text states any fact, extract it. One fact per item, include concrete details. Output ONLY a JSON array of strings, no commentary.
 
 SESSION:
 {s}"""
@@ -39,12 +39,25 @@ def extract(episode, role="curator"):
     return _parse(c)
 
 
+def model_for(role):
+    """Actual model id configured for a role (what really writes / judges)."""
+    return llm._roles()[role]["model"]
+
+
+def stamp(episode, role):
+    """store.add kwargs every written memory carries: real model id, authority and scope copied from the episode.
+    Episodes without these fields (older adapters, server.Episode) keep the store defaults."""
+    kw = {"model": model_for(role), "authority": getattr(episode, "authority", None) or "discussion"}
+    if getattr(episode, "scope", None): kw["scope"] = episode.scope
+    return kw
+
+
 def ingest(episode, store, author=None, role="curator"):
-    """The author name defaults to the role that wrote the memories."""
+    """Append-only baseline: every extracted fact is added. The author name defaults to the role that wrote the memories."""
     author = author or role
-    added = []
+    added, kw = [], stamp(episode, role)
     for f in extract(episode, role):
-        m, _ = store.add(f, author=author, origin=episode.id, date=episode.date)
+        m, _ = store.add(f, author=author, origin=episode.id, date=episode.date, **kw)
         if m: added.append(m)
     events.emit("episode.ingested", episode_id=episode.id, source=episode.source, n_memories=len(added))
     return added
