@@ -1,0 +1,48 @@
+{
+  "scope": "Documentation checks only; no benchmark or model execution",
+  "checked_documents": [
+    "README.md",
+    "docs/architecture.md",
+    "docs/architecture-plan-20261017.md",
+    "docs/evaluation-report.md",
+    "docs/backend-design.md",
+    "docs/readiness.md",
+    "docs/finetune-handoff.md",
+    "judging/README.md",
+    "judging/evidence.md",
+    "diagrams/README.md"
+  ],
+  "local_links_and_anchors_checked": 151,
+  "errors": [],
+  "imported_assets_identical_to": "373eee2e11891e43232ae509c1d7de9ae3567e3a",
+  "imported_files": [
+    "diagrams/memory-simple.png",
+    "diagrams/memory-simple.svg",
+    "diagrams/memory-simple.mmd",
+    "bobbench/results/20261017-141014/scorecard.v0.3.md",
+    "bobbench/results/20261017-141014/scorecard.v0.3.json"
+  ],
+  "macro_cats_percent": {
+    "no_memory": 25.0,
+    "full_history": 92.0,
+    "append_only": 67.9,
+    "maintained": 71.9,
+    "always_refuse": 25.0,
+    "unfiltered": 6.5
+  },
+  "maintained_minus_baseline_diff_and_95pct_interval": {
+    "no_memory": [
+      46.9,
+      22.7,
+      71.1
+    ],
+    "append_only": [
+      4.0,
+      -9.0,
+      18.2
+    ]
+  },
+  "diff_check": "passed",
+  "additional_live_evidence_links_checked": 6,
+  "existing_live_evidence_bytes_preserved": true
+}
