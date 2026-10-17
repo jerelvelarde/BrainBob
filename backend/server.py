@@ -154,9 +154,24 @@ def create_app(store, curator, agent, evaluator, judge, *, events=None,
         if org is not None and not org.can_write(viewer, mem_scopes().get(mid)):
             raise HTTPException(403, "no write permission")
 
+    def acting_member(viewer, supplied, field, fallback=None):
+        if org is not None:
+            if supplied is not None and supplied != viewer:
+                raise HTTPException(403, f"{field} must be the acting member")
+            return viewer
+        return supplied or fallback
+
     def event_visible(viewer, ev, ms=None) -> bool:
         if org is None:
             return True
+        # Answers can contain private questions or uncited information. Memory
+        # references alone cannot establish who may read the answer text.
+        if ev.get("type") in ("answer.produced", "memory.retrieved") and ev.get("viewer") != viewer:
+            return False
+        # Old/core rejection events have text but no scope. Do not broadcast
+        # unscoped source text to every account; the writer gets HTTP decisions.
+        if ev.get("type") == "memory.rejected" and not can_see_mem(viewer, ev.get("scope")):
+            return False
         ms = ms if ms is not None else mem_scopes()
         mids = [ev.get(k) for k in ("memory_id", "new_id", "old_id")]
         mids.append(ev["memory"].get("id") if isinstance(ev.get("memory"), dict) else None)
@@ -260,9 +275,9 @@ def create_app(store, curator, agent, evaluator, judge, *, events=None,
             mems = [m for m in mems if can_see_mem(viewer, getattr(m, "scope", None))]
         else:
             mems = store.search(q, reader=reader) if reader else store.search(q)
-        bus.emit("memory.retrieved", task_id=tid, memory_ids=[m.id for m in mems])
+        bus.emit("memory.retrieved", task_id=tid, memory_ids=[m.id for m in mems], viewer=viewer)
         ans = agent.answer(q, mems, body.get("now"))
-        bus.emit("answer.produced", task_id=tid, answer=ans.text, cited_ids=list(ans.cited_ids))
+        bus.emit("answer.produced", task_id=tid, answer=ans.text, cited_ids=list(ans.cited_ids), viewer=viewer)
         tasks[tid] = {"viewer": viewer, "question": q, "now": body.get("now"), "memories": mems, "answer": ans}
         return {"task_id": tid, "answer": ans.text, "cited_ids": list(ans.cited_ids), "memories": to_dict(mems)}
 
@@ -305,33 +320,41 @@ def create_app(store, curator, agent, evaluator, judge, *, events=None,
 
     @app.post("/memories/{mid}/correct")
     def post_correct(mid: str, body: dict, request: Request):
-        need_write(who(request), mid)
+        viewer = who(request)
+        need_write(viewer, mid)
+        author = acting_member(viewer, body.get("author"), "author", "user")
         text = body.get("text")
         if not isinstance(text, str) or not text.strip():
             raise HTTPException(422, "text required")
-        new, old = guarded(store.correct, mid, text, body.get("author") or "user")
+        new, old = guarded(store.correct, mid, text, author)
         return {"memory": to_dict(new), "retired_id": old.id}
 
     @app.post("/memories/{mid}/retire")
     def post_retire(mid: str, request: Request, body: dict | None = None):
-        need_write(who(request), mid)
+        viewer = who(request)
+        need_write(viewer, mid)
         body = body or {}
-        return {"memory": to_dict(guarded(store.retire, mid, body.get("reason") or "", body.get("author")))}
+        author = acting_member(viewer, body.get("author"), "author")
+        return {"memory": to_dict(guarded(store.retire, mid, body.get("reason") or "", author))}
 
     @app.post("/memories/{mid}/lock")
     def post_lock(mid: str, body: dict, request: Request):
-        need_write(who(request), mid)
+        viewer = who(request)
+        need_write(viewer, mid)
         owner = body.get("owner")
         if not isinstance(owner, str) or not owner.strip():
             raise HTTPException(422, "owner required")
+        owner = acting_member(viewer, owner, "owner")
         return {"memory": to_dict(guarded(store.lock, mid, owner))}
 
     @app.post("/memories/{mid}/resolve")
     def post_resolve(mid: str, body: dict, request: Request):
-        need_write(who(request), mid)
+        viewer = who(request)
+        need_write(viewer, mid)
         owner = body.get("owner")
         if not isinstance(owner, str) or not owner.strip():
             raise HTTPException(422, "owner required")
+        owner = acting_member(viewer, owner, "owner")
         return {"memory": to_dict(guarded(store.resolve, mid, owner, body.get("action"), body.get("text")))}
 
     @app.get("/memories/{mid}/history")
