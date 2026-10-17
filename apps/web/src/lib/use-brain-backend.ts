@@ -5,7 +5,7 @@ import { eventsUrl, backendEventSchema, brainApi } from "./brain-api";
 import { acceptBackendEvent, emptyBackendState, type BackendState } from "./backend-state";
 import type { StoredEvent } from "./brain-api";
 
-export function useBrainBackend(member: string, onLive: (event: StoredEvent, state: BackendState) => void) {
+export function useBrainBackend(member: string, onLive: (event: StoredEvent, state: BackendState) => void, enabled = true) {
   const [state, setState] = useState(emptyBackendState);
   const [connection, setConnection] = useState<"connecting" | "syncing" | "live" | "offline">("connecting");
   const [error, setError] = useState("");
@@ -23,6 +23,8 @@ export function useBrainBackend(member: string, onLive: (event: StoredEvent, sta
   }, [member]);
 
   useEffect(() => {
+    if (!enabled) return;
+    setConnection("connecting");
     let source: EventSource | undefined, retry: ReturnType<typeof setTimeout> | undefined;
     let frame = 0, closed = false;
     const abort = new AbortController();
@@ -59,6 +61,6 @@ export function useBrainBackend(member: string, onLive: (event: StoredEvent, sta
     };
     connect();
     return () => { closed = true; source?.close(); clearTimeout(retry); cancelAnimationFrame(frame); abort.abort(); };
-  }, [member, synchronizeMissing]);
+  }, [member, synchronizeMissing, enabled]);
   return { state, connection, error };
 }

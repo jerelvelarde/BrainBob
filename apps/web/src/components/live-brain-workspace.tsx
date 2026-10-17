@@ -4,8 +4,10 @@ import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Clapperboard, FolderClosed, FolderOpen, History, Maximize2, MessageCircle, Pause, Play, SkipForward, ZoomIn, ZoomOut } from "lucide-react";
 import { canRead, sceneScope, scopeLabel, type BackendAnswer, type StoredEvent } from "@/lib/brain-api";
-import { defaultReader, memberForReader, memberId, teamForReader } from "@/lib/sample-company";
-import { sessionStatus, updateActiveSession, type ActiveSession, type SessionActivity } from "@/lib/active-session";
+import { memberForReader, memberId, teamForReader } from "@/lib/sample-company";
+import { sessionStatus, type SessionActivity } from "@/lib/active-session";
+import { createDeskSessions, initialDeskId, recordDeskActivity, resetDesk, type DeskId, type LocalDeskSession } from "@/lib/desk-sessions";
+import type { DeskSession } from "./brain/session-worker";
 import { MemberSelect } from "./member-select";
 import { cuesForEvent, eventDescription, eventMemoryIds, memoriesAt, type BackendState } from "@/lib/backend-state";
 import { cinematicsAt, type SceneCue } from "@/lib/scene-animation";
@@ -19,20 +21,28 @@ const BrainScene = dynamic(() => import("./brain/brain-scene"), { ssr: false });
 const SceneChat = dynamic(() => import("./scene-chat"), { ssr: false, loading: () => <p className="chat-loading">Opening chat…</p> });
 
 export function LiveBrainWorkspace() {
-  const [context, setContext] = useState({ reader: defaultReader, revision: 0, startChat: false });
-  return <MemberWorkspace key={`${context.reader}:${context.revision}`} reader={context.reader} startChat={context.startChat} focusAccount={context.revision > 0 && !context.startChat}
-    onReaderChange={(reader) => setContext((current) => ({ reader, revision: current.revision + 1, startChat: false }))}
-    onNewSession={() => setContext((current) => ({ ...current, revision: current.revision + 1, startChat: true }))} />;
+  const [desks, setDesks] = useState(createDeskSessions);
+  const [selection, setSelection] = useState({ id: initialDeskId, token: 0, chat: false, file: false });
+  const openDesk = useCallback((id: DeskId, file = false) => setSelection((current) => ({ id, token: current.token + 1, chat: true, file })), []);
+  const activity = useCallback((id: DeskId, revision: number, event: SessionActivity) => setDesks((current) => recordDeskActivity(current, id, revision, event)), []);
+  const sceneSessions = useMemo(() => desks.map((desk) => ({ label: memberForReader(desk.reader)?.label.split(" ")[0] ?? "Bob", status: sessionStatus(desk.session), working: desk.session?.status === "working", selected: desk.id === selection.id, onOpen: () => openDesk(desk.id), onFile: () => openDesk(desk.id, true) })), [desks, selection.id, openDesk]);
+  return desks.map((desk) => <MemberWorkspace key={`${desk.id}:${desk.revision}`} desk={desk} active={desk.id === selection.id} sessions={sceneSessions}
+    openRequest={selection.chat && desk.id === selection.id ? { token: selection.token, file: selection.file } : undefined}
+    onReaderChange={(reader) => { setDesks((current) => resetDesk(current, desk.id, reader)); setSelection((current) => ({ ...current, chat: false })); }}
+    onNewSession={() => { setDesks((current) => resetDesk(current, desk.id)); openDesk(desk.id); }} onActivity={activity} />);
 }
 
-// Remount every identity-bound cache, request, chat, and event cursor together.
-function MemberWorkspace({ reader, onReaderChange, onNewSession, startChat, focusAccount }: {
-  reader: string; onReaderChange: (reader: string) => void; onNewSession: () => void; startChat: boolean; focusAccount: boolean;
+// Each desk keeps its own agent and identity-bound state. Only the selected desk renders a canvas.
+function MemberWorkspace({ desk, active, sessions, openRequest, onReaderChange, onNewSession, onActivity }: {
+  desk: LocalDeskSession; active: boolean; sessions: DeskSession[]; openRequest?: { token: number; file: boolean };
+  onReaderChange: (reader: string) => void; onNewSession: () => void; onActivity: (id: DeskId, revision: number, event: SessionActivity) => void;
 }) {
+  const { reader, session } = desk;
+  const startChat = active && Boolean(openRequest);
+  const activeRef = useRef(active);
   const readerRef = useRef(reader);
   const [panel, setPanel] = useState<"chat" | "memory" | null>(startChat ? "chat" : null);
   const [chatInspection, setChatInspection] = useState<"session" | "memory" | null>(null);
-  const [session, setSession] = useState<ActiveSession | null>(null);
   const [chatLoaded, setChatLoaded] = useState(startChat);
   const [selected, setSelected] = useState<string>();
   const [queue, setQueue] = useState<SceneCue[]>([]);
@@ -49,12 +59,16 @@ function MemberWorkspace({ reader, onReaderChange, onNewSession, startChat, focu
   const chatButton = useRef<HTMLButtonElement>(null), memoryButton = useRef<HTMLButtonElement>(null);
   const sessionButton = useRef<HTMLButtonElement>(null);
   const camera = useRef<SceneHandle | null>(null);
+  useEffect(() => { activeRef.current = active; if (!active) setQueue([]); }, [active]);
+  useEffect(() => {
+    if (active && openRequest) { setChatLoaded(true); setChatInspection(openRequest.file ? "session" : null); setPanel("chat"); }
+  }, [active, openRequest?.token, openRequest?.file]);
   const onLive = useCallback((event: StoredEvent, state: BackendState) => {
-    if (cursorRef.current !== null) return;
+    if (!activeRef.current || cursorRef.current !== null) return;
     const cues = cuesForEvent(event, state, readerRef.current);
     if (cues.length) setQueue((current) => [...current, ...cues]);
   }, []);
-  const backend = useBrainBackend(memberId(reader), onLive);
+  const backend = useBrainBackend(memberId(reader), onLive, active);
   useEffect(() => {
     const media = matchMedia("(prefers-reduced-motion: reduce)");
     const update = () => { setReducedMotion(media.matches); if (media.matches) setPlaying(false); };
@@ -71,7 +85,7 @@ function MemberWorkspace({ reader, onReaderChange, onNewSession, startChat, focu
   const onReady = useCallback((handle: SceneHandle) => { camera.current = handle; }, []);
   const inspect = useCallback((id?: string) => { setSelected(id); setPanel("memory"); }, []);
   const onAnswer = useCallback((answer: BackendAnswer) => { setCitations(answer.cited_ids); }, []);
-  const onSessionActivity = useCallback((event: SessionActivity) => { setSession((current) => updateActiveSession(current, event, reader)); }, [reader]);
+  const onSessionActivity = useCallback((event: SessionActivity) => onActivity(desk.id, desk.revision, event), [onActivity, desk.id, desk.revision]);
   function closePanel() { const previous = panel; setPanel(null); (previous === "chat" ? chatButton : memoryButton).current?.focus(); }
   function openChat(file = false) { setChatLoaded(true); setChatInspection(file ? "session" : null); setPanel("chat"); }
   function inspectInChat(id: string) { setSelected(id); setChatInspection("memory"); }
@@ -86,11 +100,11 @@ function MemberWorkspace({ reader, onReaderChange, onNewSession, startChat, focu
   function changeReader(value: string) { readerRef.current = value; onReaderChange(value); setSelected(undefined); setCitations([]); live(); }
   const shownEvent = cursor === null ? undefined : backend.state.events.find((e) => e.seq === cursor);
 
-  return <main className="app-shell" data-dramatic={cinematicsAt(cue?.action, progress).darkness > .5 ? cue?.action : undefined}>
-    <section className="scene-view" aria-label="Brain visualization"><BrainScene playing={playing && panel !== "chat"} speed={1} reducedMotion={reducedMotion} cue={cue} seek={seek} onProgress={onProgress} reader={reader}
-      session={{ label: memberForReader(reader)?.label.split(" ")[0] ?? "Bob", status: sessionStatus(session), working: session?.status === "working", selected: panel === "chat", onOpen: () => openChat(), onFile: () => openChat(true) }}
+  return <main className="app-shell desk-workspace" hidden={!active} data-dramatic={cinematicsAt(cue?.action, progress).darkness > .5 ? cue?.action : undefined}>
+    {active ? <section className="scene-view" aria-label="Brain visualization"><BrainScene playing={playing && panel !== "chat"} speed={1} reducedMotion={reducedMotion} cue={cue} seek={seek} onProgress={onProgress} reader={reader}
+      sessions={sessions}
       selectedScope={cue?.scope ?? "all"} selectedMemory={selected ?? ""} flaggedScopes={[...new Set(visibleMemories.filter((m) => m.flagged).flatMap((m) => { const scope = sceneScope(m.scope); return scope ? [scope] : []; }))]} onSelect={() => {}} onScope={(scope) => inspect(visibleMemories.find((m) => sceneScope(m.scope) === scope && m.flagged)?.id ?? visibleMemories.find((m) => sceneScope(m.scope) === scope && m.status !== "retired")?.id)}
-      onWorker={setNotice} onReady={onReady} /></section>
+      onWorker={setNotice} onReady={onReady} /></section> : null}
     <header className="floating-header"><a className="brand" href="/" aria-label="BrainBob home"><span className="bob-mark" aria-hidden="true"><i /><i /><b /><em /></span><span>BrainBob</span></a>
       <span className={`connection-state ${backend.connection}`} role="status">{backend.connection === "live" ? "Connected" : backend.connection === "syncing" ? "Loading history…" : backend.connection === "offline" ? "Backend offline" : "Connecting…"}</span>
     </header>
@@ -99,8 +113,9 @@ function MemberWorkspace({ reader, onReaderChange, onNewSession, startChat, focu
       <button ref={chatButton} aria-label="Chat" aria-haspopup="dialog" aria-expanded={panel === "chat"} className={panel === "chat" ? "selected" : ""} onClick={() => openChat()}><MessageCircle size={18} /><span>Chat</span></button>
       <button ref={memoryButton} aria-label="Memories" aria-expanded={panel === "memory"} className={panel === "memory" ? "selected" : ""} onClick={() => panel === "memory" ? closePanel() : inspect()}><FolderClosed size={18} /><span>Memories</span></button>
     </div>
-    <MemberSelect value={reader} onChange={changeReader} onNewSession={onNewSession} autoFocus={focusAccount} />
-    <SessionChatDialog open={panel === "chat"} reader={reader} onClose={closePanel} returnFocus={chatButton} fileOpen={chatInspection === "session"}
+    <MemberSelect value={reader} onChange={changeReader} onNewSession={onNewSession} autoFocus={active && desk.revision > 0 && !startChat}
+      sessions={sessions.map((item) => ({ label: item.label, selected: item.selected, onOpen: item.onOpen }))} />
+    <SessionChatDialog open={active && panel === "chat"} reader={reader} onClose={closePanel} returnFocus={chatButton} fileOpen={chatInspection === "session"}
       onFile={() => setChatInspection(chatInspection === "session" ? null : "session")}
       inspection={chatInspection === "session" ? <LiveSessionPanel reader={reader} session={session} onClose={() => setChatInspection(null)} onChat={() => setChatInspection(null)} onInspect={inspectInChat} />
         : chatInspection === "memory" ? <LiveMemoryPanel actor={memberId(reader)} memories={visibleMemories} selected={selected} events={backend.state.events.filter((e) => cursor === null || e.seq <= cursor)} readOnly={cursor !== null} citedIds={citations} onSelect={setSelected} onClose={() => setChatInspection(null)} onRetrace={(seq) => { closePanel(); retrace(seq); }} /> : null}>

@@ -257,6 +257,8 @@ blockquote { font-size: 12px; color: var(--muted); line-height: 1.7; margin: 13p
 @keyframes account-enter { from { opacity: 0; transform: translateY(5px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
 .member-menu header { display: flex; justify-content: space-between; align-items: center; padding: 18px 16px 13px; flex-shrink: 0; }
 .member-menu header small { color: #9c8b6e; font-size: 9px; letter-spacing: 1.2px; }.member-menu h2 { font-size: 18px; font-weight: 600; margin: 6px 0 0; letter-spacing: -.4px; }
+.open-desk-sessions { display: flex; gap: 7px; margin: 0 14px 12px; flex-shrink: 0; }.open-desk-sessions button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; border-radius: 10px; background: #f5f0e5; font-size: 11px; }.open-desk-sessions button[aria-current=true] { background: #f8e5b3; }.open-desk-sessions button span { font-size: 9px; color: #9c8250; }
+.desk-workspace[hidden] { display: none; }
 .new-session-action { display: flex; align-items: center; gap: 12px; text-align: left; margin: 0 14px; padding: 12px; border: 1px solid #f1ddb0; background: #fff2ce; border-radius: 12px; flex-shrink: 0; }
 .new-session-action:hover { background: #ffe9b3; }.new-session-action>svg { color: #a17b2c; }.new-session-action strong { display: block; font-size: 12px; font-weight: 600; }.new-session-action small { display: block; font-size: 10px; color: #947c51; margin-top: 4px; }
 .member-menu>p { font-size: 11px; color: var(--muted); margin: 14px 18px 10px; }

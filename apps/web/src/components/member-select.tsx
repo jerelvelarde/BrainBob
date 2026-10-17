@@ -4,8 +4,9 @@ import { useEffect, useId, useRef, useState } from "react";
 import { Check, ChevronsUpDown, Search, SquarePen, X } from "lucide-react";
 import { demoMembers, demoTeams, memberForReader, teamForReader } from "@/lib/sample-company";
 
-export function MemberSelect({ value, onChange, onNewSession, autoFocus = false }: {
+export function MemberSelect({ value, onChange, onNewSession, autoFocus = false, sessions = [] }: {
   value: string; onChange: (value: string) => void; onNewSession: () => void; autoFocus?: boolean;
+  sessions?: { label: string; selected: boolean; onOpen: () => void }[];
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -32,6 +33,7 @@ export function MemberSelect({ value, onChange, onNewSession, autoFocus = false 
     </button>
     {open ? <div className="member-menu-anchor"><section id={id} className="member-menu" role="dialog" aria-labelledby={`${id}-title`} aria-describedby={`${id}-hint`}>
       <header><div><small>RUSTY ROD</small><h2 id={`${id}-title`}>Switch person</h2></div><button className="icon-button" aria-label="Close person switcher" onClick={() => close(true)}><X size={16} /></button></header>
+      {sessions.length ? <nav className="open-desk-sessions" aria-label="Open desk sessions">{sessions.map((session, index) => <button key={index} aria-label={`Open ${session.label}’s desk session`} aria-current={session.selected ? "true" : undefined} onClick={() => { close(); session.onOpen(); }}><span aria-hidden="true">{session.label.split(" ").map((part) => part[0]).join("")}</span>{session.label.split(" ")[0]}</button>)}</nav> : null}
       <button className="new-session-action" onClick={() => { close(); onNewSession(); }}><SquarePen size={18} /><span><strong>New session</strong><small>Fresh chat, same memory</small></span></button>
       <p id={`${id}-hint`}>Switching starts a fresh context.</p>
       <label className="member-search"><Search size={16} aria-hidden="true" /><input ref={search} aria-label="Find a person" placeholder="Find a person or team…" value={query} onChange={(event) => setQuery(event.target.value)} /></label>

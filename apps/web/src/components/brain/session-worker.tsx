@@ -21,7 +21,7 @@ export function SessionWorker({ session, animate }: { session: DeskSession; anim
   return <group onClick={(event) => { event.stopPropagation(); session.onOpen(); }}
     onPointerOver={(event) => { event.stopPropagation(); setHovered(true); document.body.style.cursor = "pointer"; }}
     onPointerOut={() => { setHovered(false); document.body.style.cursor = "auto"; }}>
-    <group position={[.18, .62, -.72]} rotation={[0, .32, 0]} scale={1.15}><BrainBob walking={false} performance={performance} /></group>
+    <group position={[.18, .62, -.72]} scale={1.15}><BrainBob walking={false} performance={performance} /></group>
     <group position={[.64, 1.22, .27]} rotation={[-Math.PI / 2 + .2, 0, -.12]} scale={hovered ? 1.3 : 1.2} onClick={(event) => { event.stopPropagation(); session.onFile(); }}><SessionFolder /></group>
     <Label text={`${session.label.toUpperCase()} · ${session.status.toUpperCase()}`} position={[.15, 2.38, .05]} width={2.5} selected={session.selected || hovered} onClick={session.onOpen} />
     <Label text="OPEN FILE" position={[.7, 1.18, .89]} width={1.2} selected={session.selected || hovered} onClick={session.onFile} />
