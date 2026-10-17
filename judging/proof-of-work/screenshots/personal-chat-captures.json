@@ -1,0 +1,19 @@
+{
+  "note": "Native browser screenshots from the committed frontend, synthetic /demo data, no inference. Timestamps recorded immediately before capture; no local application edits at capture.",
+  "captures": [
+    {
+      "file": "28-personal-session-chat.jpg",
+      "captured_at": "2026-10-17T20:54:36.005Z",
+      "url": "http://127.0.0.1:3000/demo",
+      "view": "Maya welcome; three tier-based prompts; scripted preview",
+      "commit": "af8cf67d65ed66df3db69a8cfa7634e79b0d6870"
+    },
+    {
+      "file": "29-personal-session-chat-mobile.jpg",
+      "captured_at": "2026-10-17T20:54:44.643Z",
+      "url": "http://127.0.0.1:3000/demo",
+      "view": "Maya welcome at 390 × 844 CSS pixels; stacked prompts",
+      "commit": "af8cf67d65ed66df3db69a8cfa7634e79b0d6870"
+    }
+  ]
+}

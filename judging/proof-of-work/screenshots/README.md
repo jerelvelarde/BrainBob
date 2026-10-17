@@ -81,3 +81,12 @@ The initial team-cabinet layout was superseded by the requested Individual / Tea
 - [24-tier-access-mobile.jpg](24-tier-access-mobile.jpg): 1:14:04 PM PDT, `89edbad`. 390×844 view with Sales accessible and Executive/Engineering closed.
 
 Original timestamps and commit references: [earlier captures](session-file-captures.json), [final captures](tier-session-captures.json).
+
+## Personalized session chat
+
+Captured from local frontend commit `af8cf67` on October 17, 2026. Application sources were unchanged during capture. Both images show the synthetic `/demo` welcome, not model inference. The original screenshot bytes are preserved.
+
+- [28-personal-session-chat.jpg](28-personal-session-chat.jpg): 1:54:36 PM PDT, 1280 × 720. Maya’s full-screen greeting, composer, three memory-based starter cards, and session-file control.
+- [29-personal-session-chat-mobile.jpg](29-personal-session-chat-mobile.jpg): 1:54:44 PM PDT, 390 × 844. Mobile welcome with stacked cards and compact header controls.
+
+Original timestamps: [personal-chat-captures.json](personal-chat-captures.json). Tested behavior and limitations: [verification record](../personal-chat-verification.md).
