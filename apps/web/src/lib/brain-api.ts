@@ -1,7 +1,9 @@
 import { z } from "zod";
 import { canReadScope, companyScope, demoScopes, memberId } from "./sample-company";
 
-export const BACKEND_URL = (process.env.NEXT_PUBLIC_BRAINBOB_API_URL ?? "http://127.0.0.1:3001").replace(/\/$/, "");
+// Keep browser requests on the UI origin; Next forwards them to BRAINBOB_API_URL.
+// An explicit public URL remains available for deployments with direct API access.
+export const BACKEND_URL = (process.env.NEXT_PUBLIC_BRAINBOB_API_URL ?? "/api/brainbob").replace(/\/$/, "");
 export const readers = demoScopes;
 export const canRead = canReadScope;
 export function sceneScope(path: string) {

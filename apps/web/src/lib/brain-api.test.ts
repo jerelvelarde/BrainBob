@@ -28,7 +28,9 @@ describe("Rusty Rod HTTP identity", () => {
   });
 
   it("uses a distinct member query for each SSE connection and preserves its resume sequence", () => {
-    const sales = new URL(eventsUrl("sales-01", 27)), executive = new URL(eventsUrl("exec-01", 0));
+    const sales = new URL(eventsUrl("sales-01", 27), "https://brainbob.example"), executive = new URL(eventsUrl("exec-01", 0), "https://brainbob.example");
+    expect(sales.origin).toBe("https://brainbob.example");
+    expect(sales.pathname).toBe("/api/brainbob/events");
     expect(sales.searchParams.get("member")).toBe("sales-01");
     expect(sales.searchParams.get("after")).toBe("27");
     expect(executive.searchParams.get("member")).toBe("exec-01");

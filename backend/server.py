@@ -413,7 +413,9 @@ def create_app(store, curator, agent, evaluator, judge, *, events=None,
             finally:
                 if hasattr(bus, "unsubscribe"):
                     bus.unsubscribe(q)
-        return EventSourceResponse(gen())
+        # Prevent a frontend reverse proxy from compressing/buffering small SSE
+        # frames; replay.done must arrive even when the stream remains idle.
+        return EventSourceResponse(gen(), headers={"Cache-Control": "no-store, no-transform"})
 
     return app
 

@@ -81,6 +81,7 @@ def test_sse_replays_memory_added():
     c.post("/episodes", json={"text": "hello"})
     c.post("/ask", json={"question": "q"})
     with c.stream("GET", "/events") as r:
+        assert "no-transform" in r.headers["cache-control"]
         body = "".join(r.iter_text())
     for t in ("episode.ingested", "memory.added", "memory.retrieved", "answer.produced"):
         assert t in body
