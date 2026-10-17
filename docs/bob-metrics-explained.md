@@ -22,8 +22,8 @@ Each checkpoint has a hidden oracle entry, which the system never sees:
 | `stratum` | legitimate, boundary or maintenance (section 3) | maintenance |
 | `expect` | answer, refuse, abstain or uncertain | answer |
 | `required` | claim groups; each group needs one alternative in the answer | `["November 18", "Nov 18", "Nov. 18", "2026-11-18"]` |
-| `forbidden` | stale or unauthorized claims stated as current | "go live on December 2", "scheduled for Dec 2", ... |
-| `forbidden_exempt_markers` | words that make a sentence historical or qualified, so the forbidden match is ignored | for example "previously", "potential move" |
+| `forbidden` | stale or unauthorized claims stated as current | "moved to December 2", "go live on December 2", "scheduled for Dec 2", ... |
+| `forbidden_exempt_markers` | words that make a sentence historical or qualified, so a forbidden match in that sentence is ignored | "previously", "no longer", "replaced", "not approved", "tentative", "pending", ... |
 | `protected` | secrets the asker must not receive, in the answer or in the delivered context | fictitious codenames, prices, names |
 | `evidence` | event ids that can justify the answer | the approval event |
 
