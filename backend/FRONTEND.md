@@ -17,6 +17,22 @@ Tests: `.venv/Scripts/python -m pytest tests -q` (fake core, no network).
 
 ## HTTP
 
+**GET /memories/summary** -> `{summary, model, memory_count, total_count, truncated}`.
+Uses the selected `X-BrainBob-Member` identity and summarizes only readable, non-retired
+records from the server store. This read-only endpoint does not retrieve answers, write
+memories, or emit memory events. The full-screen chat Memory panel opens on Summary;
+Memory files retains saved records, reply citations, source history, and snapshot downloads.
+Empty memory skips inference; provider failures return 503 so files remain available.
+
+The dedicated `summarizer` role defaults to Crusoe's
+`nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B` (30B total / 3B active, versus the app answerer's
+Super 120B / 12B active), with thinking disabled and 768 output tokens. It uses the existing
+Crusoe credential and content-based model cache. `BRAINBOB_SUMMARIZER_MODEL`,
+`BRAINBOB_SUMMARIZER_BASE_URL`, and `BRAINBOB_SUMMARIZER_API_KEY` can override that role.
+Input is capped at 48,000 serialized record characters; partial coverage is reported in
+the response and UI. Summaries refresh when saved memory changes. The standard demo
+member header remains a demo identity, not authentication.
+
 **POST /episodes** `{"text": "Alex: let's launch Oct 24", "date": "2026-10-17", "source": "slack"}`
 also takes `scope` (path, e.g. `"krusty-krab/sales"`) and `author`; the episode is saved to episodes.jsonl.
 -> `{"episode_id": "ep-1a2b3c4d", "memories": [{"id":"m1","text":"Launch is Oct 24","author":"curator","origin":"ep-1a2b3c4d","date":"2026-10-17","status":"trial","scope":"team","reason":"","flagged":false,"supersedes":null,"owner":null}]}`

@@ -53,6 +53,8 @@ export const answerSchema = z.object({ task_id: z.string(), answer: z.string(), 
 export type BackendAnswer = z.infer<typeof answerSchema>;
 export type Episode = z.infer<typeof episodeSchema>;
 export type MemoryHistory = z.infer<typeof historySchema>;
+const memorySummarySchema = z.object({ summary: z.string(), model: z.string(), memory_count: z.number(), total_count: z.number(), truncated: z.boolean() });
+export type MemorySummary = z.infer<typeof memorySummarySchema>;
 const evidenceSchema = z.object({ memory_id: z.string(), shown: z.boolean(), correct: z.boolean(), task_id: z.string() });
 const decisionsSchema = z.object({ decisions: z.array(z.object({ memory_id: z.string(), action: z.enum(["promote", "retire", "flag"]), reason: z.string(), task_ids: z.array(z.string()) })) });
 
@@ -79,6 +81,7 @@ export function eventsUrl(member: string, after: number) {
   return `${BACKEND_URL}/events?${new URLSearchParams({ member, after: String(after) })}`;
 }
 export const brainApi = {
+  memorySummary: (member: string, signal?: AbortSignal) => request(member, "/memories/summary", memorySummarySchema, undefined, signal),
   memories: (member: string, signal?: AbortSignal) => request(member, "/memories", z.array(backendMemorySchema), undefined, signal),
   ask: (question: string, reader: string, signal?: AbortSignal) => request(memberId(reader), "/ask", answerSchema, { question, reader }, signal),
   remember: (text: string, scope: string, author: string, signal?: AbortSignal) => request(author, "/episodes", z.object({ episode_id: z.string(), memories: z.array(z.union([backendMemorySchema, ingestionDecisionSchema])) }), { text, scope, author, authority: "discussion", source: "brainbob-chat" }, signal),

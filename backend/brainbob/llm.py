@@ -20,6 +20,7 @@ def _roles():
         "curator_careful": dict(model=LIGHT, max_tokens=512, temperature=0, extra_body=NOTHINK),
         "curator_qwen": dict(model=QWEN, max_tokens=512, temperature=0, extra_body=NOTHINK),
         "agent": dict(model=os.environ.get("BRAINBOB_AGENT_MODEL", LIGHT), max_tokens=2048, temperature=0, extra_body=NOTHINK),
+        "summarizer": dict(model=NANO, max_tokens=768, temperature=0, extra_body=NOTHINK),
         "judge": dict(model="openai/gpt-oss-120b", max_tokens=2048, temperature=0, extra_body=None),
     }
     for role, cfg in r.items():
@@ -32,7 +33,7 @@ def _roles():
 
 
 _SEM = {"curator": threading.Semaphore(24), "curator_sloppy": threading.Semaphore(24), "agent": threading.Semaphore(16), "judge": threading.Semaphore(16),
-        "curator_careful": threading.Semaphore(24), "curator_qwen": threading.Semaphore(24)}
+        "curator_careful": threading.Semaphore(24), "curator_qwen": threading.Semaphore(24), "summarizer": threading.Semaphore(4)}
 _USAGE, _LOCK = [], threading.Lock()
 
 
@@ -90,9 +91,11 @@ def complete(role, messages, fresh=False, **kw):
     req = dict(model=model, messages=messages)
     for k in ("max_tokens", "temperature", "extra_body"):
         if cfg.get(k) is not None: req[k] = cfg[k]
-    delay = 3
+    # The optional memory overview must fail promptly enough for the UI to retry.
+    if role == "summarizer": req["timeout"] = 30
+    delay = 1 if role == "summarizer" else 3
     with _SEM[role]:
-        for _ in range(8):
+        for _ in range(2 if role == "summarizer" else 8):
             try:
                 r = _get_client(role).chat.completions.create(**req); break
             except (openai.RateLimitError, openai.APIConnectionError, openai.APITimeoutError, openai.InternalServerError):

@@ -188,6 +188,16 @@ blockquote { font-size: 12px; color: var(--muted); line-height: 1.7; margin: 13p
 .session-chat-inspection .panel-heading { border-bottom-color: #eeebe4; padding: 18px 22px; }
 .session-chat-inspection .panel-scroll { padding: 20px 22px; overscroll-behavior: contain; }
 .memory-intro { font-size: 13px; line-height: 1.6; color: #817b70; margin: 0 0 18px; }
+.memory-tabs { display: flex; gap: 22px; flex-shrink: 0; padding: 0 22px; border-bottom: 1px solid #eae5dc; }
+.memory-tabs [role=tab] { padding: 14px 0 12px; border-bottom: 2px solid transparent; color: #8e8576; font-size: 13px; }
+.memory-tabs [aria-selected=true] { border-bottom-color: #9780ac; color: #51415f; }
+.memory-tabs [role=tab]:focus-visible { outline: 2px solid #9780ac; outline-offset: -2px; }
+.memory-summary-copy { font-size: 14px; line-height: 1.8; color: #4b463f; overflow-wrap: anywhere; }
+.memory-summary-copy p { margin: 0 0 18px; white-space: pre-line; }
+.memory-summary-caption { display: flex; align-items: center; gap: 6px; color: #9785a5; font-size: 11px; margin: 24px 0 10px; }
+.memory-summary-loading { display: flex; align-items: center; gap: 9px; color: #9785a5; font-size: 13px; padding: 18px 0; }
+.memory-summary-error { font-size: 13px; line-height: 1.6; color: #817b70; }
+.memory-summary-error button { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border: 1px solid #eae5dc; border-radius: 8px; }
 .memory-view-switch { display: flex; gap: 4px; padding: 3px; border-radius: 10px; background: #f2f0eb; margin-bottom: 20px; }
 .memory-view-switch button { flex: 1; font-size: 12px; padding: 8px 6px; border-radius: 7px; color: #857d70; }
 .memory-view-switch button[aria-pressed=true] { background: #fffefa; color: #3b3730; box-shadow: 0 1px 4px #302d2210; }
