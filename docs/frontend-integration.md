@@ -4,7 +4,7 @@ Implemented October 17, 2026 against Bonan's [frontend contract](../backend/FRON
 
 ## Run with Bonan's backend
 
-1. Start the Python backend using its documented setup, on `http://127.0.0.1:3001`.
+1. Start the Python backend using its documented setup, on `http://127.0.0.1:3001`. Use the default Rusty Rod mode; this frontend now sends the member identity required by that mode. `--legacy` remains a backend compatibility option, not a requirement.
 2. Run `pnpm dev` from the repository root and open `http://127.0.0.1:3000/`.
 3. The header becomes **Connected** after `replay.done`. Without a server it shows **Backend offline** and retries the event connection every three seconds.
 
@@ -17,7 +17,7 @@ CopilotKit v2 renders chat through a self-managed AG-UI agent. The adapter emits
 | Control | Request | Result shown |
 | --- | --- | --- |
 | Ask | `POST /ask {question, reader}` | Actual answer and clickable cited memories |
-| Remember | `POST /episodes {text, scope, author, source}` | Actual stored memories, or a no-new-memories receipt |
+| Remember | `POST /episodes {text, scope, author, authority: "discussion", source}` | Maintenance decisions (add / tentative / supersede / reject), legacy stored memories, or a no-new-memories receipt |
 | Usefulness | `POST /feedback {task_id, correct_answer}` | Evidence for correctness flips on the last answer's cited memories |
 | Review | `POST /review {}` | Actual promotion, retirement, or flag decisions and reasons |
 | Original conversation | `GET /episodes/{id}` | Source text, date, and source label |
@@ -28,11 +28,15 @@ CopilotKit v2 renders chat through a self-managed AG-UI agent. The adapter emits
 
 The member selector has 18 Rusty Rod members across Executive, Sales, and Engineering. For example, Maya Flores (`sales-01`) reads `rusty-rod/sales/sales-01`, `rusty-rod/sales`, and `rusty-rod`. Executive membership adds no descendant access. Remember writes into the selected member’s individual scope. Changing readers starts a fresh chat context. The three cabinets are Individual, Team, and Organization. Their drawers represent members, teams, and organizations. Animations visit the record’s matching tier; only the represented member’s own, team, and organization drawers appear accessible. Display names are synthetic; request authors and owner identifiers retain stable member IDs.
 
-**Acting as (demo)** supplies an owner string, not an authenticated identity. The UI disables another owner's resolution controls, and backend 403s remain visible. The current global memory/event endpoints and client filtering are demonstration behavior, not an authorization boundary.
+Every HTTP request sends `X-BrainBob-Member` with the selected stable member ID. SSE sends `?member=<id>`. Switching members remounts the identity-bound workspace: chat, task references, inspection, cached memories, animation queue, and event cursor start fresh; the previous stream closes and pending reads abort. **Acting as (demo)** is read-only and follows the selected member, including owner operations.
+
+Bonan’s merged Rusty Rod mode applies server-side scope filtering. This is a demo identity marker, not authentication: callers can supply any member ID. The UI preserves 401/403/404 responses and never retries by elevating identity or switching to legacy mode. Authentication and a complete access-isolation audit remain required before any security claim.
+
+The parser retains tentative status, authority, writer model, and conflict references. Tentative memories are explicitly labeled in inspection. Org-mode ingestion currently returns maintenance `Decision` objects in `memories`; the receipt describes each decision and never counts a rejection as a stored fact. SSE remains the source of canonical memory records.
 
 ## Events, animation, and retrace
 
-`GET /events?after=<seq>` resumes the in-memory cursor. The reducer validates events, ignores duplicate sequence numbers, and applies replay events without animation until `replay.done`. Reloading requests the complete event history. `/memories` backfills records absent from that history without overwriting newer event projections.
+`GET /events?member=<id>&after=<seq>` resumes the in-memory cursor. The reducer validates events, ignores duplicate sequence numbers, and applies replay events without animation until `replay.done`. Reloading requests the complete event history. `/memories` backfills records absent from that history without overwriting newer event projections.
 
 | Event | Scene behavior |
 | --- | --- |
@@ -46,6 +50,9 @@ The member selector has 18 Rusty Rod members across Executive, Sales, and Engine
 | `memory.retired` | Office fire, flying papers, and shredder; retain the record as a tombstone |
 | `memory.flagged` | Red flag on the cabinet; locked record stays available |
 | `memory.locked` / owner keeps | Padlock / owner resolution scene |
+| `memory.conflict` | Retain the conflict event and both record references; no retirement animation |
+| `audit.checked` | Source-correctness verdict in history; separate from usefulness animations |
+| `audit.started` / `audit.finished` | Accept and retain sampling/count metadata without interrupting SSE; no dedicated scene yet |
 
 Supersession retirement does not trigger the fire scene. `memory.corrected`, `evidence.recorded`, and retire/correct resolution bookkeeping do not duplicate scenes already driven by other events. Unscoped `episode.ingested` and `memory.rejected` events update the log but cannot safely be attributed to a cabinet; their request receipts stay in chat. The 22 registered Rusty Rod paths retain individual, team, or organization metadata. A presentation projection supplies the logical tier’s cabinet position and the reader selects the accessible drawer; unregistered paths are not silently assigned to a tier. This does not change the backend event schema.
 
@@ -60,6 +67,8 @@ The real backend was unavailable on this machine during integration. No live Cru
 For repeatable frontend QA only, run `node apps/web/scripts/contract-fixture.mjs` while port 3001 is free, then reload the frontend. This loopback-only, in-memory fixture implements representative HTTP/SSE flows, labels its records and answers **Contract fixture**, and makes no model calls. Its review deterministically flags the locked fixture record; its feedback verdicts are scripted. Stop it before starting the real backend, and reload to clear the fixture projection.
 
 Automated tests cover event replay/deduplication, scope ancestry, correction history, locked flags, confirmation truthfulness, cited-memory verdicts, request payloads, AG-UI lifecycle, and error handling. Browser checks exercised scoped reads, chat requests, original sources, immutable corrections, retracing, locks/flags, and manual retirement against that fixture. Production build and TypeScript checks also pass.
+
+The org-mode compatibility tests also cover member headers on every API operation, member-specific SSE URLs, tentative records/model attribution, maintenance receipts, and new conflict/audit events.
 
 Remaining live validation: run the same flow against Bonan's server and Crusoe, including a real fresh retirement check. Backend task/evaluation state currently lives in process memory; after a backend restart an old feedback task may return 404. The UI surfaces that response and requires a new Ask. Records without a corresponding creation event can be shown from the memory snapshot but cannot be reconstructed at earlier timeline positions.
 

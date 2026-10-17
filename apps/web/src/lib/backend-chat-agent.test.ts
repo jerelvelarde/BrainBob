@@ -33,6 +33,17 @@ describe("CopilotKit backend bridge", () => {
     expect(JSON.parse(fetcher.mock.calls[0][1].body)).toMatchObject({ text: "sales-01: Call ACME at 10 AM.", scope: defaultReader, author: "sales-01" });
   });
 
+  it("reports org-mode tentative and rejected decisions without claiming they were all stored", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(response({ episode_id: "ep1", memories: [
+      { memory_id: "m2", action: "tentative", text: "November 13 estimate", reason: "conflicts with m1" },
+      { memory_id: null, action: "reject", text: "November 6", reason: "stale" },
+    ] })));
+    const events = await lastValueFrom(new BackendChatAgent(() => context("remember"), vi.fn(), vi.fn()).run(input("Estimate")).pipe(toArray()));
+    expect(events[2]).toMatchObject({ delta: expect.stringContaining("tentative: November 13 estimate") });
+    expect(JSON.stringify(events)).toContain("reject: November 6");
+    expect(JSON.stringify(events)).not.toContain("Filed 2");
+  });
+
   it("sends feedback only to the selected task and reviews without inventing confirmation", async () => {
     const fetcher = vi.fn().mockResolvedValueOnce(response({ evidence: [] })).mockResolvedValueOnce(response({ decisions: [] })); vi.stubGlobal("fetch", fetcher);
     let mode: ChatContext["mode"] = "feedback";
@@ -64,6 +75,6 @@ describe("CopilotKit backend bridge", () => {
   it("preserves owner-denial errors and rejects malformed response bodies", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValueOnce(response({ detail: "sales-01 is not the owner of m1" }, 403)).mockResolvedValueOnce(response({ memories: "broken" })));
     await expect(brainApi.resolve("m1", "sales-01", "retire")).rejects.toThrow("not the owner");
-    await expect(brainApi.memories()).rejects.toThrow("unexpected response");
+    await expect(brainApi.memories("sales-01")).rejects.toThrow("unexpected response");
   });
 });

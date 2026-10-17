@@ -39,20 +39,20 @@ function MemoryDetail({ initialActor, memory, events, readOnly, onSelect, onRetr
   const [error, setError] = useState("");
   const [receipt, setReceipt] = useState("");
   const [busy, setBusy] = useState(false);
-  const [actor, setActor] = useState(initialActor);
+  const actor = initialActor;
   const [text, setText] = useState(memory.text);
   const [reason, setReason] = useState("");
   const latestSeq = events.at(-1)?.seq;
   useEffect(() => {
     const abort = new AbortController();
-    void brainApi.episode(memory.origin, abort.signal).then(setEpisode).catch((err) => { if (!abort.signal.aborted) setSourceError(err.message); });
+    void brainApi.episode(memory.origin, initialActor, abort.signal).then(setEpisode).catch((err) => { if (!abort.signal.aborted) setSourceError(err.message); });
     return () => abort.abort();
-  }, [memory.origin]);
+  }, [memory.origin, initialActor]);
   useEffect(() => {
     const abort = new AbortController();
-    void brainApi.history(memory.id, abort.signal).then((value) => { setHistory(value); setHistoryError(""); }).catch((err) => { if (!abort.signal.aborted) setHistoryError(err.message); });
+    void brainApi.history(memory.id, initialActor, abort.signal).then((value) => { setHistory(value); setHistoryError(""); }).catch((err) => { if (!abort.signal.aborted) setHistoryError(err.message); });
     return () => abort.abort();
-  }, [memory.id, latestSeq]);
+  }, [memory.id, initialActor, latestSeq]);
   const owner = memory.owner === actor.trim();
   const locked = memory.status === "locked";
   const disabled = readOnly || busy || memory.status === "retired" || !actor.trim() || (locked && !owner);
@@ -74,6 +74,8 @@ function MemoryDetail({ initialActor, memory, events, readOnly, onSelect, onRetr
     <div className="memory-meta"><span>{scopeLabel(memory.scope)}</span><span className={memory.flagged ? "memory-status flagged" : ""}>{memory.flagged ? "Flagged · locked" : memory.status}</span></div>
     <h3 className="memory-title">{memory.text}</h3>
     <p className="memory-author">By {memory.author}{memory.owner ? ` · Owner: ${memory.owner}` : ""}</p>
+    <p className="memory-author">Authority: {memory.authority}{memory.model ? ` · Model: ${memory.model}` : ""}</p>
+    {memory.status === "tentative" ? <p className="memory-value">Tentative · not an approved commitment.</p> : null}
     {memory.reason ? <p className="memory-value">{memory.reason}</p> : null}
     {retirement?.type === "memory.retired" && retirement.confirmed === true ? <p className="confirmed-retirement">Fresh retirement confirmation passed.</p> : null}
     <details open><summary>Original conversation</summary>{episode ? <><blockquote>{episode.text}</blockquote><p className="memory-author">{episode.date} · {episode.source}</p></> : <p className="empty-state">{sourceError || "Loading source…"}</p>}</details>
@@ -82,7 +84,7 @@ function MemoryDetail({ initialActor, memory, events, readOnly, onSelect, onRetr
       {history?.events.filter((e): e is StoredEvent => e.type !== "replay.done").map((event) => <button className="revision-item" key={event.seq} onClick={() => onRetrace(event.seq)}><span><strong>{eventDescription(event)}</strong><small>{new Date(event.ts * 1000).toLocaleString()}</small></span></button>)}
     </details>
     <details><summary>Manage memory</summary>
-      <label className="memory-field">Acting as (demo)<input value={actor} onChange={(e) => setActor(e.target.value)} placeholder="sales-01 or exec-01" /></label>
+      <label className="memory-field">Acting as (demo)<input value={actor} readOnly /></label>
       <p className="empty-state">Demo identity only. Read access does not establish authority to approve or change a record.</p>
       {locked && !owner ? <p className="empty-state">Only {memory.owner} can resolve this locked record.</p> : null}
       <label className="memory-field">Correction<textarea value={text} onChange={(e) => setText(e.target.value)} /></label>

@@ -1,11 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { BACKEND_URL, backendEventSchema, brainApi } from "./brain-api";
+import { eventsUrl, backendEventSchema, brainApi } from "./brain-api";
 import { acceptBackendEvent, emptyBackendState, type BackendState } from "./backend-state";
 import type { StoredEvent } from "./brain-api";
 
-export function useBrainBackend(onLive: (event: StoredEvent, state: BackendState) => void) {
+export function useBrainBackend(member: string, onLive: (event: StoredEvent, state: BackendState) => void) {
   const [state, setState] = useState(emptyBackendState);
   const [connection, setConnection] = useState<"connecting" | "syncing" | "live" | "offline">("connecting");
   const [error, setError] = useState("");
@@ -13,13 +13,14 @@ export function useBrainBackend(onLive: (event: StoredEvent, state: BackendState
   const listener = useRef(onLive);
   useEffect(() => { listener.current = onLive; }, [onLive]);
   const synchronizeMissing = useCallback(async (signal?: AbortSignal) => {
-    const snapshot = await brainApi.memories(signal);
+    const snapshot = await brainApi.memories(member, signal);
+    if (signal?.aborted) return;
     // The event log owns known records; a later HTTP snapshot must not overwrite newer SSE changes.
     const memories = { ...store.current.memories };
     for (const memory of snapshot) if (!memories[memory.id]) memories[memory.id] = memory;
     store.current = { ...store.current, memories };
     setState(store.current);
-  }, []);
+  }, [member]);
 
   useEffect(() => {
     let source: EventSource | undefined, retry: ReturnType<typeof setTimeout> | undefined;
@@ -29,9 +30,10 @@ export function useBrainBackend(onLive: (event: StoredEvent, state: BackendState
     const connect = () => {
       if (closed) return;
       store.current = { ...store.current, replaying: true };
-      source = new EventSource(`${BACKEND_URL}/events?after=${store.current.seq}`);
-      source.onopen = () => { setConnection("syncing"); setError(""); };
+      source = new EventSource(eventsUrl(member, store.current.seq));
+      source.onopen = () => { if (closed) return; setConnection("syncing"); setError(""); };
       source.onmessage = (message) => {
+        if (closed) return;
         try {
           const event = backendEventSchema.parse(JSON.parse(message.data));
           const accepted = acceptBackendEvent(store.current, event);
@@ -57,6 +59,6 @@ export function useBrainBackend(onLive: (event: StoredEvent, state: BackendState
     };
     connect();
     return () => { closed = true; source?.close(); clearTimeout(retry); cancelAnimationFrame(frame); abort.abort(); };
-  }, [synchronizeMissing]);
+  }, [member, synchronizeMissing]);
   return { state, connection, error };
 }

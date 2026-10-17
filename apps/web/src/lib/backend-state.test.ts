@@ -27,6 +27,23 @@ describe("backend event projection", () => {
     expect(() => acceptBackendEvent(state, wire(0, "replay.done"))).toThrow("history was reset");
   });
 
+  it("accepts conflict and correctness audit events without confusing them with usefulness", () => {
+    let state = emptyBackendState();
+    const active = memory("m0"), tentative = { ...memory("m1"), status: "tentative", authority: "tentative", conflicts_with: ["m0"], model: "fixture-writer" };
+    const events = [wire(1, "memory.added", { memory: active }), wire(2, "memory.added", { memory: tentative }),
+      wire(3, "memory.conflict", { new_id: "m1", old_id: "m0", reason: "tentative", model: "fixture-judge" }),
+      wire(4, "audit.started", { seed: 17, eligible_ids: ["ep-1"], sampled_ids: ["ep-1"] }),
+      wire(5, "audit.checked", { memory_id: "m0", episode_id: "ep-1", verdict: "insufficient", reason: "not mentioned", model: "fixture-judge" }),
+      wire(6, "audit.finished", { checked: 1, supported: 0, contradicted: 0, insufficient: 1 })];
+    for (const event of events) state = acceptBackendEvent(state, event).state;
+    expect(state.memories.m0.status).toBe("trial");
+    expect(state.memories.m1).toMatchObject({ status: "tentative", model: "fixture-writer", conflicts_with: ["m0"] });
+    expect(state.events[4]).toMatchObject({ model: "fixture-judge" });
+    expect(eventDescription(state.events[4])).toContain("Source correctness: insufficient");
+    expect(cuesForEvent(state.events[4], state, defaultReader)).toEqual([]);
+    expect(acceptBackendEvent(state, wire(6, "replay.done")).state.replaying).toBe(false);
+  });
+
   it("uses ancestor segments, not string prefixes, for reader visibility", () => {
     expect(readers.map((scope) => canRead(scope.path, readers[2].path))).toEqual([true, true, true]);
     expect(readers.map((scope) => canRead(scope.path, readers[1].path))).toEqual([true, true, false]);

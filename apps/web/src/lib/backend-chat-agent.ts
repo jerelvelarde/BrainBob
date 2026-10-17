@@ -24,24 +24,25 @@ export class BackendChatAgent extends AbstractAgent {
         switch (context.mode) {
           case "ask": {
             const answer = await brainApi.ask(text, context.reader, abort.signal);
+            if (abort.signal.aborted) return;
             this.answered(answer);
             reply = answer.answer || "The backend returned an empty answer.";
             break;
           }
           case "remember": {
             const saved = await brainApi.remember(text, context.reader, context.author, abort.signal);
-            reply = saved.memories.length ? `Filed ${saved.memories.length} ${saved.memories.length === 1 ? "memory" : "memories"} for ${scopeLabel(context.reader)}:\n\n${saved.memories.map((m) => `- ${m.text}`).join("\n")}` : "The conversation was received; no new memories were stored.";
+            reply = saved.memories.length ? `Conversation processed for ${scopeLabel(context.reader)}:\n\n${saved.memories.map((m) => "action" in m ? `- ${m.action}: ${m.text || m.reason} (${m.reason})` : `- Stored: ${m.text}`).join("\n")}` : "The conversation was received; no new memories were stored.";
             break;
           }
           case "feedback": {
             if (!context.taskId) throw new Error("Ask a question first, then supply its correct answer in Usefulness mode.");
-            const result = await brainApi.feedback(context.taskId, text, abort.signal);
+            const result = await brainApi.feedback(context.taskId, text, context.author, abort.signal);
             const ids = new Set(result.evidence.map((e) => e.memory_id));
             reply = ids.size ? `The cited-memory check recorded correctness flips for ${ids.size} ${ids.size === 1 ? "memory" : "memories"}. Review can now assess the accumulated evidence.` : "The cited-memory check finished with no new correctness-flip evidence.";
             break;
           }
           case "review": {
-            const result = await brainApi.review(abort.signal);
+            const result = await brainApi.review(context.author, abort.signal);
             reply = result.decisions.length ? result.decisions.map((d) => `- ${d.action}: ${d.reason}`).join("\n") : "Review finished. No memories changed status.";
             break;
           }

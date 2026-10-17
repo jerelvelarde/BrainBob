@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { canReadScope, companyScope, demoScopes } from "./sample-company";
+import { canReadScope, companyScope, demoScopes, memberId } from "./sample-company";
 
 export const BACKEND_URL = (process.env.NEXT_PUBLIC_BRAINBOB_API_URL ?? "http://127.0.0.1:3001").replace(/\/$/, "");
 export const readers = demoScopes;
@@ -11,12 +11,14 @@ export function scopeLabel(path: string) { return companyScope(path)?.label ?? p
 
 export const backendMemorySchema = z.object({
   id: z.string(), text: z.string(), author: z.string(), origin: z.string(), date: z.string(),
-  status: z.enum(["trial", "promoted", "retired", "locked"]), scope: z.string(),
+  status: z.enum(["trial", "promoted", "retired", "locked", "tentative"]), scope: z.string(),
   reason: z.string().default(""), flagged: z.boolean().default(false),
+  authority: z.enum(["approved", "tentative", "discussion"]).default("discussion"),
+  model: z.string().nullable().default(null), conflicts_with: z.array(z.string()).default([]),
   supersedes: z.string().nullable().default(null), owner: z.string().nullable().default(null),
 });
 export type BackendMemory = z.infer<typeof backendMemorySchema>;
-const base = { seq: z.number().int().nonnegative(), ts: z.number() };
+const base = { seq: z.number().int().nonnegative(), ts: z.number(), model: z.string().nullable().optional() };
 const memoryId = { memory_id: z.string() };
 const taskId = { task_id: z.string() };
 export const backendEventSchema = z.discriminatedUnion("type", [
@@ -36,6 +38,10 @@ export const backendEventSchema = z.discriminatedUnion("type", [
   z.object({ ...base, ...memoryId, type: z.literal("memory.locked"), owner: z.string() }),
   z.object({ ...base, ...memoryId, type: z.literal("memory.resolved"), owner: z.string(), action: z.enum(["keep", "retire", "correct"]), new_id: z.string().nullable() }),
   z.object({ ...base, ...memoryId, type: z.literal("memory.corrected"), new_id: z.string(), author: z.string() }),
+  z.object({ ...base, type: z.literal("memory.conflict"), new_id: z.string(), old_id: z.string(), reason: z.string() }),
+  z.object({ ...base, type: z.literal("audit.started"), seed: z.union([z.number(), z.string()]), eligible_ids: z.array(z.string()), sampled_ids: z.array(z.string()) }),
+  z.object({ ...base, ...memoryId, type: z.literal("audit.checked"), episode_id: z.string(), verdict: z.enum(["supported", "contradicted", "insufficient"]), reason: z.string() }),
+  z.object({ ...base, type: z.literal("audit.finished"), checked: z.number(), contradicted: z.number(), supported: z.number(), insufficient: z.number() }),
 ]);
 export type BackendEvent = z.infer<typeof backendEventSchema>;
 export type StoredEvent = Exclude<BackendEvent, { type: "replay.done" }>;
@@ -48,10 +54,10 @@ export type MemoryHistory = z.infer<typeof historySchema>;
 const evidenceSchema = z.object({ memory_id: z.string(), shown: z.boolean(), correct: z.boolean(), task_id: z.string() });
 const decisionsSchema = z.object({ decisions: z.array(z.object({ memory_id: z.string(), action: z.enum(["promote", "retire", "flag"]), reason: z.string(), task_ids: z.array(z.string()) })) });
 
-async function request<T extends z.ZodTypeAny>(path: string, schema: T, body?: object, signal?: AbortSignal): Promise<z.output<T>> {
+async function request<T extends z.ZodTypeAny>(member: string, path: string, schema: T, body?: object, signal?: AbortSignal): Promise<z.output<T>> {
   let response: Response;
   try {
-    response = await fetch(`${BACKEND_URL}${path}`, { method: body ? "POST" : "GET", headers: body ? { "Content-Type": "application/json" } : undefined, body: body ? JSON.stringify(body) : undefined, signal, cache: "no-store" });
+    response = await fetch(`${BACKEND_URL}${path}`, { method: body ? "POST" : "GET", headers: { "X-BrainBob-Member": member, ...(body ? { "Content-Type": "application/json" } : {}) }, body: body ? JSON.stringify(body) : undefined, signal, cache: "no-store" });
   } catch (error) {
     if (signal?.aborted) throw error;
     throw new Error("Couldn’t reach the BrainBob backend. Check that it is running, then try again.");
@@ -65,16 +71,21 @@ async function request<T extends z.ZodTypeAny>(path: string, schema: T, body?: o
   return parsed.data;
 }
 const midPath = (id: string) => `/memories/${encodeURIComponent(id)}`;
+// Org-mode ingestion returns maintenance decisions; legacy ingestion returns memories.
+const ingestionDecisionSchema = z.object({ memory_id: z.string().nullable(), action: z.enum(["add", "tentative", "supersede", "reject"]), reason: z.string(), text: z.string().default(""), related: z.array(z.string()).default([]), model: z.string().nullable().optional() });
+export function eventsUrl(member: string, after: number) {
+  return `${BACKEND_URL}/events?${new URLSearchParams({ member, after: String(after) })}`;
+}
 export const brainApi = {
-  memories: (signal?: AbortSignal) => request("/memories", z.array(backendMemorySchema), undefined, signal),
-  ask: (question: string, reader: string, signal?: AbortSignal) => request("/ask", answerSchema, { question, reader }, signal),
-  remember: (text: string, scope: string, author: string, signal?: AbortSignal) => request("/episodes", z.object({ episode_id: z.string(), memories: z.array(backendMemorySchema) }), { text, scope, author, source: "brainbob-chat" }, signal),
-  feedback: (task_id: string, correct_answer: string, signal?: AbortSignal) => request("/feedback", z.object({ evidence: z.array(evidenceSchema) }), { task_id, correct_answer }, signal),
-  review: (signal?: AbortSignal) => request("/review", decisionsSchema, {}, signal),
-  episode: (id: string, signal?: AbortSignal) => request(`/episodes/${encodeURIComponent(id)}`, episodeSchema, undefined, signal),
-  history: (id: string, signal?: AbortSignal) => request(`${midPath(id)}/history`, historySchema, undefined, signal),
-  correct: (id: string, text: string, author: string) => request(`${midPath(id)}/correct`, z.object({ memory: backendMemorySchema, retired_id: z.string() }), { text, author }),
-  retire: (id: string, reason: string, author: string) => request(`${midPath(id)}/retire`, z.object({ memory: backendMemorySchema }), { reason, author }),
-  lock: (id: string, owner: string) => request(`${midPath(id)}/lock`, z.object({ memory: backendMemorySchema }), { owner }),
-  resolve: (id: string, owner: string, action: "keep" | "retire" | "correct", text?: string) => request(`${midPath(id)}/resolve`, z.object({ memory: backendMemorySchema }), { owner, action, text }),
+  memories: (member: string, signal?: AbortSignal) => request(member, "/memories", z.array(backendMemorySchema), undefined, signal),
+  ask: (question: string, reader: string, signal?: AbortSignal) => request(memberId(reader), "/ask", answerSchema, { question, reader }, signal),
+  remember: (text: string, scope: string, author: string, signal?: AbortSignal) => request(author, "/episodes", z.object({ episode_id: z.string(), memories: z.array(z.union([backendMemorySchema, ingestionDecisionSchema])) }), { text, scope, author, authority: "discussion", source: "brainbob-chat" }, signal),
+  feedback: (task_id: string, correct_answer: string, member: string, signal?: AbortSignal) => request(member, "/feedback", z.object({ evidence: z.array(evidenceSchema) }), { task_id, correct_answer }, signal),
+  review: (member: string, signal?: AbortSignal) => request(member, "/review", decisionsSchema, {}, signal),
+  episode: (id: string, member: string, signal?: AbortSignal) => request(member, `/episodes/${encodeURIComponent(id)}`, episodeSchema, undefined, signal),
+  history: (id: string, member: string, signal?: AbortSignal) => request(member, `${midPath(id)}/history`, historySchema, undefined, signal),
+  correct: (id: string, text: string, author: string) => request(author, `${midPath(id)}/correct`, z.object({ memory: backendMemorySchema, retired_id: z.string() }), { text, author }),
+  retire: (id: string, reason: string, author: string) => request(author, `${midPath(id)}/retire`, z.object({ memory: backendMemorySchema }), { reason, author }),
+  lock: (id: string, owner: string) => request(owner, `${midPath(id)}/lock`, z.object({ memory: backendMemorySchema }), { owner }),
+  resolve: (id: string, owner: string, action: "keep" | "retire" | "correct", text?: string) => request(owner, `${midPath(id)}/resolve`, z.object({ memory: backendMemorySchema }), { owner, action, text }),
 };

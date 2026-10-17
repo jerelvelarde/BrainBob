@@ -22,7 +22,7 @@ const retire = (m, reason, confirmed) => { m.status = "retired"; m.flagged = fal
 
 const server = createServer(async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:3000");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Last-Event-ID");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Last-Event-ID, X-BrainBob-Member");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   if (req.method === "OPTIONS") { res.writeHead(204); res.end(); return; }
   const url = new URL(req.url, "http://127.0.0.1:3001");

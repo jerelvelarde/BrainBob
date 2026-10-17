@@ -35,6 +35,7 @@ export function memoriesAt(events: StoredEvent[], seq: number) {
 
 export function eventMemoryIds(event: StoredEvent, events: StoredEvent[] = []): string[] {
   if (event.type === "memory.added") return [event.memory.id];
+  if (event.type === "memory.conflict") return [event.new_id, event.old_id];
   if ("memory_id" in event) return [event.memory_id, ...("new_id" in event && event.new_id ? [event.new_id] : [])];
   if ("memory_ids" in event) return event.memory_ids;
   if (event.type === "answer.produced") return event.cited_ids;
@@ -62,6 +63,10 @@ export function eventDescription(event: StoredEvent) {
     case "evidence.recorded": return "Evidence recorded";
     case "episode.ingested": return `Conversation processed · ${event.n_memories} memories`;
     case "memory.rejected": return `Not stored: ${event.reason}`;
+    case "memory.conflict": return "Tentative conflict · existing memory retained";
+    case "audit.started": return `Correctness audit · ${event.sampled_ids.length} of ${event.eligible_ids.length} conversations`;
+    case "audit.checked": return `Source correctness: ${event.verdict} · ${event.reason}`;
+    case "audit.finished": return `Correctness audit complete · ${event.checked} checks, ${event.insufficient} insufficient`;
   }
 }
 

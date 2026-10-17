@@ -17,6 +17,11 @@ const SceneChat = dynamic(() => import("./scene-chat"), { ssr: false, loading: (
 
 export function LiveBrainWorkspace() {
   const [reader, setReader] = useState<string>(defaultReader);
+  return <MemberWorkspace key={reader} reader={reader} onReaderChange={setReader} />;
+}
+
+// Remount every identity-bound cache, request, chat, and event cursor together.
+function MemberWorkspace({ reader, onReaderChange }: { reader: string; onReaderChange: (reader: string) => void }) {
   const readerRef = useRef(reader);
   const [panel, setPanel] = useState<"chat" | "memory" | null>(null);
   const [chatLoaded, setChatLoaded] = useState(false);
@@ -39,7 +44,7 @@ export function LiveBrainWorkspace() {
     const cues = cuesForEvent(event, state, readerRef.current);
     if (cues.length) setQueue((current) => [...current, ...cues]);
   }, []);
-  const backend = useBrainBackend(onLive);
+  const backend = useBrainBackend(memberId(reader), onLive);
   useEffect(() => {
     const media = matchMedia("(prefers-reduced-motion: reduce)");
     const update = () => { setReducedMotion(media.matches); if (media.matches) setPlaying(false); };
@@ -66,7 +71,7 @@ export function LiveBrainWorkspace() {
     setNotice(eventDescription(event));
   }
   function live() { cursorRef.current = null; setCursor(null); setRetraceCue(undefined); setQueue([]); setSeek(undefined); setNotice(""); setPlaying(!reducedMotion); }
-  function changeReader(value: string) { readerRef.current = value; setReader(value); setSelected(undefined); setCitations([]); live(); }
+  function changeReader(value: string) { readerRef.current = value; onReaderChange(value); setSelected(undefined); setCitations([]); live(); }
   const shownEvent = cursor === null ? undefined : backend.state.events.find((e) => e.seq === cursor);
 
   return <main className="app-shell" data-dramatic={cinematicsAt(cue?.action, progress).darkness > .5 ? cue?.action : undefined}>
