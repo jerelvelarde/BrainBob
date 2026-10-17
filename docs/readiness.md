@@ -2,6 +2,14 @@
 
 Assessment: October 17, 2026 (America/Los_Angeles). This combines the frontend checkout with concurrent backend/Bob work from remote `main` through `d85064d`, and the frozen diagnostics scorer from `codex/bob-benchmark@ab084a6`. Milestone histories were merged, not rewritten. No new GPU job, paid inference, deployment, or score submission was performed during this assessment.
 
+**Follow-up to Bonan's `13df1c0` report:** the organizational run is now published;
+its original scorer reports maintained 74.4, append-only 67.3 and full-history 88.6
+macro CATS. The [review](bob-pilot-review-20261017.md) reproduces a wrong-current-date
+false accept and finds that source/history probes made no requests. Treat these
+as historical scores with unresolved scorer validity, not current verified
+conformance. The original checker 60 have been inspected case by case and are
+development for round two; use the [new frozen input set](../benchmarks/bob/round2/README.md).
+
 **Decision: ready for offline integration checks and a controlled fine-tuned-checker experiment; not ready to claim a complete cross-benchmark scorecard or enable the tuned checker as the default memory writer.** Missing measurements remain unmeasured, not zero and not passing.
 
 Completed verification: **473 Python tests**, **52 frontend tests**, and TypeScript checking passed. The latest main integration retains Bonan's recent-conversation audits and in-process HTTP probes alongside the local judge callback and canonical adapter pin. The integration subagent also passed a production build and the actual Next-to-Python HTTP/SSE smoke with deterministic model substitutes. [Commands, commit references, and limitations](../judging/readiness-20261017/verification.md).
@@ -11,7 +19,7 @@ Completed verification: **473 Python tests**, **52 frontend tests**, and TypeScr
 | Evaluation | Base / comparator | BrainBob / tuned | Meaning and limitation |
 | --- | --- | --- | --- |
 | Bob memory-pair diagnostic, 60 public synthetic cases | Qwen3-0.6B: 32/60 (53.3%), macro-F1 0.437 | LoRA: 42/60 (70.0%), macro-F1 0.694 | Independently rescored saved predictions; no new inference. Not the organizational Bob pilot. |
-| Bob organizational pilot (`bobbench/`) | Always-refuse diagnostic: 0% legitimate, 25% macro CATS | No scored BrainBob/model run | Six worlds / 41 checkpoints; the refusal control made zero model calls and is not a BrainBob score. |
+| Bob organizational pilot (`bobbench/`) | Recorded append-only 67.3, full history 88.6 macro CATS | Recorded maintained 74.4 macro CATS | Six worlds / 41 checkpoints / three replicates, build `5fcd554`; +7.1 vs append-only [-6.2, +21.6]. Original scorer has review findings; see linked review. |
 | Bob structured scorer smoke (`benchmarks/bob/`) | Append-only rules 15/18 | Maintained rules 18/18 | Existing deterministic reference evidence; neither system is the app or a trained model. |
 | GateMem | Not measured | Not measured | Public data/code available; validated 91 episodes and 2,218 checkpoints. Full-app policy mapping and official scored inference remain. |
 | MUMBench / MUM (AIM) | Not measured | Not measured | Bonan confirmed these are the same target. Official runnable data/evaluator not located. |
@@ -33,7 +41,7 @@ Saved-response replay through the real `maintain.ingest` policy confirms the ris
 
 Recorded inference latency p50/p95 is 307.78/339.75 ms base versus 349.46/360.99 ms tuned, on the same unoptimized L4 setup. These are read from saved predictions, not measured on this machine. Run metadata records 8.6 seconds training, 103.8 seconds in the job process and estimated process GPU cost $0.0231; Bonan reports 137 seconds total running time and approximately $0.03 GPU plus $0.09 teacher. Process and whole-job timing have different scopes, and neither is a newly verified bill.
 
-The adapter identity is resolved: Bonan confirmed canonical revision `b904e6ec0baea37bf70209093b8c59332d3c450a`, matching the committed metadata and reload checks. He confirmed unchanged weights across the other mentioned repository revisions; metadata records SHA-256 `21588c9e975fe23d6c8e73db35bea23cd8834e8e1259ce6184d29472c7a19a0b`. This identity confirmation is from the model owner, not an independent download of the private weights. The supplied [Hub page](https://huggingface.co/Guangze/memops-small-qwen3-0.6b-lora) was inaccessible to the browser tool. A local GPU callable through `bridge.make_judge` is supported; no standing inference endpoint is required. See [handoff instructions](finetune-handoff.md).
+The adapter identity is resolved: Bonan confirmed canonical revision `b904e6ec0baea37bf70209093b8c59332d3c450a`, matching the committed metadata and reload checks. He confirmed unchanged weights across the other mentioned repository revisions; metadata records SHA-256 `21588c9e975fe23d6c8e73db35bea23cd8834e8e1259ce6184d29472c7a19a0b`. This identity confirmation is from the model owner; weights were not independently downloaded here. The [Hub release](https://huggingface.co/Guangze/memops-small-qwen3-0.6b-lora) is now public; the earlier browser-access failure is not a current access blocker. A local GPU callable through `bridge.make_judge` is supported; no standing inference endpoint is required. See [handoff instructions](finetune-handoff.md).
 
 ## Work assigned and acceptance gates
 
@@ -42,10 +50,10 @@ The adapter identity is resolved: Bonan confirmed canonical revision `b904e6ec0b
 | UI → backend | `live_integration` subagent | Same-origin HTTP and SSE reach the actual Python service; ingest, ask, feedback, correction, inspection, member isolation and reconnect checks pass. Model responses in offline smoke remain explicitly fake. |
 | External benchmarks | `benchmark_readiness` subagent | GateMem adapter sees no labels/future turns; hashes and completeness are recorded; unavailable official MUMBench/CoMemBench evaluation stays marked blocked. |
 | Bob pilot | `bob_pilot` subagent | Existing six worlds and scorer validated; inaccessible citations and failed operations cannot pass; real backend adapter resolves and is tested. |
-| Fine-tuning integration | Root + `benchmark_readiness` | Saved predictions independently scored; maintenance bridge tested with provenance and deterministic policy guards; canonical checkpoint pinned; GPU/private Hub access still needed for fresh inference. |
-| Real model and official scores | Bonan + project owners | Private checkpoint access/compute, configured inference and judging credentials, full-app external adapter, and official evaluator access. These cannot be inferred from passing unit tests. |
+| Fine-tuning integration | Root + `benchmark_readiness` | Saved predictions independently scored; maintenance bridge tested with provenance and deterministic policy guards; canonical checkpoint pinned; GPU execution still needed for fresh inference; the adapter is public. |
+| Real model and official scores | Bonan + project owners | Compute, configured inference and judging credentials, full-app external adapter, and official evaluator access. These cannot be inferred from passing unit tests. |
 
-Priority order: complete a real-provider UI demo; run the LoRA checker as an opt-in maintenance candidate on fresh cases; run the organizational Bob pilot with comparable conditions; finish GateMem full-app mapping and official judging; obtain MUMBench and CoMemBench evaluation access. Maintain separate score cells and disclose unsupported surfaces and data exposure.
+Next couple of hours: complete the real-provider UI demo (#1); keep the LoRA checker observe-only or confirmation-gated (#6); address the organizational scorer/probe findings and compare frozen candidates consistently (#4); finish the submission package (#5). External benchmark expansion is deferred. Maintain separate score cells and disclose unsupported surfaces and data exposure.
 
 The app still uses client-selected demo identity, not authenticated multi-user login. The permission regression tests check behavior within that demo contract; they do not establish an authentication boundary. SQLite, NemoClaw and Switchyard remain separate roadmap items and are not prerequisites for the saved-prediction rescore.
 
