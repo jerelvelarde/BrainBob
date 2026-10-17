@@ -1,0 +1,94 @@
+{
+ "tr001-conflict": {
+  "label": "unrelated",
+  "why": "policy: a hedged/unconfirmed 'might move to X' does not assert an incompatible current value; both statements can coexist (Bob prompt: same applicable time). Labeling it conflict would let an approved hedge supersede a valid memory."
+ },
+ "tr002-conflict": {
+  "label": "unrelated",
+  "why": "policy: a hedged/unconfirmed 'might move to X' does not assert an incompatible current value; both statements can coexist (Bob prompt: same applicable time). Labeling it conflict would let an approved hedge supersede a valid memory."
+ },
+ "tr006-conflict": {
+  "label": "unrelated",
+  "why": "policy: a hedged/unconfirmed 'might move to X' does not assert an incompatible current value; both statements can coexist (Bob prompt: same applicable time). Labeling it conflict would let an approved hedge supersede a valid memory."
+ },
+ "tr009-conflict": {
+  "label": "unrelated",
+  "why": "policy: a hedged/unconfirmed 'might move to X' does not assert an incompatible current value; both statements can coexist (Bob prompt: same applicable time). Labeling it conflict would let an approved hedge supersede a valid memory."
+ },
+ "tr011-conflict": {
+  "label": "unrelated",
+  "why": "policy: a hedged/unconfirmed 'might move to X' does not assert an incompatible current value; both statements can coexist (Bob prompt: same applicable time). Labeling it conflict would let an approved hedge supersede a valid memory."
+ },
+ "tr013-conflict": {
+  "label": "unrelated",
+  "why": "policy: a hedged/unconfirmed 'might move to X' does not assert an incompatible current value; both statements can coexist (Bob prompt: same applicable time). Labeling it conflict would let an approved hedge supersede a valid memory."
+ },
+ "tr015-conflict": {
+  "label": "unrelated",
+  "why": "policy: a hedged/unconfirmed 'might move to X' does not assert an incompatible current value; both statements can coexist (Bob prompt: same applicable time). Labeling it conflict would let an approved hedge supersede a valid memory."
+ },
+ "tr020-conflict": {
+  "label": "unrelated",
+  "why": "policy: a hedged/unconfirmed 'might move to X' does not assert an incompatible current value; both statements can coexist (Bob prompt: same applicable time). Labeling it conflict would let an approved hedge supersede a valid memory."
+ },
+ "tr021-conflict": {
+  "label": "unrelated",
+  "why": "policy: a hedged/unconfirmed 'might move to X' does not assert an incompatible current value; both statements can coexist (Bob prompt: same applicable time). Labeling it conflict would let an approved hedge supersede a valid memory."
+ },
+ "tr023-conflict": {
+  "label": "unrelated",
+  "why": "policy: a hedged/unconfirmed 'might move to X' does not assert an incompatible current value; both statements can coexist (Bob prompt: same applicable time). Labeling it conflict would let an approved hedge supersede a valid memory."
+ },
+ "tr025-conflict": {
+  "label": "unrelated",
+  "why": "policy: a hedged/unconfirmed 'might move to X' does not assert an incompatible current value; both statements can coexist (Bob prompt: same applicable time). Labeling it conflict would let an approved hedge supersede a valid memory."
+ },
+ "tr032-conflict": {
+  "label": "unrelated",
+  "why": "policy: a hedged/unconfirmed 'might move to X' does not assert an incompatible current value; both statements can coexist (Bob prompt: same applicable time). Labeling it conflict would let an approved hedge supersede a valid memory."
+ },
+ "tr034-conflict": {
+  "label": "unrelated",
+  "why": "policy: a hedged/unconfirmed 'might move to X' does not assert an incompatible current value; both statements can coexist (Bob prompt: same applicable time). Labeling it conflict would let an approved hedge supersede a valid memory."
+ },
+ "tr037-conflict": {
+  "label": "unrelated",
+  "why": "policy: a hedged/unconfirmed 'might move to X' does not assert an incompatible current value; both statements can coexist (Bob prompt: same applicable time). Labeling it conflict would let an approved hedge supersede a valid memory."
+ },
+ "tr041-conflict": {
+  "label": "unrelated",
+  "why": "policy: a hedged/unconfirmed 'might move to X' does not assert an incompatible current value; both statements can coexist (Bob prompt: same applicable time). Labeling it conflict would let an approved hedge supersede a valid memory."
+ },
+ "tr053-conflict": {
+  "label": "unrelated",
+  "why": "policy: a hedged/unconfirmed 'might move to X' does not assert an incompatible current value; both statements can coexist (Bob prompt: same applicable time). Labeling it conflict would let an approved hedge supersede a valid memory."
+ },
+ "tr054-conflict": {
+  "label": "unrelated",
+  "why": "policy: a hedged/unconfirmed 'might move to X' does not assert an incompatible current value; both statements can coexist (Bob prompt: same applicable time). Labeling it conflict would let an approved hedge supersede a valid memory."
+ },
+ "tr060-conflict": {
+  "label": "unrelated",
+  "why": "policy: a hedged/unconfirmed 'might move to X' does not assert an incompatible current value; both statements can coexist (Bob prompt: same applicable time). Labeling it conflict would let an approved hedge supersede a valid memory."
+ },
+ "de005-conflict": {
+  "label": "unrelated",
+  "why": "policy: a hedged/unconfirmed 'might move to X' does not assert an incompatible current value; both statements can coexist (Bob prompt: same applicable time). Labeling it conflict would let an approved hedge supersede a valid memory."
+ },
+ "de009-conflict": {
+  "label": "unrelated",
+  "why": "policy: a hedged/unconfirmed 'might move to X' does not assert an incompatible current value; both statements can coexist (Bob prompt: same applicable time). Labeling it conflict would let an approved hedge supersede a valid memory."
+ },
+ "tr033-unrelated": {
+  "drop": true,
+  "why": "ambiguous scope (Chicago office vs company-wide courier): could be read as either; dropped"
+ },
+ "tr055-conflict": {
+  "drop": true,
+  "why": "channels can coexist (email launch vs later social ads); not a clean conflict; dropped"
+ },
+ "de007-conflict": {
+  "drop": true,
+  "why": "both say the offsite is at Redwood; candidate adds history (Pine Valley); not a conflict, not a clean same; dropped"
+ }
+}

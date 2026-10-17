@@ -1,0 +1,2464 @@
+{
+ "threshold": 0.8,
+ "note": "not part of the scored predictions",
+ "base_eval": [
+  {
+   "id": "eval-001",
+   "probs": {
+    "same": 0.8355,
+    "conflict": 0.0,
+    "unrelated": 0.1645
+   },
+   "label_logprobs": {
+    "same": -0.182,
+    "conflict": -15.432,
+    "unrelated": -1.807
+   }
+  },
+  {
+   "id": "eval-002",
+   "probs": {
+    "same": 0.5312,
+    "conflict": 0.0,
+    "unrelated": 0.4688
+   },
+   "label_logprobs": {
+    "same": -0.637,
+    "conflict": -11.262,
+    "unrelated": -0.762
+   }
+  },
+  {
+   "id": "eval-003",
+   "probs": {
+    "same": 0.9999,
+    "conflict": 0.0,
+    "unrelated": 0.0001
+   },
+   "label_logprobs": {
+    "same": -0.0,
+    "conflict": -14.375,
+    "unrelated": -8.875
+   }
+  },
+  {
+   "id": "eval-004",
+   "probs": {
+    "same": 0.9991,
+    "conflict": 0.0,
+    "unrelated": 0.0009
+   },
+   "label_logprobs": {
+    "same": -0.001,
+    "conflict": -13.876,
+    "unrelated": -7.001
+   }
+  },
+  {
+   "id": "eval-005",
+   "probs": {
+    "same": 1.0,
+    "conflict": 0.0,
+    "unrelated": 0.0
+   },
+   "label_logprobs": {
+    "same": -0.0,
+    "conflict": -16.625,
+    "unrelated": -13.5
+   }
+  },
+  {
+   "id": "eval-006",
+   "probs": {
+    "same": 0.9046,
+    "conflict": 0.0001,
+    "unrelated": 0.0953
+   },
+   "label_logprobs": {
+    "same": -0.104,
+    "conflict": -9.604,
+    "unrelated": -2.354
+   }
+  },
+  {
+   "id": "eval-007",
+   "probs": {
+    "same": 0.9399,
+    "conflict": 0.0,
+    "unrelated": 0.0601
+   },
+   "label_logprobs": {
+    "same": -0.065,
+    "conflict": -10.315,
+    "unrelated": -2.815
+   }
+  },
+  {
+   "id": "eval-008",
+   "probs": {
+    "same": 0.9702,
+    "conflict": 0.0005,
+    "unrelated": 0.0293
+   },
+   "label_logprobs": {
+    "same": -0.033,
+    "conflict": -7.658,
+    "unrelated": -3.533
+   }
+  },
+  {
+   "id": "eval-009",
+   "probs": {
+    "same": 0.133,
+    "conflict": 0.0001,
+    "unrelated": 0.867
+   },
+   "label_logprobs": {
+    "same": -2.023,
+    "conflict": -9.648,
+    "unrelated": -0.148
+   }
+  },
+  {
+   "id": "eval-010",
+   "probs": {
+    "same": 0.8175,
+    "conflict": 0.0001,
+    "unrelated": 0.1824
+   },
+   "label_logprobs": {
+    "same": -0.206,
+    "conflict": -8.956,
+    "unrelated": -1.706
+   }
+  },
+  {
+   "id": "eval-011",
+   "probs": {
+    "same": 0.9948,
+    "conflict": 0.0,
+    "unrelated": 0.0052
+   },
+   "label_logprobs": {
+    "same": -0.006,
+    "conflict": -11.756,
+    "unrelated": -5.256
+   }
+  },
+  {
+   "id": "eval-012",
+   "probs": {
+    "same": 0.7677,
+    "conflict": 0.1941,
+    "unrelated": 0.0382
+   },
+   "label_logprobs": {
+    "same": -0.27,
+    "conflict": -1.645,
+    "unrelated": -3.27
+   }
+  },
+  {
+   "id": "eval-013",
+   "probs": {
+    "same": 0.9399,
+    "conflict": 0.0,
+    "unrelated": 0.0601
+   },
+   "label_logprobs": {
+    "same": -0.067,
+    "conflict": -11.567,
+    "unrelated": -2.817
+   }
+  },
+  {
+   "id": "eval-014",
+   "probs": {
+    "same": 0.9484,
+    "conflict": 0.0044,
+    "unrelated": 0.0472
+   },
+   "label_logprobs": {
+    "same": -0.057,
+    "conflict": -5.432,
+    "unrelated": -3.057
+   }
+  },
+  {
+   "id": "eval-015",
+   "probs": {
+    "same": 0.9921,
+    "conflict": 0.0003,
+    "unrelated": 0.0076
+   },
+   "label_logprobs": {
+    "same": -0.009,
+    "conflict": -8.009,
+    "unrelated": -4.884
+   }
+  },
+  {
+   "id": "eval-016",
+   "probs": {
+    "same": 0.8355,
+    "conflict": 0.0,
+    "unrelated": 0.1645
+   },
+   "label_logprobs": {
+    "same": -0.184,
+    "conflict": -10.434,
+    "unrelated": -1.809
+   }
+  },
+  {
+   "id": "eval-017",
+   "probs": {
+    "same": 0.9964,
+    "conflict": 0.0,
+    "unrelated": 0.0036
+   },
+   "label_logprobs": {
+    "same": -0.004,
+    "conflict": -12.629,
+    "unrelated": -5.629
+   }
+  },
+  {
+   "id": "eval-018",
+   "probs": {
+    "same": 0.7058,
+    "conflict": 0.0,
+    "unrelated": 0.2942
+   },
+   "label_logprobs": {
+    "same": -0.352,
+    "conflict": -12.852,
+    "unrelated": -1.227
+   }
+  },
+  {
+   "id": "eval-019",
+   "probs": {
+    "same": 0.3486,
+    "conflict": 0.0,
+    "unrelated": 0.6513
+   },
+   "label_logprobs": {
+    "same": -1.058,
+    "conflict": -10.183,
+    "unrelated": -0.433
+   }
+  },
+  {
+   "id": "eval-020",
+   "probs": {
+    "same": 0.8933,
+    "conflict": 0.0,
+    "unrelated": 0.1067
+   },
+   "label_logprobs": {
+    "same": -0.116,
+    "conflict": -11.116,
+    "unrelated": -2.241
+   }
+  },
+  {
+   "id": "eval-021",
+   "probs": {
+    "same": 0.8933,
+    "conflict": 0.0,
+    "unrelated": 0.1067
+   },
+   "label_logprobs": {
+    "same": -0.116,
+    "conflict": -12.491,
+    "unrelated": -2.241
+   }
+  },
+  {
+   "id": "eval-022",
+   "probs": {
+    "same": 0.9997,
+    "conflict": 0.0,
+    "unrelated": 0.0003
+   },
+   "label_logprobs": {
+    "same": -0.0,
+    "conflict": -16.0,
+    "unrelated": -8.0
+   }
+  },
+  {
+   "id": "eval-023",
+   "probs": {
+    "same": 0.9706,
+    "conflict": 0.0001,
+    "unrelated": 0.0293
+   },
+   "label_logprobs": {
+    "same": -0.032,
+    "conflict": -8.907,
+    "unrelated": -3.532
+   }
+  },
+  {
+   "id": "eval-024",
+   "probs": {
+    "same": 0.9998,
+    "conflict": 0.0,
+    "unrelated": 0.0002
+   },
+   "label_logprobs": {
+    "same": -0.0,
+    "conflict": -15.625,
+    "unrelated": -8.375
+   }
+  },
+  {
+   "id": "eval-025",
+   "probs": {
+    "same": 0.4688,
+    "conflict": 0.0,
+    "unrelated": 0.5312
+   },
+   "label_logprobs": {
+    "same": -0.764,
+    "conflict": -10.889,
+    "unrelated": -0.639
+   }
+  },
+  {
+   "id": "eval-026",
+   "probs": {
+    "same": 0.9707,
+    "conflict": 0.0,
+    "unrelated": 0.0293
+   },
+   "label_logprobs": {
+    "same": -0.032,
+    "conflict": -11.282,
+    "unrelated": -3.532
+   }
+  },
+  {
+   "id": "eval-027",
+   "probs": {
+    "same": 0.9924,
+    "conflict": 0.0,
+    "unrelated": 0.0076
+   },
+   "label_logprobs": {
+    "same": -0.009,
+    "conflict": -11.009,
+    "unrelated": -4.884
+   }
+  },
+  {
+   "id": "eval-028",
+   "probs": {
+    "same": 0.974,
+    "conflict": 0.0001,
+    "unrelated": 0.026
+   },
+   "label_logprobs": {
+    "same": -0.029,
+    "conflict": -9.404,
+    "unrelated": -3.654
+   }
+  },
+  {
+   "id": "eval-029",
+   "probs": {
+    "same": 0.9993,
+    "conflict": 0.0,
+    "unrelated": 0.0007
+   },
+   "label_logprobs": {
+    "same": -0.001,
+    "conflict": -13.376,
+    "unrelated": -7.251
+   }
+  },
+  {
+   "id": "eval-030",
+   "probs": {
+    "same": 0.9627,
+    "conflict": 0.0,
+    "unrelated": 0.0373
+   },
+   "label_logprobs": {
+    "same": -0.041,
+    "conflict": -11.916,
+    "unrelated": -3.291
+   }
+  },
+  {
+   "id": "eval-031",
+   "probs": {
+    "same": 0.9819,
+    "conflict": 0.0001,
+    "unrelated": 0.018
+   },
+   "label_logprobs": {
+    "same": -0.02,
+    "conflict": -9.145,
+    "unrelated": -4.02
+   }
+  },
+  {
+   "id": "eval-032",
+   "probs": {
+    "same": 1.0,
+    "conflict": 0.0,
+    "unrelated": 0.0
+   },
+   "label_logprobs": {
+    "same": -0.0,
+    "conflict": -15.688,
+    "unrelated": -12.0
+   }
+  },
+  {
+   "id": "eval-033",
+   "probs": {
+    "same": 0.5923,
+    "conflict": 0.0006,
+    "unrelated": 0.4071
+   },
+   "label_logprobs": {
+    "same": -0.529,
+    "conflict": -7.404,
+    "unrelated": -0.904
+   }
+  },
+  {
+   "id": "eval-034",
+   "probs": {
+    "same": 0.8176,
+    "conflict": 0.0,
+    "unrelated": 0.1824
+   },
+   "label_logprobs": {
+    "same": -0.205,
+    "conflict": -12.205,
+    "unrelated": -1.705
+   }
+  },
+  {
+   "id": "eval-035",
+   "probs": {
+    "same": 0.9238,
+    "conflict": 0.0004,
+    "unrelated": 0.0758
+   },
+   "label_logprobs": {
+    "same": -0.083,
+    "conflict": -7.833,
+    "unrelated": -2.583
+   }
+  },
+  {
+   "id": "eval-036",
+   "probs": {
+    "same": 0.932,
+    "conflict": 0.0005,
+    "unrelated": 0.0675
+   },
+   "label_logprobs": {
+    "same": -0.074,
+    "conflict": -7.574,
+    "unrelated": -2.699
+   }
+  },
+  {
+   "id": "eval-037",
+   "probs": {
+    "same": 0.9976,
+    "conflict": 0.0002,
+    "unrelated": 0.0022
+   },
+   "label_logprobs": {
+    "same": -0.003,
+    "conflict": -8.503,
+    "unrelated": -6.128
+   }
+  },
+  {
+   "id": "eval-038",
+   "probs": {
+    "same": 0.989,
+    "conflict": 0.0,
+    "unrelated": 0.011
+   },
+   "label_logprobs": {
+    "same": -0.012,
+    "conflict": -11.137,
+    "unrelated": -4.512
+   }
+  },
+  {
+   "id": "eval-039",
+   "probs": {
+    "same": 0.8354,
+    "conflict": 0.0001,
+    "unrelated": 0.1645
+   },
+   "label_logprobs": {
+    "same": -0.185,
+    "conflict": -8.935,
+    "unrelated": -1.81
+   }
+  },
+  {
+   "id": "eval-040",
+   "probs": {
+    "same": 0.9994,
+    "conflict": 0.0,
+    "unrelated": 0.0006
+   },
+   "label_logprobs": {
+    "same": -0.001,
+    "conflict": -14.063,
+    "unrelated": -7.501
+   }
+  },
+  {
+   "id": "eval-041",
+   "probs": {
+    "same": 1.0,
+    "conflict": 0.0,
+    "unrelated": 0.0
+   },
+   "label_logprobs": {
+    "same": -0.0,
+    "conflict": -16.688,
+    "unrelated": -11.75
+   }
+  },
+  {
+   "id": "eval-042",
+   "probs": {
+    "same": 0.9841,
+    "conflict": 0.0,
+    "unrelated": 0.0159
+   },
+   "label_logprobs": {
+    "same": -0.017,
+    "conflict": -12.392,
+    "unrelated": -4.142
+   }
+  },
+  {
+   "id": "eval-043",
+   "probs": {
+    "same": 0.8519,
+    "conflict": 0.0,
+    "unrelated": 0.148
+   },
+   "label_logprobs": {
+    "same": -0.163,
+    "conflict": -11.413,
+    "unrelated": -1.913
+   }
+  },
+  {
+   "id": "eval-044",
+   "probs": {
+    "same": 0.6791,
+    "conflict": 0.0001,
+    "unrelated": 0.3208
+   },
+   "label_logprobs": {
+    "same": -0.393,
+    "conflict": -9.643,
+    "unrelated": -1.143
+   }
+  },
+  {
+   "id": "eval-045",
+   "probs": {
+    "same": 0.9046,
+    "conflict": 0.0001,
+    "unrelated": 0.0953
+   },
+   "label_logprobs": {
+    "same": -0.103,
+    "conflict": -9.728,
+    "unrelated": -2.353
+   }
+  },
+  {
+   "id": "eval-046",
+   "probs": {
+    "same": 0.982,
+    "conflict": 0.0,
+    "unrelated": 0.018
+   },
+   "label_logprobs": {
+    "same": -0.02,
+    "conflict": -11.395,
+    "unrelated": -4.02
+   }
+  },
+  {
+   "id": "eval-047",
+   "probs": {
+    "same": 0.9324,
+    "conflict": 0.0,
+    "unrelated": 0.0675
+   },
+   "label_logprobs": {
+    "same": -0.073,
+    "conflict": -10.573,
+    "unrelated": -2.698
+   }
+  },
+  {
+   "id": "eval-048",
+   "probs": {
+    "same": 0.9874,
+    "conflict": 0.0001,
+    "unrelated": 0.0124
+   },
+   "label_logprobs": {
+    "same": -0.014,
+    "conflict": -9.014,
+    "unrelated": -4.389
+   }
+  },
+  {
+   "id": "eval-049",
+   "probs": {
+    "same": 0.9914,
+    "conflict": 0.0,
+    "unrelated": 0.0086
+   },
+   "label_logprobs": {
+    "same": -0.01,
+    "conflict": -13.447,
+    "unrelated": -4.76
+   }
+  },
+  {
+   "id": "eval-050",
+   "probs": {
+    "same": 0.982,
+    "conflict": 0.0,
+    "unrelated": 0.018
+   },
+   "label_logprobs": {
+    "same": -0.019,
+    "conflict": -13.707,
+    "unrelated": -4.019
+   }
+  },
+  {
+   "id": "eval-051",
+   "probs": {
+    "same": 0.867,
+    "conflict": 0.0,
+    "unrelated": 0.133
+   },
+   "label_logprobs": {
+    "same": -0.146,
+    "conflict": -10.896,
+    "unrelated": -2.021
+   }
+  },
+  {
+   "id": "eval-052",
+   "probs": {
+    "same": 0.9994,
+    "conflict": 0.0,
+    "unrelated": 0.0006
+   },
+   "label_logprobs": {
+    "same": -0.001,
+    "conflict": -13.376,
+    "unrelated": -7.501
+   }
+  },
+  {
+   "id": "eval-053",
+   "probs": {
+    "same": 1.0,
+    "conflict": 0.0,
+    "unrelated": 0.0
+   },
+   "label_logprobs": {
+    "same": -0.0,
+    "conflict": -17.188,
+    "unrelated": -14.25
+   }
+  },
+  {
+   "id": "eval-054",
+   "probs": {
+    "same": 0.9399,
+    "conflict": 0.0,
+    "unrelated": 0.0601
+   },
+   "label_logprobs": {
+    "same": -0.065,
+    "conflict": -10.815,
+    "unrelated": -2.815
+   }
+  },
+  {
+   "id": "eval-055",
+   "probs": {
+    "same": 0.7982,
+    "conflict": 0.0,
+    "unrelated": 0.2018
+   },
+   "label_logprobs": {
+    "same": -0.23,
+    "conflict": -11.98,
+    "unrelated": -1.605
+   }
+  },
+  {
+   "id": "eval-056",
+   "probs": {
+    "same": 0.4378,
+    "conflict": 0.0,
+    "unrelated": 0.5622
+   },
+   "label_logprobs": {
+    "same": -0.83,
+    "conflict": -14.955,
+    "unrelated": -0.58
+   }
+  },
+  {
+   "id": "eval-057",
+   "probs": {
+    "same": 0.7549,
+    "conflict": 0.0,
+    "unrelated": 0.2451
+   },
+   "label_logprobs": {
+    "same": -0.286,
+    "conflict": -12.411,
+    "unrelated": -1.411
+   }
+  },
+  {
+   "id": "eval-058",
+   "probs": {
+    "same": 0.6225,
+    "conflict": 0.0,
+    "unrelated": 0.3775
+   },
+   "label_logprobs": {
+    "same": -0.478,
+    "conflict": -12.853,
+    "unrelated": -0.978
+   }
+  },
+  {
+   "id": "eval-059",
+   "probs": {
+    "same": 0.5311,
+    "conflict": 0.0002,
+    "unrelated": 0.4687
+   },
+   "label_logprobs": {
+    "same": -0.639,
+    "conflict": -8.639,
+    "unrelated": -0.764
+   }
+  },
+  {
+   "id": "eval-060",
+   "probs": {
+    "same": 0.731,
+    "conflict": 0.0,
+    "unrelated": 0.2689
+   },
+   "label_logprobs": {
+    "same": -0.318,
+    "conflict": -10.568,
+    "unrelated": -1.318
+   }
+  }
+ ],
+ "base_dev": [
+  {
+   "id": "dev-001",
+   "probs": {
+    "same": 0.9466,
+    "conflict": 0.0,
+    "unrelated": 0.0534
+   },
+   "label_logprobs": {
+    "same": -0.057,
+    "conflict": -12.057,
+    "unrelated": -2.932
+   }
+  },
+  {
+   "id": "dev-002",
+   "probs": {
+    "same": 0.2018,
+    "conflict": 0.0,
+    "unrelated": 0.7982
+   },
+   "label_logprobs": {
+    "same": -1.605,
+    "conflict": -11.48,
+    "unrelated": -0.23
+   }
+  },
+  {
+   "id": "dev-003",
+   "probs": {
+    "same": 0.9968,
+    "conflict": 0.0,
+    "unrelated": 0.0032
+   },
+   "label_logprobs": {
+    "same": -0.004,
+    "conflict": -14.004,
+    "unrelated": -5.754
+   }
+  },
+  {
+   "id": "dev-004",
+   "probs": {
+    "same": 0.9998,
+    "conflict": 0.0,
+    "unrelated": 0.0002
+   },
+   "label_logprobs": {
+    "same": -0.0,
+    "conflict": -16.25,
+    "unrelated": -8.375
+   }
+  },
+  {
+   "id": "dev-005",
+   "probs": {
+    "same": 0.7311,
+    "conflict": 0.0,
+    "unrelated": 0.2689
+   },
+   "label_logprobs": {
+    "same": -0.317,
+    "conflict": -12.442,
+    "unrelated": -1.317
+   }
+  },
+  {
+   "id": "dev-006",
+   "probs": {
+    "same": 0.8355,
+    "conflict": 0.0,
+    "unrelated": 0.1645
+   },
+   "label_logprobs": {
+    "same": -0.182,
+    "conflict": -14.432,
+    "unrelated": -1.807
+   }
+  },
+  {
+   "id": "dev-007",
+   "probs": {
+    "same": 0.9398,
+    "conflict": 0.0002,
+    "unrelated": 0.0601
+   },
+   "label_logprobs": {
+    "same": -0.066,
+    "conflict": -8.691,
+    "unrelated": -2.816
+   }
+  },
+  {
+   "id": "dev-008",
+   "probs": {
+    "same": 0.893,
+    "conflict": 0.0004,
+    "unrelated": 0.1066
+   },
+   "label_logprobs": {
+    "same": -0.119,
+    "conflict": -7.869,
+    "unrelated": -2.244
+   }
+  },
+  {
+   "id": "dev-009",
+   "probs": {
+    "same": 0.5622,
+    "conflict": 0.0,
+    "unrelated": 0.4378
+   },
+   "label_logprobs": {
+    "same": -0.582,
+    "conflict": -10.582,
+    "unrelated": -0.832
+   }
+  },
+  {
+   "id": "dev-010",
+   "probs": {
+    "same": 0.9996,
+    "conflict": 0.0,
+    "unrelated": 0.0004
+   },
+   "label_logprobs": {
+    "same": -0.001,
+    "conflict": -13.751,
+    "unrelated": -7.751
+   }
+  },
+  {
+   "id": "dev-011",
+   "probs": {
+    "same": 0.9981,
+    "conflict": 0.0,
+    "unrelated": 0.0019
+   },
+   "label_logprobs": {
+    "same": -0.003,
+    "conflict": -13.003,
+    "unrelated": -6.253
+   }
+  },
+  {
+   "id": "dev-012",
+   "probs": {
+    "same": 0.8175,
+    "conflict": 0.0001,
+    "unrelated": 0.1824
+   },
+   "label_logprobs": {
+    "same": -0.206,
+    "conflict": -9.581,
+    "unrelated": -1.706
+   }
+  }
+ ],
+ "base_syn_dev": {
+  "thresholded": {
+   "conflict": {
+    "n_argmax": 0,
+    "n_kept": 0,
+    "coverage": null,
+    "precision": null,
+    "recall_vs_gold": 0.0
+   },
+   "same": {
+    "n_argmax": 27,
+    "n_kept": 19,
+    "coverage": 0.7037037037037037,
+    "precision": 0.5263157894736842,
+    "recall_vs_gold": 1.0
+   }
+  },
+  "rows": [
+   {
+    "id": "syn-001",
+    "gold": "same",
+    "probs": {
+     "same": 0.977,
+     "conflict": 0.0,
+     "unrelated": 0.023
+    }
+   },
+   {
+    "id": "syn-002",
+    "gold": "conflict",
+    "probs": {
+     "same": 0.9147,
+     "conflict": 0.0003,
+     "unrelated": 0.0851
+    }
+   },
+   {
+    "id": "syn-003",
+    "gold": "same",
+    "probs": {
+     "same": 0.9998,
+     "conflict": 0.0,
+     "unrelated": 0.0002
+    }
+   },
+   {
+    "id": "syn-004",
+    "gold": "conflict",
+    "probs": {
+     "same": 0.9769,
+     "conflict": 0.0002,
+     "unrelated": 0.023
+    }
+   },
+   {
+    "id": "syn-005",
+    "gold": "conflict",
+    "probs": {
+     "same": 0.777,
+     "conflict": 0.0003,
+     "unrelated": 0.2226
+    }
+   },
+   {
+    "id": "syn-006",
+    "gold": "unrelated",
+    "probs": {
+     "same": 0.2227,
+     "conflict": 0.0,
+     "unrelated": 0.7773
+    }
+   },
+   {
+    "id": "syn-007",
+    "gold": "same",
+    "probs": {
+     "same": 1.0,
+     "conflict": 0.0,
+     "unrelated": 0.0
+    }
+   },
+   {
+    "id": "syn-008",
+    "gold": "same",
+    "probs": {
+     "same": 0.9997,
+     "conflict": 0.0,
+     "unrelated": 0.0003
+    }
+   },
+   {
+    "id": "syn-009",
+    "gold": "conflict",
+    "probs": {
+     "same": 0.7763,
+     "conflict": 0.0013,
+     "unrelated": 0.2224
+    }
+   },
+   {
+    "id": "syn-010",
+    "gold": "conflict",
+    "probs": {
+     "same": 0.7733,
+     "conflict": 0.0052,
+     "unrelated": 0.2215
+    }
+   },
+   {
+    "id": "syn-011",
+    "gold": "same",
+    "probs": {
+     "same": 0.9964,
+     "conflict": 0.0,
+     "unrelated": 0.0036
+    }
+   },
+   {
+    "id": "syn-012",
+    "gold": "unrelated",
+    "probs": {
+     "same": 0.9399,
+     "conflict": 0.0,
+     "unrelated": 0.0601
+    }
+   },
+   {
+    "id": "syn-013",
+    "gold": "unrelated",
+    "probs": {
+     "same": 0.7982,
+     "conflict": 0.0,
+     "unrelated": 0.2018
+    }
+   },
+   {
+    "id": "syn-014",
+    "gold": "conflict",
+    "probs": {
+     "same": 0.8517,
+     "conflict": 0.0003,
+     "unrelated": 0.148
+    }
+   },
+   {
+    "id": "syn-015",
+    "gold": "conflict",
+    "probs": {
+     "same": 0.7158,
+     "conflict": 0.0519,
+     "unrelated": 0.2324
+    }
+   },
+   {
+    "id": "syn-016",
+    "gold": "unrelated",
+    "probs": {
+     "same": 0.7058,
+     "conflict": 0.0,
+     "unrelated": 0.2942
+    }
+   },
+   {
+    "id": "syn-017",
+    "gold": "unrelated",
+    "probs": {
+     "same": 0.2018,
+     "conflict": 0.0,
+     "unrelated": 0.7982
+    }
+   },
+   {
+    "id": "syn-018",
+    "gold": "unrelated",
+    "probs": {
+     "same": 0.9869,
+     "conflict": 0.0007,
+     "unrelated": 0.0124
+    }
+   },
+   {
+    "id": "syn-019",
+    "gold": "same",
+    "probs": {
+     "same": 0.9994,
+     "conflict": 0.0,
+     "unrelated": 0.0006
+    }
+   },
+   {
+    "id": "syn-020",
+    "gold": "same",
+    "probs": {
+     "same": 0.9981,
+     "conflict": 0.0,
+     "unrelated": 0.0019
+    }
+   },
+   {
+    "id": "syn-021",
+    "gold": "same",
+    "probs": {
+     "same": 0.9948,
+     "conflict": 0.0,
+     "unrelated": 0.0052
+    }
+   },
+   {
+    "id": "syn-022",
+    "gold": "unrelated",
+    "probs": {
+     "same": 0.7771,
+     "conflict": 0.0002,
+     "unrelated": 0.2227
+    }
+   },
+   {
+    "id": "syn-023",
+    "gold": "same",
+    "probs": {
+     "same": 0.9997,
+     "conflict": 0.0,
+     "unrelated": 0.0003
+    }
+   },
+   {
+    "id": "syn-024",
+    "gold": "conflict",
+    "probs": {
+     "same": 0.9769,
+     "conflict": 0.0001,
+     "unrelated": 0.023
+    }
+   },
+   {
+    "id": "syn-025",
+    "gold": "unrelated",
+    "probs": {
+     "same": 0.2018,
+     "conflict": 0.0,
+     "unrelated": 0.7982
+    }
+   },
+   {
+    "id": "syn-026",
+    "gold": "same",
+    "probs": {
+     "same": 0.9859,
+     "conflict": 0.0,
+     "unrelated": 0.0141
+    }
+   },
+   {
+    "id": "syn-027",
+    "gold": "conflict",
+    "probs": {
+     "same": 0.9574,
+     "conflict": 0.0005,
+     "unrelated": 0.0421
+    }
+   },
+   {
+    "id": "syn-028",
+    "gold": "unrelated",
+    "probs": {
+     "same": 0.5,
+     "conflict": 0.0001,
+     "unrelated": 0.5
+    }
+   },
+   {
+    "id": "syn-029",
+    "gold": "unrelated",
+    "probs": {
+     "same": 0.8354,
+     "conflict": 0.0001,
+     "unrelated": 0.1645
+    }
+   },
+   {
+    "id": "syn-030",
+    "gold": "conflict",
+    "probs": {
+     "same": 0.9611,
+     "conflict": 0.0016,
+     "unrelated": 0.0373
+    }
+   }
+  ]
+ },
+ "tuned_eval": [
+  {
+   "id": "eval-001",
+   "probs": {
+    "same": 0.0159,
+    "conflict": 0.0017,
+    "unrelated": 0.9824
+   },
+   "label_logprobs": {
+    "same": -4.145,
+    "conflict": -6.395,
+    "unrelated": -0.02
+   }
+  },
+  {
+   "id": "eval-002",
+   "probs": {
+    "same": 0.0335,
+    "conflict": 0.1031,
+    "unrelated": 0.8634
+   },
+   "label_logprobs": {
+    "same": -3.401,
+    "conflict": -2.276,
+    "unrelated": -0.151
+   }
+  },
+  {
+   "id": "eval-003",
+   "probs": {
+    "same": 0.9259,
+    "conflict": 0.0461,
+    "unrelated": 0.028
+   },
+   "label_logprobs": {
+    "same": -0.08,
+    "conflict": -3.08,
+    "unrelated": -3.58
+   }
+  },
+  {
+   "id": "eval-004",
+   "probs": {
+    "same": 0.7491,
+    "conflict": 0.0615,
+    "unrelated": 0.1894
+   },
+   "label_logprobs": {
+    "same": -0.295,
+    "conflict": -2.795,
+    "unrelated": -1.67
+   }
+  },
+  {
+   "id": "eval-005",
+   "probs": {
+    "same": 0.9793,
+    "conflict": 0.0179,
+    "unrelated": 0.0028
+   },
+   "label_logprobs": {
+    "same": -0.022,
+    "conflict": -4.022,
+    "unrelated": -5.897
+   }
+  },
+  {
+   "id": "eval-006",
+   "probs": {
+    "same": 0.0508,
+    "conflict": 0.331,
+    "unrelated": 0.6183
+   },
+   "label_logprobs": {
+    "same": -2.986,
+    "conflict": -1.111,
+    "unrelated": -0.486
+   }
+  },
+  {
+   "id": "eval-007",
+   "probs": {
+    "same": 0.3192,
+    "conflict": 0.3617,
+    "unrelated": 0.3192
+   },
+   "label_logprobs": {
+    "same": -1.148,
+    "conflict": -1.023,
+    "unrelated": -1.148
+   }
+  },
+  {
+   "id": "eval-008",
+   "probs": {
+    "same": 0.0757,
+    "conflict": 0.8141,
+    "unrelated": 0.1102
+   },
+   "label_logprobs": {
+    "same": -2.583,
+    "conflict": -0.208,
+    "unrelated": -2.208
+   }
+  },
+  {
+   "id": "eval-009",
+   "probs": {
+    "same": 0.0064,
+    "conflict": 0.0371,
+    "unrelated": 0.9565
+   },
+   "label_logprobs": {
+    "same": -5.047,
+    "conflict": -3.297,
+    "unrelated": -0.047
+   }
+  },
+  {
+   "id": "eval-010",
+   "probs": {
+    "same": 0.0471,
+    "conflict": 0.5062,
+    "unrelated": 0.4467
+   },
+   "label_logprobs": {
+    "same": -3.06,
+    "conflict": -0.685,
+    "unrelated": -0.81
+   }
+  },
+  {
+   "id": "eval-011",
+   "probs": {
+    "same": 0.206,
+    "conflict": 0.4942,
+    "unrelated": 0.2998
+   },
+   "label_logprobs": {
+    "same": -1.585,
+    "conflict": -0.71,
+    "unrelated": -1.21
+   }
+  },
+  {
+   "id": "eval-012",
+   "probs": {
+    "same": 0.0094,
+    "conflict": 0.9578,
+    "unrelated": 0.0328
+   },
+   "label_logprobs": {
+    "same": -4.669,
+    "conflict": -0.044,
+    "unrelated": -3.419
+   }
+  },
+  {
+   "id": "eval-013",
+   "probs": {
+    "same": 0.3039,
+    "conflict": 0.0528,
+    "unrelated": 0.6433
+   },
+   "label_logprobs": {
+    "same": -1.201,
+    "conflict": -2.951,
+    "unrelated": -0.451
+   }
+  },
+  {
+   "id": "eval-014",
+   "probs": {
+    "same": 0.0656,
+    "conflict": 0.7054,
+    "unrelated": 0.229
+   },
+   "label_logprobs": {
+    "same": -2.728,
+    "conflict": -0.353,
+    "unrelated": -1.478
+   }
+  },
+  {
+   "id": "eval-015",
+   "probs": {
+    "same": 0.1451,
+    "conflict": 0.8352,
+    "unrelated": 0.0196
+   },
+   "label_logprobs": {
+    "same": -1.933,
+    "conflict": -0.183,
+    "unrelated": -3.933
+   }
+  },
+  {
+   "id": "eval-016",
+   "probs": {
+    "same": 0.1573,
+    "conflict": 0.2938,
+    "unrelated": 0.5489
+   },
+   "label_logprobs": {
+    "same": -1.855,
+    "conflict": -1.23,
+    "unrelated": -0.605
+   }
+  },
+  {
+   "id": "eval-017",
+   "probs": {
+    "same": 0.5066,
+    "conflict": 0.1452,
+    "unrelated": 0.3482
+   },
+   "label_logprobs": {
+    "same": -0.686,
+    "conflict": -1.936,
+    "unrelated": -1.061
+   }
+  },
+  {
+   "id": "eval-018",
+   "probs": {
+    "same": 0.0221,
+    "conflict": 0.0365,
+    "unrelated": 0.9414
+   },
+   "label_logprobs": {
+    "same": -3.814,
+    "conflict": -3.314,
+    "unrelated": -0.064
+   }
+  },
+  {
+   "id": "eval-019",
+   "probs": {
+    "same": 0.0144,
+    "conflict": 0.094,
+    "unrelated": 0.8916
+   },
+   "label_logprobs": {
+    "same": -4.243,
+    "conflict": -2.368,
+    "unrelated": -0.118
+   }
+  },
+  {
+   "id": "eval-020",
+   "probs": {
+    "same": 0.0707,
+    "conflict": 0.1695,
+    "unrelated": 0.7598
+   },
+   "label_logprobs": {
+    "same": -2.654,
+    "conflict": -1.779,
+    "unrelated": -0.279
+   }
+  },
+  {
+   "id": "eval-021",
+   "probs": {
+    "same": 0.0699,
+    "conflict": 0.0792,
+    "unrelated": 0.851
+   },
+   "label_logprobs": {
+    "same": -2.668,
+    "conflict": -2.543,
+    "unrelated": -0.168
+   }
+  },
+  {
+   "id": "eval-022",
+   "probs": {
+    "same": 0.8896,
+    "conflict": 0.0041,
+    "unrelated": 0.1063
+   },
+   "label_logprobs": {
+    "same": -0.121,
+    "conflict": -5.496,
+    "unrelated": -2.246
+   }
+  },
+  {
+   "id": "eval-023",
+   "probs": {
+    "same": 0.1038,
+    "conflict": 0.6766,
+    "unrelated": 0.2197
+   },
+   "label_logprobs": {
+    "same": -2.269,
+    "conflict": -0.394,
+    "unrelated": -1.519
+   }
+  },
+  {
+   "id": "eval-024",
+   "probs": {
+    "same": 0.9773,
+    "conflict": 0.0024,
+    "unrelated": 0.0203
+   },
+   "label_logprobs": {
+    "same": -0.025,
+    "conflict": -6.025,
+    "unrelated": -3.9
+   }
+  },
+  {
+   "id": "eval-025",
+   "probs": {
+    "same": 0.0213,
+    "conflict": 0.0742,
+    "unrelated": 0.9045
+   },
+   "label_logprobs": {
+    "same": -3.854,
+    "conflict": -2.604,
+    "unrelated": -0.104
+   }
+  },
+  {
+   "id": "eval-026",
+   "probs": {
+    "same": 0.0548,
+    "conflict": 0.2781,
+    "unrelated": 0.6671
+   },
+   "label_logprobs": {
+    "same": -2.909,
+    "conflict": -1.284,
+    "unrelated": -0.409
+   }
+  },
+  {
+   "id": "eval-027",
+   "probs": {
+    "same": 0.0794,
+    "conflict": 0.5176,
+    "unrelated": 0.4031
+   },
+   "label_logprobs": {
+    "same": -2.537,
+    "conflict": -0.662,
+    "unrelated": -0.912
+   }
+  },
+  {
+   "id": "eval-028",
+   "probs": {
+    "same": 0.0872,
+    "conflict": 0.6442,
+    "unrelated": 0.2686
+   },
+   "label_logprobs": {
+    "same": -2.444,
+    "conflict": -0.444,
+    "unrelated": -1.319
+   }
+  },
+  {
+   "id": "eval-029",
+   "probs": {
+    "same": 0.6642,
+    "conflict": 0.1679,
+    "unrelated": 0.1679
+   },
+   "label_logprobs": {
+    "same": -0.415,
+    "conflict": -1.79,
+    "unrelated": -1.79
+   }
+  },
+  {
+   "id": "eval-030",
+   "probs": {
+    "same": 0.2134,
+    "conflict": 0.1294,
+    "unrelated": 0.6572
+   },
+   "label_logprobs": {
+    "same": -1.554,
+    "conflict": -2.054,
+    "unrelated": -0.429
+   }
+  },
+  {
+   "id": "eval-031",
+   "probs": {
+    "same": 0.1127,
+    "conflict": 0.6487,
+    "unrelated": 0.2386
+   },
+   "label_logprobs": {
+    "same": -2.186,
+    "conflict": -0.436,
+    "unrelated": -1.436
+   }
+  },
+  {
+   "id": "eval-032",
+   "probs": {
+    "same": 0.9825,
+    "conflict": 0.0124,
+    "unrelated": 0.0052
+   },
+   "label_logprobs": {
+    "same": -0.02,
+    "conflict": -4.395,
+    "unrelated": -5.27
+   }
+  },
+  {
+   "id": "eval-033",
+   "probs": {
+    "same": 0.0416,
+    "conflict": 0.3075,
+    "unrelated": 0.6509
+   },
+   "label_logprobs": {
+    "same": -3.183,
+    "conflict": -1.183,
+    "unrelated": -0.433
+   }
+  },
+  {
+   "id": "eval-034",
+   "probs": {
+    "same": 0.0746,
+    "conflict": 0.123,
+    "unrelated": 0.8023
+   },
+   "label_logprobs": {
+    "same": -2.6,
+    "conflict": -2.1,
+    "unrelated": -0.225
+   }
+  },
+  {
+   "id": "eval-035",
+   "probs": {
+    "same": 0.0722,
+    "conflict": 0.6043,
+    "unrelated": 0.3235
+   },
+   "label_logprobs": {
+    "same": -2.633,
+    "conflict": -0.508,
+    "unrelated": -1.133
+   }
+  },
+  {
+   "id": "eval-036",
+   "probs": {
+    "same": 0.0571,
+    "conflict": 0.6141,
+    "unrelated": 0.3287
+   },
+   "label_logprobs": {
+    "same": -2.865,
+    "conflict": -0.49,
+    "unrelated": -1.115
+   }
+  },
+  {
+   "id": "eval-037",
+   "probs": {
+    "same": 0.0921,
+    "conflict": 0.874,
+    "unrelated": 0.0339
+   },
+   "label_logprobs": {
+    "same": -2.387,
+    "conflict": -0.137,
+    "unrelated": -3.387
+   }
+  },
+  {
+   "id": "eval-038",
+   "probs": {
+    "same": 0.2926,
+    "conflict": 0.3316,
+    "unrelated": 0.3758
+   },
+   "label_logprobs": {
+    "same": -1.235,
+    "conflict": -1.11,
+    "unrelated": -0.985
+   }
+  },
+  {
+   "id": "eval-039",
+   "probs": {
+    "same": 0.0391,
+    "conflict": 0.4207,
+    "unrelated": 0.5402
+   },
+   "label_logprobs": {
+    "same": -3.245,
+    "conflict": -0.87,
+    "unrelated": -0.62
+   }
+  },
+  {
+   "id": "eval-040",
+   "probs": {
+    "same": 0.8835,
+    "conflict": 0.044,
+    "unrelated": 0.0725
+   },
+   "label_logprobs": {
+    "same": -0.128,
+    "conflict": -3.128,
+    "unrelated": -2.628
+   }
+  },
+  {
+   "id": "eval-041",
+   "probs": {
+    "same": 0.9966,
+    "conflict": 0.0006,
+    "unrelated": 0.0028
+   },
+   "label_logprobs": {
+    "same": -0.004,
+    "conflict": -7.379,
+    "unrelated": -5.879
+   }
+  },
+  {
+   "id": "eval-042",
+   "probs": {
+    "same": 0.5617,
+    "conflict": 0.0522,
+    "unrelated": 0.3861
+   },
+   "label_logprobs": {
+    "same": -0.584,
+    "conflict": -2.959,
+    "unrelated": -0.959
+   }
+  },
+  {
+   "id": "eval-043",
+   "probs": {
+    "same": 0.0236,
+    "conflict": 0.2873,
+    "unrelated": 0.6891
+   },
+   "label_logprobs": {
+    "same": -3.751,
+    "conflict": -1.251,
+    "unrelated": -0.376
+   }
+  },
+  {
+   "id": "eval-044",
+   "probs": {
+    "same": 0.0197,
+    "conflict": 0.2403,
+    "unrelated": 0.74
+   },
+   "label_logprobs": {
+    "same": -3.93,
+    "conflict": -1.43,
+    "unrelated": -0.305
+   }
+  },
+  {
+   "id": "eval-045",
+   "probs": {
+    "same": 0.0872,
+    "conflict": 0.2686,
+    "unrelated": 0.6442
+   },
+   "label_logprobs": {
+    "same": -2.445,
+    "conflict": -1.32,
+    "unrelated": -0.445
+   }
+  },
+  {
+   "id": "eval-046",
+   "probs": {
+    "same": 0.2006,
+    "conflict": 0.3748,
+    "unrelated": 0.4247
+   },
+   "label_logprobs": {
+    "same": -1.612,
+    "conflict": -0.987,
+    "unrelated": -0.862
+   }
+  },
+  {
+   "id": "eval-047",
+   "probs": {
+    "same": 0.1136,
+    "conflict": 0.1458,
+    "unrelated": 0.7406
+   },
+   "label_logprobs": {
+    "same": -2.181,
+    "conflict": -1.931,
+    "unrelated": -0.306
+   }
+  },
+  {
+   "id": "eval-048",
+   "probs": {
+    "same": 0.0533,
+    "conflict": 0.8338,
+    "unrelated": 0.1128
+   },
+   "label_logprobs": {
+    "same": -2.934,
+    "conflict": -0.184,
+    "unrelated": -2.184
+   }
+  },
+  {
+   "id": "eval-049",
+   "probs": {
+    "same": 0.6372,
+    "conflict": 0.0218,
+    "unrelated": 0.341
+   },
+   "label_logprobs": {
+    "same": -0.458,
+    "conflict": -3.833,
+    "unrelated": -1.083
+   }
+  },
+  {
+   "id": "eval-050",
+   "probs": {
+    "same": 0.3697,
+    "conflict": 0.0209,
+    "unrelated": 0.6095
+   },
+   "label_logprobs": {
+    "same": -1.003,
+    "conflict": -3.878,
+    "unrelated": -0.503
+   }
+  },
+  {
+   "id": "eval-051",
+   "probs": {
+    "same": 0.0426,
+    "conflict": 0.1021,
+    "unrelated": 0.8553
+   },
+   "label_logprobs": {
+    "same": -3.161,
+    "conflict": -2.286,
+    "unrelated": -0.161
+   }
+  },
+  {
+   "id": "eval-052",
+   "probs": {
+    "same": 0.8072,
+    "conflict": 0.0964,
+    "unrelated": 0.0964
+   },
+   "label_logprobs": {
+    "same": -0.22,
+    "conflict": -2.345,
+    "unrelated": -2.345
+   }
+  },
+  {
+   "id": "eval-053",
+   "probs": {
+    "same": 0.9882,
+    "conflict": 0.0059,
+    "unrelated": 0.0059
+   },
+   "label_logprobs": {
+    "same": -0.013,
+    "conflict": -5.138,
+    "unrelated": -5.138
+   }
+  },
+  {
+   "id": "eval-054",
+   "probs": {
+    "same": 0.0692,
+    "conflict": 0.3514,
+    "unrelated": 0.5794
+   },
+   "label_logprobs": {
+    "same": -2.676,
+    "conflict": -1.051,
+    "unrelated": -0.551
+   }
+  },
+  {
+   "id": "eval-055",
+   "probs": {
+    "same": 0.0928,
+    "conflict": 0.0266,
+    "unrelated": 0.8806
+   },
+   "label_logprobs": {
+    "same": -2.384,
+    "conflict": -3.634,
+    "unrelated": -0.134
+   }
+  },
+  {
+   "id": "eval-056",
+   "probs": {
+    "same": 0.0041,
+    "conflict": 0.0019,
+    "unrelated": 0.994
+   },
+   "label_logprobs": {
+    "same": -5.508,
+    "conflict": -6.258,
+    "unrelated": -0.008
+   }
+  },
+  {
+   "id": "eval-057",
+   "probs": {
+    "same": 0.0586,
+    "conflict": 0.0244,
+    "unrelated": 0.9169
+   },
+   "label_logprobs": {
+    "same": -2.843,
+    "conflict": -3.718,
+    "unrelated": -0.093
+   }
+  },
+  {
+   "id": "eval-058",
+   "probs": {
+    "same": 0.0096,
+    "conflict": 0.0096,
+    "unrelated": 0.9808
+   },
+   "label_logprobs": {
+    "same": -4.647,
+    "conflict": -4.647,
+    "unrelated": -0.022
+   }
+  },
+  {
+   "id": "eval-059",
+   "probs": {
+    "same": 0.0081,
+    "conflict": 0.2668,
+    "unrelated": 0.7252
+   },
+   "label_logprobs": {
+    "same": -4.824,
+    "conflict": -1.324,
+    "unrelated": -0.324
+   }
+  },
+  {
+   "id": "eval-060",
+   "probs": {
+    "same": 0.0431,
+    "conflict": 0.1931,
+    "unrelated": 0.7638
+   },
+   "label_logprobs": {
+    "same": -3.149,
+    "conflict": -1.649,
+    "unrelated": -0.274
+   }
+  }
+ ],
+ "tuned_dev": [
+  {
+   "id": "dev-001",
+   "probs": {
+    "same": 0.0469,
+    "conflict": 0.3058,
+    "unrelated": 0.6473
+   },
+   "label_logprobs": {
+    "same": -3.064,
+    "conflict": -1.189,
+    "unrelated": -0.439
+   }
+  },
+  {
+   "id": "dev-002",
+   "probs": {
+    "same": 0.0085,
+    "conflict": 0.0139,
+    "unrelated": 0.9776
+   },
+   "label_logprobs": {
+    "same": -4.776,
+    "conflict": -4.276,
+    "unrelated": -0.026
+   }
+  },
+  {
+   "id": "dev-003",
+   "probs": {
+    "same": 0.5578,
+    "conflict": 0.0588,
+    "unrelated": 0.3834
+   },
+   "label_logprobs": {
+    "same": -0.592,
+    "conflict": -2.842,
+    "unrelated": -0.967
+   }
+  },
+  {
+   "id": "dev-004",
+   "probs": {
+    "same": 0.9284,
+    "conflict": 0.0043,
+    "unrelated": 0.0673
+   },
+   "label_logprobs": {
+    "same": -0.078,
+    "conflict": -5.453,
+    "unrelated": -2.703
+   }
+  },
+  {
+   "id": "dev-005",
+   "probs": {
+    "same": 0.0191,
+    "conflict": 0.0589,
+    "unrelated": 0.9219
+   },
+   "label_logprobs": {
+    "same": -3.96,
+    "conflict": -2.835,
+    "unrelated": -0.085
+   }
+  },
+  {
+   "id": "dev-006",
+   "probs": {
+    "same": 0.0123,
+    "conflict": 0.0096,
+    "unrelated": 0.9781
+   },
+   "label_logprobs": {
+    "same": -4.399,
+    "conflict": -4.649,
+    "unrelated": -0.024
+   }
+  },
+  {
+   "id": "dev-007",
+   "probs": {
+    "same": 0.0642,
+    "conflict": 0.6095,
+    "unrelated": 0.3262
+   },
+   "label_logprobs": {
+    "same": -2.749,
+    "conflict": -0.499,
+    "unrelated": -1.124
+   }
+  },
+  {
+   "id": "dev-008",
+   "probs": {
+    "same": 0.0571,
+    "conflict": 0.6141,
+    "unrelated": 0.3287
+   },
+   "label_logprobs": {
+    "same": -2.868,
+    "conflict": -0.493,
+    "unrelated": -1.118
+   }
+  },
+  {
+   "id": "dev-009",
+   "probs": {
+    "same": 0.013,
+    "conflict": 0.0749,
+    "unrelated": 0.9121
+   },
+   "label_logprobs": {
+    "same": -4.346,
+    "conflict": -2.596,
+    "unrelated": -0.096
+   }
+  },
+  {
+   "id": "dev-010",
+   "probs": {
+    "same": 0.8979,
+    "conflict": 0.0574,
+    "unrelated": 0.0447
+   },
+   "label_logprobs": {
+    "same": -0.112,
+    "conflict": -2.862,
+    "unrelated": -3.112
+   }
+  },
+  {
+   "id": "dev-011",
+   "probs": {
+    "same": 0.8247,
+    "conflict": 0.032,
+    "unrelated": 0.1433
+   },
+   "label_logprobs": {
+    "same": -0.199,
+    "conflict": -3.449,
+    "unrelated": -1.949
+   }
+  },
+  {
+   "id": "dev-012",
+   "probs": {
+    "same": 0.0365,
+    "conflict": 0.571,
+    "unrelated": 0.3925
+   },
+   "label_logprobs": {
+    "same": -3.314,
+    "conflict": -0.564,
+    "unrelated": -0.939
+   }
+  }
+ ],
+ "tuned_syn_dev": {
+  "thresholded": {
+   "conflict": {
+    "n_argmax": 8,
+    "n_kept": 1,
+    "coverage": 0.125,
+    "precision": 1.0,
+    "recall_vs_gold": 0.1
+   },
+   "same": {
+    "n_argmax": 10,
+    "n_kept": 7,
+    "coverage": 0.7,
+    "precision": 1.0,
+    "recall_vs_gold": 0.7
+   }
+  },
+  "rows": [
+   {
+    "id": "syn-001",
+    "gold": "same",
+    "probs": {
+     "same": 0.74,
+     "conflict": 0.0197,
+     "unrelated": 0.2403
+    }
+   },
+   {
+    "id": "syn-002",
+    "gold": "conflict",
+    "probs": {
+     "same": 0.0722,
+     "conflict": 0.6043,
+     "unrelated": 0.3235
+    }
+   },
+   {
+    "id": "syn-003",
+    "gold": "same",
+    "probs": {
+     "same": 0.9888,
+     "conflict": 0.0046,
+     "unrelated": 0.0067
+    }
+   },
+   {
+    "id": "syn-004",
+    "gold": "conflict",
+    "probs": {
+     "same": 0.3045,
+     "conflict": 0.3045,
+     "unrelated": 0.391
+    }
+   },
+   {
+    "id": "syn-005",
+    "gold": "conflict",
+    "probs": {
+     "same": 0.0266,
+     "conflict": 0.3675,
+     "unrelated": 0.6059
+    }
+   },
+   {
+    "id": "syn-006",
+    "gold": "unrelated",
+    "probs": {
+     "same": 0.0045,
+     "conflict": 0.0158,
+     "unrelated": 0.9796
+    }
+   },
+   {
+    "id": "syn-007",
+    "gold": "same",
+    "probs": {
+     "same": 0.9989,
+     "conflict": 0.0009,
+     "unrelated": 0.0002
+    }
+   },
+   {
+    "id": "syn-008",
+    "gold": "same",
+    "probs": {
+     "same": 0.9806,
+     "conflict": 0.0085,
+     "unrelated": 0.0109
+    }
+   },
+   {
+    "id": "syn-009",
+    "gold": "conflict",
+    "probs": {
+     "same": 0.0328,
+     "conflict": 0.4534,
+     "unrelated": 0.5138
+    }
+   },
+   {
+    "id": "syn-010",
+    "gold": "conflict",
+    "probs": {
+     "same": 0.0209,
+     "conflict": 0.6095,
+     "unrelated": 0.3697
+    }
+   },
+   {
+    "id": "syn-011",
+    "gold": "same",
+    "probs": {
+     "same": 0.9017,
+     "conflict": 0.0033,
+     "unrelated": 0.095
+    }
+   },
+   {
+    "id": "syn-012",
+    "gold": "unrelated",
+    "probs": {
+     "same": 0.1597,
+     "conflict": 0.1244,
+     "unrelated": 0.7159
+    }
+   },
+   {
+    "id": "syn-013",
+    "gold": "unrelated",
+    "probs": {
+     "same": 0.0414,
+     "conflict": 0.0172,
+     "unrelated": 0.9414
+    }
+   },
+   {
+    "id": "syn-014",
+    "gold": "conflict",
+    "probs": {
+     "same": 0.0471,
+     "conflict": 0.5062,
+     "unrelated": 0.4467
+    }
+   },
+   {
+    "id": "syn-015",
+    "gold": "conflict",
+    "probs": {
+     "same": 0.0061,
+     "conflict": 0.9093,
+     "unrelated": 0.0846
+    }
+   },
+   {
+    "id": "syn-016",
+    "gold": "unrelated",
+    "probs": {
+     "same": 0.0369,
+     "conflict": 0.012,
+     "unrelated": 0.9511
+    }
+   },
+   {
+    "id": "syn-017",
+    "gold": "unrelated",
+    "probs": {
+     "same": 0.011,
+     "conflict": 0.0031,
+     "unrelated": 0.9859
+    }
+   },
+   {
+    "id": "syn-018",
+    "gold": "unrelated",
+    "probs": {
+     "same": 0.1603,
+     "conflict": 0.6339,
+     "unrelated": 0.2058
+    }
+   },
+   {
+    "id": "syn-019",
+    "gold": "same",
+    "probs": {
+     "same": 0.9202,
+     "conflict": 0.0131,
+     "unrelated": 0.0667
+    }
+   },
+   {
+    "id": "syn-020",
+    "gold": "same",
+    "probs": {
+     "same": 0.9124,
+     "conflict": 0.0215,
+     "unrelated": 0.0661
+    }
+   },
+   {
+    "id": "syn-021",
+    "gold": "same",
+    "probs": {
+     "same": 0.7433,
+     "conflict": 0.0154,
+     "unrelated": 0.2413
+    }
+   },
+   {
+    "id": "syn-022",
+    "gold": "unrelated",
+    "probs": {
+     "same": 0.03,
+     "conflict": 0.1958,
+     "unrelated": 0.7742
+    }
+   },
+   {
+    "id": "syn-023",
+    "gold": "same",
+    "probs": {
+     "same": 0.9601,
+     "conflict": 0.0199,
+     "unrelated": 0.0199
+    }
+   },
+   {
+    "id": "syn-024",
+    "gold": "conflict",
+    "probs": {
+     "same": 0.1442,
+     "conflict": 0.6461,
+     "unrelated": 0.2098
+    }
+   },
+   {
+    "id": "syn-025",
+    "gold": "unrelated",
+    "probs": {
+     "same": 0.0083,
+     "conflict": 0.0328,
+     "unrelated": 0.9589
+    }
+   },
+   {
+    "id": "syn-026",
+    "gold": "same",
+    "probs": {
+     "same": 0.6013,
+     "conflict": 0.0339,
+     "unrelated": 0.3647
+    }
+   },
+   {
+    "id": "syn-027",
+    "gold": "conflict",
+    "probs": {
+     "same": 0.1258,
+     "conflict": 0.6391,
+     "unrelated": 0.2351
+    }
+   },
+   {
+    "id": "syn-028",
+    "gold": "unrelated",
+    "probs": {
+     "same": 0.0358,
+     "conflict": 0.0406,
+     "unrelated": 0.9236
+    }
+   },
+   {
+    "id": "syn-029",
+    "gold": "unrelated",
+    "probs": {
+     "same": 0.0547,
+     "conflict": 0.0901,
+     "unrelated": 0.8552
+    }
+   },
+   {
+    "id": "syn-030",
+    "gold": "conflict",
+    "probs": {
+     "same": 0.0737,
+     "conflict": 0.6993,
+     "unrelated": 0.227
+    }
+   }
+  ]
+ }
+}
