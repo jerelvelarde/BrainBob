@@ -1,6 +1,6 @@
 {
   "world_id": "w5-conflict-retention",
-  "checker_version": "0.2",
+  "checker_version": "0.3",
   "checkpoints": {
     "cp-1": {
       "stratum": "legitimate",
