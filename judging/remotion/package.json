@@ -1,0 +1,28 @@
+{
+  "name": "brainbob-demo-film",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio src/index.tsx --port=3010",
+    "typecheck": "tsc --noEmit",
+    "render": "node scripts/render.mjs",
+    "stills": "node scripts/render.mjs --stills",
+    "check": "node scripts/check.mjs",
+    "assets": "node scripts/prepare.mjs"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.536",
+    "@remotion/bundler": "4.0.536",
+    "@remotion/renderer": "4.0.536",
+    "remotion": "4.0.536",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.0",
+    "@types/react-dom": "19.1.0",
+    "@types/node": "22.15.3",
+    "typescript": "5.9.3"
+  }
+}
