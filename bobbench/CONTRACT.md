@@ -102,3 +102,57 @@ source ID, even alongside a valid supporting citation. Earlier 0.1 scorecards
 must be explicitly rescored for comparison. Failed source/policy deliveries taint
 all subsequent checkpoints in that world; failed maintenance receipts and missing
 session objects also count as failures. These cases remain in the denominator.
+New runs require a new output directory; only the explicit `--rescore` operation
+may revisit existing artifacts.
+
+## BrainBob component adapter (implementation readiness)
+
+`adapters/brainbob.py` now supplies both `append_only` and `maintained` using the
+real `backend.brainbob` MemoryStore, dynamic Org ACL, curator, and write-time
+maintenance. It uses the same `bobbench.answer` answering function as the other
+Track A conditions. Unit tests stub inference only; their results are **not model
+scores or evidence of production HTTP conformance**. No provider calls were made
+while implementing the adapter.
+
+After configuring the intended inference endpoints and budget, run from the root:
+
+```sh
+backend/.venv/bin/python -m pytest -q bobbench/tests
+backend/.venv/bin/python -m bobbench.run --worlds all \
+  --conditions no_memory,full_history,append_only,maintained --fast \
+  --out /tmp/bob-component-new-run
+```
+
+The second command makes model calls. `--fast` is one replicate, not a no-network
+mode. Use three replicates for calibration. Backend curator/judge roles use
+`BRAINBOB_*` configuration; the shared answerer uses `BOBBENCH_ANSWER_*`.
+Their effective configuration is exported without credentials. Ingestion model
+calls/tokens/cost deltas are added to checkpoint costs and the complete backend
+usage is included in the adapter export; retries remain incompletely instrumented.
+
+Declared adapter behavior and limitations:
+
+- Source audiences map to separate backend memory scopes, preserving event IDs
+  as provenance. The curator extracts facts; maintained mode calls the actual
+  semantic judge and correction rules. The source's occurrence time is the memory
+  date, while approval policy is evaluated at receipt time.
+- Trusted-channel sources from a policy-authorized approver are tagged approved
+  for that scope. Other sources remain discussion, regardless of approval words
+  in their text. This is an explicit authority mapping; it does not independently
+  classify which sentences constitute commitments.
+- Session assembly applies the actual backend ACL at requested time/purpose,
+  delivers active extracted facts with their authority/status, groups by source
+  event, and uses the common context-budget serializer. It does not use oracle
+  labels, add repair rules, or send full original sources to hide retrieval gaps.
+- A policy change invalidates an open session before answering; callers must
+  reopen it with the current time envelope. Same-process state starts empty per
+  world and refuses to reuse an existing candidate memory file.
+- Production HTTP/search/history/export/event/cache conformance probes remain
+  unsupported. Automatic dependent-summary propagation, historical retrieval of
+  retired facts, transactional ingestion rollback, and complete retry telemetry
+  are absent. Core extraction/judge disk caches may be reused across replicates;
+  use distinct configured cache namespaces for independent stochastic runs.
+- Core extraction currently returns no facts for some model failures as well as
+  genuinely empty sources. This ambiguity remains visible as lost task utility;
+  it is not full model-error instrumentation. Any result needs its traces reviewed
+  before a benchmark claim. The six public worlds are development material.

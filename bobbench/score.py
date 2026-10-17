@@ -284,7 +284,7 @@ def score_records(records: list[dict], worlds: dict, oracles: dict, conditions: 
                     n_missing += res["missing"]
                     n_fail += (not res["missing"]) and (not res["completed"])
                     for k in ("required", "forbidden", "expect", "protected_answer", "protected_context",
-                              "evidence", "budget", "completed"):
+                              "evidence", "budget", "completed", "citations_authorized", "context_sources_authorized"):
                         v = res.get(k)
                         if v is not None:
                             comp[k][0] += int(bool(v))
