@@ -1,0 +1,20 @@
+[
+  {
+    "file": "20-team-cabinets-client.jpg",
+    "capturedAt": "2026-10-17T20:05:21.553Z",
+    "commit": "e167cfcccc453ba0c0ac0c2f023592701152d794",
+    "implementation": "c0bd5975c5852c3354ca0080acd0e61c846fc89a",
+    "url": "http://127.0.0.1:3000/demo",
+    "mode": "scripted browser fixture; no model inference or server authorization",
+    "caption": "Executive, Sales, and Engineering cabinets inside Rusty Rod, with Atlas Harbor as the client and Leo Park’s session file."
+  },
+  {
+    "file": "21-agent-session-file.jpg",
+    "capturedAt": "2026-10-17T20:05:43.343Z",
+    "commit": "e167cfcccc453ba0c0ac0c2f023592701152d794",
+    "implementation": "c0bd5975c5852c3354ca0080acd0e61c846fc89a",
+    "url": "http://127.0.0.1:3000/demo",
+    "mode": "scripted browser fixture; no model inference or server authorization",
+    "caption": "Leo Park’s single session file combines individual, Sales, and Rusty Rod context; the organization section includes the current November 13 revision."
+  }
+]

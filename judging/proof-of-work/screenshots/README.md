@@ -69,3 +69,15 @@ Captured from committed frontend `6c84f78` on October 17, 2026. App sources were
 - [17-rusty-rod-tentative-estimate.jpg](17-rusty-rod-tentative-estimate.jpg): 12:51:08 PM PDT. Engineering’s tentative November 13 estimate leaves the approved November 6 organization commitment unchanged.
 - [18-rusty-rod-fresh-sales.jpg](18-rusty-rod-fresh-sales.jpg): 12:51:17 PM PDT. A scripted fresh Sales agent cites the corrected November 13 organization revision and the preserved reporting goal.
 - [19-rusty-rod-audit-coverage.jpg](19-rusty-rod-audit-coverage.jpg): 12:51:22 PM PDT. Seed 17 misses the decisive approval in its latest-50 sample; coverage and judgment are distinct and the valid record is retained.
+
+## Tier drawers and session files
+
+The initial team-cabinet layout was superseded by the requested Individual / Team / Organization hierarchy. Names, client context, and the session-file assembler were retained. All captures are synthetic browser fixtures; no inference or server authorization is implied. App sources were unchanged during each capture.
+
+- [20-team-cabinets-client.jpg](20-team-cabinets-client.jpg): 1:05:21 PM PDT, `e167cfc`. Superseded team-cabinet layout.
+- [21-agent-session-file.jpg](21-agent-session-file.jpg): 1:05:43 PM PDT, `e167cfc`. First assembled session panel in that earlier layout.
+- [22-tier-cabinets.jpg](22-tier-cabinets.jpg): 1:14:55 PM PDT, `95c15b3`. Final tier cabinets and scoped named drawers.
+- [23-tier-session-file.jpg](23-tier-session-file.jpg): 1:15:03 PM PDT, `95c15b3`. Leo’s session combines individual, Sales, and shared Rusty Rod knowledge.
+- [24-tier-access-mobile.jpg](24-tier-access-mobile.jpg): 1:14:04 PM PDT, `89edbad`. 390×844 view with Sales accessible and Executive/Engineering closed.
+
+Original timestamps and commit references: [earlier captures](session-file-captures.json), [final captures](tier-session-captures.json).

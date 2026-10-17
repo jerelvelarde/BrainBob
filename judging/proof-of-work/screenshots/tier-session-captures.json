@@ -1,0 +1,28 @@
+[
+  {
+    "file": "24-tier-access-mobile.jpg",
+    "description": "390 × 844: Sales available; Executive and Engineering closed",
+    "capturedAt": "2026-10-17T20:14:04.484Z",
+    "commit": "89edbadd05828995bd6b7c78f075a6bedac910ac",
+    "url": "http://127.0.0.1:3000/demo",
+    "execution": "Scripted fixture; no inference or server authorization claim"
+  },
+  {
+    "file": "22-tier-cabinets.jpg",
+    "description": "Individual, Team, Organization cabinets with named drawers and Rusty Rod’s client Atlas Harbor",
+    "capturedAt": "2026-10-17T20:14:55.328Z",
+    "commit": "95c15b317d7f74c06d147341689735921a992b32",
+    "implementation": "89edbadd05828995bd6b7c78f075a6bedac910ac",
+    "url": "http://127.0.0.1:3000/demo",
+    "execution": "Scripted fixture; no inference or server authorization claim"
+  },
+  {
+    "file": "23-tier-session-file.jpg",
+    "description": "Leo Park’s task file combines his individual context, Sales guidance, and Rusty Rod knowledge including the approved November 13 revision",
+    "capturedAt": "2026-10-17T20:15:03.139Z",
+    "commit": "95c15b317d7f74c06d147341689735921a992b32",
+    "implementation": "89edbadd05828995bd6b7c78f075a6bedac910ac",
+    "url": "http://127.0.0.1:3000/demo",
+    "execution": "Scripted fixture; no inference or server authorization claim"
+  }
+]
