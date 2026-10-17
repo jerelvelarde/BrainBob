@@ -40,4 +40,4 @@ Weights below come from the supplied participant guide; see the [competition det
 | Creativity and originality | 25% | 25% | A playful brain office that visualizes actual memory operations and their evidence. |
 | Future potential and AI impact | 15% | 25% | Better cross-agent continuity and quality with less repeated context, supported by measured results. |
 
-The intended stack is CopilotKit/AG-UI → BrainBob bridge → NemoClaw-managed agents → NVIDIA Switchyard → Crusoe inference, with SQL-backed Markdown memory. Distinguish working integrations, planned integrations, scripted preview events, and recorded replay throughout the presentation.
+The intended system uses NemoClaw-managed agents, NVIDIA Switchyard routing, Crusoe inference, and SQL-backed Markdown memory. The frontend visualizes memory operations and their evidence. Distinguish working integrations, planned integrations, scripted preview events, and recorded replay throughout the presentation.

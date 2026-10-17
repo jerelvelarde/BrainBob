@@ -1,6 +1,6 @@
 # BrainBob
 
-A shared memory layer for an agent team, visualized as a 3D isometric brain office full of working BrainBobs.
+A shared memory layer that agents read before work and maintain afterward, with memory evaluation and a 3D brain office for inspecting and retracing changes.
 
 Meet the **BrainBobs**: our SpongeBob-inspired memory crew, with round yellow bodies, expressive eyes, lavender overalls, and memory badges.
 
@@ -15,11 +15,11 @@ The current build is an interactive frontend preview. The 3D room fills the scre
 | Capability | Current implementation |
 | --- | --- |
 | 3D brain office | Six animated BrainBob workers, desks, filing cabinets, orbit and zoom controls. |
-| Floating panels | CopilotKit chat and memory inspection open over the room. Chat survives closing and reopening its panel. |
+| Floating panels | Chat and memory inspection open over the room. Chat survives closing and reopening its panel. |
 | Memory operations | Scripted create, retrieve, check, update, and archive actions with evidence and revision history. |
 | Retracing | Project earlier memory states from recorded events; return to the current state without replaying actions. |
 | Local persistence | Validated browser-local history, JSON export, and demo reset. |
-| Agent UI protocol | A local CopilotKit/AG-UI controller turns supported chat commands into scripted scene events. |
+| Chat controls | A local controller turns supported chat commands into scripted scene events. |
 
 **Still planned:** NemoClaw agents, NVIDIA NeMo Switchyard routing, Crusoe inference, SQL-backed shared memory, role enforcement, conflict handling, and live memory evaluation. The preview makes no model calls and does not yet demonstrate cross-agent memory or measured quality gains.
 
@@ -40,7 +40,7 @@ Open [the local preview](http://127.0.0.1:3000). No API key is needed for the sc
 - Click a memory card to inspect its source evidence and revision history.
 - Choose **Run demo** to demonstrate retrieval, evaluation, correction, creation, and archival using fixture data. This restarts the local fixture trace.
 - Open **Retrace** and scrub the timeline to follow recorded changes; **Return to live** restores current state.
-- Choose **Chat** for CopilotKit/AG-UI scene commands such as “retrieve this memory”. These are scripted commands, not live inference.
+- Choose **Chat** for scene commands such as “retrieve this memory”. These are scripted commands, not live inference.
 - Export the local trace as JSON or reset the scene from the memory panel. History is saved in this browser; it is not yet shared across agents or devices.
 
 ```bash
@@ -58,14 +58,14 @@ The source for this first frontend is in [apps/web](apps/web).
 | Agent harness | [NVIDIA NemoClaw](https://github.com/NVIDIA/NemoClaw) | Run the agent team inside OpenShell sandboxes. |
 | Model routing | [NVIDIA NeMo Switchyard](https://github.com/NVIDIA-NeMo/Switchyard) | Route requests between specialized models from our configured pool. |
 | Inference | [Crusoe Managed Inference](https://github.com/crusoecloud/crusoe-developer-hub) | Serve all project model calls, including NVIDIA Nemotron models. |
-| Agent UI | CopilotKit + AG-UI | Chat, alignment decisions, tool results, and event streaming through a project-specific harness bridge. |
+| Frontend interaction layer | CopilotKit + AG-UI | Present chat, alignment decisions, tool results, and streamed events from the agent backend. |
 | 3D visualization | Next.js, React Three Fiber, Three.js, Drei | Isometric brain office, walking BrainBobs, cabinets, and memory retracing. |
 | Shared memory | SQLite + versioned Markdown records | Scoped retrieval, evidence, revision history, and transactional updates. |
 | Optional planning research | You.com | Retrieve public web sources for planning artifacts. |
 
-The intended path is **CopilotKit/AG-UI → BrainBob bridge → NemoClaw-managed agents → Switchyard → Crusoe**. The bridge connects agent memory tools to the SQL memory service and emits committed events for the visualization. This combined integration still needs to be built and tested.
+The intended agent loop is **read shared memory → work with NemoClaw-managed agents → evaluate and commit memory changes → retrace the evidence**. Switchyard routes specialized model calls to Crusoe. The BrainBob bridge connects agent memory tools to the SQL memory service and emits committed events for the visualization. This combined integration still needs to be built and tested.
 
-See the [architecture and tech stack plan](docs/architecture.md) for the Crusoe memory loop, CopilotKit/AG-UI integration, 3D brain, and memory retrace/replay design.
+See the [architecture and tech stack plan](docs/architecture.md) for the Crusoe memory loop, harness integration, 3D brain, and memory retrace/replay design.
 
 Runtime memories, skills, and plans will be stored as **versioned Markdown documents in SQLite**, with SQL managing scope, evidence, revisions, and relationships. Repository documentation stays in Git and can be imported as reference material.
 
