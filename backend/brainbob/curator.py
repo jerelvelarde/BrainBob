@@ -44,7 +44,7 @@ def ingest(episode, store, author=None, role="curator"):
     author = author or role
     added = []
     for f in extract(episode, role):
-        m, _ = store.add(f, author=author, origin=episode.source, date=episode.date)
+        m, _ = store.add(f, author=author, origin=episode.id, date=episode.date)
         if m: added.append(m)
     events.emit("episode.ingested", episode_id=episode.id, source=episode.source, n_memories=len(added))
     return added

@@ -65,8 +65,11 @@ Existing actions in `apps/web/src/lib/memory.ts`: created, retrieved, evaluated,
 | memory.retrieved | task_id, memory_ids | `retrieved` for each id (Runner Bob pulls records) |
 | answer.produced | task_id, answer, cited_ids | answer delivered; show answer text, highlight cited_ids |
 | evidence.recorded | memory_id, author, shown, correct, task_id | `evaluated` (Inspector Bob checks the record) |
+| evaluation.started | task_id, memory_ids | Inspector Bob walks to the shelf and heads for the cited records (one stop per id, in order) |
+| memory.checked | task_id, memory_id, with_correct, without_correct, flipped | at that record: `evaluated`; if flipped, flash red (without_correct true = harmful) or green (with_correct true = helpful); no flip: a plain nod. With `reason: "confirm failed"` shake head, record stays |
+| evaluation.finished | task_id, checked, flips | inspector walks back, caption "checked N, M flips" |
 | memory.promoted | memory_id, reason | `updated` (record moves to trusted shelf) |
-| memory.retired | memory_id, reason, task_ids | `forgotten` (archive) |
+| memory.retired | memory_id, reason, task_ids, confirmed (always true) | `forgotten` (archive) |
 | memory.flagged | memory_id, reason | mark record red (no existing action; add a flag state) |
 | memory.locked | memory_id, owner | lock badge on the record |
 | memory.resolved | memory_id, owner, action, new_id | owner decision; clear the red flag |

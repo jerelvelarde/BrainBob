@@ -97,7 +97,7 @@ def build_real(tmp_path):
 
     class Curator:
         def ingest(self, ep, st):
-            m, _ = st.add(ep.text, author="curator", origin=ep.source, date=ep.date)
+            m, _ = st.add(ep.text, author="curator", origin=ep.id, date=ep.date)
             return [m] if m else []
 
     class Agent:
@@ -180,3 +180,45 @@ def test_sse_seq_replay_done_and_after(tmp_path):
     assert [m["data"]["seq"] for m in again[:-1]] == list(range(3, last + 1))
     hdr = _sse(c, "/events", headers={"Last-Event-ID": str(last)})
     assert len(hdr) == 1 and hdr[0]["data"] == {"type": "replay.done", "seq": last}
+
+
+def test_review_confirm_uses_fresh_and_origin(tmp_path):
+    from brainbob.evaluator import Evaluator
+    core_events.reset(); core_events.set_log(str(tmp_path / "events.jsonl"))
+    store = MemoryStore(str(tmp_path / "memory.jsonl"))
+    calls = []
+
+    class Curator:
+        def ingest(self, ep, st):
+            m, _ = st.add(ep.text, author="curator", origin=ep.id, date=ep.date)
+            core_events.emit("episode.ingested", episode_id=ep.id, source=ep.source, n_memories=1)
+            return [m]
+
+    class Agent:
+        def __init__(self): self.passes = False
+        def answer(self, q, mems, now=None, fresh=False):
+            calls.append(fresh)
+            return type("A", (), {"text": "ok" if fresh and self.passes else "no", "cited_ids": [m.id for m in mems]})()
+    agent = Agent()
+    ev = Evaluator(store, min_changes=1)
+    c = TestClient(server.create_app(store, Curator(), agent, ev, lambda q, g, a: a == "ok" or (a == "no" and False),
+                                     events=core_events, sse_once=True, episodes_path=str(tmp_path / "e.jsonl")))
+    r = c.post("/episodes", json={"text": "bad fact", "source": "slack"}).json()
+    mid = r["memories"][0]["id"]
+    assert r["memories"][0]["origin"] == r["episode_id"]
+    assert c.get(f"/episodes/{r['episode_id']}").json()["source"] == "slack"
+    assert [e["source"] for e in core_events.history() if e["type"] == "episode.ingested"] == ["slack"]
+    a = c.post("/ask", json={"question": "q"}).json()
+    # make the memory look harmful on this task: judge grades full answer wrong, answer without it right
+    class Fn:  # evaluator answer_fn comes from agent.answer; emulate flip via stored evidence
+        pass
+    from brainbob.types import Evidence
+    ev.evidence += [Evidence(mid, True, False, a["task_id"]), Evidence(mid, False, True, a["task_id"])]
+    c.post("/feedback", json={"task_id": a["task_id"], "correct_answer": "ok"})
+    ev.evidence += [Evidence(mid, True, False, a["task_id"]), Evidence(mid, False, True, a["task_id"])]
+    calls.clear()
+    assert c.post("/review").json()["decisions"] == [] and store.get(mid).status == "trial" and calls == [True]
+    agent.passes = True
+    d = c.post("/review").json()["decisions"]
+    assert d[0]["action"] == "retire" and store.get(mid).status == "retired"
+    assert [e for e in core_events.history() if e["type"] == "memory.retired"][0]["confirmed"] is True

@@ -91,8 +91,11 @@ The core emits `memory.*` and `evidence.recorded`. `memory.retrieved` and
 | memory.retrieved | task_id, memory_ids | worker pulls records |
 | answer.produced | task_id, answer, cited_ids | answer delivered |
 | evidence.recorded | memory_id, author, shown, correct, task_id | inspector checks a record |
+| evaluation.started | task_id, memory_ids (the cited memories to check) | inspector sets out to check them |
+| memory.checked | task_id, memory_id, with_correct, without_correct, flipped (sent for every check; `reason: "confirm failed"` when a retirement confirmation fails) | inspector examines one record |
+| evaluation.finished | task_id, checked, flips | inspector done |
 | memory.promoted | memory_id, reason | record moved to the trusted shelf |
-| memory.retired | memory_id, reason, task_ids | record archived |
+| memory.retired | memory_id, reason, task_ids, confirmed (true: a fresh re-answer without it was graded correct) | record archived |
 | memory.flagged | memory_id, reason | locked record marked red for its owner |
 | memory.locked | memory_id, owner | record locked by its owner |
 | memory.resolved | memory_id, owner, action (keep/retire/correct), new_id | owner decided on a locked record |

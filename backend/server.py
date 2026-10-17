@@ -146,11 +146,10 @@ def create_app(store, curator, agent, evaluator, judge, *, events=None,
         if episodes_path:
             with open(episodes_path, "a", encoding="utf8") as f:
                 f.write(json.dumps(rec, ensure_ascii=False) + "\n")
-        # Bug workaround: curator.py writes memory.origin = episode.source (the label), but origin must be
-        # the episode id. curator.py is not ours to edit, so the Episode handed to it carries the id as source.
-        ep = episode_factory(id=eid, text=text, date=rec["date"], source=eid)
+        ep = episode_factory(id=eid, text=text, date=rec["date"], source=rec["source"])
         mems = curator.ingest(ep, _Scoped(store, body.get("scope"), body.get("author")))
-        bus.emit("episode.ingested", episode_id=eid, source=rec["source"], n_memories=len(mems))
+        if not any(e.get("type") == "episode.ingested" and e.get("episode_id") == eid for e in bus.history()):
+            bus.emit("episode.ingested", episode_id=eid, source=rec["source"], n_memories=len(mems))  # curator did not
         return {"episode_id": eid, "memories": to_dict(mems)}
 
     @app.get("/episodes/{eid}")
@@ -183,6 +182,7 @@ def create_app(store, curator, agent, evaluator, judge, *, events=None,
         if not isinstance(correct, str):
             raise HTTPException(422, "correct_answer required")
         q = rec["question"]
+        rec["correct_answer"] = correct
         task = task_factory(id=body["task_id"], question=q, now=rec["now"],
                             grade=lambda a: bool(judge(q, correct, a)))
         ev = evaluator.observe(task, rec["memories"], agent.answer)
@@ -192,7 +192,17 @@ def create_app(store, curator, agent, evaluator, judge, *, events=None,
 
     @app.post("/review")
     def post_review(body: dict | None = None):
-        decisions = evaluator.review(lambda *a, **k: True)
+        def confirm(mid):
+            """Remove the memory, re-answer a task it harmed with fresh=True, grade with the same judge."""
+            for tid in evaluator.stats(mid)["harmed"]:
+                rec = tasks.get(tid)
+                if rec is None or "correct_answer" not in rec:
+                    continue
+                ans = agent.answer(rec["question"], [m for m in rec["memories"] if m.id != mid], rec["now"], fresh=True)
+                if judge(rec["question"], rec["correct_answer"], ans.text):
+                    return True
+            return False
+        decisions = evaluator.review(confirm)
         return {"decisions": to_dict(decisions)}
 
     @app.post("/memories/{mid}/correct")
