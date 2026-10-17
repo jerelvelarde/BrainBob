@@ -30,11 +30,11 @@ export function cinematicsAt(action: SceneAction | undefined, progress: number, 
     const u = Math.max(0, Math.min(1, (p - from) / (to - from)));
     return u * u * (3 - 2 * u);
   };
-  if (action !== "forgotten" && action !== "evaluated") return { darkness: 0, heat: 0, zoom: 1 };
+  if (action !== "forgotten") return { darkness: 0, heat: 0, zoom: 1 };
   const envelope = ramp(0, .12) * (1 - ramp(.88, 1));
   const punch = ramp(.04, .12) * (1 - ramp(.12, .3));
   return { darkness: envelope, heat: action === "forgotten" ? envelope : 0,
-    zoom: reducedMotion ? 1 : 1 + envelope * .025 + punch * (action === "forgotten" ? .065 : .04) };
+    zoom: reducedMotion ? 1 : 1 + envelope * .025 + punch * .065 };
 }
 
 export const scopeCharacters = {
@@ -49,7 +49,7 @@ export const sceneClips: Record<SceneAction, { label: string; seconds: number; p
   retrieved: { label: "Retrieve", seconds: 9, phases: ["Find the right cabinet", "Found it! Bring the record", "Memory delivered"], color: "#648f9f" },
   updated: { label: "Rewrite", seconds: 10, phases: ["Pull the old record", "Write the correction", "File the new version"], color: "#9375b2" },
   forgotten: { label: "Delete", seconds: 12, phases: ["CODE RED. Forget that!", "EVERYBOB PANIC!", "Crisis over. History preserved."], color: "#d26c45" },
-  evaluated: { label: "Evaluate", seconds: 14, phases: ["Nobody move. He’s here.", "Checks the cited memories", "The evidence takes the stand."], color: "#8972af" },
+  evaluated: { label: "Evaluate", seconds: 14, phases: ["Evaluator Bob arrives", "Checks the cited memories", "Check recorded"], color: "#8972af" },
   promoted: { label: "Promote", seconds: 7, phases: ["A helpful memory", "Up to the trusted shelf", "Trusted, with evidence"], color: "#b39243" },
   flagged: { label: "Flag", seconds: 7, phases: ["This record is locked", "A concern for the owner", "Flagged. Kept for review."], color: "#ce6c73" },
   rejected: { label: "Reject", seconds: 6, phases: ["Another record arrives", "Duplicate or tombstone", "Return to sender"], color: "#ba8168" },
@@ -169,10 +169,9 @@ export function performanceForCue(cue: SceneCue, index: number, progress: number
     const [x, z] = workerHomes[index];
     return { ...samplePath([[0, x, z], [1, x, z]], progress), pose: "panic" as const, expression: "worried" as const, paper: true };
   }
-  // Stand beside the record so the desk and cabinet do not hide the evaluator's face.
-  const x = cueCabinetX(cue) - 2;
-  const path: Waypoint[] = cue.evaluation.phase === "start" ? [[0, 4.8, .5], [.6, 4.8, -2.15], [1, x, -2.15]]
-    : cue.evaluation.phase === "finish" ? [[0, x, -2.15], [.5, 4.8, -2.15], [1, 4.8, .5]]
-    : [[0, x, -2.15], [1, x, -2.15]];
+  // Enter through the open right side; the evaluator never mobilizes the whole crew.
+  const path: Waypoint[] = cue.evaluation.phase === "start" ? [[0, 7.8, 3.2], [.7, 4.8, 2.3], [1, 4.8, 2.3]]
+    : cue.evaluation.phase === "finish" ? [[0, 4.8, 2.3], [.3, 4.8, 2.3], [1, 7.8, 3.2]]
+    : [[0, 4.8, 2.3], [1, 4.8, 2.3]];
   return { ...samplePath(path, progress), pose: "inspect" as const, expression: "focused" as const, paper: true };
 }

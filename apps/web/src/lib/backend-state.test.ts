@@ -40,7 +40,7 @@ describe("backend event projection", () => {
     expect(state.memories.m1).toMatchObject({ status: "tentative", model: "fixture-writer", conflicts_with: ["m0"] });
     expect(state.events[4]).toMatchObject({ model: "fixture-judge" });
     expect(eventDescription(state.events[4])).toContain("Source correctness: insufficient");
-    expect(cuesForEvent(state.events[4], state, defaultReader)[0]).toMatchObject({ action: "evaluated", evaluationLabel: "SOURCE · INSUFFICIENT", evaluation: { phase: "check" } });
+    expect(cuesForEvent(state.events[4], state, defaultReader)[0]).toMatchObject({ action: "evaluated", evaluationLabel: "SOURCE · INSUFFICIENT", evaluation: { phase: "start" } });
     expect(cuesForEvent(state.events[4], state, defaultReader)[0].evaluation?.verdict).toBeUndefined();
     expect(cuesForEvent(state.events[2], state, defaultReader)[0]).toMatchObject({ action: "flagged", noticeLabel: "TENTATIVE · REVIEW" });
     expect(acceptBackendEvent(state, wire(6, "replay.done")).state.replaying).toBe(false);
@@ -92,7 +92,7 @@ describe("backend event projection", () => {
       expect(cuesForEvent(checked, state, readers[1].path)).toEqual([]);
       const cue = cuesForEvent(checked, state, readers[2].path)[0];
       expect(cue.evaluation?.verdict).toBe(expected); expect(cue.records).toEqual([{ id: "m2", scope: "individual" }]);
-      expect(performanceForCue(cue, 4, .5).x).toBeCloseTo(-5.8);
+      expect(performanceForCue(cue, 4, .5)).toMatchObject({ x: 4.8, z: 2.3, moving: false });
     }
     const failed = wire(6, "memory.checked", { task_id: null, memory_id: "m0", with_correct: false, without_correct: false, flipped: false, reason: "confirm failed" }) as StoredEvent;
     expect(cuesForEvent(failed, state, readers[2].path)[0].evaluation?.verdict).toBe("unconfirmed");

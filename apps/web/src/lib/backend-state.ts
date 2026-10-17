@@ -101,6 +101,6 @@ export function cuesForEvent(event: StoredEvent, state: BackendState, reader: st
     evaluation: event.type === "evaluation.started" ? { phase: "start" as const }
       : event.type === "memory.checked" ? { phase: "check" as const, verdict: event.reason === "confirm failed" ? "unconfirmed" as const : !event.flipped ? "unchanged" as const : event.with_correct ? "helpful" as const : "harmful" as const }
       : event.type === "evaluation.finished" ? { phase: "finish" as const }
-      : event.type === "audit.checked" ? { phase: "check" as const } : undefined,
+      : event.type === "audit.checked" ? { phase: "start" as const } : undefined,
   }));
 }

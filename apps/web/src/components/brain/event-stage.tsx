@@ -59,41 +59,6 @@ function Performer({ index, cue, clock }: { index: number; cue: SceneCue; clock:
   </group>;
 }
 
-function EvaluatorEntrance({ cue, clock }: { cue: SceneCue; clock: Clock }) {
-  const stage = useRef<THREE.Group>(null);
-  const cone = useRef<THREE.MeshBasicMaterial>(null);
-  const spotlight = useRef<THREE.SpotLight>(null);
-  const target = useMemo(() => new THREE.Object3D(), []);
-  useFrame(() => {
-    const p = clock.current.progress;
-    const bob = performanceForCue(cue, 4, p);
-    const envelope = smooth(0, .09, p) * (1 - smooth(.88, 1, p));
-    if (stage.current) {
-      stage.current.position.set(bob.x, 0, bob.z);
-      stage.current.visible = envelope > .001;
-    }
-    target.position.set(bob.x, .4, bob.z);
-    target.updateMatrixWorld();
-    if (cone.current) cone.current.opacity = envelope * .1;
-    if (spotlight.current) {
-      spotlight.current.position.set(bob.x, 7, bob.z);
-      spotlight.current.intensity = envelope * 110;
-    }
-  });
-  return <>
-    <primitive object={target} />
-    <spotLight ref={spotlight} target={target} color="#ede5ff" angle={.24} penumbra={.6} distance={14} intensity={0} decay={1.4} />
-    <group ref={stage}>
-      <mesh position={[0, 3.5, 0]}><coneGeometry args={[1.6, 6.8, 40, 1, true]} />
-        <meshBasicMaterial ref={cone} color="#d8caff" transparent opacity={0} depthWrite={false} side={THREE.DoubleSide} />
-      </mesh>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, .08, 0]}>
-        <ringGeometry args={[.85, .9, 48]} /><meshBasicMaterial color="#e7d6ff" transparent opacity={.8} />
-      </mesh>
-    </group>
-  </>;
-}
-
 function TransferPaper({ cue, clock }: { cue: SceneCue; clock: Clock }) {
   const group = useRef<THREE.Group>(null);
   const x = cueCabinetX(cue);
@@ -157,12 +122,12 @@ function AuditRecords({ cue, clock }: { cue: SceneCue; clock: Clock }) {
       if (!sheet) return;
       const u = smooth(.12 + i * .045, .56 + i * .045, p);
       const x = cue.records?.[i] ? (cue.records[i].cabinetX ?? scopeCharacters[cue.records[i].scope].x) : [-3.8, -.5, 3.2][i % 3];
-      sheet.position.set(checking ? x : lerp(x, 3.2 + (i % 3) * .33, u), checking ? 1.5 : 1.45 + Math.sin(u * Math.PI) * 1.5 + (i > 2 ? .07 : 0), checking ? -2.8 : lerp(-3, -.35 + Math.floor(i / 3) * .45, u));
+      sheet.position.set(checking ? 4.1 + (i % 3) * .33 : lerp(x, 4.1 + (i % 3) * .33, u), checking ? 1.5 : 1.45 + Math.sin(u * Math.PI) * 1.5 + (i > 2 ? .07 : 0), checking ? 2.2 + Math.floor(i / 3) * .45 : lerp(-3, 2.2 + Math.floor(i / 3) * .45, u));
       sheet.rotation.set(checking ? 0 : -u * Math.PI / 2, 0, .12 * Math.sin(i));
       sheet.visible = checking || p > .1 + i * .04;
     });
     if (lens.current) {
-      lens.current.position.set((checking ? cueCabinetX(cue) : 3.55) + Math.sin(clock.current.time * 1.6) * .4, 2.05, (checking ? -2.7 : -.15) + Math.cos(clock.current.time * 1.6) * .15);
+      lens.current.position.set(4.35 + Math.sin(clock.current.time * 1.6) * .4, 2.05, 2.2 + Math.cos(clock.current.time * 1.6) * .15);
       lens.current.rotation.z = -.4;
     }
   });
@@ -305,7 +270,7 @@ export function EventStage({ cue, playing, reducedMotion, speed, seek, onProgres
     <ScopeSpotlight cue={cue} clock={clock} />
     <Performer index={operator} cue={cue} clock={clock} />
     <TransferPaper cue={cue} clock={clock} />
-    {cue.action === "evaluated" ? <><EvaluatorEntrance cue={cue} clock={clock} /><AuditRecords cue={cue} clock={clock} /></> : null}
+    {cue.action === "evaluated" ? <AuditRecords cue={cue} clock={clock} /> : null}
     {cue.action === "forgotten" ? <OfficeChaos clock={clock} /> : null}
     {cue.action === "locked" || cue.action === "resolved" ? <group position={[cueCabinetX(cue), 2.7, -3.1]}>
       <mesh position={[0, .25, 0]}><torusGeometry args={[.2, .045, 8, 20, Math.PI]} /><meshStandardMaterial color="#7962b2" /></mesh>
