@@ -14,10 +14,10 @@ type SceneProps = {
   onSelect: (memoryId: string) => void; onScope: (scope: MemoryScope) => void;
   onWorker: (name: string) => void; onReady: (handle: SceneHandle) => void;
 };
-const palette = { floor: "#dce4cd", green: "#73a797", trim: "#406e60", wall: "#e7b6ae", fold: "#c98f91", dark: "#294e43" };
+const palette = { floor: "#e8d7b9", green: "#b99a76", trim: "#6e5b49", wall: "#e7b6ae", fold: "#c98f91", dark: "#43392f" };
 const banks: { scope: MemoryScope; color: string; x: number; memory: string; label: string }[] = [
   { scope: "individual", color: "#93bac3", x: -3.8, memory: "coffee", label: "INDIVIDUAL" },
-  { scope: "team", color: "#8eb694", x: -.5, memory: "launch", label: "TEAM MEMORY" },
+  { scope: "team", color: "#d7b268", x: -.5, memory: "launch", label: "TEAM MEMORY" },
   { scope: "organization", color: "#c4ac7d", x: 3.2, memory: "sources", label: "ORGANIZATION" },
 ];
 const routes: [number, number][][] = [
@@ -39,8 +39,8 @@ function Label({ text, position, width = 1.8, selected = false, onClick }: {
     if (context) {
       context.fillStyle = selected ? "#f2d67a" : "#fbf9e9";
       context.beginPath(); context.roundRect(2, 2, 508, 92, 14); context.fill();
-      context.strokeStyle = "#d3d9bf"; context.lineWidth = 3; context.stroke();
-      context.fillStyle = "#506b50"; context.font = "bold 30px monospace";
+      context.strokeStyle = "#ded1b8"; context.lineWidth = 3; context.stroke();
+      context.fillStyle = "#63533d"; context.font = "bold 30px monospace";
       context.textAlign = "center"; context.textBaseline = "middle"; context.fillText(text, 256, 50);
     }
     const map = new THREE.CanvasTexture(canvas); map.colorSpace = THREE.SRGBColorSpace;
@@ -77,10 +77,10 @@ const Room = memo(function Room() {
     return [[-6.78, .6, z], [-6.76, 1.2, z + .3], [-6.76, 1.9, z - .15], [-6.76, 2.7, z + .4], [-6.76, 3.4, z]] as [number, number, number][];
   }), []);
   return <group>
-    <Box position={[0, -.28, 0]} size={[14.3, .55, 10.3]} color="#70968b" radius={.16} />
+    <Box position={[0, -.28, 0]} size={[14.3, .55, 10.3]} color="#bca27e" radius={.16} />
     <Box position={[0, -.035, 0]} size={[14, .13, 10]} color={palette.floor} />
     {Array.from({ length: 14 }, (_, x) => Array.from({ length: 10 }, (_, z) => (x + z) % 2 === 0 ? <mesh key={`${x}-${z}`} rotation={[-Math.PI / 2, 0, 0]} position={[x - 6.5, .035, z - 4.5]} receiveShadow>
-      <planeGeometry args={[.99, .99]} /><meshStandardMaterial color="#cfdcc5" roughness={1} />
+      <planeGeometry args={[.99, .99]} /><meshStandardMaterial color="#dfc9a6" roughness={1} />
     </mesh> : null))}
     <Box position={[0, 1.85, -5]} size={[14, 3.7, .42]} color={palette.wall} radius={.15} />
     <Box position={[-7, 1.85, 0]} size={[.42, 3.7, 10]} color={palette.wall} radius={.15} />
@@ -92,8 +92,8 @@ const Room = memo(function Room() {
     {sideFolds.map((points, i) => <Fold key={`sf-${i}`} points={points} />)}
     <Box position={[-6.4, 1.65, -1]} size={[.06, 1.15, 1.65]} color="#bd9290" />
     <Box position={[-6.35, 1.65, -1]} size={[.06, .95, 1.45]} color="#f4e4c8" />
-    <Label position={[-6.25, 1.65, -1]} text="TAKE BRAINS." width={1.3} />
-    <Box position={[.2, .07, 2.7]} size={[4, .025, 2]} color="#b9cfae" radius={.15} />
+
+    <Box position={[.2, .07, 2.7]} size={[4, .025, 2]} color="#dbb980" radius={.15} />
     {[-5.8, 5.7].map((x) => <Plant key={x} position={[x, 0, -3.7]} />)}
     <Box position={[5.8, .4, 3.8]} size={[.85, .8, .65]} color="#c3a279" />
     <Box position={[5.8, .82, 3.8]} size={[.9, .08, .7]} color="#9a7c5b" />
@@ -114,9 +114,9 @@ function Cabinet({ bank, selected, active, onClick }: { bank: typeof banks[numbe
     {[-.49, .49].map((x) => <Box key={x} position={[x, .13, 0]} size={[.12, .25, .68]} color={palette.trim} />)}
     <Box position={[0, 1.22, 0]} size={[1.35, 2.15, .8]} color={bank.color} radius={.06} />
     {[.5, 1.15, 1.8].map((y, i) => <group key={y}>
-      <Box position={[0, y, .428 + (active && i === 1 ? .16 : 0)]} size={[1.15, .56, .05]} color={selected ? "#dce6b9" : bank.color} radius={.025} />
+      <Box position={[0, y, .428 + (active && i === 1 ? .16 : 0)]} size={[1.15, .56, .05]} color={selected ? "#f4d88b" : bank.color} radius={.025} />
       <Box position={[0, y + .1, .465 + (active && i === 1 ? .16 : 0)]} size={[.28, .12, .018]} color="#f0e6c9" radius={.01} />
-      <Box position={[0, y - .1, .48 + (active && i === 1 ? .16 : 0)]} size={[.33, .05, .04]} color="#526f61" radius={.015} />
+      <Box position={[0, y - .1, .48 + (active && i === 1 ? .16 : 0)]} size={[.33, .05, .04]} color="#79664e" radius={.015} />
     </group>)}
     <Box position={[0, 2.33, 0]} size={[1.45, .1, .86]} color={palette.trim} />
     {active ? <mesh position={[0, 2.55, 0]}><sphereGeometry args={[.09, 12, 10]} /><meshBasicMaterial color="#f4cf49" /></mesh> : null}
@@ -128,19 +128,19 @@ const Desk = memo(function Desk({ position, rotation = 0, audit = false }: { pos
   return <group position={position} rotation={[0, rotation, 0]}>
     <Box position={[0, 1, 0]} size={[2.1, .14, 1.2]} color="#a17d56" radius={.04} />
     <Box position={[0, .89, 0]} size={[1.95, .12, 1.08]} color="#765c42" />
-    {[-.85, .85].flatMap((x) => [-.43, .43].map((z) => <Box key={`${x}-${z}`} position={[x, .47, z]} size={[.11, .91, .11]} color="#566a51" />))}
-    <Box position={[-.23, 1.4, -.22]} size={[.62, .49, .42]} color="#c5cbb6" radius={.06} />
-    <Box position={[-.23, 1.4, .003]} size={[.48, .34, .025]} color="#467e75" radius={.02} />
-    <Box position={[-.23, 1.19, -.1]} size={[.28, .1, .3]} color="#aab6a1" />
-    <Box position={[-.23, 1.1, .3]} size={[.64, .045, .22]} color="#c5cbb6" />
+    {[-.85, .85].flatMap((x) => [-.43, .43].map((z) => <Box key={`${x}-${z}`} position={[x, .47, z]} size={[.11, .91, .11]} color="#6c5844" />))}
+    <Box position={[-.23, 1.4, -.22]} size={[.62, .49, .42]} color="#d5cbb9" radius={.06} />
+    <Box position={[-.23, 1.4, .003]} size={[.48, .34, .025]} color="#5f8b9d" radius={.02} />
+    <Box position={[-.23, 1.19, -.1]} size={[.28, .1, .3]} color="#bbae98" />
+    <Box position={[-.23, 1.1, .3]} size={[.64, .045, .22]} color="#d5cbb9" />
     {[0, 1, 2, 3].map((i) => <Box key={i} position={[.65, 1.1 + i * .027, .06]} size={[.4, .025, .46]} color={i % 2 ? "#efedd6" : "#dedac4"} rotation={[0, i % 2 * .1, 0]} radius={.005} />)}
     <mesh position={[-.8, 1.19, .2]} castShadow><cylinderGeometry args={[.07, .065, .16, 10]} /><meshStandardMaterial color={audit ? "#e5b958" : "#e9d9c0"} /></mesh>
     <group position={[0, 0, 1]}>
-      <Box position={[0, .55, 0]} size={[.55, .1, .55]} color="#658979" />
-      <Box position={[0, .86, .22]} size={[.55, .5, .08]} color="#658979" />
-      <mesh position={[0, .27, 0]}><cylinderGeometry args={[.045, .045, .5, 8]} /><meshStandardMaterial color="#516d5b" /></mesh>
-      <Box position={[0, .07, 0]} size={[.7, .07, .1]} color="#516d5b" />
-      <Box position={[0, .07, 0]} size={[.1, .07, .7]} color="#516d5b" />
+      <Box position={[0, .55, 0]} size={[.55, .1, .55]} color="#9f8164" />
+      <Box position={[0, .86, .22]} size={[.55, .5, .08]} color="#9f8164" />
+      <mesh position={[0, .27, 0]}><cylinderGeometry args={[.045, .045, .5, 8]} /><meshStandardMaterial color="#695744" /></mesh>
+      <Box position={[0, .07, 0]} size={[.7, .07, .1]} color="#695744" />
+      <Box position={[0, .07, 0]} size={[.1, .07, .7]} color="#695744" />
     </group>
     {audit ? <Label position={[0, 1.95, -.1]} text="EVIDENCE DESK" width={1.65} /> : null}
   </group>;
@@ -205,13 +205,13 @@ export default function BrainScene(props: SceneProps) {
     setSupported(Boolean(gl));
     gl?.getExtension("WEBGL_lose_context")?.loseContext();
   }, []);
-  if (!supported) return <div className="scene-fallback"><h2>Your memories are in good hands.</h2><p>Enable WebGL to visit the 3D brain. You can still explore memory and history below.</p></div>;
+  if (!supported) return <div className="scene-fallback"><h2>Your memories are in good hands.</h2><p>Enable WebGL to visit the 3D brain. Open Memories to explore memory and history.</p></div>;
   return <SceneBoundary><Canvas orthographic shadows dpr={[1, 1.7]} camera={{ position: [16, 14, 19], zoom: 45, near: .1, far: 100 }} gl={{ antialias: true, powerPreference: "high-performance" }} aria-label="Interactive isometric brain office with six walking SpongeBob memory workers">
-    <color attach="background" args={["#eceddf"]} />
+    <color attach="background" args={["#f0e9dd"]} />
     <ambientLight intensity={1.55} color="#fff5e2" />
     <directionalLight position={[5, 12, 8]} intensity={2.8} color="#fff1d5" castShadow shadow-mapSize={[2048, 2048]} shadow-camera-left={-12} shadow-camera-right={12} shadow-camera-top={12} shadow-camera-bottom={-12} shadow-normalBias={.04} />
-    <directionalLight position={[-8, 5, -3]} intensity={.6} color="#c8e4df" />
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -.58, 0]} receiveShadow><planeGeometry args={[200, 200]} /><meshStandardMaterial color="#eceddf" roughness={1} /></mesh>
+    <directionalLight position={[-8, 5, -3]} intensity={.6} color="#e7ddf5" />
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -.58, 0]} receiveShadow><planeGeometry args={[200, 200]} /><meshStandardMaterial color="#f0e9dd" roughness={1} /></mesh>
     <Room />
     {banks.map((bank) => <Cabinet key={bank.scope} bank={bank} selected={props.selectedScope === bank.scope} active={props.event?.scope === bank.scope} onClick={() => { props.onScope(bank.scope); props.onSelect(bank.memory); }} />)}
     <Desk position={[-3.6, 0, .9]} />

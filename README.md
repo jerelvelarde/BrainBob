@@ -20,12 +20,13 @@ pnpm dev
 Open [the local preview](http://127.0.0.1:3000). No API key is needed for the scripted scene.
 
 - Drag the room to orbit; scroll or use the zoom controls to inspect the crew.
-- Click a filing cabinet to filter individual, team, or organization memory.
+- The 3D room fills the workspace. Open **Chat** or **Memories** as floating panels; close either to return to the room.
+- Click a filing cabinet to inspect its memory, or browse individual, team, and organization records in **Memories**.
 - Click a memory card to inspect its source evidence and revision history.
-- Choose **Watch the memory loop** to demonstrate retrieval, evaluation, correction, creation, and archival using fixture data. This restarts the local fixture trace.
-- Scrub the timeline to retrace recorded changes; **Return to live** restores current state.
-- Choose **Talk to the crew** for CopilotKit/AG-UI scene commands such as “retrieve this memory”. These are scripted commands, not live inference.
-- Export the local trace as JSON, or reset the scene to its starting fixture. History is saved in this browser; it is not yet shared across agents or devices.
+- Choose **Run demo** to demonstrate retrieval, evaluation, correction, creation, and archival using fixture data. This restarts the local fixture trace.
+- Open **Retrace** and scrub the timeline to follow recorded changes; **Return to live** restores current state.
+- Choose **Chat** for CopilotKit/AG-UI scene commands such as “retrieve this memory”. These are scripted commands, not live inference.
+- Export the local trace as JSON or reset the scene from the memory panel. History is saved in this browser; it is not yet shared across agents or devices.
 
 ```bash
 pnpm typecheck
