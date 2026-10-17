@@ -41,7 +41,9 @@ backend/
 ```python
 Episode(id: str, text: str, date: str, source: str)
 Memory(id: str, text: str, author: str, origin: str, date: str,
-       status: "trial"|"promoted"|"retired"|"locked", scope: str = "team")
+       status: "trial"|"promoted"|"retired"|"locked", scope: str = "team",
+       reason: str = "",       # why the last status change happened
+       flagged: bool = False)  # locked but judged harmful: handed to its owner
 Task(id: str, question: str, grade: Callable[[str], bool], now: str | None = None)
 Answer(text: str, cited_ids: list[str])
 Evidence(memory_id, shown: bool, correct: bool, task_id)   # one row per observation
@@ -53,8 +55,8 @@ Decision(memory_id, action: "promote"|"retire"|"flag", reason: str, task_ids: li
 | Module | Interface | Hides |
 |---|---|---|
 | llm | `complete(role, messages, **kw) -> str`, `usage() -> dict` | role->model map, Crusoe client, key file, retries, disk cache, cost, stripping think text / code fences / leading newlines |
-| memory | `MemoryStore(path=None)`: `add(text, *, author, origin, date, scope="team", status="trial") -> (Memory or None, reason)`, `search(query, k=40) -> list[Memory]` (active only), `get(id)`, `all()`, `set_status(id, status, reason)` | BM25 index, normalized dedupe, tombstone Jaccard >= 0.8 vs retired, jsonl persistence |
-| curator | `ingest(episode, store, author="curator") -> list[Memory]` | extraction prompt, JSON/bullet fallback parsing |
+| memory | `MemoryStore(path=None, tombstone_jaccard=0.8)`: `add(text, *, author, origin, date, scope="team", status="trial") -> (Memory or None, reason)`, `search(query, k=40) -> list[Memory]` (active only), `get(id)`, `all()`, `set_status(id, status, reason)`, `flag(id, reason)` | BM25 index, normalized dedupe, tombstone Jaccard vs retired, jsonl persistence |
+| curator | `ingest(episode, store, author=None, role="curator") -> list[Memory]`; `extract(episode, role) -> list[str]` (model call only, so callers can run extraction in parallel and add in a fixed order) | extraction prompt, JSON/bullet fallback parsing; author defaults to the role |
 | agent | `answer(question, memories, now=None) -> Answer` | answer prompt; memories numbered [m1]..; model ends with `CITED: m3, m7`; parse to memory ids |
 | evaluator | `Evaluator(store, strategy=leave_one_out, min_changes=3)`: `observe(task, memories, answer_fn) -> list[Evidence]`, `review(confirm_fn) -> list[Decision]`, `report() -> dict` | strategies (leave_one_out, sample_pct, random_half_hide), flip-only evidence, confirm-before-retire, author ledger |
 | events | `emit(type, **data)`, `subscribe() -> queue.Queue`, `history() -> list` | in-process bus + append to events.jsonl |
@@ -66,6 +68,7 @@ Roles -> models (llm.py):
 | curator | nvidia/Nemotron-3.5-Lightning-30B-A3B | thinking off |
 | agent | nvidia/Nemotron-3.5-Lightning-30B-A3B | temperature 0, max_tokens >= 1024; Super ($0.30/$2.40) only via env BRAINBOB_AGENT_MODEL, and never mixed across conditions of one comparison |
 | judge | openai/gpt-oss-120b | temperature 0; different family from agent |
+| curator_sloppy | nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B | stress test only (in progress): a cheap, careless teammate; thinking off, high temperature |
 
 Anti-leak rule: gold answers are only ever used inside `Task.grade` as a
 right/wrong signal. Nothing derived from a gold answer is written to memory.
@@ -73,6 +76,9 @@ right/wrong signal. Nothing derived from a gold answer is written to memory.
 ## Events (for the 3D frontend)
 
 Every state change emits one JSON event: `{"type", "ts", ...data}`.
+The core emits `memory.*` and `evidence.recorded`. `memory.retrieved` and
+`answer.produced` are emitted by the caller (server.py or bench.py), because
+`agent.answer` does not know the task id.
 
 | type | data | 3D visual (friend's table) |
 |---|---|---|
