@@ -1,6 +1,55 @@
-# BrainBob character design
+# BrainBob — final character design
 
-Research and design direction, October 17, 2026. Use a bright yellow rounded rectangle, a readable graphic face, and wide violet pants. Keep a circular body and a gentle parallelogram available in the character study for comparison. Cuteness depends on the relationship between features; adding more blush, shine, or larger eyes is not a reliable formula.
+**Approved baseline: version 1, October 17, 2026.** The user selected the rounded rectangle: “rounded rectangle is cute.” This is the shared design reference for future BrainBob characters, expressions, and task animations. The circle and gentle parallelogram remain comparison studies.
+
+## Final appearance
+
+BrainBobs are cheerful memory workers inspired by the SpongeBob brain-office scene. Their identity is a bright yellow rounded rectangular body, a small graphic face, wide violet pants, and compact limbs. Preserve this silhouette when adding roles or actions.
+
+| Element | Final design |
+| --- | --- |
+| Body | Rounded rectangle, slightly wider than tall, with a shallow 3D depth and soft corners. Current geometry: `0.84 × 0.80 × 0.44` scene units; corner radius `0.13`. |
+| Face | Two dark oval eyes, one small highlight per eye, a clear U-shaped smile, and subtle coral cheeks. Leave generous forehead space. Use a graphic texture fitted to the front surface. |
+| Pants | Wide, shallow violet rectangle, rounded corners, a small pocket badge, and a slight diagonal tilt. Current geometry: `0.76 × 0.18 × 0.49`; radius `0.03`; tilt approximately 2 degrees. |
+| Arms and feet | Short rounded yellow arms, compact violet feet, and pale soles. Keep their attachment points independent for movement and prop handling. |
+| Role cues | Small accessories or carried objects preserve the same base character. The current inspector wears a violet beret; designated carriers hold paper. |
+| Finish | Matte body and workwear; simple face details. Keep the face readable in both the close-up study and the normal isometric room. |
+
+Material colors below are the source values; scene lighting affects the rendered appearance.
+
+| Use | Color |
+| --- | --- |
+| Body and arms | Bright yellow `#FFD21F` |
+| Pants, feet, inspector beret | Violet `#7962B2` |
+| Eyes and smile | Dark plum `#302B3B` |
+| Eye highlight | Warm cream `#FFF9DD` |
+| Cheeks | Coral `#ED8D55` |
+| Pocket accent | Soft violet `#A492CB` |
+| Soles | Pale gold `#F7DC97` |
+
+### Visual references
+
+The center character is the approved design. This comparison was captured October 17, 2026 at **11:34:08 AM PDT**, after implementation commit `801a04b`.
+
+![Three BrainBob silhouettes, with the center rounded rectangle marked Chosen](../judging/proof-of-work/screenshots/05-rounded-rectangle-study.jpg)
+
+The room screenshot was captured at **11:34:09 AM PDT** from the same implementation. These images record appearance; task-specific animations remain planned below.
+
+![The final rounded rectangular BrainBobs in the isometric brain office](../judging/proof-of-work/screenshots/06-rounded-rectangle-workspace.jpg)
+
+Original captures and provenance are retained in the [proof-of-work record](../judging/proof-of-work/index.html#2026-10-17-113403-rounded-rectangle) and [screenshot notes](../judging/proof-of-work/screenshots/README.md).
+
+### Preserve when extending the design
+
+- Keep the bright yellow body, rounded rectangular silhouette, wide pants, and compact face consistent across roles.
+- Express emotion through eye and mouth shapes, gaze, and body pose. Keep one coherent cartoon style; avoid protruding realistic eyeballs, teeth, or skin detail.
+- Let arms and props carry the action. Keep resting limbs compact and the face unobstructed during writing, filing, and teaching.
+- Use small steps, restrained bounce, and deliberate gestures. Avoid inflated-body motion, continuous wobble, and exaggerated panic during ordinary memory operations.
+- Keep the archived record retraceable when showing its paper representation burning. The effect communicates a recorded operation; it does not perform that operation.
+
+## Design rationale
+
+Cuteness depends on the relationship between features; adding more blush, shine, or larger eyes is not a reliable formula. The following research informed the revision, while the final selection comes from the user's feedback.
 
 ## What the evidence supports
 
@@ -23,7 +72,7 @@ This is a design assessment of the existing mesh and room screenshot, not a meas
 
 ## Practical design checklist
 
-The following are proposed art-direction and animation choices, informed by the evidence above but not directly tested by those studies:
+The following art-direction and animation principles guide the approved design. They are informed by the evidence above but were not directly tested by those studies:
 
 - Use the restored vivid yellow body (`#FFD21F`), matte shading, and violet workwear.
 - Place two dark, shallow eyes slightly lower on the face, leaving more forehead. Remove cream rims and multiple sparkles; one small highlight is enough.
@@ -56,3 +105,11 @@ For the next animation layer, give each action an event ID, actor ID, target, pr
 | Resolve a conflict | Compare two papers, tilt the body slightly, present the discrepancy. | Puzzled until evidence resolves it; no permanent alarm state. |
 
 These actions and additional expressions are **planned**. Walking, blinking, arm motion, and carried paper are implemented. Keep task animations tied to recorded results, with deterministic playback for retracing; animation completion must never create or delete a memory. Reduced motion should show the final pose and a readable event description, without flame particles or repeated gestures.
+
+## Implementation reference
+
+- [Character geometry, face textures, and hand attachment points](../apps/web/src/components/brain/brain-bob.tsx): `BrainBob`, with `silhouette="rectangle"` as the default. The named sockets are the future attachment points for paper, pens, and other props.
+- [Room movement and role assignment](../apps/web/src/components/brain/brain-scene.tsx): waypoint travel, distance-driven gait, and short turns.
+- [Character comparison](../apps/web/src/components/character-study.tsx): three silhouettes under matching lighting with a movement toggle, available at `/character-study`.
+
+The current rig is procedural Three.js geometry rendered through React Three Fiber. It does not yet contain skeletal clips, elbow/wrist reach, facial expressions beyond the neutral smile and blink, or event-driven filing, writing, burning, teaching, or learning sequences.
