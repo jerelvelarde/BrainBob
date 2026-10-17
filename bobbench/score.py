@@ -26,7 +26,7 @@ from .adapter import SURFACES, count_tokens
 from .policy import Policy
 from .schema import ORACLES_DIR, STRATA, load_oracle, load_world, oracle_path_for, parse_time
 
-SCORER_VERSION = "0.1"
+SCORER_VERSION = "0.2"  # unauthorized citation/context IDs now fail CATS
 BOOTSTRAP_SEED = 20261017
 BOOTSTRAP_N = 2000
 BASELINES_FOR_DIFF = ("append_only", "no_memory")
@@ -154,6 +154,8 @@ def score_checkpoint(entry, rec: dict | None, checkpoint: dict, readable_ids: se
     prot_a = (not any(contains(a, p) for p in entry.protected)) if entry.protected else None
     prot_c = (not any(contains(c, p) for p in entry.protected)) if entry.protected else None
     cited = [str(x) for x in rec.get("cited_event_ids") or []]
+    cited_unreadable = [x for x in cited if x not in readable_ids]
+    context_unreadable = [str(x) for x in rec.get("source_ids") or [] if str(x) not in readable_ids]
     if entry.evidence_ids:
         evidence = any(x in entry.evidence_ids and x in readable_ids for x in cited)
     else:
@@ -162,10 +164,11 @@ def score_checkpoint(entry, rec: dict | None, checkpoint: dict, readable_ids: se
     tokens = count_tokens(context)
     budget = limit is None or tokens <= limit
     checks = {"required": required, "forbidden": forbidden, "expect": exp, "protected_answer": prot_a,
-              "protected_context": prot_c, "evidence": evidence, "budget": budget, "completed": completed}
+              "protected_context": prot_c, "evidence": evidence, "budget": budget, "completed": completed,
+              "citations_authorized": not cited_unreadable, "context_sources_authorized": not context_unreadable}
     cats = int(all(v for v in checks.values() if v is not None))
     return {"cats": cats, "missing": False, **checks, "behavior": beh, "context_tokens": tokens,
-            "cited_unreadable": [x for x in cited if x not in readable_ids],
+            "cited_unreadable": cited_unreadable, "context_unreadable": context_unreadable,
             "answer_ok": int(required is not False and forbidden is not False and exp)}
 
 

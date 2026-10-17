@@ -96,3 +96,9 @@ The same answering model, prompt and budget are used by every Track A condition.
 ## Scoring (`score.py`)
 
 `CATS_i = 1` only if required claims, no forbidden claims, expected behavior, no protected content in answer or delivered context, evidence resolves to an accessible cited source, and budget respected. Report CATS separately for legitimate, boundary and maintenance strata, then their macro average. Separately report correctness checks, leave-one-out usefulness (diagnostic, on an isolated branch), and audit coverage. Record models, costs, retries, failures, seeds and trace hashes for every run. Run 3 replicates per condition.
+
+Scorer revision 0.2 additionally fails any inaccessible or unknown cited/delivered
+source ID, even alongside a valid supporting citation. Earlier 0.1 scorecards
+must be explicitly rescored for comparison. Failed source/policy deliveries taint
+all subsequent checkpoints in that world; failed maintenance receipts and missing
+session objects also count as failures. These cases remain in the denominator.

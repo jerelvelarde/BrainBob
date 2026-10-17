@@ -60,6 +60,35 @@ class Spy(Adapter):
         return None
 
 
+@pytest.mark.parametrize("operation", ["ingest", "apply_policy", "maintain", "open_session"])
+def test_failed_receipts_and_missing_sessions_cannot_pass(operation, tmp_path):
+    class Failed(Spy):
+        pass
+
+    setattr(Failed, operation, lambda self, *args: None if operation == "open_session" else {"ok": False})
+    records = runmod.run_world(World("mini-core", mini_world()), "failed", Failed, 0, str(tmp_path), probes=False)
+    checkpoints = [r for r in records if r["type"] == "checkpoint"]
+    assert len(checkpoints) == 4
+    assert all(r["error"] for r in checkpoints)
+    if operation in ("ingest", "apply_policy"):
+        assert all(r["delivery_errors"] for r in checkpoints)
+
+
+@pytest.mark.parametrize("operation", ["ingest", "apply_policy"])
+def test_failed_delivery_exceptions_taint_later_checkpoints(operation, tmp_path):
+    class Failed(Spy):
+        pass
+
+    def fail(self, *args):
+        raise RuntimeError("injected delivery failure")
+
+    setattr(Failed, operation, fail)
+    records = runmod.run_world(World("mini-core", mini_world()), "failed", Failed, 0, str(tmp_path), probes=False)
+    checkpoints = [r for r in records if r["type"] == "checkpoint"]
+    assert len(checkpoints) == 4
+    assert all("prior delivery failed" in r["error"] for r in checkpoints)
+
+
 def sentinel_oracle():
     o = mini_oracle()
     for cid, e in o["checkpoints"].items():
@@ -115,7 +144,7 @@ def test_baselines_and_controls_end_to_end(tmp_path, monkeypatch):
     def strata(name):
         return tuple(c[name]["strata"][s]["cats"] for s in ("legitimate", "boundary", "maintenance"))
     assert strata("full_history") == (1.0, 1.0, 1.0)
-    assert strata("unfiltered") == (0.0, 0.0, 1.0)  # leaks protected context
+    assert strata("unfiltered") == (0.0, 0.0, 0.0)  # protected text or inaccessible source IDs
     assert strata("no_memory") == (0.0, 1.0, 0.0)
     assert strata("always_refuse") == (0.0, 1.0, 0.0)
     assert set(card["unsupported"]) == {"append_only", "maintained"}

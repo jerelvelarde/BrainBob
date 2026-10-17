@@ -87,11 +87,20 @@ def run_world(world, condition: str, factory, replicate: int, workdir: str, expo
         elif kind == "policy":
             n_pol += 1
             try:
-                adapter.apply_policy(visible)
+                rc = adapter.apply_policy(visible)
+                if isinstance(rc, dict) and rc.get("ok") is False:
+                    errors.append(f"apply_policy {item['policy_id']}: not ok")
             except Exception as e:  # noqa: BLE001
                 errors.append(f"apply_policy {item.get('policy_id')}: {_err(e)}")
         elif kind == "checkpoint":
-            out.append(_checkpoint(adapter, item, last_seq, base, probes))
+            rec = _checkpoint(adapter, item, last_seq, base, probes)
+            if errors:
+                # A lost source or policy update leaves later state unverified.
+                # Keep every checkpoint in the denominator, including refusals
+                # that happen to look correct after the failed delivery.
+                rec["delivery_errors"] = list(errors)
+                rec["error"] = "; ".join(filter(None, [rec.get("error"), "prior delivery failed: " + "; ".join(errors)]))
+            out.append(rec)
         last_seq = item["seq"]
     export_sha, export_bytes = None, 0
     try:
@@ -119,6 +128,8 @@ def _checkpoint(adapter, cp: dict, last_seq: int, base: dict, probes: bool) -> d
     errors = []
     try:
         rec["maintain_receipt"] = adapter.maintain(last_seq, copy.deepcopy(budget))
+        if isinstance(rec["maintain_receipt"], dict) and rec["maintain_receipt"].get("ok") is False:
+            errors.append("maintain: not ok")
     except Exception as e:  # noqa: BLE001
         errors.append(f"maintain: {_err(e)}")
     t0 = time.time()
@@ -150,7 +161,7 @@ def _checkpoint(adapter, cp: dict, last_seq: int, base: dict, probes: bool) -> d
             rec.update(context=final, context_sha256=_sha(final), context_tokens=count_tokens(final),
                        context_opened_sha256=_sha(context), context_changed_in_act=True,
                        source_ids=list(session.get("source_ids") or []))
-    elif session is not None:
+    else:
         errors.append("open_session: did not return a dict")
     rec.setdefault("context", context)
     rec.setdefault("answer", "")
