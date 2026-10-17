@@ -10,6 +10,7 @@ QWEN = "Qwen/Qwen3.8-27B"
 NOTHINK = {"chat_template_kwargs": {"enable_thinking": False}}
 PRICE = {LIGHT: (0.05, 0.20), "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B": (0.30, 2.40), "openai/gpt-oss-120b": (0.05, 0.25), NANO: (0.05, 0.20), QWEN: (0.10, 0.40)}
 _OVR = {}  # role -> default overrides (configure)
+DEFAULT_BASE_URL = "https://api.inference.crusoecloud.com/v1"
 
 
 def _roles():
@@ -21,12 +22,18 @@ def _roles():
         "agent": dict(model=os.environ.get("BRAINBOB_AGENT_MODEL", LIGHT), max_tokens=2048, temperature=0, extra_body=NOTHINK),
         "judge": dict(model="openai/gpt-oss-120b", max_tokens=2048, temperature=0, extra_body=None),
     }
-    return {k: {**v, **_OVR.get(k, {})} for k, v in r.items()}
+    for role, cfg in r.items():
+        prefix = f"BRAINBOB_{role.upper()}"
+        cfg["model"] = os.environ.get(f"{prefix}_MODEL", cfg["model"])
+        if os.environ.get(f"{prefix}_EXTRA_BODY") is not None:
+            cfg["extra_body"] = json.loads(os.environ[f"{prefix}_EXTRA_BODY"])
+        cfg.update(_OVR.get(role, {}))
+    return r
 
 
 _SEM = {"curator": threading.Semaphore(24), "curator_sloppy": threading.Semaphore(24), "agent": threading.Semaphore(16), "judge": threading.Semaphore(16),
         "curator_careful": threading.Semaphore(24), "curator_qwen": threading.Semaphore(24)}
-_USAGE, _LOCK, _client = [], threading.Lock(), None
+_USAGE, _LOCK = [], threading.Lock()
 
 
 def configure(role, concurrency=None, **defaults):
@@ -36,22 +43,42 @@ def configure(role, concurrency=None, **defaults):
         _SEM[role] = threading.Semaphore(concurrency)
 
 
-def _key():
+def _key(role=None):
+    for name in ([f"BRAINBOB_{role.upper()}_API_KEY"] if role else []) + ["BRAINBOB_API_KEY"]:
+        if os.environ.get(name):
+            return os.environ[name]
     return open(os.path.expanduser("~/.config/crusoe/api.key")).read().strip()
 
 
-def _get_client():
-    global _client
-    if _client is None:
-        _client = OpenAI(api_key=_key(), base_url="https://api.inference.crusoecloud.com/v1", timeout=900, max_retries=0)
-    return _client
+def _base_url(role=None):
+    return os.environ.get(f"BRAINBOB_{role.upper()}_BASE_URL", os.environ.get("BRAINBOB_BASE_URL", DEFAULT_BASE_URL)).rstrip("/") if role else os.environ.get("BRAINBOB_BASE_URL", DEFAULT_BASE_URL).rstrip("/")
+
+
+def configuration():
+    """Serializable effective model configuration; deliberately excludes credentials."""
+    return {role: {**cfg, "base_url": _base_url(role),
+                   "cache_namespace": os.environ.get(f"BRAINBOB_{role.upper()}_CACHE_NAMESPACE", os.environ.get("BRAINBOB_CACHE_NAMESPACE", ""))}
+            for role, cfg in _roles().items()}
+
+
+_clients = {}
+
+
+def _get_client(role=None):
+    endpoint, key = _base_url(role), _key(role)
+    identity = (endpoint, hashlib.sha256(key.encode()).hexdigest())
+    with _LOCK:
+        if identity not in _clients:
+            _clients[identity] = OpenAI(api_key=key, base_url=endpoint, timeout=900, max_retries=0)
+        return _clients[identity]
 
 
 def complete(role, messages, fresh=False, **kw):
     """fresh=True skips reading the cache (the result is still written to it)."""
     cfg = {**_roles()[role], **kw}  # kw overrides; None drops the param
     model = cfg["model"]
-    payload = json.dumps([model, messages, cfg.get("max_tokens"), cfg.get("temperature"), cfg.get("extra_body")], sort_keys=True)
+    namespace = os.environ.get(f"BRAINBOB_{role.upper()}_CACHE_NAMESPACE", os.environ.get("BRAINBOB_CACHE_NAMESPACE", ""))
+    payload = json.dumps([_base_url(role), namespace, model, messages, cfg.get("max_tokens"), cfg.get("temperature"), cfg.get("extra_body")], sort_keys=True)
     path = os.path.join(CACHE, hashlib.sha256(payload.encode()).hexdigest() + ".json")
     if not fresh and os.path.exists(path):
         try:
@@ -67,14 +94,14 @@ def complete(role, messages, fresh=False, **kw):
     with _SEM[role]:
         for _ in range(8):
             try:
-                r = _get_client().chat.completions.create(**req); break
+                r = _get_client(role).chat.completions.create(**req); break
             except (openai.RateLimitError, openai.APIConnectionError, openai.APITimeoutError, openai.InternalServerError):
                 time.sleep(delay); delay = min(delay * 2, 60)
             except openai.APIStatusError as e:
                 if e.status_code >= 500 or e.status_code == 429:
                     time.sleep(delay); delay = min(delay * 2, 60)
                 else:
-                    print("HTTP", e.status_code, str(e)[:200].replace(_key(), "***"), file=sys.stderr); return ""
+                    print("HTTP", e.status_code, str(e)[:200].replace(_key(role), "***"), file=sys.stderr); return ""
         else:
             return ""
     c = r.choices[0].message.content or ""

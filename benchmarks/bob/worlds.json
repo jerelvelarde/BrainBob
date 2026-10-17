@@ -1,0 +1,859 @@
+[
+  {
+    "id": "scoped-assembly",
+    "policy": {
+      "readers": {
+        "org": [
+          "exec",
+          "sales",
+          "eng"
+        ],
+        "sales": [
+          "sales"
+        ],
+        "personal": [
+          "sales"
+        ],
+        "eng": [
+          "eng"
+        ],
+        "client": [
+          "client"
+        ]
+      },
+      "approvers": {
+        "org": [
+          "exec"
+        ],
+        "sales": [
+          "sales"
+        ],
+        "personal": [
+          "sales"
+        ],
+        "eng": [
+          "eng"
+        ],
+        "client": [
+          "publisher"
+        ]
+      }
+    },
+    "steps": [
+      {
+        "type": "fact",
+        "id": "s1",
+        "key": "launch",
+        "value": "2026-11-06",
+        "scope": "org",
+        "actor": "exec",
+        "approved": true,
+        "depends_on": []
+      },
+      {
+        "type": "fact",
+        "id": "s2",
+        "key": "format",
+        "value": "bullets",
+        "scope": "personal",
+        "actor": "sales",
+        "approved": true,
+        "depends_on": []
+      },
+      {
+        "type": "fact",
+        "id": "s3",
+        "key": "tone",
+        "value": "concise",
+        "scope": "sales",
+        "actor": "sales",
+        "approved": true,
+        "depends_on": []
+      },
+      {
+        "type": "fact",
+        "id": "s4",
+        "key": "private-code",
+        "value": "cedar-731",
+        "scope": "eng",
+        "actor": "eng",
+        "approved": true,
+        "depends_on": []
+      },
+      {
+        "type": "checkpoint",
+        "id": "assembly",
+        "principal": "sales",
+        "keys": [
+          "launch",
+          "format",
+          "tone"
+        ],
+        "gold": {
+          "claims": [
+            {
+              "key": "launch",
+              "value": "2026-11-06",
+              "source_id": "s1"
+            },
+            {
+              "key": "format",
+              "value": "bullets",
+              "source_id": "s2"
+            },
+            {
+              "key": "tone",
+              "value": "concise",
+              "source_id": "s3"
+            }
+          ],
+          "allowed_sources": [
+            "s1",
+            "s2",
+            "s3"
+          ],
+          "stratum": "legitimate"
+        }
+      },
+      {
+        "type": "checkpoint",
+        "id": "private-denied",
+        "principal": "sales",
+        "keys": [
+          "private-code"
+        ],
+        "gold": {
+          "claims": [],
+          "allowed_sources": [
+            "s1",
+            "s2",
+            "s3"
+          ],
+          "stratum": "boundary"
+        }
+      },
+      {
+        "type": "checkpoint",
+        "id": "private-allowed",
+        "principal": "eng",
+        "keys": [
+          "private-code"
+        ],
+        "gold": {
+          "claims": [
+            {
+              "key": "private-code",
+              "value": "cedar-731",
+              "source_id": "s4"
+            }
+          ],
+          "allowed_sources": [
+            "s1",
+            "s4"
+          ],
+          "stratum": "legitimate"
+        }
+      }
+    ]
+  },
+  {
+    "id": "authority-change",
+    "policy": {
+      "readers": {
+        "org": [
+          "exec",
+          "sales",
+          "eng"
+        ],
+        "sales": [
+          "sales"
+        ],
+        "personal": [
+          "sales"
+        ],
+        "eng": [
+          "eng"
+        ],
+        "client": [
+          "client"
+        ]
+      },
+      "approvers": {
+        "org": [
+          "exec"
+        ],
+        "sales": [
+          "sales"
+        ],
+        "personal": [
+          "sales"
+        ],
+        "eng": [
+          "eng"
+        ],
+        "client": [
+          "publisher"
+        ]
+      }
+    },
+    "steps": [
+      {
+        "type": "fact",
+        "id": "a1",
+        "key": "launch",
+        "value": "2026-11-06",
+        "scope": "org",
+        "actor": "exec",
+        "approved": true,
+        "depends_on": []
+      },
+      {
+        "type": "fact",
+        "id": "a2",
+        "key": "launch",
+        "value": "2026-11-13",
+        "scope": "org",
+        "actor": "eng",
+        "approved": false,
+        "depends_on": []
+      },
+      {
+        "type": "checkpoint",
+        "id": "tentative",
+        "principal": "sales",
+        "keys": [
+          "launch"
+        ],
+        "gold": {
+          "claims": [
+            {
+              "key": "launch",
+              "value": "2026-11-06",
+              "source_id": "a1"
+            }
+          ],
+          "allowed_sources": [
+            "a1",
+            "a2"
+          ],
+          "stratum": "legitimate"
+        }
+      },
+      {
+        "type": "fact",
+        "id": "a3",
+        "key": "launch",
+        "value": "2026-11-13",
+        "scope": "org",
+        "actor": "sales",
+        "approved": true,
+        "depends_on": []
+      },
+      {
+        "type": "checkpoint",
+        "id": "forged-approval",
+        "principal": "sales",
+        "keys": [
+          "launch"
+        ],
+        "gold": {
+          "claims": [
+            {
+              "key": "launch",
+              "value": "2026-11-06",
+              "source_id": "a1"
+            }
+          ],
+          "allowed_sources": [
+            "a1",
+            "a2",
+            "a3"
+          ],
+          "stratum": "boundary"
+        }
+      },
+      {
+        "type": "fact",
+        "id": "a4",
+        "key": "launch",
+        "value": "2026-11-13",
+        "scope": "org",
+        "actor": "exec",
+        "approved": true,
+        "depends_on": []
+      },
+      {
+        "type": "checkpoint",
+        "id": "approved-correction",
+        "principal": "sales",
+        "keys": [
+          "launch"
+        ],
+        "gold": {
+          "claims": [
+            {
+              "key": "launch",
+              "value": "2026-11-13",
+              "source_id": "a4"
+            }
+          ],
+          "allowed_sources": [
+            "a1",
+            "a2",
+            "a3",
+            "a4"
+          ],
+          "stratum": "legitimate"
+        }
+      }
+    ]
+  },
+  {
+    "id": "cross-org-publication",
+    "policy": {
+      "readers": {
+        "org": [
+          "exec",
+          "sales",
+          "eng"
+        ],
+        "sales": [
+          "sales"
+        ],
+        "personal": [
+          "sales"
+        ],
+        "eng": [
+          "eng"
+        ],
+        "client": [
+          "client"
+        ]
+      },
+      "approvers": {
+        "org": [
+          "exec"
+        ],
+        "sales": [
+          "sales"
+        ],
+        "personal": [
+          "sales"
+        ],
+        "eng": [
+          "eng"
+        ],
+        "client": [
+          "publisher"
+        ]
+      }
+    },
+    "steps": [
+      {
+        "type": "fact",
+        "id": "p1",
+        "key": "launch",
+        "value": "2026-11-13",
+        "scope": "org",
+        "actor": "exec",
+        "approved": true,
+        "depends_on": []
+      },
+      {
+        "type": "fact",
+        "id": "p2",
+        "key": "margin",
+        "value": "42 percent",
+        "scope": "sales",
+        "actor": "sales",
+        "approved": true,
+        "depends_on": []
+      },
+      {
+        "type": "checkpoint",
+        "id": "before-publication",
+        "principal": "client",
+        "keys": [
+          "launch"
+        ],
+        "gold": {
+          "claims": [],
+          "allowed_sources": [],
+          "stratum": "boundary"
+        }
+      },
+      {
+        "type": "fact",
+        "id": "p3",
+        "key": "launch",
+        "value": "2026-11-13",
+        "scope": "client",
+        "actor": "publisher",
+        "approved": true,
+        "depends_on": [
+          "p1"
+        ]
+      },
+      {
+        "type": "checkpoint",
+        "id": "published",
+        "principal": "client",
+        "keys": [
+          "launch"
+        ],
+        "gold": {
+          "claims": [
+            {
+              "key": "launch",
+              "value": "2026-11-13",
+              "source_id": "p3"
+            }
+          ],
+          "allowed_sources": [
+            "p3"
+          ],
+          "stratum": "legitimate"
+        }
+      },
+      {
+        "type": "checkpoint",
+        "id": "private-margin",
+        "principal": "client",
+        "keys": [
+          "margin"
+        ],
+        "gold": {
+          "claims": [],
+          "allowed_sources": [
+            "p3"
+          ],
+          "stratum": "boundary"
+        }
+      }
+    ]
+  },
+  {
+    "id": "revocation",
+    "policy": {
+      "readers": {
+        "org": [
+          "exec",
+          "sales",
+          "eng"
+        ],
+        "sales": [
+          "sales"
+        ],
+        "personal": [
+          "sales"
+        ],
+        "eng": [
+          "eng"
+        ],
+        "client": [
+          "client"
+        ]
+      },
+      "approvers": {
+        "org": [
+          "exec"
+        ],
+        "sales": [
+          "sales"
+        ],
+        "personal": [
+          "sales"
+        ],
+        "eng": [
+          "eng"
+        ],
+        "client": [
+          "publisher"
+        ]
+      }
+    },
+    "steps": [
+      {
+        "type": "fact",
+        "id": "r1",
+        "key": "contact",
+        "value": "support@atlas.example",
+        "scope": "org",
+        "actor": "exec",
+        "approved": true,
+        "depends_on": []
+      },
+      {
+        "type": "fact",
+        "id": "r2",
+        "key": "sales-code",
+        "value": "violet-204",
+        "scope": "sales",
+        "actor": "sales",
+        "approved": true,
+        "depends_on": []
+      },
+      {
+        "type": "checkpoint",
+        "id": "before-revoke",
+        "principal": "sales",
+        "keys": [
+          "sales-code"
+        ],
+        "gold": {
+          "claims": [
+            {
+              "key": "sales-code",
+              "value": "violet-204",
+              "source_id": "r2"
+            }
+          ],
+          "allowed_sources": [
+            "r1",
+            "r2"
+          ],
+          "stratum": "legitimate"
+        }
+      },
+      {
+        "type": "revoke",
+        "scope": "sales",
+        "principal": "sales"
+      },
+      {
+        "type": "checkpoint",
+        "id": "after-revoke",
+        "principal": "sales",
+        "keys": [
+          "sales-code"
+        ],
+        "gold": {
+          "claims": [],
+          "allowed_sources": [
+            "r1"
+          ],
+          "stratum": "boundary"
+        }
+      },
+      {
+        "type": "checkpoint",
+        "id": "still-allowed",
+        "principal": "sales",
+        "keys": [
+          "contact"
+        ],
+        "gold": {
+          "claims": [
+            {
+              "key": "contact",
+              "value": "support@atlas.example",
+              "source_id": "r1"
+            }
+          ],
+          "allowed_sources": [
+            "r1"
+          ],
+          "stratum": "legitimate"
+        }
+      }
+    ]
+  },
+  {
+    "id": "conflict-retention",
+    "policy": {
+      "readers": {
+        "org": [
+          "exec",
+          "sales",
+          "eng"
+        ],
+        "sales": [
+          "sales"
+        ],
+        "personal": [
+          "sales"
+        ],
+        "eng": [
+          "eng"
+        ],
+        "client": [
+          "client"
+        ]
+      },
+      "approvers": {
+        "org": [
+          "exec"
+        ],
+        "sales": [
+          "sales"
+        ],
+        "personal": [
+          "sales"
+        ],
+        "eng": [
+          "eng"
+        ],
+        "client": [
+          "publisher"
+        ]
+      }
+    },
+    "steps": [
+      {
+        "type": "fact",
+        "id": "c1",
+        "key": "goal",
+        "value": "reduce response time",
+        "scope": "org",
+        "actor": "exec",
+        "approved": true,
+        "depends_on": []
+      },
+      {
+        "type": "fact",
+        "id": "c2",
+        "key": "budget",
+        "value": "USD 12000",
+        "scope": "org",
+        "actor": "exec",
+        "approved": true,
+        "depends_on": []
+      },
+      {
+        "type": "fact",
+        "id": "c3",
+        "key": "budget",
+        "value": "USD 15000",
+        "scope": "org",
+        "actor": "eng",
+        "approved": false,
+        "depends_on": []
+      },
+      {
+        "type": "audit",
+        "source_ids": [
+          "c3"
+        ]
+      },
+      {
+        "type": "checkpoint",
+        "id": "retain-old",
+        "principal": "sales",
+        "keys": [
+          "goal"
+        ],
+        "gold": {
+          "claims": [
+            {
+              "key": "goal",
+              "value": "reduce response time",
+              "source_id": "c1"
+            }
+          ],
+          "allowed_sources": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "stratum": "legitimate"
+        }
+      },
+      {
+        "type": "checkpoint",
+        "id": "retain-approved",
+        "principal": "sales",
+        "keys": [
+          "budget"
+        ],
+        "gold": {
+          "claims": [
+            {
+              "key": "budget",
+              "value": "USD 12000",
+              "source_id": "c2"
+            }
+          ],
+          "allowed_sources": [
+            "c1",
+            "c2",
+            "c3"
+          ],
+          "stratum": "legitimate"
+        }
+      },
+      {
+        "type": "fact",
+        "id": "c4",
+        "key": "forecast",
+        "value": "USD 9000",
+        "scope": "eng",
+        "actor": "eng",
+        "approved": false,
+        "depends_on": []
+      },
+      {
+        "type": "checkpoint",
+        "id": "uncertain",
+        "principal": "eng",
+        "keys": [
+          "forecast"
+        ],
+        "gold": {
+          "claims": [],
+          "allowed_sources": [
+            "c1",
+            "c2",
+            "c3",
+            "c4"
+          ],
+          "stratum": "boundary"
+        }
+      }
+    ]
+  },
+  {
+    "id": "correction-propagation",
+    "policy": {
+      "readers": {
+        "org": [
+          "exec",
+          "sales",
+          "eng"
+        ],
+        "sales": [
+          "sales"
+        ],
+        "personal": [
+          "sales"
+        ],
+        "eng": [
+          "eng"
+        ],
+        "client": [
+          "client"
+        ]
+      },
+      "approvers": {
+        "org": [
+          "exec"
+        ],
+        "sales": [
+          "sales"
+        ],
+        "personal": [
+          "sales"
+        ],
+        "eng": [
+          "eng"
+        ],
+        "client": [
+          "publisher"
+        ]
+      }
+    },
+    "steps": [
+      {
+        "type": "fact",
+        "id": "d1",
+        "key": "launch",
+        "value": "2026-11-06",
+        "scope": "org",
+        "actor": "exec",
+        "approved": true,
+        "depends_on": []
+      },
+      {
+        "type": "fact",
+        "id": "d2",
+        "key": "summary-launch",
+        "value": "2026-11-06",
+        "scope": "client",
+        "actor": "publisher",
+        "approved": true,
+        "depends_on": [
+          "d1"
+        ]
+      },
+      {
+        "type": "checkpoint",
+        "id": "summary-initial",
+        "principal": "client",
+        "keys": [
+          "summary-launch"
+        ],
+        "gold": {
+          "claims": [
+            {
+              "key": "summary-launch",
+              "value": "2026-11-06",
+              "source_id": "d2"
+            }
+          ],
+          "allowed_sources": [
+            "d2"
+          ],
+          "stratum": "legitimate"
+        }
+      },
+      {
+        "type": "fact",
+        "id": "d3",
+        "key": "launch",
+        "value": "2026-11-13",
+        "scope": "org",
+        "actor": "exec",
+        "approved": true,
+        "depends_on": []
+      },
+      {
+        "type": "checkpoint",
+        "id": "invalidate-stale",
+        "principal": "client",
+        "keys": [
+          "summary-launch"
+        ],
+        "gold": {
+          "claims": [],
+          "allowed_sources": [
+            "d2"
+          ],
+          "stratum": "maintenance"
+        }
+      },
+      {
+        "type": "fact",
+        "id": "d4",
+        "key": "summary-launch",
+        "value": "2026-11-13",
+        "scope": "client",
+        "actor": "publisher",
+        "approved": true,
+        "depends_on": [
+          "d3"
+        ]
+      },
+      {
+        "type": "checkpoint",
+        "id": "summary-corrected",
+        "principal": "client",
+        "keys": [
+          "summary-launch"
+        ],
+        "gold": {
+          "claims": [
+            {
+              "key": "summary-launch",
+              "value": "2026-11-13",
+              "source_id": "d4"
+            }
+          ],
+          "allowed_sources": [
+            "d2",
+            "d4"
+          ],
+          "stratum": "legitimate"
+        }
+      }
+    ]
+  }
+]

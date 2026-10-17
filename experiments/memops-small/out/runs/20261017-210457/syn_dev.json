@@ -1,0 +1,1520 @@
+{
+ "base": {
+  "metrics": {
+   "n": 30,
+   "accuracy": 0.5666666666666667,
+   "macro_f1": 0.45555555555555555,
+   "f1": {
+    "same": 0.6666666666666666,
+    "conflict": 0.0,
+    "unrelated": 0.7
+   },
+   "confusion": {
+    "same": {
+     "same": 10,
+     "conflict": 0,
+     "unrelated": 0,
+     "None": 0
+    },
+    "conflict": {
+     "same": 7,
+     "conflict": 0,
+     "unrelated": 3,
+     "None": 0
+    },
+    "unrelated": {
+     "same": 3,
+     "conflict": 0,
+     "unrelated": 7,
+     "None": 0
+    }
+   },
+   "invalid_rate": 0.0,
+   "prob_argmax_accuracy": 0.43333333333333335,
+   "threshold": 0.8,
+   "thresholded": {
+    "conflict": {
+     "n_argmax": 0,
+     "n_kept": 0,
+     "coverage": null,
+     "precision": null,
+     "recall_vs_gold": 0.0
+    },
+    "same": {
+     "n_argmax": 27,
+     "n_kept": 19,
+     "coverage": 0.7037037037037037,
+     "precision": 0.5263157894736842,
+     "recall_vs_gold": 1.0
+    }
+   },
+   "operations": {
+    "harmful_overwrites": 0,
+    "wrongful_noop_drops": 10,
+    "denominator": 30,
+    "gold_supersede": 5,
+    "op_match": 0.5666666666666667
+   },
+   "latency_ms": {
+    "first_calls": [
+     324.08,
+     310.14
+    ],
+    "warm_p50": 311.775,
+    "warm_p95": 344.762,
+    "warm_n": 28
+   }
+  },
+  "predictions": [
+   {
+    "id": "syn-001",
+    "input_sha256": null,
+    "gold": "same",
+    "authority": "tentative",
+    "cand_date": "2026-03-28",
+    "old_date": "2026-03-04",
+    "output": "{\n  \"verdict\": \"same\"\n}",
+    "out_tokens": 11,
+    "latency_ms": 324.08,
+    "pred": "same",
+    "prompt_tokens": 214,
+    "probs": {
+     "same": 0.977,
+     "conflict": 0.0,
+     "unrelated": 0.023
+    },
+    "label_logprobs": {
+     "same": -0.024,
+     "conflict": -12.899,
+     "unrelated": -3.774
+    }
+   },
+   {
+    "id": "syn-002",
+    "input_sha256": null,
+    "gold": "conflict",
+    "authority": "approved",
+    "cand_date": "2026-04-14",
+    "old_date": "2026-04-02",
+    "output": "{\n  \"verdict\": \"same\"\n}",
+    "out_tokens": 11,
+    "latency_ms": 310.14,
+    "pred": "same",
+    "prompt_tokens": 211,
+    "probs": {
+     "same": 0.9147,
+     "conflict": 0.0003,
+     "unrelated": 0.0851
+    },
+    "label_logprobs": {
+     "same": -0.093,
+     "conflict": -8.218,
+     "unrelated": -2.468
+    }
+   },
+   {
+    "id": "syn-003",
+    "input_sha256": null,
+    "gold": "same",
+    "authority": "approved",
+    "cand_date": "2026-04-14",
+    "old_date": "2026-04-02",
+    "output": "{\n  \"verdict\": \"same\"\n}",
+    "out_tokens": 11,
+    "latency_ms": 303.07,
+    "pred": "same",
+    "prompt_tokens": 215,
+    "probs": {
+     "same": 0.9998,
+     "conflict": 0.0,
+     "unrelated": 0.0002
+    },
+    "label_logprobs": {
+     "same": -0.0,
+     "conflict": -14.375,
+     "unrelated": -8.625
+    }
+   },
+   {
+    "id": "syn-004",
+    "input_sha256": null,
+    "gold": "conflict",
+    "authority": "tentative",
+    "cand_date": "2026-08-08",
+    "old_date": "2026-06-30",
+    "output": "{\n  \"verdict\": \"same\"\n}",
+    "out_tokens": 11,
+    "latency_ms": 309.08,
+    "pred": "same",
+    "prompt_tokens": 239,
+    "probs": {
+     "same": 0.9769,
+     "conflict": 0.0002,
+     "unrelated": 0.023
+    },
+    "label_logprobs": {
+     "same": -0.026,
+     "conflict": -8.776,
+     "unrelated": -3.776
+    }
+   },
+   {
+    "id": "syn-005",
+    "input_sha256": null,
+    "gold": "conflict",
+    "authority": "tentative",
+    "cand_date": "2026-03-09",
+    "old_date": "2026-02-23",
+    "output": "{\n  \"verdict\": \"same\"\n}",
+    "out_tokens": 11,
+    "latency_ms": 307.63,
+    "pred": "same",
+    "prompt_tokens": 225,
+    "probs": {
+     "same": 0.777,
+     "conflict": 0.0003,
+     "unrelated": 0.2226
+    },
+    "label_logprobs": {
+     "same": -0.256,
+     "conflict": -8.006,
+     "unrelated": -1.506
+    }
+   },
+   {
+    "id": "syn-006",
+    "input_sha256": null,
+    "gold": "unrelated",
+    "authority": "discussion",
+    "cand_date": "2026-02-22",
+    "old_date": "2026-02-12",
+    "output": "{\n  \"verdict\": \"unrelated\"\n}",
+    "out_tokens": 12,
+    "latency_ms": 338.01,
+    "pred": "unrelated",
+    "prompt_tokens": 220,
+    "probs": {
+     "same": 0.2227,
+     "conflict": 0.0,
+     "unrelated": 0.7773
+    },
+    "label_logprobs": {
+     "same": -1.506,
+     "conflict": -11.256,
+     "unrelated": -0.256
+    }
+   },
+   {
+    "id": "syn-007",
+    "input_sha256": null,
+    "gold": "same",
+    "authority": "discussion",
+    "cand_date": "2026-07-11",
+    "old_date": "2026-07-02",
+    "output": "{\n  \"verdict\": \"same\"\n}",
+    "out_tokens": 11,
+    "latency_ms": 306.53,
+    "pred": "same",
+    "prompt_tokens": 221,
+    "probs": {
+     "same": 1.0,
+     "conflict": 0.0,
+     "unrelated": 0.0
+    },
+    "label_logprobs": {
+     "same": -0.0,
+     "conflict": -16.0,
+     "unrelated": -12.125
+    }
+   },
+   {
+    "id": "syn-008",
+    "input_sha256": null,
+    "gold": "same",
+    "authority": "discussion",
+    "cand_date": "2026-02-22",
+    "old_date": "2026-02-12",
+    "output": "{\n  \"verdict\": \"same\"\n}",
+    "out_tokens": 11,
+    "latency_ms": 306.27,
+    "pred": "same",
+    "prompt_tokens": 220,
+    "probs": {
+     "same": 0.9997,
+     "conflict": 0.0,
+     "unrelated": 0.0003
+    },
+    "label_logprobs": {
+     "same": -0.0,
+     "conflict": -13.875,
+     "unrelated": -8.25
+    }
+   },
+   {
+    "id": "syn-009",
+    "input_sha256": null,
+    "gold": "conflict",
+    "authority": "discussion",
+    "cand_date": "2026-07-11",
+    "old_date": "2026-07-02",
+    "output": "{\n  \"verdict\": \"unrelated\"\n}",
+    "out_tokens": 12,
+    "latency_ms": 330.55,
+    "pred": "unrelated",
+    "prompt_tokens": 218,
+    "probs": {
+     "same": 0.7763,
+     "conflict": 0.0013,
+     "unrelated": 0.2224
+    },
+    "label_logprobs": {
+     "same": -0.261,
+     "conflict": -6.636,
+     "unrelated": -1.511
+    }
+   },
+   {
+    "id": "syn-010",
+    "input_sha256": null,
+    "gold": "conflict",
+    "authority": "approved",
+    "cand_date": "2026-07-20",
+    "old_date": "2026-06-30",
+    "output": "{\n  \"verdict\": \"unrelated\"\n}",
+    "out_tokens": 12,
+    "latency_ms": 336.17,
+    "pred": "unrelated",
+    "prompt_tokens": 221,
+    "probs": {
+     "same": 0.7733,
+     "conflict": 0.0052,
+     "unrelated": 0.2215
+    },
+    "label_logprobs": {
+     "same": -0.261,
+     "conflict": -5.261,
+     "unrelated": -1.511
+    }
+   },
+   {
+    "id": "syn-011",
+    "input_sha256": null,
+    "gold": "same",
+    "authority": "tentative",
+    "cand_date": "2026-03-09",
+    "old_date": "2026-02-23",
+    "output": "{\n  \"verdict\": \"same\"\n}",
+    "out_tokens": 11,
+    "latency_ms": 310.54,
+    "pred": "same",
+    "prompt_tokens": 228,
+    "probs": {
+     "same": 0.9964,
+     "conflict": 0.0,
+     "unrelated": 0.0036
+    },
+    "label_logprobs": {
+     "same": -0.004,
+     "conflict": -14.504,
+     "unrelated": -5.629
+    }
+   },
+   {
+    "id": "syn-012",
+    "input_sha256": null,
+    "gold": "unrelated",
+    "authority": "approved",
+    "cand_date": "2026-06-28",
+    "old_date": "2026-04-30",
+    "output": "{\n  \"verdict\": \"same\"\n}",
+    "out_tokens": 11,
+    "latency_ms": 306.65,
+    "pred": "same",
+    "prompt_tokens": 221,
+    "probs": {
+     "same": 0.9399,
+     "conflict": 0.0,
+     "unrelated": 0.0601
+    },
+    "label_logprobs": {
+     "same": -0.065,
+     "conflict": -11.69,
+     "unrelated": -2.815
+    }
+   },
+   {
+    "id": "syn-013",
+    "input_sha256": null,
+    "gold": "unrelated",
+    "authority": "discussion",
+    "cand_date": "2026-01-27",
+    "old_date": "2026-01-23",
+    "output": "{\n  \"verdict\": \"unrelated\"\n}",
+    "out_tokens": 12,
+    "latency_ms": 334.21,
+    "pred": "unrelated",
+    "prompt_tokens": 219,
+    "probs": {
+     "same": 0.7982,
+     "conflict": 0.0,
+     "unrelated": 0.2018
+    },
+    "label_logprobs": {
+     "same": -0.229,
+     "conflict": -11.979,
+     "unrelated": -1.604
+    }
+   },
+   {
+    "id": "syn-014",
+    "input_sha256": null,
+    "gold": "conflict",
+    "authority": "approved",
+    "cand_date": "2026-06-28",
+    "old_date": "2026-04-30",
+    "output": "{\n  \"verdict\": \"same\"\n}",
+    "out_tokens": 11,
+    "latency_ms": 303.36,
+    "pred": "same",
+    "prompt_tokens": 226,
+    "probs": {
+     "same": 0.8517,
+     "conflict": 0.0003,
+     "unrelated": 0.148
+    },
+    "label_logprobs": {
+     "same": -0.167,
+     "conflict": -8.167,
+     "unrelated": -1.917
+    }
+   },
+   {
+    "id": "syn-015",
+    "input_sha256": null,
+    "gold": "conflict",
+    "authority": "approved",
+    "cand_date": "2026-05-20",
+    "old_date": "2026-04-05",
+    "output": "{\n  \"verdict\": \"unrelated\"\n}",
+    "out_tokens": 12,
+    "latency_ms": 347.38,
+    "pred": "unrelated",
+    "prompt_tokens": 234,
+    "probs": {
+     "same": 0.7158,
+     "conflict": 0.0519,
+     "unrelated": 0.2324
+    },
+    "label_logprobs": {
+     "same": -0.342,
+     "conflict": -2.967,
+     "unrelated": -1.467
+    }
+   },
+   {
+    "id": "syn-016",
+    "input_sha256": null,
+    "gold": "unrelated",
+    "authority": "tentative",
+    "cand_date": "2026-03-28",
+    "old_date": "2026-03-04",
+    "output": "{\n  \"verdict\": \"unrelated\"\n}",
+    "out_tokens": 12,
+    "latency_ms": 339.9,
+    "pred": "unrelated",
+    "prompt_tokens": 207,
+    "probs": {
+     "same": 0.7058,
+     "conflict": 0.0,
+     "unrelated": 0.2942
+    },
+    "label_logprobs": {
+     "same": -0.354,
+     "conflict": -12.354,
+     "unrelated": -1.229
+    }
+   },
+   {
+    "id": "syn-017",
+    "input_sha256": null,
+    "gold": "unrelated",
+    "authority": "discussion",
+    "cand_date": "2026-02-22",
+    "old_date": "2026-02-12",
+    "output": "{\n  \"verdict\": \"unrelated\"\n}",
+    "out_tokens": 12,
+    "latency_ms": 333.75,
+    "pred": "unrelated",
+    "prompt_tokens": 213,
+    "probs": {
+     "same": 0.2018,
+     "conflict": 0.0,
+     "unrelated": 0.7982
+    },
+    "label_logprobs": {
+     "same": -1.604,
+     "conflict": -13.479,
+     "unrelated": -0.229
+    }
+   },
+   {
+    "id": "syn-018",
+    "input_sha256": null,
+    "gold": "unrelated",
+    "authority": "approved",
+    "cand_date": "2026-09-17",
+    "old_date": "2026-08-20",
+    "output": "{\n  \"verdict\": \"same\"\n}",
+    "out_tokens": 11,
+    "latency_ms": 323.38,
+    "pred": "same",
+    "prompt_tokens": 233,
+    "probs": {
+     "same": 0.9869,
+     "conflict": 0.0007,
+     "unrelated": 0.0124
+    },
+    "label_logprobs": {
+     "same": -0.015,
+     "conflict": -7.265,
+     "unrelated": -4.39
+    }
+   },
+   {
+    "id": "syn-019",
+    "input_sha256": null,
+    "gold": "same",
+    "authority": "tentative",
+    "cand_date": "2026-08-08",
+    "old_date": "2026-06-30",
+    "output": "{\n  \"verdict\": \"same\"\n}",
+    "out_tokens": 11,
+    "latency_ms": 307.16,
+    "pred": "same",
+    "prompt_tokens": 234,
+    "probs": {
+     "same": 0.9994,
+     "conflict": 0.0,
+     "unrelated": 0.0006
+    },
+    "label_logprobs": {
+     "same": -0.001,
+     "conflict": -14.001,
+     "unrelated": -7.376
+    }
+   },
+   {
+    "id": "syn-020",
+    "input_sha256": null,
+    "gold": "same",
+    "authority": "approved",
+    "cand_date": "2026-09-17",
+    "old_date": "2026-08-20",
+    "output": "{\n  \"verdict\": \"same\"\n}",
+    "out_tokens": 11,
+    "latency_ms": 307.97,
+    "pred": "same",
+    "prompt_tokens": 231,
+    "probs": {
+     "same": 0.9981,
+     "conflict": 0.0,
+     "unrelated": 0.0019
+    },
+    "label_logprobs": {
+     "same": -0.002,
+     "conflict": -12.752,
+     "unrelated": -6.252
+    }
+   },
+   {
+    "id": "syn-021",
+    "input_sha256": null,
+    "gold": "same",
+    "authority": "discussion",
+    "cand_date": "2026-01-29",
+    "old_date": "2026-03-13",
+    "output": "{\n  \"verdict\": \"same\"\n}",
+    "out_tokens": 11,
+    "latency_ms": 304.41,
+    "pred": "same",
+    "prompt_tokens": 205,
+    "probs": {
+     "same": 0.9948,
+     "conflict": 0.0,
+     "unrelated": 0.0052
+    },
+    "label_logprobs": {
+     "same": -0.006,
+     "conflict": -14.506,
+     "unrelated": -5.256
+    }
+   },
+   {
+    "id": "syn-022",
+    "input_sha256": null,
+    "gold": "unrelated",
+    "authority": "approved",
+    "cand_date": "2026-09-14",
+    "old_date": "2026-07-25",
+    "output": "{\n  \"verdict\": \"unrelated\"\n}",
+    "out_tokens": 12,
+    "latency_ms": 334.29,
+    "pred": "unrelated",
+    "prompt_tokens": 218,
+    "probs": {
+     "same": 0.7771,
+     "conflict": 0.0002,
+     "unrelated": 0.2227
+    },
+    "label_logprobs": {
+     "same": -0.257,
+     "conflict": -8.507,
+     "unrelated": -1.507
+    }
+   },
+   {
+    "id": "syn-023",
+    "input_sha256": null,
+    "gold": "same",
+    "authority": "approved",
+    "cand_date": "2026-07-20",
+    "old_date": "2026-06-30",
+    "output": "{\n  \"verdict\": \"same\"\n}",
+    "out_tokens": 11,
+    "latency_ms": 312.14,
+    "pred": "same",
+    "prompt_tokens": 219,
+    "probs": {
+     "same": 0.9997,
+     "conflict": 0.0,
+     "unrelated": 0.0003
+    },
+    "label_logprobs": {
+     "same": -0.0,
+     "conflict": -14.625,
+     "unrelated": -8.125
+    }
+   },
+   {
+    "id": "syn-024",
+    "input_sha256": null,
+    "gold": "conflict",
+    "authority": "discussion",
+    "cand_date": "2026-01-27",
+    "old_date": "2026-01-23",
+    "output": "{\n  \"verdict\": \"same\"\n}",
+    "out_tokens": 11,
+    "latency_ms": 325.11,
+    "pred": "same",
+    "prompt_tokens": 215,
+    "probs": {
+     "same": 0.9769,
+     "conflict": 0.0001,
+     "unrelated": 0.023
+    },
+    "label_logprobs": {
+     "same": -0.025,
+     "conflict": -8.9,
+     "unrelated": -3.775
+    }
+   },
+   {
+    "id": "syn-025",
+    "input_sha256": null,
+    "gold": "unrelated",
+    "authority": "approved",
+    "cand_date": "2026-09-14",
+    "old_date": "2026-07-25",
+    "output": "{\n  \"verdict\": \"unrelated\"\n}",
+    "out_tokens": 12,
+    "latency_ms": 349.45,
+    "pred": "unrelated",
+    "prompt_tokens": 211,
+    "probs": {
+     "same": 0.2018,
+     "conflict": 0.0,
+     "unrelated": 0.7982
+    },
+    "label_logprobs": {
+     "same": -1.604,
+     "conflict": -11.854,
+     "unrelated": -0.229
+    }
+   },
+   {
+    "id": "syn-026",
+    "input_sha256": null,
+    "gold": "same",
+    "authority": "approved",
+    "cand_date": "2026-05-20",
+    "old_date": "2026-04-05",
+    "output": "{\n  \"verdict\": \"same\"\n}",
+    "out_tokens": 11,
+    "latency_ms": 311.41,
+    "pred": "same",
+    "prompt_tokens": 235,
+    "probs": {
+     "same": 0.9859,
+     "conflict": 0.0,
+     "unrelated": 0.0141
+    },
+    "label_logprobs": {
+     "same": -0.015,
+     "conflict": -12.64,
+     "unrelated": -4.265
+    }
+   },
+   {
+    "id": "syn-027",
+    "input_sha256": null,
+    "gold": "conflict",
+    "authority": "approved",
+    "cand_date": "2026-09-17",
+    "old_date": "2026-08-20",
+    "output": "{\n  \"verdict\": \"same\"\n}",
+    "out_tokens": 11,
+    "latency_ms": 304.19,
+    "pred": "same",
+    "prompt_tokens": 242,
+    "probs": {
+     "same": 0.9574,
+     "conflict": 0.0005,
+     "unrelated": 0.0421
+    },
+    "label_logprobs": {
+     "same": -0.047,
+     "conflict": -7.547,
+     "unrelated": -3.172
+    }
+   },
+   {
+    "id": "syn-028",
+    "input_sha256": null,
+    "gold": "unrelated",
+    "authority": "approved",
+    "cand_date": "2026-05-20",
+    "old_date": "2026-04-05",
+    "output": "{\n  \"verdict\": \"unrelated\"\n}",
+    "out_tokens": 12,
+    "latency_ms": 339.12,
+    "pred": "unrelated",
+    "prompt_tokens": 235,
+    "probs": {
+     "same": 0.5,
+     "conflict": 0.0001,
+     "unrelated": 0.5
+    },
+    "label_logprobs": {
+     "same": -0.698,
+     "conflict": -9.448,
+     "unrelated": -0.698
+    }
+   },
+   {
+    "id": "syn-029",
+    "input_sha256": null,
+    "gold": "unrelated",
+    "authority": "tentative",
+    "cand_date": "2026-08-08",
+    "old_date": "2026-06-30",
+    "output": "{\n  \"verdict\": \"same\"\n}",
+    "out_tokens": 11,
+    "latency_ms": 314.76,
+    "pred": "same",
+    "prompt_tokens": 237,
+    "probs": {
+     "same": 0.8354,
+     "conflict": 0.0001,
+     "unrelated": 0.1645
+    },
+    "label_logprobs": {
+     "same": -0.186,
+     "conflict": -9.561,
+     "unrelated": -1.811
+    }
+   },
+   {
+    "id": "syn-030",
+    "input_sha256": null,
+    "gold": "conflict",
+    "authority": "tentative",
+    "cand_date": "2026-03-28",
+    "old_date": "2026-03-04",
+    "output": "{\n  \"verdict\": \"same\"\n}",
+    "out_tokens": 11,
+    "latency_ms": 304.73,
+    "pred": "same",
+    "prompt_tokens": 216,
+    "probs": {
+     "same": 0.9611,
+     "conflict": 0.0016,
+     "unrelated": 0.0373
+    },
+    "label_logprobs": {
+     "same": -0.043,
+     "conflict": -6.418,
+     "unrelated": -3.293
+    }
+   }
+  ]
+ },
+ "tuned": {
+  "metrics": {
+   "n": 30,
+   "accuracy": 0.8666666666666667,
+   "macro_f1": 0.8653198653198654,
+   "f1": {
+    "same": 1.0,
+    "conflict": 0.7777777777777777,
+    "unrelated": 0.8181818181818182
+   },
+   "confusion": {
+    "same": {
+     "same": 10,
+     "conflict": 0,
+     "unrelated": 0,
+     "None": 0
+    },
+    "conflict": {
+     "same": 0,
+     "conflict": 7,
+     "unrelated": 3,
+     "None": 0
+    },
+    "unrelated": {
+     "same": 0,
+     "conflict": 1,
+     "unrelated": 9,
+     "None": 0
+    }
+   },
+   "invalid_rate": 0.0,
+   "prob_argmax_accuracy": 0.8666666666666667,
+   "threshold": 0.8,
+   "thresholded": {
+    "conflict": {
+     "n_argmax": 8,
+     "n_kept": 1,
+     "coverage": 0.125,
+     "precision": 1.0,
+     "recall_vs_gold": 0.1
+    },
+    "same": {
+     "n_argmax": 10,
+     "n_kept": 7,
+     "coverage": 0.7,
+     "precision": 1.0,
+     "recall_vs_gold": 0.7
+    }
+   },
+   "operations": {
+    "harmful_overwrites": 1,
+    "wrongful_noop_drops": 0,
+    "denominator": 30,
+    "gold_supersede": 5,
+    "op_match": 0.8666666666666667
+   },
+   "latency_ms": {
+    "first_calls": [
+     309.9,
+     343.05
+    ],
+    "warm_p50": 346.31,
+    "warm_p95": 357.1975,
+    "warm_n": 28
+   }
+  },
+  "predictions": [
+   {
+    "id": "syn-001",
+    "input_sha256": null,
+    "gold": "same",
+    "authority": "tentative",
+    "cand_date": "2026-03-28",
+    "old_date": "2026-03-04",
+    "output": "{\"verdict\":\"same\"}",
+    "out_tokens": 7,
+    "latency_ms": 309.9,
+    "pred": "same",
+    "prompt_tokens": 214,
+    "probs": {
+     "same": 0.74,
+     "conflict": 0.0197,
+     "unrelated": 0.2403
+    },
+    "label_logprobs": {
+     "same": -0.307,
+     "conflict": -3.932,
+     "unrelated": -1.432
+    }
+   },
+   {
+    "id": "syn-002",
+    "input_sha256": null,
+    "gold": "conflict",
+    "authority": "approved",
+    "cand_date": "2026-04-14",
+    "old_date": "2026-04-02",
+    "output": "{\"verdict\":\"conflict\"}",
+    "out_tokens": 8,
+    "latency_ms": 343.05,
+    "pred": "conflict",
+    "prompt_tokens": 211,
+    "probs": {
+     "same": 0.0722,
+     "conflict": 0.6043,
+     "unrelated": 0.3235
+    },
+    "label_logprobs": {
+     "same": -2.633,
+     "conflict": -0.508,
+     "unrelated": -1.133
+    }
+   },
+   {
+    "id": "syn-003",
+    "input_sha256": null,
+    "gold": "same",
+    "authority": "approved",
+    "cand_date": "2026-04-14",
+    "old_date": "2026-04-02",
+    "output": "{\"verdict\":\"same\"}",
+    "out_tokens": 7,
+    "latency_ms": 300.21,
+    "pred": "same",
+    "prompt_tokens": 215,
+    "probs": {
+     "same": 0.9888,
+     "conflict": 0.0046,
+     "unrelated": 0.0067
+    },
+    "label_logprobs": {
+     "same": -0.013,
+     "conflict": -5.388,
+     "unrelated": -5.013
+    }
+   },
+   {
+    "id": "syn-004",
+    "input_sha256": null,
+    "gold": "conflict",
+    "authority": "tentative",
+    "cand_date": "2026-08-08",
+    "old_date": "2026-06-30",
+    "output": "{\"verdict\":\"unrelated\"}",
+    "out_tokens": 8,
+    "latency_ms": 350.0,
+    "pred": "unrelated",
+    "prompt_tokens": 239,
+    "probs": {
+     "same": 0.3045,
+     "conflict": 0.3045,
+     "unrelated": 0.391
+    },
+    "label_logprobs": {
+     "same": -1.196,
+     "conflict": -1.196,
+     "unrelated": -0.946
+    }
+   },
+   {
+    "id": "syn-005",
+    "input_sha256": null,
+    "gold": "conflict",
+    "authority": "tentative",
+    "cand_date": "2026-03-09",
+    "old_date": "2026-02-23",
+    "output": "{\"verdict\":\"unrelated\"}",
+    "out_tokens": 8,
+    "latency_ms": 348.06,
+    "pred": "unrelated",
+    "prompt_tokens": 225,
+    "probs": {
+     "same": 0.0266,
+     "conflict": 0.3675,
+     "unrelated": 0.6059
+    },
+    "label_logprobs": {
+     "same": -3.629,
+     "conflict": -1.004,
+     "unrelated": -0.504
+    }
+   },
+   {
+    "id": "syn-006",
+    "input_sha256": null,
+    "gold": "unrelated",
+    "authority": "discussion",
+    "cand_date": "2026-02-22",
+    "old_date": "2026-02-12",
+    "output": "{\"verdict\":\"unrelated\"}",
+    "out_tokens": 8,
+    "latency_ms": 355.67,
+    "pred": "unrelated",
+    "prompt_tokens": 220,
+    "probs": {
+     "same": 0.0045,
+     "conflict": 0.0158,
+     "unrelated": 0.9796
+    },
+    "label_logprobs": {
+     "same": -5.398,
+     "conflict": -4.148,
+     "unrelated": -0.023
+    }
+   },
+   {
+    "id": "syn-007",
+    "input_sha256": null,
+    "gold": "same",
+    "authority": "discussion",
+    "cand_date": "2026-07-11",
+    "old_date": "2026-07-02",
+    "output": "{\"verdict\":\"same\"}",
+    "out_tokens": 7,
+    "latency_ms": 300.7,
+    "pred": "same",
+    "prompt_tokens": 221,
+    "probs": {
+     "same": 0.9989,
+     "conflict": 0.0009,
+     "unrelated": 0.0002
+    },
+    "label_logprobs": {
+     "same": -0.002,
+     "conflict": -7.002,
+     "unrelated": -8.627
+    }
+   },
+   {
+    "id": "syn-008",
+    "input_sha256": null,
+    "gold": "same",
+    "authority": "discussion",
+    "cand_date": "2026-02-22",
+    "old_date": "2026-02-12",
+    "output": "{\"verdict\":\"same\"}",
+    "out_tokens": 7,
+    "latency_ms": 299.74,
+    "pred": "same",
+    "prompt_tokens": 220,
+    "probs": {
+     "same": 0.9806,
+     "conflict": 0.0085,
+     "unrelated": 0.0109
+    },
+    "label_logprobs": {
+     "same": -0.021,
+     "conflict": -4.771,
+     "unrelated": -4.521
+    }
+   },
+   {
+    "id": "syn-009",
+    "input_sha256": null,
+    "gold": "conflict",
+    "authority": "discussion",
+    "cand_date": "2026-07-11",
+    "old_date": "2026-07-02",
+    "output": "{\"verdict\":\"unrelated\"}",
+    "out_tokens": 8,
+    "latency_ms": 344.32,
+    "pred": "unrelated",
+    "prompt_tokens": 218,
+    "probs": {
+     "same": 0.0328,
+     "conflict": 0.4534,
+     "unrelated": 0.5138
+    },
+    "label_logprobs": {
+     "same": -3.42,
+     "conflict": -0.795,
+     "unrelated": -0.67
+    }
+   },
+   {
+    "id": "syn-010",
+    "input_sha256": null,
+    "gold": "conflict",
+    "authority": "approved",
+    "cand_date": "2026-07-20",
+    "old_date": "2026-06-30",
+    "output": "{\"verdict\":\"conflict\"}",
+    "out_tokens": 8,
+    "latency_ms": 345.97,
+    "pred": "conflict",
+    "prompt_tokens": 221,
+    "probs": {
+     "same": 0.0209,
+     "conflict": 0.6095,
+     "unrelated": 0.3697
+    },
+    "label_logprobs": {
+     "same": -3.873,
+     "conflict": -0.498,
+     "unrelated": -0.998
+    }
+   },
+   {
+    "id": "syn-011",
+    "input_sha256": null,
+    "gold": "same",
+    "authority": "tentative",
+    "cand_date": "2026-03-09",
+    "old_date": "2026-02-23",
+    "output": "{\"verdict\":\"same\"}",
+    "out_tokens": 7,
+    "latency_ms": 299.65,
+    "pred": "same",
+    "prompt_tokens": 228,
+    "probs": {
+     "same": 0.9017,
+     "conflict": 0.0033,
+     "unrelated": 0.095
+    },
+    "label_logprobs": {
+     "same": -0.107,
+     "conflict": -5.732,
+     "unrelated": -2.357
+    }
+   },
+   {
+    "id": "syn-012",
+    "input_sha256": null,
+    "gold": "unrelated",
+    "authority": "approved",
+    "cand_date": "2026-06-28",
+    "old_date": "2026-04-30",
+    "output": "{\"verdict\":\"unrelated\"}",
+    "out_tokens": 8,
+    "latency_ms": 346.65,
+    "pred": "unrelated",
+    "prompt_tokens": 221,
+    "probs": {
+     "same": 0.1597,
+     "conflict": 0.1244,
+     "unrelated": 0.7159
+    },
+    "label_logprobs": {
+     "same": -1.843,
+     "conflict": -2.093,
+     "unrelated": -0.343
+    }
+   },
+   {
+    "id": "syn-013",
+    "input_sha256": null,
+    "gold": "unrelated",
+    "authority": "discussion",
+    "cand_date": "2026-01-27",
+    "old_date": "2026-01-23",
+    "output": "{\"verdict\":\"unrelated\"}",
+    "out_tokens": 8,
+    "latency_ms": 351.77,
+    "pred": "unrelated",
+    "prompt_tokens": 219,
+    "probs": {
+     "same": 0.0414,
+     "conflict": 0.0172,
+     "unrelated": 0.9414
+    },
+    "label_logprobs": {
+     "same": -3.189,
+     "conflict": -4.064,
+     "unrelated": -0.064
+    }
+   },
+   {
+    "id": "syn-014",
+    "input_sha256": null,
+    "gold": "conflict",
+    "authority": "approved",
+    "cand_date": "2026-06-28",
+    "old_date": "2026-04-30",
+    "output": "{\"verdict\":\"conflict\"}",
+    "out_tokens": 8,
+    "latency_ms": 346.71,
+    "pred": "conflict",
+    "prompt_tokens": 226,
+    "probs": {
+     "same": 0.0471,
+     "conflict": 0.5062,
+     "unrelated": 0.4467
+    },
+    "label_logprobs": {
+     "same": -3.059,
+     "conflict": -0.684,
+     "unrelated": -0.809
+    }
+   },
+   {
+    "id": "syn-015",
+    "input_sha256": null,
+    "gold": "conflict",
+    "authority": "approved",
+    "cand_date": "2026-05-20",
+    "old_date": "2026-04-05",
+    "output": "{\"verdict\":\"conflict\"}",
+    "out_tokens": 8,
+    "latency_ms": 350.18,
+    "pred": "conflict",
+    "prompt_tokens": 234,
+    "probs": {
+     "same": 0.0061,
+     "conflict": 0.9093,
+     "unrelated": 0.0846
+    },
+    "label_logprobs": {
+     "same": -5.096,
+     "conflict": -0.096,
+     "unrelated": -2.471
+    }
+   },
+   {
+    "id": "syn-016",
+    "input_sha256": null,
+    "gold": "unrelated",
+    "authority": "tentative",
+    "cand_date": "2026-03-28",
+    "old_date": "2026-03-04",
+    "output": "{\"verdict\":\"unrelated\"}",
+    "out_tokens": 8,
+    "latency_ms": 355.23,
+    "pred": "unrelated",
+    "prompt_tokens": 207,
+    "probs": {
+     "same": 0.0369,
+     "conflict": 0.012,
+     "unrelated": 0.9511
+    },
+    "label_logprobs": {
+     "same": -3.306,
+     "conflict": -4.431,
+     "unrelated": -0.056
+    }
+   },
+   {
+    "id": "syn-017",
+    "input_sha256": null,
+    "gold": "unrelated",
+    "authority": "discussion",
+    "cand_date": "2026-02-22",
+    "old_date": "2026-02-12",
+    "output": "{\"verdict\":\"unrelated\"}",
+    "out_tokens": 8,
+    "latency_ms": 350.27,
+    "pred": "unrelated",
+    "prompt_tokens": 213,
+    "probs": {
+     "same": 0.011,
+     "conflict": 0.0031,
+     "unrelated": 0.9859
+    },
+    "label_logprobs": {
+     "same": -4.516,
+     "conflict": -5.766,
+     "unrelated": -0.016
+    }
+   },
+   {
+    "id": "syn-018",
+    "input_sha256": null,
+    "gold": "unrelated",
+    "authority": "approved",
+    "cand_date": "2026-09-17",
+    "old_date": "2026-08-20",
+    "output": "{\"verdict\":\"conflict\"}",
+    "out_tokens": 8,
+    "latency_ms": 345.65,
+    "pred": "conflict",
+    "prompt_tokens": 233,
+    "probs": {
+     "same": 0.1603,
+     "conflict": 0.6339,
+     "unrelated": 0.2058
+    },
+    "label_logprobs": {
+     "same": -1.835,
+     "conflict": -0.46,
+     "unrelated": -1.585
+    }
+   },
+   {
+    "id": "syn-019",
+    "input_sha256": null,
+    "gold": "same",
+    "authority": "tentative",
+    "cand_date": "2026-08-08",
+    "old_date": "2026-06-30",
+    "output": "{\"verdict\":\"same\"}",
+    "out_tokens": 7,
+    "latency_ms": 299.97,
+    "pred": "same",
+    "prompt_tokens": 234,
+    "probs": {
+     "same": 0.9202,
+     "conflict": 0.0131,
+     "unrelated": 0.0667
+    },
+    "label_logprobs": {
+     "same": -0.086,
+     "conflict": -4.336,
+     "unrelated": -2.711
+    }
+   },
+   {
+    "id": "syn-020",
+    "input_sha256": null,
+    "gold": "same",
+    "authority": "approved",
+    "cand_date": "2026-09-17",
+    "old_date": "2026-08-20",
+    "output": "{\"verdict\":\"same\"}",
+    "out_tokens": 7,
+    "latency_ms": 304.95,
+    "pred": "same",
+    "prompt_tokens": 231,
+    "probs": {
+     "same": 0.9124,
+     "conflict": 0.0215,
+     "unrelated": 0.0661
+    },
+    "label_logprobs": {
+     "same": -0.094,
+     "conflict": -3.844,
+     "unrelated": -2.719
+    }
+   },
+   {
+    "id": "syn-021",
+    "input_sha256": null,
+    "gold": "same",
+    "authority": "discussion",
+    "cand_date": "2026-01-29",
+    "old_date": "2026-03-13",
+    "output": "{\"verdict\":\"same\"}",
+    "out_tokens": 7,
+    "latency_ms": 305.3,
+    "pred": "same",
+    "prompt_tokens": 205,
+    "probs": {
+     "same": 0.7433,
+     "conflict": 0.0154,
+     "unrelated": 0.2413
+    },
+    "label_logprobs": {
+     "same": -0.301,
+     "conflict": -4.176,
+     "unrelated": -1.426
+    }
+   },
+   {
+    "id": "syn-022",
+    "input_sha256": null,
+    "gold": "unrelated",
+    "authority": "approved",
+    "cand_date": "2026-09-14",
+    "old_date": "2026-07-25",
+    "output": "{\"verdict\":\"unrelated\"}",
+    "out_tokens": 8,
+    "latency_ms": 352.24,
+    "pred": "unrelated",
+    "prompt_tokens": 218,
+    "probs": {
+     "same": 0.03,
+     "conflict": 0.1958,
+     "unrelated": 0.7742
+    },
+    "label_logprobs": {
+     "same": -3.51,
+     "conflict": -1.635,
+     "unrelated": -0.26
+    }
+   },
+   {
+    "id": "syn-023",
+    "input_sha256": null,
+    "gold": "same",
+    "authority": "approved",
+    "cand_date": "2026-07-20",
+    "old_date": "2026-06-30",
+    "output": "{\"verdict\":\"same\"}",
+    "out_tokens": 7,
+    "latency_ms": 309.38,
+    "pred": "same",
+    "prompt_tokens": 219,
+    "probs": {
+     "same": 0.9601,
+     "conflict": 0.0199,
+     "unrelated": 0.0199
+    },
+    "label_logprobs": {
+     "same": -0.043,
+     "conflict": -3.918,
+     "unrelated": -3.918
+    }
+   },
+   {
+    "id": "syn-024",
+    "input_sha256": null,
+    "gold": "conflict",
+    "authority": "discussion",
+    "cand_date": "2026-01-27",
+    "old_date": "2026-01-23",
+    "output": "{\"verdict\":\"conflict\"}",
+    "out_tokens": 8,
+    "latency_ms": 354.51,
+    "pred": "conflict",
+    "prompt_tokens": 215,
+    "probs": {
+     "same": 0.1442,
+     "conflict": 0.6461,
+     "unrelated": 0.2098
+    },
+    "label_logprobs": {
+     "same": -1.94,
+     "conflict": -0.44,
+     "unrelated": -1.565
+    }
+   },
+   {
+    "id": "syn-025",
+    "input_sha256": null,
+    "gold": "unrelated",
+    "authority": "approved",
+    "cand_date": "2026-09-14",
+    "old_date": "2026-07-25",
+    "output": "{\"verdict\":\"unrelated\"}",
+    "out_tokens": 8,
+    "latency_ms": 348.69,
+    "pred": "unrelated",
+    "prompt_tokens": 211,
+    "probs": {
+     "same": 0.0083,
+     "conflict": 0.0328,
+     "unrelated": 0.9589
+    },
+    "label_logprobs": {
+     "same": -4.794,
+     "conflict": -3.419,
+     "unrelated": -0.044
+    }
+   },
+   {
+    "id": "syn-026",
+    "input_sha256": null,
+    "gold": "same",
+    "authority": "approved",
+    "cand_date": "2026-05-20",
+    "old_date": "2026-04-05",
+    "output": "{\"verdict\":\"same\"}",
+    "out_tokens": 7,
+    "latency_ms": 315.16,
+    "pred": "same",
+    "prompt_tokens": 235,
+    "probs": {
+     "same": 0.6013,
+     "conflict": 0.0339,
+     "unrelated": 0.3647
+    },
+    "label_logprobs": {
+     "same": -0.514,
+     "conflict": -3.389,
+     "unrelated": -1.014
+    }
+   },
+   {
+    "id": "syn-027",
+    "input_sha256": null,
+    "gold": "conflict",
+    "authority": "approved",
+    "cand_date": "2026-09-17",
+    "old_date": "2026-08-20",
+    "output": "{\"verdict\":\"conflict\"}",
+    "out_tokens": 8,
+    "latency_ms": 358.56,
+    "pred": "conflict",
+    "prompt_tokens": 242,
+    "probs": {
+     "same": 0.1258,
+     "conflict": 0.6391,
+     "unrelated": 0.2351
+    },
+    "label_logprobs": {
+     "same": -2.077,
+     "conflict": -0.452,
+     "unrelated": -1.452
+    }
+   },
+   {
+    "id": "syn-028",
+    "input_sha256": null,
+    "gold": "unrelated",
+    "authority": "approved",
+    "cand_date": "2026-05-20",
+    "old_date": "2026-04-05",
+    "output": "{\"verdict\":\"unrelated\"}",
+    "out_tokens": 8,
+    "latency_ms": 345.78,
+    "pred": "unrelated",
+    "prompt_tokens": 235,
+    "probs": {
+     "same": 0.0358,
+     "conflict": 0.0406,
+     "unrelated": 0.9236
+    },
+    "label_logprobs": {
+     "same": -3.333,
+     "conflict": -3.208,
+     "unrelated": -0.083
+    }
+   },
+   {
+    "id": "syn-029",
+    "input_sha256": null,
+    "gold": "unrelated",
+    "authority": "tentative",
+    "cand_date": "2026-08-08",
+    "old_date": "2026-06-30",
+    "output": "{\"verdict\":\"unrelated\"}",
+    "out_tokens": 8,
+    "latency_ms": 344.61,
+    "pred": "unrelated",
+    "prompt_tokens": 237,
+    "probs": {
+     "same": 0.0547,
+     "conflict": 0.0901,
+     "unrelated": 0.8552
+    },
+    "label_logprobs": {
+     "same": -2.913,
+     "conflict": -2.413,
+     "unrelated": -0.163
+    }
+   },
+   {
+    "id": "syn-030",
+    "input_sha256": null,
+    "gold": "conflict",
+    "authority": "tentative",
+    "cand_date": "2026-03-28",
+    "old_date": "2026-03-04",
+    "output": "{\"verdict\":\"conflict\"}",
+    "out_tokens": 8,
+    "latency_ms": 358.02,
+    "pred": "conflict",
+    "prompt_tokens": 216,
+    "probs": {
+     "same": 0.0737,
+     "conflict": 0.6993,
+     "unrelated": 0.227
+    },
+    "label_logprobs": {
+     "same": -2.611,
+     "conflict": -0.361,
+     "unrelated": -1.486
+    }
+   }
+  ]
+ }
+}

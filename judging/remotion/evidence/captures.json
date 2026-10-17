@@ -1,0 +1,62 @@
+{
+  "baseCommit": "10e098708dfbca606c427db6931e585aa82d52a0",
+  "mode": "Actual browser screenshots of scripted /demo. No inference. Captured from a working tree with pre-existing local edits in globals.css, correctness-demo.tsx, live-brain-workspace.tsx and member-select.tsx; screenshots are not evidence of an exact committed build.",
+  "captures": [
+    {
+      "file": "office.jpg",
+      "view": "Approved commitment, initial office",
+      "capturedAt": "2026-10-17T21:03:12.454Z",
+      "url": "http://127.0.0.1:3000/demo"
+    },
+    {
+      "file": "approval.jpg",
+      "view": "Approved November 6 source and revision",
+      "capturedAt": "2026-10-17T21:03:18.413Z",
+      "url": "http://127.0.0.1:3000/demo"
+    },
+    {
+      "file": "estimate.jpg",
+      "view": "Engineering tentative November 13 estimate; approved date stays November 6",
+      "capturedAt": "2026-10-17T21:04:13.429Z",
+      "url": "http://127.0.0.1:3000/demo"
+    },
+    {
+      "file": "correction.jpg",
+      "view": "Authorized November 13 correction, v1 retired and v2 active",
+      "capturedAt": "2026-10-17T21:04:18.089Z",
+      "url": "http://127.0.0.1:3000/demo"
+    },
+    {
+      "file": "handoff.jpg",
+      "view": "Leo fresh-agent answer with revision 2 citations",
+      "capturedAt": "2026-10-17T21:04:24.048Z",
+      "url": "http://127.0.0.1:3000/demo"
+    },
+    {
+      "file": "session.jpg",
+      "view": "Leo session file with individual, team and organization memory",
+      "capturedAt": "2026-10-17T21:04:44.049Z",
+      "url": "http://127.0.0.1:3000/demo"
+    },
+    {
+      "file": "chat.jpg",
+      "view": "Leo personalized chat welcome and memory-based suggestions",
+      "capturedAt": "2026-10-17T21:05:04.010Z",
+      "url": "http://127.0.0.1:3000/demo"
+    },
+    {
+      "file": "stale.jpg",
+      "view": "Older evidence cannot replace the approved revision",
+      "capturedAt": "2026-10-17T21:05:43.246Z",
+      "url": "http://127.0.0.1:3000/demo"
+    },
+    {
+      "file": "audit.jpg",
+      "view": "Audit sample and No coverage verdict, evidence pane scrolled; scripted scenario 7",
+      "capturedAt": "2026-10-17T21:14:59.113Z",
+      "url": "http://127.0.0.1:3000/demo",
+      "baseCommit": "51058a1",
+      "note": "Includes ongoing uncommitted scene/session teammate edits. Not an exact committed build."
+    }
+  ]
+}

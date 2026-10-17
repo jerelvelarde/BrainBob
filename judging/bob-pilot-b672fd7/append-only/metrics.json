@@ -1,0 +1,69 @@
+{
+  "adapter": "append-only",
+  "execution": "structured deterministic reference",
+  "task_success": {
+    "numerator": 15,
+    "denominator": 18,
+    "rate": 0.8333333333333334
+  },
+  "disclosure": {
+    "numerator": 0,
+    "denominator": 18,
+    "rate": 0.0
+  },
+  "invalid_output": {
+    "numerator": 0,
+    "denominator": 18,
+    "rate": 0.0
+  },
+  "by_world": {
+    "authority-change": {
+      "numerator": 2,
+      "denominator": 3,
+      "rate": 0.6666666666666666
+    },
+    "conflict-retention": {
+      "numerator": 3,
+      "denominator": 3,
+      "rate": 1.0
+    },
+    "correction-propagation": {
+      "numerator": 1,
+      "denominator": 3,
+      "rate": 0.3333333333333333
+    },
+    "cross-org-publication": {
+      "numerator": 3,
+      "denominator": 3,
+      "rate": 1.0
+    },
+    "revocation": {
+      "numerator": 3,
+      "denominator": 3,
+      "rate": 1.0
+    },
+    "scoped-assembly": {
+      "numerator": 3,
+      "denominator": 3,
+      "rate": 1.0
+    }
+  },
+  "by_stratum": {
+    "boundary": {
+      "numerator": 6,
+      "denominator": 6,
+      "rate": 1.0
+    },
+    "legitimate": {
+      "numerator": 9,
+      "denominator": 11,
+      "rate": 0.8181818181818182
+    },
+    "maintenance": {
+      "numerator": 0,
+      "denominator": 1,
+      "rate": 0.0
+    }
+  },
+  "model_cost_usd": 0
+}

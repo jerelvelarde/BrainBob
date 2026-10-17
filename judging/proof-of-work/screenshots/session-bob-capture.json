@@ -1,0 +1,17 @@
+{
+  "commit": "2e80be444317f8fd3fc91256f096afc47d9907a9",
+  "captures": [
+    {
+      "path": "/Users/jerel/Documents/ChatGPT/recursive-agents/judging/proof-of-work/screenshots/26-session-bob-demo.jpg",
+      "capturedAt": "2026-10-17T20:35:30.075Z",
+      "route": "/demo",
+      "mode": "scripted fixture"
+    },
+    {
+      "path": "/Users/jerel/Documents/ChatGPT/recursive-agents/judging/proof-of-work/screenshots/27-session-bob-live-fixture.jpg",
+      "capturedAt": "2026-10-17T20:36:00.065Z",
+      "route": "/",
+      "mode": "HTTP/SSE contract fixture; no inference"
+    }
+  ]
+}

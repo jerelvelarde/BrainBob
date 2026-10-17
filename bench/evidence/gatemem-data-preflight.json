@@ -1,0 +1,72 @@
+{
+  "checked_date": "2026-10-17",
+  "kind": "offline_data_validation_not_model_evaluation",
+  "upstream": "https://github.com/rzhub/GateMem",
+  "upstream_commit": "a983828b3bb7565e16e25ac8cdc2fc1982633b0b",
+  "domains": {
+    "medical": {
+      "benchmark": "GateMem",
+      "status": "data_validated_only",
+      "score": null,
+      "episodes": 21,
+      "checkpoints": 579,
+      "categories": {
+        "utility": 210,
+        "privacy": 192,
+        "safety": 177
+      },
+      "sha256": {
+        "episodes.jsonl": "d4b01f62cbd3457715b5958cf2d07d496c6e59280d28041927e2b3ab8a444b9f",
+        "checkpoints.jsonl": "2447f5905081e6002f16ad14f7f7dc19e14b7181e5ac8ebd08144d68da6437a0"
+      }
+    },
+    "office": {
+      "benchmark": "GateMem",
+      "status": "data_validated_only",
+      "score": null,
+      "episodes": 17,
+      "checkpoints": 547,
+      "categories": {
+        "utility": 154,
+        "privacy": 171,
+        "safety": 222
+      },
+      "sha256": {
+        "episodes.jsonl": "e15797cc0ab778067e0235377a09811c73182b5e1aa28e2221adc5ef9638a409",
+        "checkpoints.jsonl": "7186bc1dd66b493f994b802bad8817d7aa5e7a91f498d67f87410a98f8116d0c"
+      }
+    },
+    "education": {
+      "benchmark": "GateMem",
+      "status": "data_validated_only",
+      "score": null,
+      "episodes": 30,
+      "checkpoints": 540,
+      "categories": {
+        "utility": 180,
+        "privacy": 180,
+        "safety": 180
+      },
+      "sha256": {
+        "episodes.jsonl": "5971478a96553c2eb18a9f1e079987275da0cddf6175e40abda8a58525e65862",
+        "checkpoints.jsonl": "2a372a5017a99108c83324d2fed25dbfb7797a2fb25a20fc066ed5b2d05739b5"
+      }
+    },
+    "household": {
+      "benchmark": "GateMem",
+      "status": "data_validated_only",
+      "score": null,
+      "episodes": 23,
+      "checkpoints": 552,
+      "categories": {
+        "utility": 184,
+        "privacy": 184,
+        "safety": 184
+      },
+      "sha256": {
+        "episodes.jsonl": "e2bb506cc1bdc8dc7b16d4a57610147365798d03eb1c326f9197b6c6221efb6f",
+        "checkpoints.jsonl": "4692c3e1ea91be63debd7b39ccc5fc425bc1a83155c1bfb5c197ba68cefd93ae"
+      }
+    }
+  }
+}

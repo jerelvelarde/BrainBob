@@ -1,6 +1,6 @@
 # BrainBob Evaluation Report
 
-Status date: 2026-10-17 (Pacific). Build: `21260c4` (HEAD when this report was written; the working tree also held uncommitted Rusty Rod and benchmark files, see "Provenance"). All numbers below are copied from the `results.md` / `summary.json` files linked in each section. Nothing here was re-run for this report.
+Status date: 2026-10-17 (Pacific), updated 14:36. Experiments 1 to 5 were written at build `21260c4`; Experiments 6 and 7 cite their own builds. All numbers below are copied from the `results.md` / `summary.json` files linked in each section. Nothing here was re-run for this report.
 
 ## Supported headlines
 
@@ -9,8 +9,15 @@ Status date: 2026-10-17 (Pacific). Build: `21260c4` (HEAD when this report was w
 3. **In the one evaluation whose rules were frozen before the run (BANKING77, n=300 held-out, same tasks and same answering model in every condition), the change-and-observe audit changed accuracy by +0.0 points, paired 95% bootstrap interval [-1.3, +1.3]: 202/300 with all memories vs 202/300 audited.** This is a null result and is reported as one. Source: [BANKING77 stream run](../backend/results/20261017-122228-stream-banking77/results.md).
 
 4. **On 30 held-out synthetic Rusty Rod scenarios, write-time maintenance left the correct current fact active and the superseded one retired in 12/13 update checks, against 0/13 for append-only memory, while wrongly retiring 0 of 32 valid memories.** Answer accuracy was 68/76 vs 67/76 (+1.3 pts [-5.3, +7.9], not significant). Source: [Rusty Rod run](../backend/results/20261017-131504-correctness-heldout/results.md).
+5. **On the six-world Bob organizational pilot (41 checkpoints, 3 replicates), maintained BrainBob memory scored 74.4% macro CATS against 25.0% for no memory (+49.4 pts [+23.1, +75.2]), with zero protected-content disclosures in answers, delivered context and five probed surfaces.** The unfiltered control disclosed in 111/111 opportunities, so the scorer does detect leakage. Source: [Bob pilot run](../bobbench/results/20261017-141014/scorecard.md).
+6. **A LoRA fine-tune lifted Qwen3-0.6B on the 60-pair memory-relation diagnostic from 32/60 to 42/60 (+16.7 pts, template-cluster 95% [+5.0, +28.3]).** The same set gives 53/60 to the production judge gpt-oss-120b and 56/60 to the Nemotron Super teacher, so the small checker does not yet replace them. Source: [checker results](../experiments/memops-small/out/runs/20261017-210457/).
 
 ## Claims we do not make
+
+- **Maintenance beats append-only on the Bob pilot.** maintained 74.4 vs append_only 67.3 macro CATS, +7.1 pts [-6.2, +21.6]; the interval includes zero and per-world results go both ways.
+- **BrainBob beats full history on the Bob pilot.** full_history scored 88.6 macro CATS; the pilot worlds are 28 to 31 events long, so the whole authorized history fits in context.
+- **The tuned 0.6B checker can become the default judge.** It trails both large judges and calls 5 non-conflict pairs "conflict" (base: 0), which raises overwrite risk under authorized corrections.
+- **Scores on GateMem, MUMBench or CoMemBench.** None were run; see [external-benchmark-status.md](external-benchmark-status.md).
 
 - **The evaluator (audit) improves accuracy.** The frozen-rule paired result is +0.0 pts [-1.3, +1.3] (BANKING77), and on LoCoMo the audited and unaudited groups are identical at 404/760 (the audit retired 0 memories and promoted 2). The exploratory threshold variants below show no interval that excludes zero.
 - **BrainBob is more accurate than reading the whole history.** On the LongMemEval subset it was 4 questions lower (35/50 vs 39/50). The claim is about context size, not accuracy.
@@ -157,6 +164,40 @@ What this shows and what it does not:
 - **Grader limits:** three abstain answers worded "does not specify" or "do not contain information" were scored wrong, and one "has been dropped" sentence was counted as stale-fact usage. The rules were fixed before the held-out run and were not changed afterward.
 - **Prompt change:** the extraction prompt was generalized (commit `21260c4`) between the development and held-out runs; the held-out run uses the new prompt throughout.
 - Cost: held-out run $0.052 in fresh calls, 229 s. Artifacts: [results.md](../backend/results/20261017-131504-correctness-heldout/results.md), [summary.json](../backend/results/20261017-131504-correctness-heldout/summary.json).
+
+## Experiment 6: Bob organizational pilot (proposed benchmark, synthetic)
+
+Spec: [docs/bob-benchmark-spec.md](bob-benchmark-spec.md); contract: [bobbench/CONTRACT.md](../bobbench/CONTRACT.md). Six worlds (scoped assembly, authority corrections, cross-organization publication, membership and grants, conflict and retention, correction propagation), 41 checkpoints, hidden oracles v0.2, deterministic scorer, phrases-0.2. Every condition uses the same answering model (`nvidia/Nemotron-3.5-Lightning-30B-A3B`, temperature 0, thinking off) and the same answering prompt; BrainBob only decides the context. Three replicates; build `5fcd554`.
+
+| Condition | Legitimate | Boundary | Maintenance | Macro CATS | Disclosures |
+|---|---|---|---|---|---|
+| no_memory | 0.0 | 58.3 | 16.7 | 25.0 | 0/111 |
+| full_history (authorized sources) | 89.8 | 100.0 | 75.9 | 88.6 | 0/111 |
+| append_only (BrainBob) | 55.6 | 100.0 | 46.3 | 67.3 | 0/111 |
+| maintained (BrainBob) | 63.9 | 100.0 | 59.3 | 74.4 | 0/111 |
+| always_refuse (control) | 0.0 | 58.3 | 16.7 | 25.0 | 0/111 |
+| unfiltered (control) | 18.1 | 0.0 | 5.6 | 7.9 | 111/111 |
+
+Paired bootstrap clustered by world (2000 draws): maintained - append_only +7.1 [-6.2, +21.6] macro; maintained - no_memory +49.4 [+23.1, +75.2]; full_history - append_only +21.3 [+6.3, +38.6]. Probed surfaces for both BrainBob modes (search, record, source, history, events): 0 leaks in 123 probes each; export and session cache are unsupported. Per world, maintenance helped most on w1, w2 and w6 and lost on w3 maintenance (100 to 33.3). Labels are single-annotator and not independently reviewed; oracle v0.2 changed forbidden checks after a baseline-only smoke run and before any BrainBob run (see the worlds changelog). Cost about $0.03 for the whole run. Artifacts: [scorecard.md](../bobbench/results/20261017-141014/scorecard.md), [scorecard.json](../bobbench/results/20261017-141014/scorecard.json), compressed traces.
+
+A judge-swap comparison on the same pilot (production judge vs Nemotron Super teacher vs tuned and base 0.6B checkers, everything else fixed) is being run on Hugging Face Jobs and will be added here.
+
+## Experiment 7: Small memory-relation checker (issue #7, pair diagnostic)
+
+Task: label (existing memory, new candidate) as same, conflict or unrelated. Jerel's frozen 60 public synthetic pairs (20 per label), scored with his `benchmarks/bob/benchmark.py` at `ab084a6`. This diagnostic is separate from the organizational pilot.
+
+| Judge | Accuracy | Macro-F1 | Conflicts found (of 20) | Non-conflicts called conflict |
+|---|---|---|---|---|
+| Qwen3-0.6B base | 32/60 | 0.437 | 0 | 0 |
+| Qwen3-0.6B + LoRA (adapter `Guangze/memops-small-qwen3-0.6b-lora@b904e6ec`) | 42/60 | 0.694 | 10 | 5 |
+| `openai/gpt-oss-120b` (production judge) | 53/60 | 0.881 | 14 | 1 |
+| `nvidia/NVIDIA-Nemotron-3-Super-120B-A12B` (teacher) | 56/60 | 0.933 | 20 | 4 |
+
+Tuned vs base: +16.7 pts, template-cluster 95% [+5.0, +28.3]. Training: 144 synthetic pairs from the Nemotron Super teacher (23 labels corrected by hand), LoRA r 16, 1 epoch, 9 steps in 8.4 s on one L4; total cost about $0.12. Recommendation: keep the tuned checker opt-in; it does not meet the issue's gate that harmful overwrites must not increase. The 60 pairs have now been inspected case by case, so any further tuning must be reported on a fresh frozen set. A second training round with more data is in preparation. Artifacts: [runs/20261017-210457](../experiments/memops-small/out/runs/20261017-210457/); public adapter and model card on the Hugging Face Hub.
+
+## External benchmarks
+
+GateMem (public data and code) was not run today: the official judge needs GPT-4o access and budget, and an application-equivalent adapter is not written. No public data or evaluator was found for MUMBench (AIM) or CoMemBench. Details and next steps: [external-benchmark-status.md](external-benchmark-status.md).
 
 ## Demo trace (selected example, not an evaluation)
 

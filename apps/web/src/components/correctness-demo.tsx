@@ -2,33 +2,45 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, Clapperboard, Download, FileSearch, FolderOpen, Pause, Play, RotateCcw, X, ZoomIn, ZoomOut } from "lucide-react";
+import { ArrowLeft, ArrowRight, Clapperboard, Download, FileSearch, FolderOpen, MessageCircle, Pause, Play, RotateCcw, X, ZoomIn, ZoomOut } from "lucide-react";
 import { demoStepCount, demoStepTitles, demoView, exportDemoView, stepReader } from "@/lib/correctness-demo";
 import { cinematicsAt } from "@/lib/scene-animation";
 import { companyScope, memberName } from "@/lib/sample-company";
+import { createDeskSessions, initialDeskId, resetDesk, type DeskId } from "@/lib/desk-sessions";
 import { MemberSelect } from "./member-select";
 import { TierMemoryPanel } from "./tier-memory-panel";
 import type { MemoryScope } from "@/lib/memory";
 import { SessionFilePanel } from "./session-file-panel";
+import { SessionChatDialog } from "./session-chat-dialog";
 import type { SceneHandle } from "./brain/brain-scene";
 
 const BrainScene = dynamic(() => import("./brain/brain-scene"), { ssr: false });
+const SceneChat = dynamic(() => import("./scene-chat"), { ssr: false });
+const previewMemories = {};
+const noop = () => {};
 
 export function CorrectnessDemo() {
   const [step, setStep] = useState(0);
-  const [reader, setReader] = useState<string>(stepReader(0));
+  const [desks, setDesks] = useState(createDeskSessions);
+  const [activeDesk, setActiveDesk] = useState<DeskId>(initialDeskId);
+  const reader = desks.find((desk) => desk.id === activeDesk)!.reader;
   const [playing, setPlaying] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [progress, setProgress] = useState(.62);
   const [seek, setSeek] = useState({ value: .62, revision: 0 });
   const [panel, setPanel] = useState<"evidence" | "session" | "cabinet" | null>(null);
+  const [chatOpen, setChatOpen] = useState(false);
+  const [loadedDesks, setLoadedDesks] = useState<DeskId[]>([]);
+  const [chatFileOpen, setChatFileOpen] = useState(false);
   const [cabinetScope, setCabinetScope] = useState<MemoryScope>("team");
   const [sourceId, setSourceId] = useState<string>();
   const camera = useRef<SceneHandle | null>(null);
   const evidenceButton = useRef<HTMLButtonElement>(null);
   const sessionButton = useRef<HTMLButtonElement>(null);
+  const chatButton = useRef<HTMLButtonElement>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
-  const view = useMemo(() => demoView(step, reader), [step, reader]);
+  const views = useMemo(() => desks.map((desk) => demoView(step, desk.reader)), [step, desks]);
+  const view = views[desks.findIndex((desk) => desk.id === activeDesk)];
   const selectedSource = view.sources.find((source) => source.id === sourceId);
   useEffect(() => {
     const media = matchMedia("(prefers-reduced-motion: reduce)");
@@ -39,10 +51,14 @@ export function CorrectnessDemo() {
   const onReady = useCallback((handle: SceneHandle) => { camera.current = handle; }, []);
   const onProgress = useCallback((value: number) => { setProgress(value); if (value >= 1) setPlaying(false); }, []);
   function go(index: number) {
-    setStep(index); setReader(stepReader(index)); setSourceId(undefined);
+    setStep(index); setSourceId(undefined);
+    const suggested = stepReader(index), existing = desks.find((desk) => desk.reader === suggested);
+    if (existing) setActiveDesk(existing.id);
+    else setDesks((current) => resetDesk(current, activeDesk, suggested));
     setPlaying(!reducedMotion); setSeek({ value: reducedMotion ? .62 : 0, revision: Date.now() });
   }
   function closePanel() { setPanel(null); (panel === "evidence" ? evidenceButton : sessionButton).current?.focus(); }
+  function openChat(file = false, id = activeDesk) { setActiveDesk(id); setPanel(null); setSourceId(undefined); setPlaying(false); setLoadedDesks((current) => current.includes(id) ? current : [...current, id]); setChatFileOpen(file); setChatOpen(true); }
   function exportView() {
     const url = URL.createObjectURL(new Blob([JSON.stringify(exportDemoView(step, reader), null, 2)], { type: "application/json" }));
     const anchor = document.createElement("a"); anchor.href = url; anchor.download = `rusty-rod-step-${step + 1}-${reader.split("/").at(-1)}.json`; anchor.click();
@@ -50,13 +66,19 @@ export function CorrectnessDemo() {
   }
   return <main className="app-shell correctness-demo" data-dramatic={cinematicsAt(view.cue?.action, progress).darkness > .5 ? view.cue?.action : undefined}>
     <section className="scene-view" aria-label="Rusty Rod memory office"><BrainScene playing={playing} reducedMotion={reducedMotion} speed={1} cue={view.cue} seek={seek} onProgress={onProgress} reader={reader}
-      sessionFile={{ label: view.sessionFile.member.name.split(" ")[0], onOpen: () => setPanel("session") }}
+      sessions={desks.map((desk, index) => ({ label: views[index].sessionFile.member.name.split(" ")[0], status: "Demo session", working: playing, selected: desk.id === activeDesk, onOpen: () => openChat(false, desk.id), onFile: () => openChat(true, desk.id) }))}
       selectedScope={panel === "cabinet" ? cabinetScope : view.cue?.scope ?? "all"} selectedMemory="" onSelect={() => {}} onScope={(scope) => { setCabinetScope(scope); setPanel("cabinet"); }} onWorker={() => setPanel("session")} onReady={onReady} /></section>
     <header className="floating-header"><a className="brand" href="/" aria-label="BrainBob home"><span className="bob-mark" aria-hidden="true"><i /><i /><b /><em /></span>BrainBob</a><span className="connection-state">Rusty Rod · scripted demo</span></header>
     <div className="panel-launchers"><a className="rehearsal-link" href="/rehearsal" aria-label="Open animation playground"><Clapperboard size={18} /><span>Animations</span></a>
+      <button ref={chatButton} aria-label="Open personalized chat" aria-haspopup="dialog" onClick={() => openChat()}><MessageCircle size={18} /><span>Chat</span></button>
       <button ref={sessionButton} aria-label="Open session file" aria-expanded={panel === "session"} onClick={() => panel === "session" ? closePanel() : setPanel("session")}><FolderOpen size={18} /><span>Session file</span></button>
       <button ref={evidenceButton} aria-label="Scenario evidence" aria-expanded={panel === "evidence"} onClick={() => panel === "evidence" ? closePanel() : setPanel("evidence")}><FileSearch size={18} /><span>Evidence</span></button></div>
-    <MemberSelect value={reader} onChange={(value) => { setReader(value); setSourceId(undefined); setPlaying(false); setSeek({ value: .62, revision: Date.now() }); }} />
+    <MemberSelect value={reader} onChange={(value) => { setDesks((current) => resetDesk(current, activeDesk, value)); setPanel(null); setSourceId(undefined); setPlaying(false); setSeek({ value: .62, revision: Date.now() }); }} onNewSession={() => { setDesks((current) => resetDesk(current, activeDesk)); openChat(); }}
+      sessions={desks.map((desk, index) => ({ label: views[index].sessionFile.member.name, selected: desk.id === activeDesk, onOpen: () => openChat(false, desk.id) }))} />
+    {desks.map((desk, index) => <SessionChatDialog key={desk.id} open={chatOpen && desk.id === activeDesk} reader={desk.reader} onClose={() => setChatOpen(false)} returnFocus={chatButton} preview fileOpen={chatFileOpen} onFile={() => setChatFileOpen(!chatFileOpen)}
+      inspection={chatFileOpen && desk.id === activeDesk ? <SessionFilePanel key={views[index].sessionFile.id} file={views[index].sessionFile} onClose={() => setChatFileOpen(false)} onTier={(scope) => { setChatOpen(false); setCabinetScope(scope); setPanel("cabinet"); }} onHistory={() => { setChatOpen(false); setPanel("evidence"); }} /> : null}>
+      {loadedDesks.includes(desk.id) ? <SceneChat key={`${views[index].sessionFile.id}:${desk.revision}`} reader={desk.reader} readOnly={false} memories={previewMemories} previewFile={views[index].sessionFile} onAnswer={noop} onInspect={noop} onSessionActivity={noop} /> : null}
+    </SessionChatDialog>)}
     {panel === "cabinet" ? <TierMemoryPanel key={`${cabinetScope}-${reader}`} scope={cabinetScope} reader={reader} records={view.records} onClose={closePanel} onSession={() => setPanel("session")} onEvidence={(id) => { setSourceId(id); setPanel("evidence"); }} /> : null}
     {panel === "session" ? <SessionFilePanel key={view.sessionFile.id} file={view.sessionFile} onTier={(scope) => { setCabinetScope(scope); setPanel("cabinet"); }} onClose={closePanel} onHistory={() => setPanel("evidence")} /> : null}
     {panel === "evidence" ? <aside className="floating-panel inspector-panel demo-evidence" aria-label="Scenario evidence" onKeyDown={(event) => { if (event.key === "Escape") closePanel(); }}>

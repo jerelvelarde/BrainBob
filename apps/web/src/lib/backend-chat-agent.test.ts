@@ -18,12 +18,26 @@ describe("CopilotKit backend bridge", () => {
   it("sends questions with a reader and emits the backend answer and AG-UI lifecycle", async () => {
     const fetcher = vi.fn().mockResolvedValue(response({ task_id: "t1", answer: "November 13, 2026", cited_ids: [], memories: [] }));
     vi.stubGlobal("fetch", fetcher);
-    const answered = vi.fn(), failed = vi.fn();
-    const events = await lastValueFrom(new BackendChatAgent(() => context("ask"), answered, failed).run(input("When do we launch?")).pipe(toArray()));
+    const answered = vi.fn(), failed = vi.fn(), activity = vi.fn();
+    const events = await lastValueFrom(new BackendChatAgent(() => context("ask"), answered, failed, activity).run(input("When do we launch?")).pipe(toArray()));
     expect(fetcher.mock.calls[0][0]).toContain("/ask");
     expect(JSON.parse(fetcher.mock.calls[0][1].body)).toEqual({ question: "When do we launch?", reader: defaultReader });
     expect(events.map((e) => e.type)).toEqual(["RUN_STARTED", "TEXT_MESSAGE_START", "TEXT_MESSAGE_CONTENT", "TEXT_MESSAGE_END", "RUN_FINISHED"]);
     expect(events[2]).toMatchObject({ delta: "November 13, 2026" }); expect(answered).toHaveBeenCalledOnce();
+    expect(activity.mock.calls.map(([event]) => event.type)).toEqual(["started", "answered"]);
+    expect(activity.mock.calls[0][0]).toMatchObject({ requestId: "run-1", question: "When do we launch?" });
+  });
+
+  it("ends the desk's working state on cancellation and request failure", async () => {
+    const activity = vi.fn();
+    vi.stubGlobal("fetch", vi.fn(() => new Promise(() => {})));
+    const subscription = new BackendChatAgent(() => context("ask"), vi.fn(), vi.fn(), activity).run(input("Question")).subscribe();
+    subscription.unsubscribe();
+    expect(activity.mock.calls.map(([event]) => event.type)).toEqual(["started", "cancelled"]);
+    activity.mockClear();
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(response({ detail: "Unavailable" }, 503)));
+    await lastValueFrom(new BackendChatAgent(() => context("ask"), vi.fn(), vi.fn(), activity).run(input("Question")).pipe(toArray()));
+    expect(activity.mock.calls.map(([event]) => event.type)).toEqual(["started", "failed"]);
   });
 
   it("writes the original conversation with its scope and author", async () => {

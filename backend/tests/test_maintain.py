@@ -9,7 +9,7 @@ from brainbob.types import Episode, Memory
 
 ORG = "rusty-rod"
 TEAM = {"exec-01": "executive", "exec-02": "executive", "sales-01": "sales", "eng-01": "engineering", "eng-02": "engineering"}
-JM = llm._roles()["judge"]["model"]
+JM = "test:date-judge"
 CM = llm._roles()["curator"]["model"]
 
 
@@ -32,6 +32,9 @@ def date_judge(cand, mem):
         da, db = re.findall(r"november (\d+)", a), re.findall(r"november (\d+)", b)
         return "same" if da == db else "conflict"
     return "unrelated"
+
+
+date_judge.model_id = JM
 
 
 @pytest.fixture(autouse=True)

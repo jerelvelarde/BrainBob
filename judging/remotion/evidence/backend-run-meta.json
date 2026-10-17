@@ -1,0 +1,48 @@
+{
+  "started": "2026-10-17T13:16:49.010074-07:00",
+  "finished": "2026-10-17T13:17:33.452802-07:00",
+  "base": "http://127.0.0.1:3002",
+  "git_commit": "6c6e3e9c0e8a5d34db4cb325622705ea095c58aa",
+  "git_dirty_files": 17,
+  "models": {
+    "curator": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+    "agent": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+    "judge": "openai/gpt-oss-120b"
+  },
+  "agent_model_env": null,
+  "server_mode": "server.py --legacy (no permissions, no write-time maintenance), Evaluator min_changes=3",
+  "data": "seed conversations are synthetic; seeded asks/checks are real model calls at seed time; steps 1-4 are live",
+  "ids": {
+    "bad": "m2",
+    "good": "m3",
+    "hours": "m1"
+  },
+  "checks": {
+    "seeded history recorded the expected flips": true,
+    "live answer cites the bad memory": true,
+    "live answer says 6 PM (wrong)": true,
+    "check: wrong with bad memory, right without": true,
+    "review retires the bad memory": true,
+    "review does not retire the good memory": true,
+    "review promotes the good memory": true,
+    "new answer says 10 PM, not 6 PM": true,
+    "new answer cites the real hours memory": true,
+    "new answer does not use the bad memory": true,
+    "memory.retired event for the bad memory, confirmed=true": true,
+    "bad memory status retired": true,
+    "good memory status promoted": true,
+    "only frontend event types": true,
+    "only frontend memory statuses": true
+  },
+  "passed": true,
+  "seconds": {
+    "remember:hours": 3.7,
+    "remember:patrick": 0.5,
+    "ask+check:harm": 4.8,
+    "ask+check:help": 4.2,
+    "1 ask (Sales Team)": 0.3,
+    "2 check": 1.0,
+    "3 review": 0.4,
+    "4 ask a different question (John, new agent)": 0.5
+  }
+}

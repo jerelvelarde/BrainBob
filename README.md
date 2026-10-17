@@ -8,6 +8,8 @@ Built by **Jerel Velarde and Bonan Kou** for the **Shared Brain** track at The R
 
 > **Hackathon build in progress.** The memory backend, evaluation experiments, and interactive app are implemented. Jerel is completing the end-to-end app experience. Bonan's [0.6B fine-tuned memory checker](https://huggingface.co/Guangze/memops-small-qwen3-0.6b-lora) is published with synthetic diagnostic results; it remains experimental and opt-in. Final integrated submission verification is pending.
 
+The app connects to the Python backend through HTTP/SSE; `/demo` remains a separate scripted preview. See the [readiness assessment](docs/readiness.md) for verified checks and remaining gates, the [integration runbook](apps/web/README.md) to connect the app, and the [model handoff](docs/finetune-handoff.md) for the experimental checker.
+
 ![BrainBob's three-tier memory office and an inspectable agent session file](judging/proof-of-work/screenshots/23-tier-session-file.jpg)
 
 *Captured from the scripted Rusty Rod walkthrough. It illustrates individual, team, and organization context; it is not evidence of live inference. [Capture provenance](judging/proof-of-work/screenshots/tier-session-captures.json).*
@@ -100,11 +102,11 @@ Requires Python 3.12 and `uv`. The current client reads a Crusoe API key from `~
 ```bash
 cd backend
 uv venv --python 3.12
-uv pip install --python .venv/bin/python fastapi uvicorn sse-starlette httpx pytest openai rank-bm25 pyarrow huggingface_hub
+uv pip install --python .venv/bin/python -r requirements.txt
 .venv/bin/python server.py
 ```
 
-These commands use macOS/Linux paths; on Windows use `.venv/Scripts/python.exe`. The server listens on `127.0.0.1:3001` and defaults to Rusty Rod organization mode. Memory, episode, and event files persist in its working directory. Use `NEXT_PUBLIC_BRAINBOB_API_URL` for a different backend URL; configure CORS for that origin. See the [connection guide](docs/frontend-integration.md) and [backend contract](backend/CONTRACT.md).
+These commands use macOS/Linux paths; on Windows use `.venv/Scripts/python.exe`. The server listens on `127.0.0.1:3001` and defaults to Rusty Rod organization mode. Memory, episode, and event files persist in its working directory. Browser requests default to the same-origin `/api/brainbob` proxy. Set server-side `BRAINBOB_API_URL` for a different backend address. `NEXT_PUBLIC_BRAINBOB_API_URL` bypasses the proxy and requires appropriate CORS. See the [connection guide](docs/frontend-integration.md) and [backend contract](backend/CONTRACT.md).
 
 ### Checks and experiments
 

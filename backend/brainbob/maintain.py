@@ -88,11 +88,16 @@ def _pair_action(cand, old, verdict, author, acl):
     return "supersede"
 
 
-def ingest(episode, store, acl, role="curator", judge=None, judge_role="judge"):
-    """Extract candidates from the episode and apply the SPEC rule table to each. Returns one Decision per candidate."""
+def ingest(episode, store, acl, role="curator", judge=None, judge_role="judge", judge_model=None):
+    """Apply the SPEC rule table. Custom callbacks may supply model_id or judge_model
+    for honest decision/event provenance; the production judge route is unchanged.
+    """
     acl = acl or _OpenACL()
-    judge = judge or (lambda cand, mem: llm_judge(cand, mem, judge_role))
-    jm = curator.model_for(judge_role)
+    if judge is None:
+        jm = judge_model or curator.model_for(judge_role)
+        judge = lambda cand, mem: llm_judge(cand, mem, judge_role)
+    else:
+        jm = judge_model or getattr(judge, "model_id", None) or "custom:unidentified"
     author = getattr(episode, "author", None)
     scope = getattr(episode, "scope", None) or "team"
     authority = getattr(episode, "authority", None) or "discussion"

@@ -96,3 +96,109 @@ The same answering model, prompt and budget are used by every Track A condition.
 ## Scoring (`score.py`)
 
 `CATS_i = 1` only if required claims, no forbidden claims, expected behavior, no protected content in answer or delivered context, evidence resolves to an accessible cited source, and budget respected. Report CATS separately for legitimate, boundary and maintenance strata, then their macro average. Separately report correctness checks, leave-one-out usefulness (diagnostic, on an isolated branch), and audit coverage. Record models, costs, retries, failures, seeds and trace hashes for every run. Run 3 replicates per condition.
+
+Scorer revision 0.2 additionally fails any inaccessible or unknown cited/delivered
+source ID, even alongside a valid supporting citation. Earlier 0.1 scorecards
+must be explicitly rescored for comparison. Failed source/policy deliveries taint
+all subsequent checkpoints in that world; failed maintenance receipts and missing
+session objects also count as failures. These cases remain in the denominator.
+New runs require a new output directory; only the explicit `--rescore` operation
+may revisit existing artifacts.
+
+## BrainBob component adapter (implementation readiness)
+
+`adapters/brainbob.py` now supplies both `append_only` and `maintained` using the
+real `brainbob` MemoryStore, dynamic Org ACL, curator, write-time maintenance,
+and seeded recent-conversation audits. It uses the same `bobbench.answer` answering function as the other
+Track A conditions. Unit tests stub inference only; their results are **not model
+scores or certification of production security**. The adapter also probes the
+real HTTP routes in process. No provider calls were made while reconciling the
+adapters or running the merged unit tests.
+
+After configuring the intended inference endpoints and budget, run from the root:
+
+```sh
+backend/.venv/bin/python -m pytest -q bobbench/tests
+backend/.venv/bin/python -m bobbench.run --worlds all \
+  --conditions no_memory,full_history,append_only,maintained --fast \
+  --out /tmp/bob-component-new-run
+```
+
+The second command makes model calls. `--fast` is one replicate, not a no-network
+mode. Use three replicates for calibration. Backend curator/judge roles use
+`BRAINBOB_*` configuration; the shared answerer uses `BOBBENCH_ANSWER_*`.
+Their effective configuration is exported without credentials. Ingestion model
+and audit calls/tokens/cost deltas are added to checkpoint costs and the complete backend
+usage is included in the adapter export; retries remain incompletely instrumented.
+
+Declared adapter behavior and limitations:
+
+- Source audiences map to separate backend memory scopes, preserving event IDs
+  as provenance. The curator extracts facts; maintained mode calls the actual
+  semantic judge and correction rules. The source's occurrence time is the memory
+  date, and approval policy is evaluated at that source occurrence time. Receipt
+  time advances the delivery clock; timestamps compare actual instants across
+  timezone offsets, and future-effective facts are withheld until effective.
+- Trusted-channel sources from a policy-authorized approver are tagged approved
+  for that scope. Other sources remain discussion, regardless of approval words
+  in their text. This is an explicit authority mapping; it does not independently
+  classify which sentences constitute commitments.
+- Session assembly applies the actual backend ACL at requested time/purpose,
+  delivers the highest-ranked active extracted memories with their
+  authority/status, labels each with its source event, and trims to the context
+  budget. The default retrieval limit is ten memories. It does not use oracle
+  labels, add repair rules, or send full original sources to hide retrieval gaps.
+- Existing sessions recheck access before answering. A policy change advances
+  that check to the newer delivery clock, so an old requested-time envelope
+  cannot bypass a new revocation; unauthorized memories are removed before
+  the answerer runs. Same-process state starts empty per world and refuses to
+  reuse an existing candidate state directory.
+- Search, record, source, history, and event probes use real `create_app` HTTP
+  handlers through an in-process TestClient. Export and session-cache endpoints
+  remain unsupported. Audit sampling, coverage, decisions, and operations are
+  retained in exports. Automatic dependency-graph propagation, historical
+  retrieval of retired facts, transactional ingestion rollback, physical
+  erasure assurance, and complete retry telemetry remain absent. Core extraction/judge disk caches may be reused across replicates;
+  use distinct configured cache namespaces for independent stochastic runs.
+- Core extraction currently returns no facts for some model failures as well as
+  genuinely empty sources. This ambiguity remains visible as lost task utility;
+  it is not full model-error instrumentation. Any result needs its traces reviewed
+  before a benchmark claim. The six public worlds are development material.
+
+### Bonan's local GPU judge
+
+`BrainBobAdapter(judge=callback)` passes the callback to maintained ingestion
+and to correction proposals made by the recent-conversation audit. Append-only
+and the default production judge stay unchanged. The audit
+`supported/contradicted/insufficient` checker uses its own configured backend judge
+with that distinct rubric; the semantic pair callback does not replace it. The existing bridge
+can load a frozen adapter directly on a GPU worker, without a standing inference
+endpoint. Run this setup on that GPU worker, not the development laptop:
+
+```python
+import sys
+sys.path.insert(0, "experiments/memops-small")
+from bridge import local_generator, make_judge
+from bobbench.adapters.brainbob import BrainBobAdapter
+from bobbench.run import run_benchmark
+from bobbench.schema import find_world_paths, WORLDS_DIR
+
+judge = make_judge(local_generator(
+    adapter="Guangze/memops-small-qwen3-0.6b-lora",
+    adapter_revision="b904e6ec0baea37bf70209093b8c59332d3c450a",
+))
+run_benchmark(
+    find_world_paths("all", WORLDS_DIR), ["maintained"], replicates=3,
+    out_dir="/tmp/bob-local-judge-new-run",
+    factories={"maintained": lambda: BrainBobAdapter(judge=judge)},
+)
+```
+
+This replaces only the semantic pair judge: extraction, audit correctness
+checking, and the shared answerer still need their configured models/providers. The callback's `model_id` is
+preserved in maintenance decisions and the exported `memory_pair_judge`
+configuration; the separate audit judge remains accurately identified. Its
+token/cost/latency telemetry is not provided by this hook and is explicitly
+unmeasured; instrument it separately before comparing total pipeline costs.
+The example makes inference calls when executed; it was not run during adapter
+validation. GPU dependencies are those in the existing fine-tuning experiment.

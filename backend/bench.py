@@ -448,6 +448,7 @@ def correctness_main(a):
     phash = lambda s: hashlib.sha256(s.encode()).hexdigest()[:12]
     summary = dict(suite="rusty_rod_correctness", fixture=rr.load()["version"], split=a.split, fast=a.fast, n_scenarios=len(scs),
                    n_questions=len(rows["none"]), seed=a.seed, retrieval_top_k=10, models={r: roles[r]["model"] for r in ("curator", "judge", "agent")},
+                   model_configuration=llm.configuration(),
                    prompt_versions=dict(agent=phash(agent.PROMPT), maintain=phash(maintain.PROMPT), audit=phash(audit_mod.PROMPT), curator=phash(curator.PROMPT)),
                    metrics=M, bootstrap={k: {kk: [round(100 * x, 1) for x in vv] for kk, vv in v.items()} for k, v in boots.items()},
                    audit=audit_sum, state=state, cost_by_stage=stages, wall_by_stage=walls, cost_usd_fresh=round(usd, 4),

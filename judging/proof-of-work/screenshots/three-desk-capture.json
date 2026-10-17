@@ -1,0 +1,8 @@
+{
+  "file": "32-three-active-sessions.jpg",
+  "captured_at": "2026-10-17T21:19:30.722Z",
+  "commit": "9d7e78a09b19974d518bf169bd912e1c54d2ce7d",
+  "url": "http://127.0.0.1:3000/demo",
+  "view": "Iris, Maya, and Mara at three viewer-facing desks with monitors oriented toward their operators",
+  "note": "Native browser screenshot of synthetic demo sessions. No inference. Frontend sources committed; unrelated teammate documentation work remains in the shared workspace."
+}

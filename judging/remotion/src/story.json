@@ -1,0 +1,183 @@
+{
+  "title": "BrainBob: a shared brain you can inspect",
+  "fps": 30,
+  "full": [
+    {
+      "id": "intro",
+      "seconds": 10,
+      "kind": "cover",
+      "title": "BrainBob",
+      "subtitle": "A shared brain you can inspect",
+      "image": "office",
+      "mode": "ACTUAL APP \u00b7 SCRIPTED WALKTHROUGH",
+      "narration": "When agents share memory, one stale fact can spread across the whole team. We built BrainBob to make shared memory current, scoped, and inspectable.",
+      "action": "Open /demo. Show the complete brain office before opening any panels. State that this is the scripted product walkthrough."
+    },
+    {
+      "id": "approval",
+      "seconds": 14,
+      "kind": "screen",
+      "title": "An approved fact has a source",
+      "image": "approval",
+      "metric": "Nov 6",
+      "detail": "Atlas pilot\nApproved commitment\nRevision 1",
+      "mode": "SCRIPTED FIXTURE \u00b7 NO INFERENCE",
+      "narration": "Here is Rusty Rod, our fictional company. Sales needs the Atlas pilot date. The organization memory says November sixth, with an approval source and revision one. That gives the next agent a fact it can trace.",
+      "action": "Scenario 1, An approved commitment. Open Evidence. Point to the approved commitment and atlas-date-r1. Click the record to inspect its source if presenting live."
+    },
+    {
+      "id": "estimate",
+      "seconds": 12,
+      "kind": "screen",
+      "title": "An estimate stays tentative",
+      "image": "estimate",
+      "metric": "Nov 13?",
+      "detail": "Engineering estimate\nOrganization date unchanged",
+      "mode": "SCRIPTED FIXTURE \u00b7 NO INFERENCE",
+      "narration": "Engineering now estimates November thirteenth. That estimate stays tentative and does not overwrite the approval. Private team context stays scoped, even when an executive asks.",
+      "action": "Scenario 2, An estimate is not a promise. Show Iris and the tentative conflict. Scenario 3 shows the Sales view still using November 6 without Engineering's private estimate."
+    },
+    {
+      "id": "correction",
+      "seconds": 14,
+      "kind": "screen",
+      "title": "Approval creates a new revision",
+      "image": "correction",
+      "metric": "Nov 13",
+      "detail": "Authorized correction\nRevision 2 active\nRevision 1 retained in history",
+      "mode": "SCRIPTED FIXTURE \u00b7 NO INFERENCE",
+      "narration": "An authorized approval changes the date. BrainBob creates revision two for November thirteenth and retires the superseded record, preserving its history. The reporting goal stays active. Correcting one fact should preserve other useful knowledge.",
+      "action": "Scenario 4, A correction with authority. Show Mara, the new date, and the retired predecessor. Scroll the evidence panel if necessary to compare revisions 1 and 2."
+    },
+    {
+      "id": "handoff",
+      "seconds": 14,
+      "kind": "screen",
+      "title": "A fresh agent gets current context",
+      "image": "handoff",
+      "metric": "Leo",
+      "detail": "Fresh Sales agent\nCurrent date + unchanged goal",
+      "mode": "SCRIPTED ANSWER \u00b7 NO INFERENCE",
+      "narration": "Switch to Leo, a different Sales member. His fresh agent gets November thirteenth and the unchanged reporting goal, citing both records. Maya\u2019s preferences and Engineering\u2019s private estimate do not enter his session.",
+      "action": "Scenario 5, A fresh Sales agent gets it right. Point to Leo and the scripted answer citing atlas-date-r2 and atlas-goal-r1. Do not describe this authored answer as a live model response."
+    },
+    {
+      "id": "session",
+      "seconds": 12,
+      "kind": "portrait",
+      "title": "The session file shows what travels",
+      "image": "session",
+      "metric": "3 tiers",
+      "detail": "Individual\nTeam\nOrganization",
+      "mode": "SCRIPTED SESSION FILE",
+      "narration": "The desk opens Leo\u2019s session file. His preferences, Sales guidance, and organization facts form one inspectable dossier. Records retain their sources and revisions. Download exports the file as Markdown.",
+      "action": "Stay on scenario 5. Close Evidence and open Session file. Inspect the three tiers and Download session .md. On the live route this is a snapshot of returned Ask records, not a complete model-input trace."
+    },
+    {
+      "id": "chat",
+      "seconds": 12,
+      "kind": "portrait",
+      "title": "Context is part of the conversation",
+      "image": "chat",
+      "metric": "Hey Leo",
+      "detail": "Personal welcome\nMemory-based starter prompts\nCitations and file inspection",
+      "mode": "SCRIPTED CHAT PREVIEW",
+      "narration": "Click Bob for personalized chat, with starters drawn from accessible memories. The main route calls the Python backend through CopilotKit. This demo previews saved context without inference.",
+      "action": "Close the file and click Chat or the seated Bob. Show Leo's three memory-based prompts. Close and reopen to demonstrate conversation persistence for this member and step."
+    },
+    {
+      "id": "audit",
+      "seconds": 16,
+      "kind": "screen",
+      "title": "Missing evidence preserves uncertainty",
+      "image": "audit",
+      "metric": "10 / 50",
+      "detail": "Sampled conversations\nApproval absent\nCurrent record retained",
+      "mode": "SCRIPTED AUDIT \u00b7 SELECTED SEED 17",
+      "narration": "Older evidence cannot undo later approval. This audit samples ten of the latest fifty conversations but misses the approval. BrainBob reports insufficient evidence and retains the record. Missing evidence is not a reason to delete it.",
+      "action": "Show scenario 6 briefly, then scenario 7. Open Evidence. Point to seed 17, 10 of 50 conversations, Approval evidence covered: No, and the retain judgment. This is a demonstration seed, not a scored audit."
+    },
+    {
+      "id": "implementation",
+      "seconds": 12,
+      "kind": "architecture",
+      "title": "What we built",
+      "mode": "IMPLEMENTED CODE \u00b7 INTEGRATION BOUNDARIES BELOW",
+      "narration": "We built the Python memory service and event-driven office. Scoped retrieval and maintenance preserve history. Crusoe serves the models. CopilotKit connects the conversation.",
+      "action": "Show the implementation summary. Do not call the store SQLite. Distinguish direct Crusoe calls from the unimplemented NemoClaw and Switchyard integrations."
+    },
+    {
+      "id": "backend",
+      "seconds": 18,
+      "kind": "trace",
+      "title": "A recorded real-model correction loop",
+      "mode": "RECORDED BACKEND RUN \u00b7 SYNTHETIC INPUT \u00b7 LEGACY MODE",
+      "narration": "A separate recorded run uses real models on synthetic data. Bad memory produces six P M. Removing it fixes the answer. After three harmful-task signals and fresh confirmation, review retires that claim and promotes a useful one. Another agent answers ten P M.",
+      "action": "Present the recorded October 17, 13:16 PDT trace. Show wrong answer m2, leave-one-out check, confirmed retirement m2, promotion m3, and new answer m1. Two harmful-task signals were seeded with real calls before the visible check. This legacy scenario is separate from Rusty Rod UI integration."
+    },
+    {
+      "id": "correctness",
+      "seconds": 18,
+      "kind": "correctness",
+      "title": "Maintenance keeps the right fact active",
+      "mode": "MEASURED RESULT \u00b7 30 SYNTHETIC HELD-OUT SCENARIOS",
+      "narration": "Thirty held-out synthetic scenarios produced twelve of thirteen correct updates, versus zero for append-only memory. Zero of thirty-two valid memories were wrongly retired. Answers scored sixty-eight of seventy-six versus sixty-seven. The answer gain is not significant. The recent audit added no gain.",
+      "action": "Show update counts and the retention result first, then answer accuracy and its paired confidence interval. Explain that memory-state correctness and downstream answer correctness are different outcomes."
+    },
+    {
+      "id": "context",
+      "seconds": 16,
+      "kind": "context",
+      "title": "Less context, with an accuracy tradeoff",
+      "mode": "MEASURED RESULT \u00b7 LONGMEMEVAL 50-QUESTION SUBSET",
+      "narration": "On fifty LongMemEval questions, average answer context fell from about one hundred nine thousand tokens to twenty-seven hundred. Roughly forty times smaller. Correct answers fell from thirty-nine to thirty-five. This shows a context tradeoff, not accuracy parity.",
+      "action": "Show average context tokens and both correct/total counts together. This run tests extraction and retrieval, not the audit. Judge differs from the official protocol."
+    },
+    {
+      "id": "close",
+      "seconds": 12,
+      "kind": "close",
+      "title": "Shared memory, with a visible history",
+      "mode": "BRAINBOB \u00b7 RECURSIVE AGENTS HACKATHON \u00b7 OCT 17, 2026",
+      "narration": "BrainBob makes the memory behind an answer inspectable. We built the memory lifecycle and the office that explains it. Next: authentication, durable sessions, and stronger uncertainty handling.",
+      "action": "End on repository and next steps. NemoClaw and Switchyard remain unintegrated. The current UI-to-backend flow has fixture verification; do not claim a newly verified end-to-end Crusoe UI session."
+    }
+  ],
+  "short": [
+    {
+      "ref": "intro",
+      "seconds": 7,
+      "narration": "One stale memory can mislead an entire agent team. BrainBob makes shared memory current and inspectable."
+    },
+    {
+      "ref": "approval",
+      "seconds": 8,
+      "narration": "In this scripted walkthrough, Sales reads an approved November sixth commitment, with a source and revision."
+    },
+    {
+      "ref": "correction",
+      "seconds": 9,
+      "narration": "A later approval creates November thirteenth as revision two. The old fact stays in history. Other valid knowledge survives."
+    },
+    {
+      "ref": "handoff",
+      "seconds": 9,
+      "narration": "A fresh Sales agent gets the corrected date and the unchanged goal. Its session file keeps individual, team, and organization context inspectable."
+    },
+    {
+      "ref": "backend",
+      "seconds": 9,
+      "narration": "Separately, a recorded real-model run shows a harmful memory retired after fresh confirmation, followed by a corrected answer from another agent."
+    },
+    {
+      "ref": "correctness",
+      "seconds": 11,
+      "narration": "Held-out synthetic tests show twelve of thirteen correct updates, versus zero for append-only memory. No valid memories were wrongly retired. Answer gains were not significant."
+    },
+    {
+      "ref": "close",
+      "seconds": 7,
+      "narration": "We built the memory lifecycle and the office that explains it. BrainBob: shared memory, with a visible history."
+    }
+  ]
+}

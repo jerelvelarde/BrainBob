@@ -1,0 +1,188 @@
+{
+  "source": "backend/results/20261017-131649-demo/responses.json",
+  "note": "Selected recorded steps, not a newly executed run. Synthetic input; legacy mode. See backend-run-meta.json.",
+  "steps": [
+    {
+      "phase": "live",
+      "step": "1 ask (Sales Team)",
+      "request": {
+        "path": "/ask",
+        "reader": "krusty-krab/sales",
+        "question": "What time does the Krusty Krab close on weekdays?"
+      },
+      "response": {
+        "task_id": "t-c9844d35",
+        "answer": "6 PM",
+        "cited_ids": [
+          "m2"
+        ],
+        "memories": [
+          {
+            "id": "m1",
+            "text": "Mr. Krabs (owner) stated that The Krusty Krab closes at 10 PM every weekday, Monday through Friday.",
+            "author": "Krusty Krab",
+            "origin": "ep-ff710a78",
+            "date": "2026-10-01",
+            "status": "trial",
+            "scope": "krusty-krab",
+            "reason": "",
+            "flagged": false,
+            "supersedes": null,
+            "owner": null,
+            "authority": "discussion",
+            "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+            "conflicts_with": []
+          },
+          {
+            "id": "m2",
+            "text": "Krusty Krab changed its weekday hours, now closes at 6 PM instead of 10 PM",
+            "author": "Sales Team",
+            "origin": "ep-3a8accb0",
+            "date": "2026-10-15",
+            "status": "trial",
+            "scope": "krusty-krab/sales",
+            "reason": "",
+            "flagged": false,
+            "supersedes": null,
+            "owner": null,
+            "authority": "discussion",
+            "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+            "conflicts_with": []
+          },
+          {
+            "id": "m3",
+            "text": "Catering orders need 48 hours' notice",
+            "author": "Sales Team",
+            "origin": "ep-3a8accb0",
+            "date": "2026-10-15",
+            "status": "trial",
+            "scope": "krusty-krab/sales",
+            "reason": "",
+            "flagged": false,
+            "supersedes": null,
+            "owner": null,
+            "authority": "discussion",
+            "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+            "conflicts_with": []
+          }
+        ]
+      },
+      "seconds": 0.3
+    },
+    {
+      "phase": "live",
+      "step": "2 check",
+      "request": {
+        "path": "/feedback",
+        "task_id": "t-c9844d35",
+        "correct_answer": "10 PM"
+      },
+      "response": {
+        "evidence": [
+          {
+            "memory_id": "m2",
+            "shown": true,
+            "correct": false,
+            "task_id": "t-c9844d35"
+          },
+          {
+            "memory_id": "m2",
+            "shown": false,
+            "correct": true,
+            "task_id": "t-c9844d35"
+          }
+        ]
+      },
+      "seconds": 1.0
+    },
+    {
+      "phase": "live",
+      "step": "3 review",
+      "request": {
+        "path": "/review"
+      },
+      "response": {
+        "decisions": [
+          {
+            "memory_id": "m2",
+            "action": "retire",
+            "reason": "harmful on ['t-d0a64ce5', 't-1aa5511a', 't-c9844d35']",
+            "task_ids": [
+              "t-d0a64ce5",
+              "t-1aa5511a",
+              "t-c9844d35"
+            ],
+            "text": "",
+            "related": [],
+            "model": null
+          },
+          {
+            "memory_id": "m3",
+            "action": "promote",
+            "reason": "helpful on ['t-6d7be2bf', 't-2eddf655', 't-1166b801']",
+            "task_ids": [
+              "t-6d7be2bf",
+              "t-2eddf655",
+              "t-1166b801"
+            ],
+            "text": "",
+            "related": [],
+            "model": null
+          }
+        ]
+      },
+      "seconds": 0.4
+    },
+    {
+      "phase": "live",
+      "step": "4 ask a different question (John, new agent)",
+      "request": {
+        "path": "/ask",
+        "reader": "krusty-krab/sales/john",
+        "question": "How late can a customer walk in on a Thursday?"
+      },
+      "response": {
+        "task_id": "t-405c965d",
+        "answer": "The Krusty Krab closes at 10 PM on Thursdays, so a customer can walk in up until 10 PM.",
+        "cited_ids": [
+          "m1"
+        ],
+        "memories": [
+          {
+            "id": "m1",
+            "text": "Mr. Krabs (owner) stated that The Krusty Krab closes at 10 PM every weekday, Monday through Friday.",
+            "author": "Krusty Krab",
+            "origin": "ep-ff710a78",
+            "date": "2026-10-01",
+            "status": "trial",
+            "scope": "krusty-krab",
+            "reason": "",
+            "flagged": false,
+            "supersedes": null,
+            "owner": null,
+            "authority": "discussion",
+            "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+            "conflicts_with": []
+          },
+          {
+            "id": "m3",
+            "text": "Catering orders need 48 hours' notice",
+            "author": "Sales Team",
+            "origin": "ep-3a8accb0",
+            "date": "2026-10-15",
+            "status": "promoted",
+            "scope": "krusty-krab/sales",
+            "reason": "helpful on ['t-6d7be2bf', 't-2eddf655', 't-1166b801']",
+            "flagged": false,
+            "supersedes": null,
+            "owner": null,
+            "authority": "discussion",
+            "model": "nvidia/Nemotron-3.5-Lightning-30B-A3B",
+            "conflicts_with": []
+          }
+        ]
+      },
+      "seconds": 0.5
+    }
+  ]
+}

@@ -15,7 +15,7 @@ flowchart LR
 
 ## The demo file
 
-At `/demo`, select **Maya Flores**, open **Session file**, and download `sales-01-atlas-session.md`. The visible desk folder opens the same panel. Clicking a cabinet opens its tier inspector with accessible and closed drawers; its session-file button opens the assembled file. The file contains:
+At `/demo`, select **Maya Flores**, open **Session file**, and download `sales-01-atlas-session.md`. Each desk has a seated Bob with its own file. Clicking a table, Bob, or nameplate opens that desk’s full-screen personal chat; clicking its folder or label opens the chat with its file inspector. Clicking a cabinet opens the selected person’s tier inspector with accessible and closed drawers; its session-file button opens their assembled file. Maya’s file contains:
 
 - Individual: Maya’s preference for a concise, three-sentence client update.
 - Team: Sales guidance to cite the approved commitment and preserve the reporting goal.
@@ -41,6 +41,14 @@ The client brief is published into Rusty Rod organization memory. Atlas Harbor i
 
 The frontend assembler is deterministic and uses authored `atlas-update` relevance tags. Its Markdown download is real, but the scenario and sources are synthetic. It does not call a relevance model, establish context completeness for arbitrary tasks, or run Crusoe inference. All fixture data ships in the browser; client filtering is a presentation preview, not an access boundary.
 
-The main HTTP/SSE route shares the tier-cabinet scene and names. It still uses the existing backend retrieval/answer contract; **live session-file assembly and storage are not implemented**. The folder visualization must not be described as proof of the model’s actual input.
+Both routes have three desk sessions: Iris on the left, Maya in the center, and Mara on the right. Each seated Bob faces the initial camera direction; each screen and keyboard points toward its operator. Click a desk/Bob to resume its chat or its folder to inspect that session’s file. The account popup also has keyboard-accessible desk shortcuts. Switching desks preserves each conversation; New session or choosing a replacement person resets only the selected desk. A walkthrough step change still refreshes the scripted files and conversations for that step.
+
+On the main HTTP/SSE route, each desk’s current chat is its session boundary: Ask drives Working, Answer ready, Failed, or Stopped state independently. Remember, Usefulness, and Review do not replace its answer file. Bob writes while an Ask is in flight; pause and reduced motion freeze the gesture. Only the selected desk renders the canvas and subscribes to SSE; its saved event cursor resumes on return. Other desk agents retain their chat/request state, and late completions from a replaced desk revision are ignored.
+
+The table opens a full-screen CopilotKit conversation with a personal greeting and three memory-based starter prompts, one per tier. Suggestions use accessible current records; retired and flagged records are excluded, while tentative context is labeled as an open question. With no loaded records, the prompts ask to discover context instead of inventing facts. Closing the chat preserves its conversation; changing members clears it. The file opens beside the conversation on desktop and covers it on mobile. The `/demo` chat returns explicitly scripted context previews with no inference; the main route retains backend requests.
+
+After Ask completes, that desk’s file snapshots the returned task ID, question, answer, cited IDs, and accessible records from `/ask.memories`, grouped by Individual, Team, and Organization. It can be downloaded as JSON. Subsequent SSE changes do not rewrite this snapshot; the next Ask starts a new file at the same desk. Before Ask, or after failure/cancellation, the UI does not invent a completed file. This is the desk’s current chat file, not a historical file reconstructed by event retrace.
+
+**Server-side session-file assembly, persistence, and full model-input tracing remain unimplemented.** Returned retrieval records do not establish the exact prompt or complete context supplied to the model. Source/history links open the current record inspector; source bodies are not embedded in the live file. The three desks are browser-local sessions, not a global registry or evidence of three concurrent inference jobs. Reloading clears these local conversations and files.
 
 Bonan’s backend handoff should provide a session/task ID, represented member, selected memory IDs/revisions, accessible source references, relevance/omission metadata, snapshot/event sequence, actual model attribution, and cost where available. Keep factual correctness, leave-one-out usefulness, and retrieval relevance distinct. Do not add a wire event until both sides agree its contract. Backend and bench remain Bonan’s files.

@@ -1,0 +1,107 @@
+{
+ "model_input_format": "Bob benchmark messages (bob_format.py, codex/bob-benchmark@ab084a6)",
+ "bob_isolation": "generated from this file's own templates before the Bob export was seen; no bobbench/ or benchmarks/bob/ eval content used",
+ "teacher_model": "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B",
+ "endpoint": "https://api.inference.crusoecloud.com/v1",
+ "seed": 42,
+ "thinking": false,
+ "generation_prompt": "You write synthetic data for a classifier that maintains a company's shared memory notes.\nCompany: {company}. Topic: {domain}. Attribute: {attribute}. Main entity: {entity}. People you may mention: {people}.\nThe EXISTING memory was written on {d0}; the NEW candidates were written on {d1}.\n\nWrite ONE existing memory: a single atomic fact (one sentence, 8-30 words) with a concrete subject, the attribute above and a specific value, like a note extracted from a chat or meeting.\nThen write THREE new candidate memories. Each candidate is compared ALONE against the existing memory:\n1. \"same\" - {ps}: {psd}\n2. \"conflict\" - {pc}: {pcd}\n3. \"unrelated\" - {pu}: {pud}\n\nLabel definitions (follow exactly):\n- same: the candidate states the same fact with the same value; it adds nothing materially new.\n- conflict: same subject and attribute, but a different current value (different date, number, owner, choice, or a reversal/negation). Hedged suggestions of a different value still count as conflict.\n- unrelated: different subject or attribute, or compatible information that can both be true. A statement explicitly about a past or original value is not a conflict.\n\nRules: each candidate is one self-contained sentence (8-35 words) written like an extracted fact; never refer to \"the existing memory\" or the labels; use realistic specifics; fictional names only.\nReply with JSON only: {{\"existing\": \"...\", \"candidates\": [{{\"label\": \"same\", \"text\": \"...\"}}, {{\"label\": \"conflict\", \"text\": \"...\"}}, {{\"label\": \"unrelated\", \"text\": \"...\"}}]}}",
+ "generation_temperature": 0.8,
+ "check_prompt": "backend/brainbob/maintain.py PROMPT (verbatim) + llm_judge user string",
+ "check_system_prompt": "You compare one EXISTING memory with one NEW candidate memory from a company's shared notes. Decide:\n- \"same\": the candidate states the same fact with the same value (it adds nothing materially new).\n- \"conflict\": same subject and attribute, but a different current value (e.g. a different date, number, owner or decision).\n- \"unrelated\": different subjects or attributes, or compatible information that can both be true. A statement explicitly about a past or original value (\"was originally\", \"previously\") is not a conflict.\nReply with JSON only: {\"verdict\": \"same|conflict|unrelated\", \"reason\": \"one sentence\"}",
+ "check_temperature": 0.0,
+ "phenomena": {
+  "same": {
+   "paraphrase": "restate the identical fact (same subject, attribute and value) with clearly different wording and sentence structure",
+   "format_change": "the same value written in a different format or unit (e.g. 2026-11-03 vs 'Nov 3rd', '$1.2M' vs '1.2 million dollars', '2 weeks' vs '14 days')",
+   "restated_negation": "make the EXISTING memory a negative fact (something will NOT happen / is NOT allowed / is NOT used); the candidate restates that same negative fact in other words",
+   "attributed_restatement": "the same fact and value, attributed to who said or confirmed it, adding nothing materially new"
+  },
+  "conflict": {
+   "value_change": "same subject and attribute, plainly states a different current value",
+   "negation_reversal": "same subject and attribute, negates or reverses the existing claim (e.g. 'will not', 'no longer', 'cancelled')",
+   "hedged_new_value": "ambiguous evidence: a hedged or unconfirmed suggestion of a DIFFERENT value for the same attribute ('might move to', 'I heard it is probably')",
+   "explicit_update": "explicitly says the value changed ('as of this week', 'moved to', 'now', 'updated to') to a different current value"
+  },
+  "unrelated": {
+   "similar_wording_different_entity": "nearly the same wording and attribute but about a DIFFERENT entity (a sibling project, another office, another quarter, another customer); any value",
+   "different_attribute_same_entity": "the same entity but a different attribute (not the one in the existing memory)",
+   "historical_original_value": "explicitly about a past or original value ('was originally', 'previously', 'last year it was') that differs from the existing value, without claiming the current value changed",
+   "vague_no_value": "ambiguous evidence: same topic but states no specific value and does not contradict the existing memory (e.g. 'the team is still reviewing the timeline')",
+   "compatible_extra_detail": "a compatible new fact about the same entity that neither restates nor changes the existing value"
+  }
+ },
+ "train_templates": [
+  "t01",
+  "t02",
+  "t03",
+  "t05",
+  "t06",
+  "t07",
+  "t08",
+  "t09",
+  "t12",
+  "t13",
+  "t14",
+  "t15",
+  "t16",
+  "t17",
+  "t18",
+  "t20",
+  "t21",
+  "t22",
+  "t23",
+  "t24",
+  "t25",
+  "t26",
+  "t28",
+  "t29",
+  "t30",
+  "t31",
+  "t32",
+  "t33",
+  "t34",
+  "t35",
+  "t36",
+  "t37",
+  "t39",
+  "t40",
+  "t41",
+  "t42"
+ ],
+ "dev_templates": [
+  "t04",
+  "t10",
+  "t11",
+  "t19",
+  "t27",
+  "t38"
+ ],
+ "split_rule": "split by template id before any wording; dev uses disjoint templates and entity/company/person pools",
+ "target_format": "{\"verdict\":\"same|conflict|unrelated\"} (compact, no reason)",
+ "note_source_refs": "model input carries existing.id and candidate.source_id (Bob format); origin/source episode ids kept as metadata",
+ "usage": {
+  "calls": 304,
+  "fresh_calls": 0,
+  "cached_calls": 304,
+  "prompt_tokens": 90329,
+  "completion_tokens": 25304
+ },
+ "price_basis_usd_per_1M": {
+  "input": 0.3,
+  "output": 2.4,
+  "source": "Crusoe list price as in backend/brainbob/llm.py PRICE"
+ },
+ "cost_usd_all_calls": 0.0878,
+ "generated_rows": 228,
+ "dropped": {
+  "review_drop": 3
+ },
+ "overrides": 23,
+ "sha256": {
+  "train.jsonl": "5a61acb59dd9641f473c0f9cded67d262cecda91a0bc983e02967e17999bc82d",
+  "dev.jsonl": "33e6b8147f2f6af81b1d0cd91f055e0c02f9080b209aa2acd14b6a8f6d3a7a6d",
+  "stories.json": "879e01ed6a8ad5210a1b5c4fb2b50aed7e82d33b502a792f9bd90523fd103327"
+ },
+ "elapsed_s": 0.1
+}

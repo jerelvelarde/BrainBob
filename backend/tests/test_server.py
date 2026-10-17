@@ -81,6 +81,7 @@ def test_sse_replays_memory_added():
     c.post("/episodes", json={"text": "hello"})
     c.post("/ask", json={"question": "q"})
     with c.stream("GET", "/events") as r:
+        assert "no-transform" in r.headers["cache-control"]
         body = "".join(r.iter_text())
     for t in ("episode.ingested", "memory.added", "memory.retrieved", "answer.produced"):
         assert t in body
@@ -91,7 +92,7 @@ from brainbob import events as core_events
 from brainbob.memory import MemoryStore
 
 
-def build_real(tmp_path):
+def build_real(tmp_path, org=None):
     core_events.reset(); core_events.set_log(str(tmp_path / "events.jsonl"))
     store = MemoryStore(str(tmp_path / "memory.jsonl"))
 
@@ -105,7 +106,7 @@ def build_real(tmp_path):
             return type("A", (), {"text": "x", "cited_ids": [m.id for m in mems]})()
 
     app = server.create_app(store, Curator(), Agent(), None, lambda *a: True, events=core_events,
-                            sse_once=True, episodes_path=str(tmp_path / "episodes.jsonl"))
+                            sse_once=True, episodes_path=str(tmp_path / "episodes.jsonl"), org=org)
     return TestClient(app)
 
 
@@ -222,3 +223,44 @@ def test_review_confirm_uses_fresh_and_origin(tmp_path):
     d = c.post("/review").json()["decisions"]
     assert d[0]["action"] == "retire" and store.get(mid).status == "retired"
     assert [e for e in core_events.history() if e["type"] == "memory.retired"][0]["confirmed"] is True
+
+
+def test_org_mutations_bind_author_and_owner_to_acting_member(tmp_path):
+    from brainbob.acl import Org
+    org = Org.load(pathlib.Path(__file__).resolve().parents[1] / "fixtures/rusty_rod/org.json")
+    c = build_real(tmp_path, org=org)
+    owner = {"X-BrainBob-Member": "sales-01"}
+    other = {"X-BrainBob-Member": "sales-02"}
+    mid = c.post("/episodes", headers=owner, json={"text": "shared team commitment", "scope": "rusty-rod/sales"}).json()["memories"][0]["id"]
+    assert c.post(f"/memories/{mid}/lock", headers=other, json={"owner": "sales-01"}).status_code == 403
+    assert c.post(f"/memories/{mid}/lock", headers=owner, json={"owner": "sales-01"}).status_code == 200
+    for route, body in (
+        ("correct", {"author": "sales-01", "text": "forged correction"}),
+        ("retire", {"author": "sales-01", "reason": "forged retirement"}),
+        ("resolve", {"owner": "sales-01", "action": "retire"}),
+    ):
+        assert c.post(f"/memories/{mid}/{route}", headers=other, json=body).status_code == 403
+    assert c.get("/memories", headers=owner).json()[0]["status"] == "locked"
+    assert c.post(f"/memories/{mid}/resolve", headers=owner, json={"owner": "sales-01", "action": "keep"}).status_code == 200
+    fresh = c.post("/episodes", headers=owner, json={"text": "second independent record", "scope": "rusty-rod/sales"}).json()["memories"][0]["id"]
+    assert c.post(f"/memories/{fresh}/correct", headers=other, json={"author": "sales-01", "text": "forged author"}).status_code == 403
+    assert c.post(f"/memories/{fresh}/retire", headers=other, json={"author": "sales-01"}).status_code == 403
+    corrected = c.post(f"/memories/{fresh}/correct", headers=other, json={"text": "valid team correction"})
+    assert corrected.status_code == 200 and corrected.json()["memory"]["author"] == "sales-02"
+
+
+def test_org_sse_keeps_uncited_answers_private_after_restart(tmp_path):
+    from brainbob.acl import Org
+    org = Org.load(pathlib.Path(__file__).resolve().parents[1] / "fixtures/rusty_rod/org.json")
+    c = build_real(tmp_path, org=org)
+    answer = c.post("/ask", headers={"X-BrainBob-Member": "sales-01"}, json={"question": "private question without memories"}).json()
+    assert answer["cited_ids"] == []
+    core_events.emit("memory.rejected", text="unscoped private source", reason="duplicate")
+    core_events.emit("answer.produced", task_id="legacy-private", answer="legacy private answer", cited_ids=[])
+    for client in (c, TestClient(server.create_app(MemoryStore(str(tmp_path / "memory.jsonl")), None, None, None, None,
+                                                  events=core_events, org=org, sse_once=True))):
+        own = client.get("/events?member=sales-01").text
+        other = client.get("/events?member=sales-02").text
+        assert answer["task_id"] in own and answer["task_id"] not in other
+        assert "unscoped private source" not in own and "unscoped private source" not in other
+        assert "legacy private answer" not in own and "legacy private answer" not in other

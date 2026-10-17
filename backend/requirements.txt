@@ -1,0 +1,9 @@
+# Verified together on Python 3.12; install with: uv pip install -r requirements.txt
+fastapi==0.143.3
+uvicorn==0.54.0
+sse-starlette==3.5.0
+httpx==0.28.1
+pytest==9.1.1
+openai==3.34.0
+rank-bm25==0.2.2
+pyarrow==26.0.0
