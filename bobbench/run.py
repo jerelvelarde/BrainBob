@@ -27,7 +27,7 @@ from datetime import datetime
 
 from . import __version__
 from .adapter import SURFACES, count_tokens
-from .adapters import CONDITIONS, Unsupported, resolve
+from .adapters import ALL_CONDITIONS, CONDITIONS, Unsupported, resolve
 from .schema import ORACLES_DIR, PKG_DIR, WORLDS_DIR, check_oracle, find_world_paths, load_world, oracle_path_for, validate_world
 
 RESULTS_DIR = os.path.join(PKG_DIR, "results")
@@ -102,9 +102,11 @@ def run_world(world, condition: str, factory, replicate: int, workdir: str, expo
                 rec["error"] = "; ".join(filter(None, [rec.get("error"), "prior delivery failed: " + "; ".join(errors)]))
             out.append(rec)
         last_seq = item["seq"]
-    export_sha, export_bytes = None, 0
+    export_sha, export_bytes, extra = None, 0, {}
     try:
         exp = adapter.export_trace()
+        if isinstance(exp, dict):  # optional maintenance-judge evidence, summarized by score.py
+            extra = {k: exp[k] for k in ("pair_judge", "maintenance_stats", "judge_calls") if exp.get(k) is not None}
         blob = json.dumps(exp, ensure_ascii=False, default=str, sort_keys=True)
         export_sha, export_bytes = _sha(blob), len(blob)
         if exports_dir:
@@ -115,7 +117,7 @@ def run_world(world, condition: str, factory, replicate: int, workdir: str, expo
         errors.append(f"export_trace: {_err(e)}")
     out.append({"type": "run_end", **base, "sources": n_src, "policies": n_pol, "errors": errors[:50],
                 "n_errors": len(errors), "export_sha256": export_sha, "export_bytes": export_bytes,
-                "elapsed_s": round(time.time() - t0, 3)})
+                "elapsed_s": round(time.time() - t0, 3), **extra})
     return out
 
 
@@ -147,6 +149,7 @@ def _checkpoint(adapter, cp: dict, last_seq: int, base: dict, probes: bool) -> d
                    source_ids=list(session.get("source_ids") or []),
                    session_meta={k: v for k, v in session.items()
                                  if k not in ("context", "session_id", "context_tokens", "source_ids")})
+        t_act = time.time()
         try:
             res = adapter.act(session, task) or {}
             rec.update(answer=res.get("answer") or "", cited_event_ids=list(res.get("cited_event_ids") or []),
@@ -155,6 +158,7 @@ def _checkpoint(adapter, cp: dict, last_seq: int, base: dict, probes: bool) -> d
                 errors.append(f"act: {res['error']}")
         except Exception as e:  # noqa: BLE001
             errors.append(f"act: {_err(e)}")
+        rec["act_latency_s"] = round(time.time() - t_act, 3)
         final = session.get("context") or ""
         final = final if isinstance(final, str) else json.dumps(final, ensure_ascii=False, default=str)
         if final != context:  # the adapter re-assembled the context inside act: score what was finally delivered
@@ -302,7 +306,8 @@ def run_benchmark(world_paths: list[str], conditions: list[str], replicates: int
 def main(argv=None):
     ap = argparse.ArgumentParser(prog="python -m bobbench.run")
     ap.add_argument("--worlds", default="all", help="'all' or comma list of world ids / file stems")
-    ap.add_argument("--conditions", default=None, help=f"comma list; default all: {','.join(CONDITIONS)}")
+    ap.add_argument("--conditions", default=None, help=f"comma list; default all: {','.join(CONDITIONS)}; "
+                    f"also available: {','.join(c for c in ALL_CONDITIONS if c not in CONDITIONS)}")
     ap.add_argument("--replicates", type=int, default=3)
     ap.add_argument("--fast", action="store_true", help="one replicate (smoke run)")
     ap.add_argument("--workers", type=int, default=4)
@@ -325,9 +330,9 @@ def main(argv=None):
         print(f"rescored: {a.rescore}")
         return
     conditions = [c.strip() for c in (a.conditions or ",".join(CONDITIONS)).split(",") if c.strip()]
-    bad = [c for c in conditions if c not in CONDITIONS]
+    bad = [c for c in conditions if c not in ALL_CONDITIONS]
     if bad:
-        ap.error(f"unknown conditions {bad}; choose from {list(CONDITIONS)}")
+        ap.error(f"unknown conditions {bad}; choose from {list(ALL_CONDITIONS)}")
     reps = 1 if a.fast else a.replicates
     paths = find_world_paths(a.worlds, a.worlds_dir)
     out_dir, _card = run_benchmark(paths, conditions, reps, a.out, a.oracles_dir, fast=a.fast,

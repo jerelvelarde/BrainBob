@@ -5,7 +5,7 @@ judge call per (candidate, existing memory) pair. Never deletes for missing evid
 ingest(episode, store, acl) -> list[Decision]
   acl: anything with can_read(member, scope) and can_approve(member, scope); None = everything readable, nobody approves.
 """
-import json, re
+import contextvars, json, re
 from dataclasses import asdict
 from . import curator, events, llm
 from .memory import _visible
@@ -42,11 +42,22 @@ def parse_verdict(raw):
     return m[-1].lower() if m else None
 
 
+# Observation only: a caller (bobbench's judge trace) may set a list here to receive each raw judge reply.
+JUDGE_RAW = contextvars.ContextVar("maintain_judge_raw", default=None)
+
+
+def judge_messages(candidate, memory):
+    """The production judge prompt for one (candidate, existing memory) pair."""
+    return [{"role": "system", "content": PROMPT},
+            {"role": "user", "content": f"EXISTING memory ({memory.date}): {memory.text}\n\nNEW candidate ({candidate['date']}): {candidate['text']}"}]
+
+
 def llm_judge(candidate, memory, role="judge"):
     """One judge call for one pair. Returns 'same' / 'conflict' / 'unrelated' or None (unparseable)."""
-    msg = [{"role": "system", "content": PROMPT},
-           {"role": "user", "content": f"EXISTING memory ({memory.date}): {memory.text}\n\nNEW candidate ({candidate['date']}): {candidate['text']}"}]
-    return parse_verdict(llm.complete(role, msg))
+    raw = llm.complete(role, judge_messages(candidate, memory))
+    sink = JUDGE_RAW.get()
+    if sink is not None: sink.append(raw)
+    return parse_verdict(raw)
 
 
 def _date_key(s):
