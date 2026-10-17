@@ -76,6 +76,7 @@
         <nav class="timeline-nav" aria-label="Changelog timeline">
           <h2>OCT 17 / TIMELINE</h2>
           <ul>
+            <li><a href="#2026-10-17-161124-nemoclaw-alignment"><time datetime="2026-10-17T16:11:24-07:00">4:11:24 PM PDT</time>NemoClaw integration aligned with live workspace</a></li>
             <li><a href="#2026-10-17-160524-live-chat-memory-panel"><time datetime="2026-10-17T16:05:24-07:00">4:05:24 PM PDT</time>Chat and live memory workspace</a></li>
             <li><a href="#2026-10-17-144758-round2-freeze-review"><time datetime="2026-10-17T14:47:58-07:00">2:47:58 PM PDT</time>Fresh checker evaluation and scorer review</a></li>
             <li><a href="#2026-10-17-143714-evaluation-report"><time datetime="2026-10-17T14:37:14-07:00">2:37:14 PM PDT</time>Evaluation report update</a></li>
@@ -115,6 +116,20 @@
       <h2 class="date-heading">October 17, 2026 <span aria-hidden="true">/</span> Shared Brain <span aria-hidden="true">/</span> Pacific Time (PDT)</h2>
 
       <!-- Add new entries here, newest first. Use real timestamps and link the evidence. -->
+
+      <article class="entry" id="2026-10-17-161124-nemoclaw-alignment">
+        <div class="time"><time datetime="2026-10-17T16:11:24-07:00">4:11:24 PM PDT</time><span>Integration merge commit time</span></div>
+        <div><h2>NemoClaw integration aligned with the live workspace</h2>
+          <ul>
+            <li><span class="label">Integrated</span> PR #13 with main after PR #12, preserving the live chat and memory workspace without frontend or backend changes.</li>
+            <li><span class="label">Verified</span> 10 adapter tests, 287 backend tests, 40 frontend tests, and TypeScript on the combined branch.</li>
+            <li><span class="label">Documented</span> shared backend/member configuration, isolated smoke-story storage, and the separation between external tool traces and browser chat receipts.</li>
+          </ul>
+          <p class="note">Codex for Jerel. Deterministic local tests only. NemoClaw/OpenShell sandbox execution, MCP stdio, managed inference, and live story evidence remain pending. No deployment or new visual verification is claimed.</p>
+          <div class="links"><a href="https://github.com/jerelvelarde/BrainBob/commit/651d72464c440c63dcec8eddab21ba7fe9b86732">651d724 · integrate latest main</a><a href="https://github.com/jerelvelarde/BrainBob/commit/5e924395c4122438ce13ad7b540aa09b5f521ff8">5e92439 · adapter implementation</a></div>
+          <details><summary>Verification evidence and limitations</summary><p><a href="../nemoclaw-alignment-20261017/README.md">Commands, observed results, environment, and outstanding sandbox validation</a></p></details>
+        </div>
+      </article>
 
       <article class="entry" id="2026-10-17-160524-live-chat-memory-panel">
         <div class="time"><time datetime="2026-10-17T16:05:24-07:00">4:05:24 PM PDT</time><span>Latest implementation commit time</span></div>

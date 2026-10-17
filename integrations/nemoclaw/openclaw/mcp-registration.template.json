@@ -1,0 +1,15 @@
+{
+  "_status": "TODO-VERIFY schema and config path; NOT yet run inside a NemoClaw sandbox",
+  "_source": "https://docs.nvidia.com/nemoclaw/user-guide/openclaw/home",
+  "_registration": "TODO-VERIFY pinned OpenClaw MCP bridge/client support; notes do not establish registration syntax",
+  "mcpServers": {
+    "brainbob": {
+      "command": "TODO-VERIFY /opt/brainbob-venv/bin/python",
+      "args": ["TODO-VERIFY /opt/brainbob/integrations/nemoclaw/mcp_server.py"],
+      "env": {
+        "BRAINBOB_URL": "TODO-VERIFY http://brainbob-host:3001",
+        "BRAINBOB_MEMBER": "sales-01"
+      }
+    }
+  }
+}

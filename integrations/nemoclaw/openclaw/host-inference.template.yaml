@@ -1,0 +1,16 @@
+# HOST ONLY DESIGN TEMPLATE. NOT yet run inside a NemoClaw sandbox.
+# TODO-VERIFY all field names and provider registration with pinned versions.
+# Sources: https://docs.nvidia.com/nemoclaw/user-guide/openclaw/home
+# https://docs.nvidia.com/nemoclaw/0.0.35/inference/inference-options.html
+provider_type: TODO-VERIFY-openai-compatible
+provider_name: TODO-VERIFY-crusoe-host
+base_url: https://api.inference.crusoecloud.com/v1
+model: nvidia/Nemotron-3.5-Lightning-30B-A3B
+credential: TODO-VERIFY-host-secret-store-reference-only
+sandbox_route: TODO-VERIFY-runtime-managed-inference-route
+# Requested endpoint/model; TODO-VERIFY runtime compatibility and actual attribution.
+# Configure secret interactively on HOST. Never put a key in this file, arguments,
+# sandbox environment, agent prompts or evidence. No built-in Crusoe adapter claimed.
+# Notes document this command shape (TODO-VERIFY before execution):
+# openshell inference set --provider <registered-name> --model <model-id>
+# Unknown provider-creation flags intentionally omitted.
