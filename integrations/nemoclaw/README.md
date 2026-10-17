@@ -190,6 +190,33 @@ There is no GET /memories/{id} route in the inspected server despite its mention
 some backend docs; use /memories and /memories/{id}/history. Replay consumes saved
 records or GET SSE only, never POST. SSE is script-checked; UI rendering is manual.
 
+## Alignment with the live workspace (PR #12)
+
+PR #13 was merged with `main` at `fa0fe6beb9bd998d3877ef10db4be04970bcee38`
+(PR #12) in integration commit `651d72464c440c63dcec8eddab21ba7fe9b86732`.
+The frontend and backend are unchanged by this integration.
+
+- Open `/` for the live workspace; `/demo`, `/rehearsal`, and `/character-study`
+  redirect there. Follow [the live workspace runbook](../../docs/live-workspace.md).
+- Point `BRAINBOB_URL` at the direct Python backend origin (normally port 3001),
+  not the frontend or its `/api/brainbob` proxy path. To inspect integration writes,
+  configure the frontend's `BRAINBOB_API_URL` to the same backend and select the
+  same member as `BRAINBOB_MEMBER` (Sales `sales-01` in the smoke story).
+- Run the smoke story against an empty, isolated store. Do not run `seed:company`
+  against that store: the workspace fixture already contains Atlas conversations
+  and would invalidate the story's empty-store and correction assertions.
+- Proposals use the same `/episodes` ingestion path as workspace Remember.
+  Returned `origin` episode IDs support the workspace's source/history inspection;
+  only actual backend events update the memory scene and accessible cabinet files.
+- Adapter GET reads do not emit `memory.retrieved` or `answer.produced`. NemoClaw
+  conversations and tool calls do not populate browser desk chats or retrieval
+  receipts. Inspect their exported traces separately; do not fabricate UI events.
+
+Combined-branch checks: 10 adapter unit tests, 287 backend tests, 40 frontend tests,
+and TypeScript passed. See [verification evidence](../../judging/nemoclaw-alignment-20261017/README.md).
+These are deterministic local checks; no NemoClaw/OpenShell sandbox run, live model
+inference, or new browser screenshot is claimed.
+
 ## Blockers
 
 No Linux/Docker host available today; the current dev machine is Windows. NemoClaw
@@ -210,6 +237,6 @@ transport authority remains discussion. Ranking uses a record-count budget, not 
 token budget. Fake HTTP tests do not prove backend ACL/maintenance correctness or
 full Track C conformance.
 
-No backend, apps, docs, bobbench or shared proof-of-work page changes: the active
-request permits new files only here. Scratch inputs are removed at completion;
-their relevant references and requirements are retained here.
+The original implementation changed only this integration directory. The later
+PR #12 alignment adds this runbook section and judging evidence; it does not
+change backend, frontend, or benchmark behavior.
