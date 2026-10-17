@@ -1,12 +1,32 @@
 # BrainBob
 
-An agent team that manages what it knows, learns how to work better, and checks whether its memories and skills still hold up.
+A shared memory layer for an agent team, visualized as a 3D isometric brain office full of working SpongeBobs.
 
 Think of the SpongeBobs working inside a brain: some plan, some file memories, some retrieve information, and others check that the filing cabinets still contain the truth. We're bringing that metaphor to life with a fun 3D animation connected to the agents' actual work.
 
-**Status:** Hackathon concept and planned behavior. The agent system, evaluations, and 3D experience have not yet been implemented.
+**Focus: Shared Brain.** Every agent reads the team's living project memory before working and updates it afterward. We want to keep shared knowledge current, lean, and conflict-free, then demonstrate measurable gains in output quality.
+
+**Status:** Frontend implementation is in progress. The initial scene uses scripted memory events and browser-local history. The NemoClaw harness, Switchyard routing, Crusoe inference, SQL persistence, and live memory evaluation are planned integrations; no live-model results are claimed yet.
+
+## Chosen Stack
+
+| Component | Choice | Responsibility |
+| --- | --- | --- |
+| Agent harness | [NVIDIA NemoClaw](https://github.com/NVIDIA/NemoClaw) | Run the agent team inside OpenShell sandboxes. |
+| Model routing | [NVIDIA NeMo Switchyard](https://github.com/NVIDIA-NeMo/Switchyard) | Route requests between specialized models from our configured pool. |
+| Inference | [Crusoe Managed Inference](https://github.com/crusoecloud/crusoe-developer-hub) | Serve all project model calls, including NVIDIA Nemotron models. |
+| Agent UI | CopilotKit + AG-UI | Chat, alignment decisions, tool results, and event streaming through a project-specific harness bridge. |
+| 3D visualization | Next.js, React Three Fiber, Three.js, Drei | Isometric brain office, walking SpongeBobs, cabinets, and memory retracing. |
+| Shared memory | SQLite + versioned Markdown records | Scoped retrieval, evidence, revision history, and transactional updates. |
+| Optional planning research | You.com | Retrieve public web sources for planning artifacts. |
+
+The intended path is **CopilotKit/AG-UI → BrainBob bridge → NemoClaw-managed agents → Switchyard → Crusoe**. The bridge connects agent memory tools to the SQL memory service and emits committed events for the visualization. This combined integration still needs to be built and tested.
 
 See the [architecture and tech stack plan](docs/architecture.md) for the Crusoe memory loop, CopilotKit/AG-UI integration, 3D brain, and memory retrace/replay design.
+
+Runtime memories, skills, and plans will be stored as **versioned Markdown documents in SQLite**, with SQL managing scope, evidence, revisions, and relationships. Repository documentation stays in Git and can be imported as reference material.
+
+The proposed Switchyard model pool uses **NVIDIA Nemotron Nano** for bounded memory extraction and **Nemotron Super** for planning, task execution, and memory evaluation on Crusoe. Final route policies require live capability and quality checks. The retrace view will identify the actual route, model, and document revisions behind each decision.
 
 ## The Brain We're Building
 
@@ -14,7 +34,7 @@ When memories become stale, instructions conflict, and everyone acts on differen
 
 ![SpongeBobs inside a brain office with burning filing cabinets and scattered papers](docs/assets/brain-memory-chaos.png)
 
-Our goal is a coordinated team that organizes memories, learns useful procedures, and continually checks its work:
+Our goal is a coordinated team that shares context, organizes memories, and continually checks its work:
 
 ![A team of SpongeBobs working at desks inside a brain with organized filing cabinets](docs/assets/brain-memory-team.png)
 
@@ -30,9 +50,16 @@ Before agents act, a planning component turns the user's goal into a proposed pl
 - Keep the current alignment artifact available as the team works so agents can check their actions against the agreed goal.
 - Optionally use **You.com web search** as a planner tool to research public information and attach source links to the HTML alignment artifact. Planning works without it; Crusoe remains the inference backend.
 
-## Self-Improvement
+## Shared Memory Loop
 
-The system improves through two connected loops: **memory**, which captures what agents know, and **skills**, which capture how agents do things.
+Self-improvement is the secondary outcome: the team performs better as its shared memory becomes more accurate and useful. The hackathon build prioritizes memory management and evaluation; standalone skill learning is a later extension.
+
+1. **Read before work:** Retrieve the relevant shared project context within the agent's permitted scope.
+2. **Work with that context:** Record the exact memory revisions supplied to the agent.
+3. **Update after work:** Propose new facts, corrections, and retirement of obsolete records with evidence.
+4. **Resolve conflicts:** Validate sources and expected revisions before committing changes; keep unresolved conflicts out of ordinary retrieval.
+5. **Evaluate:** Check accuracy and usefulness, then compare task outcomes with a baseline agent team.
+6. **Retrace:** Show the source conversation, change, evaluation, and subsequent use in the 3D brain and timeline.
 
 ### Memory Management
 
@@ -68,26 +95,11 @@ Planned evaluation flow:
 
 **Absence from a sample is not proof that a memory is false.** A memory without enough evidence remains unresolved; it should not be deleted simply because it was not mentioned recently. Evaluation must also consider the order of evidence so an old statement does not override an explicit later correction.
 
-The sample size and evaluation frequency are implementation choices still to be defined. The recent-conversation window is **50 conversations**, not 50 messages.
-
-### Skill Learning — How-To Knowledge
-
-Skills are reusable procedures agents learn from doing work: instructions, workflows, and approaches that help them complete future tasks.
-
-| Operation | Intended behavior |
-| --- | --- |
-| Create | Capture a useful procedure discovered while completing a task. |
-| Update | Improve an existing procedure based on outcomes and evaluation. |
-| Forget | Retire a procedure that is obsolete, harmful, redundant, or consistently unhelpful. |
-| Read | Make skills available according to role and individual, team, or organization scope. |
-
-**Skill evaluation** assesses usefulness through task outcomes: did the procedure help the agent complete the task correctly, and did it reduce unnecessary work? Based on that evidence, the system decides whether to retain, improve, or remove the skill.
-
-Proposed skill changes should be compared with the previous version on evaluation tasks. Keep a change when it measurably helps, and retain the previous version when it does not. Include unseen tasks to check whether an improvement transfers beyond the run that produced it.
+The initial proposal samples **10 of the latest 50 eligible conversations** after every five completed task runs, with manual audits also available. Explicit corrections get an immediate targeted check. These are configurable proposed settings; the recent-conversation window is **50 conversations**, not 50 messages.
 
 ## The 3D Brain Experience
 
-A playful 3D brain office will show the SpongeBob workers carrying out memory management and skill learning. The animation should reflect actual agent events so viewers can follow what is happening.
+A playful 3D brain office will show SpongeBob workers walking between desks, carrying records, and managing individual, team, and organization filing cabinets. Live animations will reflect committed memory events. The first frontend preview uses clearly labeled scripted events to develop and test these interactions.
 
 | System event | Planned visual |
 | --- | --- |
@@ -97,29 +109,29 @@ A playful 3D brain office will show the SpongeBob workers carrying out memory ma
 | Memory update | A worker replaces an outdated record with a corrected version. |
 | Memory forgetting | A worker removes a retired record from the active cabinet. |
 | Memory evaluation | An inspector checks records against sampled conversation evidence. |
-| Skill learning | A worker writes or revises a how-to manual. |
-| Skill evaluation | Workers try a procedure, compare results, and keep, improve, or retire it. |
 | Contradiction detected | A confused worker flags conflicting records for resolution. |
 
 The core demonstration is the working agent system and its evaluation loop. The brain animation makes that behavior visible and fun.
 
+Click a memory to inspect its evidence and revisions. Scrub the timeline to retrace its history without repeating tool calls or inference. Individual workers represent the task agent, memory curator, and evaluator.
+
 ## Planned Demo
 
 1. Give the team a goal and review its proposed plan through an HTML alignment artifact.
-2. Run a task that creates useful memories and a reusable skill.
+2. Have one agent complete a task and write useful project memories.
 3. Introduce a correction in a later conversation so an existing memory becomes stale.
 4. Show the memory evaluator sampling from the latest 50 conversations and inspecting the supporting evidence. Use a recorded sample containing the correction for a reproducible demo, and report when a sample misses it.
 5. Watch the brain workers update the stale memory, then show the agent using the corrected fact on a subsequent task.
-6. Evaluate a learned skill on unseen tasks and show why the system keeps, improves, or removes it.
+6. Start a fresh agent and show it completing a held-out task using the maintained shared memory.
 
-Evidence we want to show includes memory accuracy before and after evaluation, retrieval of corrected facts, access boundaries between scopes, and task outcomes with and without learned skills. These are planned measurements; no results are available yet.
+Compare the same agent/model configuration with and without maintained shared memory. Measure task correctness, stale-fact usage, repeated context requests, and token usage when available. Include unchanged valid memories and conflicting sources so the evaluator cannot score well just by rewriting everything. These are planned measurements; no results are available yet.
 
 ## Hackathon Alignment
 
 Built for **The Recursive Agents Hackathon**, October 17, 2026, with **Crusoe Managed Inference** as the planned inference backend.
 
 - **Primary fit — Shared Brain:** Shared, scoped memory that agents read and maintain, with evaluation of accuracy and output quality.
-- **Secondary fit — Version N+1:** Learned skills that improve through measured outcomes and evaluation on unseen tasks.
+- **Secondary outcome — self-improvement:** Demonstrate that maintained memory helps new agents produce better results on tasks they have not seen.
 - **Supporting behavior — Done Means Done:** Plans, explicit success checks, and human alignment before execution.
 
 See [competition details](docs/competition-details.md) for the official problem statements, rules, schedule, judging criteria, and submission requirements. The README will be updated with setup instructions, demo links, measured results, and an explicit account of work built during the event as implementation progresses.

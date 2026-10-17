@@ -1,6 +1,8 @@
 # BrainBob — Architecture and Tech Stack
 
-Proposed implementation plan for the Recursive Agents Hackathon, October 17, 2026. This document describes intended behavior; implementation has not started.
+Implementation plan for the Recursive Agents Hackathon, October 17, 2026. The 3D frontend is in progress; backend sections describe intended integrations.
+
+**Current decisions:** Shared Brain is the primary problem statement. Use NVIDIA NemoClaw for the agent harness, NVIDIA NeMo Switchyard for model routing, and Crusoe Managed Inference for inference. Self-improvement is demonstrated through better shared memory; independent skill learning is deferred. The initial frontend is a clearly labeled scripted preview.
 
 ## Product Decision
 
@@ -8,7 +10,7 @@ Build a working agent memory loop on Crusoe Managed Inference, with CopilotKit c
 
 The distinctive interaction is **retrace this memory**: click a filing cabinet or memory card and walk backward through its creation, evidence, revisions, evaluations, and use in an answer. Replay should work after a page reload and without making another model call.
 
-Primary track: **Shared Brain**. Skill improvement supports **Version N+1** after the memory loop and replay work.
+Primary track: **Shared Brain**. Every agent must read relevant project memory before working and propose updates afterward. The secondary goal is measurable self-improvement through maintained memory on held-out tasks.
 
 ## Recommended Stack
 
@@ -18,11 +20,12 @@ Primary track: **Shared Brain**. Skill improvement supports **Version N+1** afte
 | Web application | Next.js App Router, React, Tailwind CSS | Host the brain workspace, chat, alignment artifact, and history controls. |
 | Agent interaction | CopilotKit React v2 APIs, AG-UI | Chat, tool cards, human decisions, state synchronization, and live domain events. |
 | Runtime and HTTP server | Node.js + Hono + CopilotKit runtime | Host the CopilotKit endpoint, AG-UI agent endpoint, and memory/history APIs in one backend process. |
-| Agent orchestration | A small explicit state machine with bounded model/tool steps | Keep planning, execution, memory consolidation, and evaluation observable and controllable. |
-| Inference | OpenAI Node client pointed directly at Crusoe | Use Crusoe for planner, task agent, memory curator, and evaluator calls. |
+| Agent harness | NVIDIA NemoClaw with OpenShell | Run the selected supported agent runtime with sandboxed tools and a BrainBob memory integration. |
+| Model routing | NVIDIA NeMo Switchyard | Route role-specific requests within a Crusoe-backed Nemotron model pool. |
+| Inference | Crusoe Managed Inference | Serve the model requests selected by Switchyard. |
 | Planning research, optional | You.com Web Search API | Let the planner gather public web evidence and cite sources in the alignment artifact. |
 | Validation | Zod | Validate tool arguments, model-produced decisions, and persisted event payloads. |
-| Persistence | SQLite + Drizzle ORM; `better-sqlite3` driver | Store conversations, memory revisions, evaluations, run checkpoints, and replay events locally. |
+| Persistence | SQLite + Drizzle ORM; `better-sqlite3` driver | Store versioned Markdown documents, conversations, memory/skill metadata, evaluations, checkpoints, and replay events locally. |
 | Retrieval | Scope-filtered SQL, stable fact keys, SQLite full-text search | Retrieve facts and skills from the small demo corpus with evidence and revisions. |
 | 3D | Three.js + React Three Fiber + Drei | Build the brain room, workers, cabinets, documents, camera controls, and picking. |
 | UI state | Zustand plus a pure event reducer | Manage event history, selected memory, playback cursor, and scene projection. |
@@ -42,7 +45,9 @@ flowchart TD
     User --> Inspect[Memory inspector and retrace controls]
     Chat <--> Runtime[CopilotKit runtime]
     Runtime <-->|AG-UI over SSE| Agent[Agent orchestrator]
-    Agent <--> Crusoe[Crusoe Managed Inference]
+    Agent <-->|Project-specific adapter| Harness[NemoClaw-managed agents in OpenShell]
+    Harness <--> Router[NVIDIA NeMo Switchyard]
+    Router <--> Crusoe[Crusoe Managed Inference]
     Agent -->|Optional planner tool| Research[You.com web search]
     Agent --> Tools[Memory and evaluation services]
     Tools --> DB[(SQLite: state, revisions, events)]
@@ -56,11 +61,13 @@ flowchart TD
     Approval --> Agent
 ```
 
-The database owns memory state. AG-UI transports updates. The frontend renders those updates and never performs memory writes merely because an animation finishes.
+The database owns memory state. AG-UI transports updates. The frontend renders those updates and never performs memory writes merely because an animation finishes. The agent coordinator is a project-specific AG-UI bridge to NemoClaw, not a replacement harness.
+
+NemoClaw manages supported agents inside OpenShell; Switchyard supplies model routing through a library or proxy surface. Their connection to BrainBob's memory tools and AG-UI requires an explicit adapter and integration tests, rather than assuming a built-in combined integration. Pin maintained versions and verify sandbox access to the memory service and the host-side inference route before claiming the end-to-end stack works. [NemoClaw](https://github.com/NVIDIA/NemoClaw), [Switchyard](https://github.com/NVIDIA-NeMo/Switchyard)
 
 ## Backend Roles and Boundaries
 
-Use four logical agent roles, each with its own prompt and output schema. They can share the same Crusoe model and run sequentially in one process; separate services are unnecessary for the demo.
+Use four logical agent roles, each with its own prompt, output schema, and explicit model policy in the NemoClaw-managed runtime. Route memory extraction to a smaller NVIDIA Nemotron model and planning/evaluation to a larger NVIDIA Nemotron model through Switchyard. BrainBob's backend coordinates the shared-memory lifecycle and translates observable activity to AG-UI.
 
 | Role | Responsibility | Write boundary |
 | --- | --- | --- |
@@ -75,7 +82,7 @@ Logical separation helps expose mistakes; it does not prove the evaluator is cor
 
 ### Orchestrator
 
-Persist the current phase and checkpoint after each completed phase:
+NemoClaw supplies the agent harness. BrainBob persists the memory lifecycle phase and checkpoint around the managed agent run:
 
 ```text
 receive → retrieve → plan → await alignment (when required)
@@ -122,15 +129,47 @@ Use You.com's **Web Search API** behind `planning.searchWeb` to gather public in
 
 ## Crusoe Integration
 
-Crusoe exposes an OpenAI-compatible inference endpoint at `https://api.inference.crusoecloud.com/v1`. Use the OpenAI client as a transport to Crusoe; the project's inference calls should go to Crusoe. [Crusoe developer hub](https://github.com/crusoecloud/crusoe-developer-hub)
+Crusoe exposes an OpenAI-compatible inference endpoint at `https://api.inference.crusoecloud.com/v1`. Configure it as the upstream provider for Switchyard; agent requests enter the host-managed routing path. All project inference, including any model-based routing judgment, must resolve to Crusoe-backed targets. [Crusoe developer hub](https://github.com/crusoecloud/crusoe-developer-hub)
+
+### Specialized Model Routing and NVIDIA
+
+**NVIDIA Nemotron inference is a required part of the core memory loop.** NeMo refers to NVIDIA's development and evaluation tooling; Nemotron is the model family used here. Adding NeMo Evaluator or Agent Toolkit would be a separate integration, not a prerequisite for calling Nemotron. [NVIDIA models and tooling](https://developer.nvidia.com/topics/ai/generative-ai)
+
+Crusoe's current published serverless catalog lists `nvidia/Nemotron-3-Nano-30B-A3B` and `nvidia/Nemotron-3-Super-120B-A12B`. These are proposed starting models, not yet tested with our credentials. [Crusoe available models](https://docs.crusoecloud.com/serverless-inference/available-models/index.html)
+
+| Role | Proposed model on Crusoe | Assignment to validate |
+| --- | --- | --- |
+| Planner | `nvidia/Nemotron-3-Super-120B-A12B` | Goal decomposition, tool selection, and alignment plans. |
+| Task agent | `nvidia/Nemotron-3-Super-120B-A12B` | Tool-driven work using retrieved memories and skills. |
+| Memory curator | `nvidia/Nemotron-3-Nano-30B-A3B` | Bounded extraction, stable fact keys, deduplication proposals, and candidate revisions. |
+| Memory evaluator | `nvidia/Nemotron-3-Super-120B-A12B` | Evidence comparison, contradictions, chronology, and proposed corrections. |
+| Skill learner, later phase | `nvidia/Nemotron-3-Super-120B-A12B` | Procedure synthesis and revision proposals from measured outcomes. |
+
+These assignments are design hypotheses. Specialization comes from the model choice, prompt, permitted tools, output schema, and task-specific checks. We are not claiming domain fine-tuning or better accuracy without measurements.
+
+Switchyard owns model selection from the configured pool. BrainBob supplies the trusted role, permitted route, versioned prompt, token limit, and timeout. Start with explicit role routes and evaluate dynamic escalation separately. Models and retrieved Markdown cannot change their own routing permissions. Run inference only after scope-filtered context construction. Use a pinned Switchyard proxy for the hackathon or its supported library interface; the standalone server is documented as a demo/evaluation component.
+
+- Keep curator and evaluator calls separate; the evaluator receives source evidence and the candidate claim without relying on the curator's self-assessment.
+- Compare Nano extraction and Super evaluation on fixtures before accepting the routing defaults. Measure schema validity, fact correctness, incorrect updates, latency, and token usage.
+- Record the actual provider/model ID, role, policy version, prompt revision, input document revision IDs, and outcome for every call.
+- Use only capability-tested fallbacks listed for that role and record each fallback. If the required NVIDIA memory routes are unavailable, show failure; do not silently substitute another vendor and claim the NVIDIA integration succeeded.
+- Different models can share failure modes. Independent expected facts and held-out task checks remain the basis for evaluation.
+
+The brain inspector shows which model extracted a memory and which evaluated it. This attribution is part of the recorded trace and remains visible during replay. No model call is needed for scope checks, SQL transactions, random sampling, or playback.
 
 Proposed environment variables:
 
 ```dotenv
 CRUSOE_API_KEY=<server-only secret>
 CRUSOE_BASE_URL=https://api.inference.crusoecloud.com/v1
-CRUSOE_MODEL=<verified model id>
-CRUSOE_EVAL_MODEL=<verified model id; may match CRUSOE_MODEL>
+# Host-side Switchyard address; resolve sandbox reachability during integration.
+SWITCHYARD_BASE_URL=http://127.0.0.1:4000/v1
+# Proposed assignments: verify account access and capabilities before enabling.
+CRUSOE_PLANNER_MODEL=nvidia/Nemotron-3-Super-120B-A12B
+CRUSOE_TASK_MODEL=nvidia/Nemotron-3-Super-120B-A12B
+CRUSOE_MEMORY_MODEL=nvidia/Nemotron-3-Nano-30B-A3B
+CRUSOE_EVAL_MODEL=nvidia/Nemotron-3-Super-120B-A12B
+CRUSOE_SKILL_MODEL=nvidia/Nemotron-3-Super-120B-A12B
 DATABASE_PATH=./data/brainbob.sqlite
 # Optional planning research; leave disabled without credentials.
 YOU_SEARCH_ENABLED=false
@@ -139,7 +178,7 @@ YOU_API_KEY=
 
 Do not commit populated environment files or use `NEXT_PUBLIC_` for either provider key.
 
-The first integration spike must list available models, inspect `supported_parameters`, and run a real streaming completion and tool/structured-output check. Select the model using those observed capabilities; do not assume a specific Nemotron model is available. Crusoe's model catalog documents capability discovery. [Crusoe model features](https://support.crusoecloud.com/hc/en-us/articles/55002524169499-How-To-List-Model-Features-via-curl-and-the-Inference-API)
+The first integration spike must list models accessible to our account, inspect `supported_parameters`, and run a real streaming completion and tool/structured-output check for each proposed model. Published availability does not prove account access or suitability for our tools. Resolve the role assignments using those checks. Crusoe's model catalog documents capability discovery. [Crusoe model features](https://support.crusoecloud.com/hc/en-us/articles/55002524169499-How-To-List-Model-Features-via-curl-and-the-Inference-API)
 
 Prefer native tool calling and structured output when supported. Otherwise, accept a schema-validated JSON action envelope with a bounded repair attempt. Invalid output produces a visible failure and no memory mutation.
 
@@ -159,6 +198,58 @@ revision 1: Launch date is October 24.
 revision 2: Launch date is October 25.
 ```
 
+### SQL-Backed Markdown Documents
+
+Use **Markdown for content and SQL for organization**. Store the Markdown body as text in immutable document revisions; keep access rules, document kind, status, fact identity, evidence, and relationships in typed SQL columns and tables.
+
+Runtime memories, skills, and plans use SQLite as their source of truth. Human-readable `.md` files are import/export views of those records. Repository documentation such as this architecture and the participant guide remains maintained in Git and can be imported into SQL as reference documents. Do not move the only copy of the project documentation into an ignored database file.
+
+Proposed common document structure:
+
+```text
+documents
+  id, brain_id, kind, title, logical_path
+  scope_type, scope_id, status, current_revision
+  origin (runtime | repository), source_path
+
+document_revisions
+  document_id, revision, body_markdown, content_hash
+  source_commit (for repository imports), created_at
+  actor_id, inference_call_id (nullable), cause_event_id
+
+document_links
+  source_document_id, source_revision
+  target_document_id, target_revision, relation
+```
+
+Kinds include `memory`, `skill`, `plan`, and `reference`. Paths such as `teams/demo/memories/project-launch-date.md` give records a familiar file-like organization; paths alone do not grant access. Relations include `supports`, `supersedes`, and `derived_from`.
+
+Example stored Markdown body:
+
+```markdown
+# Project launch date
+
+The launch date is October 25, 2026.
+
+## Evidence
+
+The project owner corrected the date in the linked source conversation.
+```
+
+Evidence IDs and revision links live in SQL; rendered Markdown can link to authorized application evidence routes. The model may suggest content, but it cannot establish permissions by writing YAML front matter or editing a heading.
+
+Memory and skill revision tables reference document revisions instead of duplicating their Markdown bodies. A memory remains one independently revisable fact, even if several records are exported into one `.md` file for reading.
+
+- **Create/update:** Commit the Markdown revision, domain metadata, evidence links, and event atomically.
+- **Forget:** Retire the runtime document and its memory/skill record from active retrieval while preserving the retrace history.
+- **Read:** Apply role/scope filters first, then retrieve current active document revisions within a context budget.
+- **Search:** Index current active Markdown with SQLite full-text search; maintain the index in the same transaction as the content change and join against authorized document rows.
+- **Import:** Explicitly import selected repository `.md` files by path and content hash. Unchanged imports are idempotent; changed content creates a new reference revision. Runtime agents cannot rewrite the source repository docs through this import.
+- **Export:** Generate scoped Markdown from a selected revision without treating the export as another writable source of truth.
+- **Trace:** Capture the exact document revisions passed to each model so we can inspect what the agent knew when it acted.
+
+The source conversation remains the evidence for a memory. Importing a Markdown claim does not automatically validate that claim or make a reference document an executable skill. A plan's HTML artifact is rendered from its validated plan structure and corresponding document revision.
+
 ### Storage
 
 | Table | Important fields |
@@ -166,12 +257,14 @@ revision 2: Launch date is October 25.
 | `principals`, `memberships` | User/agent identity, organization, team membership, role, allowed operations |
 | `conversations`, `messages` | Conversation ID, scope, speaker, timestamps, message content and revision |
 | `runs`, `checkpoints` | Run/thread IDs, phase, status, principal, budget counters, pending decision |
+| `documents`, `document_revisions`, `document_links` | Scoped logical Markdown files, immutable bodies, content hashes, origin/source paths, revision-specific relations |
+| `model_policies`, `inference_calls` | Role-to-model assignments, policy/prompt versions, actual model used, input document revisions, usage, latency, fallback and outcome |
 | `memories` | Memory ID, subject, fact key, scope type/ID, active revision, active/quarantined/forgotten status |
-| `memory_revisions` | Memory ID, revision number, content, source message/revision IDs, evidence timestamps, creation event |
+| `memory_revisions` | Memory ID, revision number, document revision reference, source message/revision IDs, evidence timestamps, creation event |
 | `evaluations` | Mode, seed, window cutoff, eligible and sampled conversation IDs, memory revisions checked, verdicts, cited evidence, model ID |
 | `events` | Event ID, brain-local sequence, schema version, type, run ID, subject ID, scope, payload, cause ID, timestamp |
 | `artifacts`, `decisions` | Versioned plan data, rendered HTML, approval status, deciding principal and plan revision |
-| `skills`, `skill_revisions`, `skill_evaluations` | Procedure, scope, revisions, source outcomes, comparison tasks and scores |
+| `skills`, `skill_revisions`, `skill_evaluations` | Scope, procedure document revision references, source outcomes, comparison tasks and scores |
 
 Conversation IDs identify distinct conversations, not individual messages. Multiple AG-UI runs can belong to one conversation.
 
@@ -184,6 +277,8 @@ Conversation IDs identify distinct conversations, not individual messages. Multi
 5. Record the memory IDs and exact revisions actually supplied to the task agent.
 
 The scope boundary also applies to snapshots, events, artifacts, evaluations, history, and replay exports. A visual scope selector cannot change the principal's permissions. Conflicting facts across scopes should be presented as a conflict unless an explicit precedence rule applies.
+
+Document search, links, import/export, and model-call inspection enforce those same boundaries. Retrieval records include both memory revisions and the underlying Markdown document revisions.
 
 For the local demo, use server-issued sessions for predefined personas and clearly identify this as demo identity. A public multi-user deployment requires proper authentication before exposing private data.
 
@@ -414,8 +509,8 @@ Keep a local recorded successful trace for presentation continuity if the provid
 
 | Phase | Deliverable | Acceptance gate |
 | --- | --- | --- |
-| 1. Integration spike | CopilotKit chat → runtime → AG-UI agent → Crusoe | A real streamed answer and custom event reach the browser; selected model capabilities are verified. |
-| 2. Memory vertical slice | SQLite, create/read/update/forget tools, evidence, scope checks | A fact survives reload, a later correction changes the answer, and unauthorized scope access is denied. |
+| 1. Integration spike | CopilotKit → AG-UI bridge → NemoClaw → Switchyard → Crusoe | A real streamed answer and custom event reach the browser; sandbox tool access and Nano/Super routes pass checks. |
+| 2. Memory vertical slice | SQL-backed Markdown, create/read/update/forget tools, evidence, scope checks | A fact survives reload, a later correction changes the answer, and unauthorized scope access is denied. |
 | 3. Evaluation | Random audit, targeted correction checks, persisted verdicts | A known contradiction is repaired when evidence is included; missing evidence does not delete a valid fact. |
 | 4. Retrace | Event history, pure reducer, revision inspector, playback | Replay reconstructs the same visible state, survives reload, and causes zero inference calls or writes. |
 | 5. 3D experience | Brain office, workers, cabinets, event animations | Real committed events drive the scene; selection opens the matching evidence and replay. |
@@ -438,6 +533,8 @@ If time is tight, deliver phases 1–6 and submission first. Skill evolution rem
 - Replaying a persisted trace produces the same memory projection as the live trace, including retirement and quarantine.
 - Reloading or replaying cannot re-run an approval, tool call, or model request.
 - Planning succeeds with You.com disabled; enabled searches record citations and failures, and replay never repeats a search.
+- Markdown import is idempotent, document bodies have immutable revisions, and content/metadata/events cannot diverge after a failed transaction.
+- Each agent role uses its configured model policy; a memory trace identifies real NVIDIA curator/evaluator calls and their exact input document revisions.
 - The browser flow exercises intent → plan → decision → memory mutation → answer → inspection → replay.
 
 ## Proposed Repository Layout
@@ -455,7 +552,7 @@ apps/
     src/server/              # Hono, CopilotKit runtime, AG-UI endpoint
     src/agents/              # Planner, task agent, curator, evaluator
     src/services/            # Memory, retrieval, evaluation, permissions
-    src/inference/           # Crusoe client and validated model calls
+    src/inference/           # Crusoe client, role-based model router, validated calls
     src/storage/             # Schema, migrations, transactions
 packages/
   contracts/                 # Zod schemas, event and domain types
@@ -470,9 +567,10 @@ docs/
 
 ## Decisions Remaining Before Implementation
 
-- Confirm a working Crusoe API key and select an available model through the integration spike.
+- Confirm Crusoe account access and capability-test the proposed NVIDIA Nemotron Nano/Super routes.
 - Verify and pin a mutually compatible CopilotKit/AG-UI/React/Three Fiber package set.
 - Tune the proposed audit sample size, cadence, and per-run inference budget using observed latency and credit usage.
 - Choose whether skill evaluation fits the event schedule after the memory/replay vertical slice works.
+- Confirm the initial reference-document import list; runtime memories and skills are SQL-backed Markdown by default.
 
-These do not block the architectural plan. The first implementation task is phase 1: prove the real Crusoe → AG-UI → CopilotKit → 3D event path.
+The current implementation task is the 3D memory frontend. The next backend task is to prove NemoClaw → Switchyard → Crusoe with shared-memory tools and the AG-UI bridge. Do not describe the scripted frontend preview as a live harness or inference integration.
