@@ -32,7 +32,6 @@ export function SessionChatDialog({ open, reader, onClose, onFile, fileOpen, onC
     wasInspecting.current = Boolean(inspection);
   }, [open, inspection]);
   return <dialog ref={dialog} className="session-chat-dialog" aria-label={`${member?.label ?? "Your"}’s session chat`}
-    onKeyDownCapture={(event) => { if (event.key === "Escape" && (inspection || compact && showBrain)) { event.preventDefault(); event.stopPropagation(); if (inspection) onCloseInspection(); else closeBrain(); } }}
     onCancel={(event) => { event.preventDefault(); if (inspection) onCloseInspection(); else if (compact && showBrain) closeBrain(); else onClose(); }}>
     <header className="session-chat-header">
       <button className="back-to-brain" aria-label="Back to brain" onClick={onClose}><ArrowLeft size={18} /><span>Back to brain</span></button>
