@@ -77,3 +77,12 @@ Existing actions in `apps/web/src/lib/memory.ts`: created, retrieved, evaluated,
 | replay.done | seq | history finished; animate only events after this |
 
 Note: the server emits episode.ingested, memory.retrieved, answer.produced; the core emits the memory.* and evidence.* events on the same bus.
+
+## Permissions (Rusty Rod org mode)
+
+Send header `X-BrainBob-Member: sales-01` on every request (fetch). For `new EventSource(url)` use `/events?member=sales-01` since headers cannot be set. **This is a demo identity marker, not authentication.**
+
+- 401: no/unknown member. 404: not readable by this member (treat as "does not exist"). 403: you may not write there, or `authority: "approved"` without approver rights for that scope.
+- Members see only: `rusty-rod`, their team path, their own individual path. Executives get no extra reads.
+- `POST /episodes` body adds `authority` (`approved|tentative|discussion`); `author` defaults to the header member; `scope` defaults to the member's individual path.
+- When the member switcher changes, reopen the EventSource with the new `?member=`.

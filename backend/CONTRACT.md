@@ -123,3 +123,16 @@ The core emits `memory.*` and `evidence.recorded`. `memory.retrieved` and
 | GET | /events | ?after=<seq> or Last-Event-ID | SSE, each message has `id: <seq>`; replays history, then `replay.done {seq}`, then live |
 
 CORS open for http://127.0.0.1:3000 and http://localhost:3000.
+
+## Permissions (Rusty Rod org mode)
+
+When the server is created with an `org` (the default in `main()`, fixture `fixtures/rusty_rod/org.json`), every endpoint needs a viewer:
+
+- Header `X-BrainBob-Member: <member id>` (e.g. `sales-01`). `EventSource` cannot set headers, so `/events` also accepts `?member=sales-01`.
+- **This is a demo identity marker, not authentication.** Anyone can send any member id.
+- 401: header/param missing or not a known member.
+- 404: the memory, episode or task exists but the viewer cannot read it (same as unknown, so existence does not leak).
+- 403: the viewer can read but not write (`can_write`), or posts `authority: "approved"` without `can_approve` for that scope.
+- Reads (`/ask` retrieval, `/memories`, `/memories/{id}`, `/memories/{id}/history`, `/episodes/{id}`, `/report`, `/events`) show only what `can_read` allows: org, own team, own individual path. `/events` delivers an event only if every memory/episode it references is readable.
+- `POST /episodes` also takes `author` (must equal the viewer), `scope` (default: the viewer's individual path) and `authority` (`approved|tentative|discussion`, default `discussion`).
+- With no org (`create_app(..., org=None)`) none of this applies and behaviour is unchanged.

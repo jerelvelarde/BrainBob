@@ -1,0 +1,95 @@
+{
+  "org": "rusty-rod",
+  "members": [
+    {
+      "id": "exec-01",
+      "team": "executive",
+      "role": "approver"
+    },
+    {
+      "id": "exec-02",
+      "team": "executive",
+      "role": "approver"
+    },
+    {
+      "id": "exec-03",
+      "team": "executive",
+      "role": "approver"
+    },
+    {
+      "id": "sales-01",
+      "team": "sales",
+      "role": "member"
+    },
+    {
+      "id": "sales-02",
+      "team": "sales",
+      "role": "member"
+    },
+    {
+      "id": "sales-03",
+      "team": "sales",
+      "role": "member"
+    },
+    {
+      "id": "sales-04",
+      "team": "sales",
+      "role": "member"
+    },
+    {
+      "id": "sales-05",
+      "team": "sales",
+      "role": "member"
+    },
+    {
+      "id": "eng-01",
+      "team": "engineering",
+      "role": "member"
+    },
+    {
+      "id": "eng-02",
+      "team": "engineering",
+      "role": "member"
+    },
+    {
+      "id": "eng-03",
+      "team": "engineering",
+      "role": "member"
+    },
+    {
+      "id": "eng-04",
+      "team": "engineering",
+      "role": "member"
+    },
+    {
+      "id": "eng-05",
+      "team": "engineering",
+      "role": "member"
+    },
+    {
+      "id": "eng-06",
+      "team": "engineering",
+      "role": "member"
+    },
+    {
+      "id": "eng-07",
+      "team": "engineering",
+      "role": "member"
+    },
+    {
+      "id": "eng-08",
+      "team": "engineering",
+      "role": "member"
+    },
+    {
+      "id": "eng-09",
+      "team": "engineering",
+      "role": "member"
+    },
+    {
+      "id": "eng-10",
+      "team": "engineering",
+      "role": "member"
+    }
+  ]
+}
