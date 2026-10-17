@@ -1,46 +1,45 @@
-# BrainBob — Judging Guide
+# BrainBob — judge's guide
 
-**Track: Shared Brain. Core problem: memory correctness.** BrainBob aims to ensure that shared memories are supported by evidence, reflect the latest valid information, and remain reliable when reused by other agents.
+**Shared Brain · Jerel Velarde and Bonan Kou · October 17, 2026**
 
-One wrong or stale memory can spread the same mistake across an agent team. Every agent should read the team's living project memory before working and update it afterward, with evaluation checking corrections, preserving valid knowledge, and surfacing unresolved conflicts. The 3D brain office makes this process inspectable; measurable gains in output quality are the intended proof that more correct memory helps.
+BrainBob gives agent teams shared memory that checks incoming facts, applies authorized corrections, and retrieves only the context the selected member may read. The 3D office makes the sources, changes, and subsequent answers inspectable.
 
-**Repository:** [jerelvelarde/BrainBob](https://github.com/jerelvelarde/BrainBob)
+## Start here: three minutes
 
-## Start Here
+1. **Watch:** [60-second narrated live demo](../docs/demo/live-one-minute-20261017/output/brainbob-live-60s-vo.mp4). Edited footage of the running app, real Crusoe inference, and fictional company data. [Recording provenance](../docs/demo/live-one-minute-20261017/README.md).
+2. **Read the result:** [corrected scorecard](../bobbench/results/20261017-141014/scorecard.v0.3.md). Maintained memory scored **71.9% macro CATS vs 25.0% with no memory** on six synthetic worlds / 41 checkpoints / three replicates. The **+4.0-point** difference against append-only memory is inconclusive (95% interval −9.0 to 18.2); full authorized history scored 92.0%.
+3. **Inspect the work:** [evidence sheet](evidence.md) for claims and artifacts; [proof-of-work timeline](proof-of-work/index.html) for implementation commits and visual history. Download/open the HTML locally to view the timeline.
 
-- [Current solution, setup, and results](../README.md)
-- [Corrected v0.3 evaluation report](../docs/evaluation-report.md)
-- [Recorded real-provider workspace](live-workspace-20261017/README.md)
-- [Three-minute demo runbook](demo-runbook.md)
-- [Evidence, results, and original contributions](evidence.md)
-- [Architecture and stack](../docs/architecture.md)
-- [Benchmark and evaluation plan](../docs/benchmarks.md)
-- [Competition requirements](../docs/competition-details.md)
+[Run the app locally](../README.md#run-locally) · [Architecture](../docs/architecture.md) · [Three-minute presenter runbook](demo-runbook.md) · [Submission status](submission-status.md)
 
-This folder is a judging aid, not evidence that a feature has been implemented. Record actual results and links in the evidence sheet before presenting claims.
+## What the team built
 
-## What to Look For
-
-| Shared Brain requirement | Demonstration or evidence |
+| Contribution | Inspect it |
 | --- | --- |
-| Memory correctness — central claim | Evidence-backed facts, correct updates, fewer stale or unsupported facts, and no unjustified removal of valid memories; report evidence coverage and uncertainty. |
-| Read before work | A fresh agent receives the correct scoped memory revisions. |
-| Update after work | A useful fact or explicit correction creates an evidence-linked revision. |
-| Keep knowledge current | A later answer uses the corrected fact rather than the superseded value. |
-| Keep knowledge lean | Less repeated context, with task quality preserved and total maintenance cost reported. |
-| Keep knowledge conflict-free | Stale inputs should not supersede newer approved facts; unresolved conflicts remain visible. |
-| Show measurable quality gains | Paired held-out results against append-only memory and full-history baselines. |
-| Make behavior inspectable | Retrace source conversation → evaluation → revision → retrieval → answer. |
+| Shared memory service: ingestion, scope checks, maintenance, revisions, source correctness and usefulness evaluation | [Architecture](../docs/architecture.md), [API contract](../backend/CONTRACT.md) |
+| Live chat and 3D office: retrieval, citations, source/history inspection, accessible cabinets, personal sessions | [Live workspace](live-workspace-20261017/README.md), [chat and cabinet checks](chat-memory-panel-20261017/README.md) |
+| Read-only Nano summaries alongside original memory files | [Summary verification](memory-summary-20261017/README.md) |
+| Organizational benchmark, independent scorer review, controls, and corrected results | [Evaluation report](../docs/evaluation-report.md), [benchmark dataset](https://huggingface.co/datasets/JerelVelarde/bob-benchmark) |
+| Experimental 0.6B LoRA relation checker: 32/60 → 42/60 on the original public diagnostic | [Model handoff](../docs/finetune-handoff.md), [confirmation/observe modes](../experiments/memops-small/SAFE_MODE.md) |
 
-## Judging Criteria
+Jerel led the app, interaction design, visualization, and independent evaluation presentation. Bonan led the agents, memory/maintenance/evaluation backend, and small-checker experiment. Reused libraries, datasets, and references are identified in the architecture and evaluation report.
 
-Weights below come from the supplied participant guide; see the [competition details](../docs/competition-details.md) for the full rules.
+## Evidence boundaries
 
-| Criterion | Round one | Round two | Relevant BrainBob evidence |
-| --- | --- | --- | --- |
-| Technicality | 40% | 25% | Shared memory lifecycle, scope enforcement, revision conflicts, independent evaluation, and harness/routing/inference integration. |
-| Live demo | 20% | 25% | A working handoff, correction, subsequent answer, and persistent retrace. |
-| Creativity and originality | 25% | 25% | A playful brain office that visualizes actual memory operations and their evidence. |
-| Future potential and AI impact | 15% | 25% | Better cross-agent continuity and quality with less repeated context, supported by measured results. |
+- **Live development evidence:** real provider calls and saved backend operations on fictional inputs. The featured video shows a manual personal-preference correction and a fresh-session answer; the Atlas approval already existed before recording.
+- **Measured results:** use corrected v0.3 scores, a post-hoc rescore of saved answers. The original scores and traces remain available. These synthetic/public diagnostics are not official leaderboard scores.
+- **Historical controls and previews:** deterministic reference runs, scripted presentations, and earlier UI captures are labeled in the [artifact index](artifacts.md). They are not additional live-app evaluations.
+- **Still pending:** public hosted-app verification and a recorded final submission receipt. NemoClaw's adapter is merged, but a real sandbox handoff is unverified. Switchyard and SQL are not integrated. The tuned checker remains opt-in; gpt-oss-120b remains the default judge. Member selection is development identity, not production authentication.
 
-The working system uses a Python/FastAPI service, JSONL memory/events, BM25 retrieval, direct Crusoe inference, and a Next.js/CopilotKit 3D workspace. The optional NemoClaw/OpenClaw memory-tool adapter is implemented, with sandbox integration and end-to-end validation pending. Switchyard and SQL remain roadmap items. Use the corrected v0.3 pilot result (71.9% maintained vs 25.0% no memory), retain the inconclusive append-only comparison, and distinguish live development demonstrations from held-out evaluation and historical scripted previews.
+## Judging criteria
+
+Weights are from the [participant guide](../docs/competition-details.md).
+
+| Criterion | Round one / two | Evidence |
+| --- | --- | --- |
+| Technicality | 40% / 25% | Scoped memory lifecycle, authority checks, source lineage, independent evaluation |
+| Live demo | 20% / 25% | Recorded correction, fresh-session use, citations, inspectable history |
+| Creativity and originality | 25% / 25% | A brain office connected to actual memory operations |
+| Future potential and AI impact | 15% / 25% | Measured context benefits, explicit limits, reproducible comparisons |
+
+For detailed provenance, use the [artifact index](artifacts.md). Existing evidence paths and historical records are preserved so published links continue to work.

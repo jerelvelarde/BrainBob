@@ -9,10 +9,14 @@ Current reading path: [solution and setup](../README.md) → [implemented archit
 | Public repository | [jerelvelarde/BrainBob](https://github.com/jerelvelarde/BrainBob) |
 | Team | Jerel Velarde and Bonan Kou |
 | Track | Shared Brain |
-| Submitted commit | Not yet recorded; individual evidence builds are listed below |
+| Submitted commit / receipt | Not yet recorded; [remaining submission checks](submission-status.md). Individual evidence builds are listed below |
 | Public live demo URL | Not yet recorded; the documented app runs locally |
-| One-minute video URL | Not yet recorded |
+| One-minute video | [Finished narrated 60-second recording](../docs/demo/live-one-minute-20261017/output/brainbob-live-60s-vo.mp4); [provenance and media checks](../docs/demo/live-one-minute-20261017/README.md) |
 | Evaluation provenance | October 17, 2026; original inference builds and v0.3 rescore are recorded in the [report](../docs/evaluation-report.md#provenance) |
+
+## Featured recording
+
+The [one-minute narrated video](../docs/demo/live-one-minute-20261017/README.md) records the running localhost application with real Crusoe inference and fictional data. It shows Maya retrieving an existing approved Atlas deadline, inspecting its source, manually correcting a personal preference, and using the correction in a fresh session. The Atlas correction predates this recording. It is edited live footage, not a continuous take, an automatic audit demonstration, or a verified hosted release. Original captures came from a shared development checkout; [verification metadata](../docs/demo/live-one-minute-20261017/verification.json) discloses the build boundary.
 
 ## Working application evidence
 
@@ -75,4 +79,4 @@ Sources, costs, model settings, and limitations: [evaluation report](../docs/eva
 | Small checker | Public adapter `b904e6ec0baea37bf70209093b8c59332d3c450a` and saved predictions in the [model handoff](../docs/finetune-handoff.md) |
 | Reused libraries, datasets, and reference material | [Runtime stack](../docs/architecture.md), per-experiment datasets in the [report](../docs/evaluation-report.md), and [character references](../docs/character-design.md) |
 
-Original results, scorer reviews, historical designs, and earlier fixture screenshots remain evidence of their own builds. They should not be presented as a single verified final submission build. Fill the submission commit and public video/demo links once those artifacts are actually submitted or published.
+Original results, scorer reviews, historical designs, and earlier fixture screenshots remain evidence of their own builds. They should not be presented as a single verified final submission build. The narrated video is now committed and linked above. Record the final submitted commit, hosted demo verification, and submission receipt only when confirmed; track the remaining work in [submission status](submission-status.md).

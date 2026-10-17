@@ -1,0 +1,34 @@
+{
+  "checked_at": "2026-10-17T23:43:40.381568+00:00",
+  "method": "anonymous HTTP HEAD; no signed-in cookies or credentials; no playback or submission-form test",
+  "results": [
+    {
+      "name": "repository",
+      "url": "https://github.com/jerelvelarde/BrainBob",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "authenticated": false
+    },
+    {
+      "name": "video",
+      "url": "https://raw.githubusercontent.com/jerelvelarde/BrainBob/main/docs/demo/live-one-minute-20261017/output/brainbob-live-60s-vo.mp4",
+      "status": 200,
+      "content_type": "application/octet-stream",
+      "authenticated": false
+    },
+    {
+      "name": "corrected_scorecard",
+      "url": "https://raw.githubusercontent.com/jerelvelarde/BrainBob/main/bobbench/results/20261017-141014/scorecard.v0.3.md",
+      "status": 200,
+      "content_type": "text/plain; charset=utf-8",
+      "authenticated": false
+    },
+    {
+      "name": "benchmark_dataset",
+      "url": "https://huggingface.co/datasets/JerelVelarde/bob-benchmark",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "authenticated": false
+    }
+  ]
+}
