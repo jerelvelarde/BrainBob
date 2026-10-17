@@ -1,12 +1,14 @@
 import type { MemoryAction, MemoryEvent, MemoryScope } from "./memory";
 
 /** Presentation only. These cues never create or change a memory. */
-export type SceneAction = MemoryAction | "arrived" | "rejected" | "answered" | "promoted" | "flagged";
-export type SceneCue = { id: string; action: SceneAction; scope: MemoryScope; title: string; source: "fixture" | "trace" };
+export type SceneAction = MemoryAction | "arrived" | "rejected" | "answered" | "promoted" | "flagged" | "locked" | "resolved";
+export type SceneCue = { id: string; action: SceneAction; scope: MemoryScope; title: string; source: "fixture" | "trace" | "backend";
+  seconds?: number; records?: { id: string; scope: MemoryScope }[];
+  evaluation?: { phase: "start" | "check" | "finish"; verdict?: "helpful" | "harmful" | "unchanged" | "unconfirmed" } };
 export type Point = [number, number];
 export type BobPose = "idle" | "carry" | "write" | "panic" | "inspect" | "present";
 export type BobExpression = "happy" | "worried" | "focused";
-export type BobPerformance = { time: number; distance: number; walking: boolean; pose: BobPose; expression: BobExpression; paper: boolean };
+export type BobPerformance = { time: number; distance: number; walking: boolean; pose: BobPose; expression: BobExpression; paper: boolean; reaction?: "nod" | "shake" };
 export type SceneCinematics = { darkness: number; heat: number; zoom: number };
 
 /** Seekable lighting and a single camera punch, with no wall-clock noise or flashing. */
@@ -35,18 +37,22 @@ export const sceneClips: Record<SceneAction, { label: string; seconds: number; p
   retrieved: { label: "Retrieve", seconds: 9, phases: ["Find the right cabinet", "Found it! Bring the record", "Memory delivered"], color: "#648f9f" },
   updated: { label: "Rewrite", seconds: 10, phases: ["Pull the old record", "Write the correction", "File the new version"], color: "#9375b2" },
   forgotten: { label: "Delete", seconds: 12, phases: ["CODE RED. Forget that!", "EVERYBOB PANIC!", "Crisis over. History preserved."], color: "#d26c45" },
-  evaluated: { label: "Evaluate", seconds: 14, phases: ["Nobody move. He’s here.", "Look busy. Bring the receipts!", "The evidence takes the stand."], color: "#8972af" },
+  evaluated: { label: "Evaluate", seconds: 14, phases: ["Nobody move. He’s here.", "Checks the cited memories", "The evidence takes the stand."], color: "#8972af" },
   promoted: { label: "Promote", seconds: 7, phases: ["A helpful memory", "Up to the trusted shelf", "Trusted, with evidence"], color: "#b39243" },
   flagged: { label: "Flag", seconds: 7, phases: ["This record is locked", "A concern for the owner", "Flagged. Kept for review."], color: "#ce6c73" },
   rejected: { label: "Reject", seconds: 6, phases: ["Another record arrives", "Duplicate or tombstone", "Return to sender"], color: "#ba8168" },
   answered: { label: "Answer", seconds: 7, phases: ["Gather the citations", "Deliver the answer", "Sources attached"], color: "#648f9f" },
+  locked: { label: "Lock", seconds: 5, phases: ["An owner’s house rule", "Lock the record", "Owner review required"], color: "#9375b2" },
+  resolved: { label: "Resolve", seconds: 5, phases: ["The owner has decided", "Clear the flag", "Kept by its owner"], color: "#648f9f" },
 };
 
-/** Keep the wire names explicit; promotion is not a content rewrite. */
+/** Base vocabulary; backend-state.ts handles scoped and multi-event choreography. */
 export const backendSceneActions = {
   "episode.ingested": "arrived", "memory.added": "created", "memory.rejected": "rejected",
-  "memory.retrieved": "retrieved", "answer.produced": "answered", "evidence.recorded": "evaluated",
+  "memory.retrieved": "retrieved", "answer.produced": "answered",
+  "evaluation.started": "evaluated", "memory.checked": "evaluated", "evaluation.finished": "evaluated",
   "memory.promoted": "promoted", "memory.retired": "forgotten", "memory.flagged": "flagged",
+  "memory.locked": "locked", "memory.resolved": "resolved",
 } as const satisfies Record<string, SceneAction>;
 
 export function cueFromMemory(event?: MemoryEvent): SceneCue | undefined {
@@ -135,4 +141,21 @@ export function workerPerformance(action: SceneAction, scope: MemoryScope, index
   }
   const sample = samplePath(path, p);
   return { ...sample, pose, expression, paper };
+}
+
+/** Backend audit clips visit only the cited record, rather than staging a whole-brain inspection. */
+export function performanceForCue(cue: SceneCue, index: number, progress: number) {
+  if (!cue.evaluation) return workerPerformance(cue.action, cue.scope, index, progress);
+  if (index !== 4) {
+    // Keep the worried crew spread around their desks while the cited paper travels.
+    // Reusing the rehearsal's converging paths for every check piled them onto the inspector.
+    const [x, z] = workerHomes[index];
+    return { ...samplePath([[0, x, z], [1, x, z]], progress), pose: "panic" as const, expression: "worried" as const, paper: true };
+  }
+  // Stand beside the record so the desk and cabinet do not hide the evaluator's face.
+  const x = scopeCharacters[cue.scope].x - 2;
+  const path: Waypoint[] = cue.evaluation.phase === "start" ? [[0, 4.8, .5], [.6, 4.8, -2.15], [1, x, -2.15]]
+    : cue.evaluation.phase === "finish" ? [[0, x, -2.15], [.5, 4.8, -2.15], [1, 4.8, .5]]
+    : [[0, x, -2.15], [1, x, -2.15]];
+  return { ...samplePath(path, progress), pose: "inspect" as const, expression: "focused" as const, paper: true };
 }

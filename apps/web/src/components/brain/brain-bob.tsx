@@ -113,7 +113,8 @@ export function BrainBob({ walking = true, carrying = false, inspector = false, 
     if (body.current) {
       body.current.position.y = moving ? Math.abs(sway) * (pose === "panic" ? .12 : .012) : 0;
       body.current.rotation.z = sway * (pose === "panic" ? .16 : .025);
-      body.current.rotation.x = pose === "inspect" || pose === "write" ? .12 : 0;
+      body.current.rotation.x = (pose === "inspect" || pose === "write" ? .12 : 0) + (act?.reaction === "nod" ? Math.sin(time * 4) * .08 : 0);
+      body.current.rotation.y = act?.reaction === "shake" ? Math.sin(time * 5) * .15 : 0;
     }
     if (face.current) {
       // Short staggered blinks; pausing or reduced motion leaves a calm open expression.

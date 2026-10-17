@@ -6,7 +6,7 @@ import { RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
 import { BrainBob } from "./brain-bob";
 import { Label } from "./scene-label";
-import { cinematicsAt, sceneClips, scopeCharacters, workerPerformance, type BobPerformance, type SceneCue, type SceneCinematics } from "@/lib/scene-animation";
+import { cinematicsAt, performanceForCue, sceneClips, scopeCharacters, type BobPerformance, type SceneCue, type SceneCinematics } from "@/lib/scene-animation";
 
 type Clock = RefObject<{ time: number; progress: number }>;
 type StageProps = { cue: SceneCue; playing: boolean; reducedMotion: boolean; speed: number;
@@ -30,13 +30,14 @@ function Performer({ index, cue, clock }: { index: number; cue: SceneCue; clock:
   const speech = useRef<THREE.Group>(null);
   const performance = useRef<BobPerformance>({ time: 0, distance: 0, walking: false, pose: "idle", expression: "happy", paper: false });
   useFrame(() => {
-    const sample = workerPerformance(cue.action, cue.scope, index, clock.current.progress);
+    const sample = performanceForCue(cue, index, clock.current.progress);
     if (group.current) {
       group.current.position.set(sample.x, .05, sample.z);
       group.current.rotation.y = sample.angle;
     }
     Object.assign(performance.current, { time: clock.current.time, distance: sample.distance,
-      walking: sample.moving, pose: sample.pose, expression: sample.expression, paper: sample.paper });
+      walking: sample.moving, pose: sample.pose, expression: sample.expression, paper: sample.paper,
+      reaction: index === 4 && cue.evaluation?.verdict ? cue.evaluation.verdict === "unconfirmed" ? "shake" : "nod" : undefined });
     if (sweat.current) {
       sweat.current.visible = sample.pose === "panic";
       sweat.current.position.y = 1.22 + Math.sin(clock.current.time * 7 + index) * .07;
@@ -57,14 +58,14 @@ function Performer({ index, cue, clock }: { index: number; cue: SceneCue; clock:
   </group>;
 }
 
-function EvaluatorEntrance({ clock }: { clock: Clock }) {
+function EvaluatorEntrance({ cue, clock }: { cue: SceneCue; clock: Clock }) {
   const stage = useRef<THREE.Group>(null);
   const cone = useRef<THREE.MeshBasicMaterial>(null);
   const spotlight = useRef<THREE.SpotLight>(null);
   const target = useMemo(() => new THREE.Object3D(), []);
   useFrame(() => {
     const p = clock.current.progress;
-    const bob = workerPerformance("evaluated", "team", 4, p);
+    const bob = performanceForCue(cue, 4, p);
     const envelope = smooth(0, .09, p) * (1 - smooth(.88, 1, p));
     if (stage.current) {
       stage.current.position.set(bob.x, 0, bob.z);
@@ -142,32 +143,36 @@ function TransferPaper({ cue, clock }: { cue: SceneCue; clock: Clock }) {
   </group>;
 }
 
-function AuditRecords({ clock }: { clock: Clock }) {
+function AuditRecords({ cue, clock }: { cue: SceneCue; clock: Clock }) {
   const sheets = useRef<(THREE.Group | null)[]>([]);
   const lens = useRef<THREE.Group>(null);
+  const checking = cue.evaluation?.phase === "check";
+  const count = cue.records ? Math.min(cue.records.length, 6) : 6;
+  const verdict = cue.evaluation?.verdict;
+  const label = verdict === "helpful" ? "HELPFUL" : verdict === "harmful" ? "HARMFUL" : verdict === "unchanged" ? "NO FLIP" : verdict === "unconfirmed" ? "CONFIRM FAILED · KEPT" : "CHECKS CITED MEMORIES";
   useFrame(() => {
     const p = clock.current.progress;
     sheets.current.forEach((sheet, i) => {
       if (!sheet) return;
       const u = smooth(.12 + i * .045, .56 + i * .045, p);
-      const x = [-3.8, -.5, 3.2][i % 3];
-      sheet.position.set(lerp(x, 3.2 + (i % 3) * .33, u), 1.45 + Math.sin(u * Math.PI) * 1.5 + (i > 2 ? .07 : 0), lerp(-3, -.35 + Math.floor(i / 3) * .45, u));
-      sheet.rotation.set(-u * Math.PI / 2, 0, .12 * Math.sin(i));
-      sheet.visible = p > .1 + i * .04;
+      const x = cue.records?.[i] ? scopeCharacters[cue.records[i].scope].x : [-3.8, -.5, 3.2][i % 3];
+      sheet.position.set(checking ? x : lerp(x, 3.2 + (i % 3) * .33, u), checking ? 1.5 : 1.45 + Math.sin(u * Math.PI) * 1.5 + (i > 2 ? .07 : 0), checking ? -2.8 : lerp(-3, -.35 + Math.floor(i / 3) * .45, u));
+      sheet.rotation.set(checking ? 0 : -u * Math.PI / 2, 0, .12 * Math.sin(i));
+      sheet.visible = checking || p > .1 + i * .04;
     });
     if (lens.current) {
-      lens.current.position.set(3.55 + Math.sin(clock.current.time * 1.6) * .55, 2.05, -.15 + Math.cos(clock.current.time * 1.6) * .15);
+      lens.current.position.set((checking ? scopeCharacters[cue.scope].x : 3.55) + Math.sin(clock.current.time * 1.6) * .4, 2.05, (checking ? -2.7 : -.15) + Math.cos(clock.current.time * 1.6) * .15);
       lens.current.rotation.z = -.4;
     }
   });
   return <group>
-    {Array.from({ length: 6 }, (_, i) => <group key={i} ref={(g) => { sheets.current[i] = g; }}><Paper /></group>)}
+    {Array.from({ length: count }, (_, i) => <group key={i} ref={(g) => { sheets.current[i] = g; }}><Paper color={verdict === "harmful" ? "#f7bbbb" : verdict === "helpful" ? "#c9e3b8" : undefined} /></group>)}
     <group ref={lens}>
       <mesh><torusGeometry args={[.25, .045, 8, 28]} /><meshStandardMaterial color="#7962b2" /></mesh>
       <mesh position={[0, -.42, 0]}><cylinderGeometry args={[.035, .035, .4, 10]} /><meshStandardMaterial color="#7962b2" /></mesh>
       <mesh><circleGeometry args={[.22, 28]} /><meshBasicMaterial color="#bfdded" transparent opacity={.35} side={THREE.DoubleSide} /></mesh>
     </group>
-    <Label text="WITH MEMORY / WITHOUT" position={[3.8, 2.8, -1]} width={2.9} />
+    <Label text={label} position={checking ? [scopeCharacters[cue.scope].x, 3.15, -2.7] : [3.8, 2.8, -1]} width={2.9} />
   </group>;
 }
 
@@ -267,7 +272,7 @@ function OfficeChaos({ clock }: { clock: Clock }) {
 
 function ScopeSpotlight({ cue, clock }: { cue: SceneCue; clock: Clock }) {
   const ring = useRef<THREE.Mesh>(null);
-  const color = scopeCharacters[cue.scope].color;
+  const color = cue.evaluation?.verdict === "harmful" ? "#d66d74" : cue.evaluation?.verdict === "helpful" ? "#81b28c" : scopeCharacters[cue.scope].color;
   useFrame(() => {
     if (ring.current) ring.current.scale.setScalar(1 + Math.sin(clock.current.time * 2) * .035);
   });
@@ -277,7 +282,7 @@ function ScopeSpotlight({ cue, clock }: { cue: SceneCue; clock: Clock }) {
 }
 
 export function EventStage({ cue, playing, reducedMotion, speed, seek, onProgress, cinematics }: StageProps) {
-  const duration = sceneClips[cue.action].seconds;
+  const duration = cue.seconds ?? sceneClips[cue.action].seconds;
   const clock = useRef({ time: 0, progress: 0 });
   const lastReported = useRef(-1);
   useEffect(() => {
@@ -298,8 +303,13 @@ export function EventStage({ cue, playing, reducedMotion, speed, seek, onProgres
     <ScopeSpotlight cue={cue} clock={clock} />
     {Array.from({ length: 6 }, (_, index) => <Performer key={index} index={index} cue={cue} clock={clock} />)}
     <TransferPaper cue={cue} clock={clock} />
-    {cue.action === "evaluated" ? <><EvaluatorEntrance clock={clock} /><AuditRecords clock={clock} /></> : null}
+    {cue.action === "evaluated" ? <><EvaluatorEntrance cue={cue} clock={clock} /><AuditRecords cue={cue} clock={clock} /></> : null}
     {cue.action === "forgotten" ? <OfficeChaos clock={clock} /> : null}
+    {cue.action === "locked" || cue.action === "resolved" ? <group position={[scopeCharacters[cue.scope].x, 2.7, -3.1]}>
+      <mesh position={[0, .25, 0]}><torusGeometry args={[.2, .045, 8, 20, Math.PI]} /><meshStandardMaterial color="#7962b2" /></mesh>
+      <RoundedBox args={[.5, .38, .12]} radius={.04}><meshStandardMaterial color={cue.action === "resolved" ? "#93bac3" : "#d7b268"} /></RoundedBox>
+      <Label text={cue.action === "resolved" ? "OWNER KEPT IT" : "OWNER LOCKED"} position={[0, .7, 0]} width={1.9} />
+    </group> : null}
     {cue.action === "flagged" ? <group position={[scopeCharacters[cue.scope].x + .45, 2.65, -3.7]}>
       <mesh position={[0, -.2, 0]}><cylinderGeometry args={[.025, .025, .8, 8]} /><meshStandardMaterial color="#725c66" /></mesh>
       <RoundedBox args={[.5, .3, .04]} radius={.03} position={[.23, .1, 0]}><meshBasicMaterial color="#cf6572" /></RoundedBox>

@@ -15,6 +15,7 @@ type SceneProps = {
   playing: boolean; reducedMotion: boolean; speed: number; event?: MemoryEvent;
   cue?: SceneCue; seek?: { value: number; revision: number }; onProgress: (progress: number) => void;
   selectedScope: MemoryScope | "all"; selectedMemory: string;
+  flaggedScopes?: MemoryScope[];
   onSelect: (memoryId: string) => void; onScope: (scope: MemoryScope) => void;
   onWorker: (name: string) => void; onReady: (handle: SceneHandle) => void;
 };
@@ -247,9 +248,10 @@ export default function BrainScene(props: SceneProps) {
     <SceneLighting cinematics={cinematics} />
     <Room />
     {banks.map((bank) => <Cabinet key={bank.scope} bank={bank} selected={props.selectedScope === bank.scope} active={props.cue?.scope === bank.scope} onClick={() => { props.onScope(bank.scope); props.onSelect(bank.memory); }} />)}
+    {props.flaggedScopes?.map((scope) => <Label key={scope} text="FLAGGED · OWNER REVIEW" position={[scopeCharacters[scope].x, 3.35, -3.8]} width={2.6} />)}
     <Desk position={[-3.6, 0, .9]} />
     <Desk position={[.2, 0, .6]} />
-    <Desk position={[3.8, 0, -1]} rotation={-.1} audit />
+    <Desk position={[3.8, 0, -1]} rotation={-.1} audit={props.cue?.evaluation?.phase !== "check"} />
     {props.cue ? <EventStage key={props.cue.id} cue={props.cue} playing={props.playing} speed={props.speed} reducedMotion={props.reducedMotion} seek={props.seek} onProgress={props.onProgress} cinematics={cinematics} /> : routes.map((_, index) => <Walker key={index} index={index} playing={props.playing} speed={props.speed} reducedMotion={props.reducedMotion} event={props.event} onClick={() => props.onWorker(index === 4 ? "Inspector BrainBob checks memories against their evidence." : index === 0 ? "Curator BrainBob files new memories and revisions." : "Runner BrainBob delivers memories to the team.")} />)}
     <CameraRig onReady={props.onReady} cinematics={cinematics} />
   </Canvas></SceneBoundary>;

@@ -8,7 +8,7 @@ import { cinematicsAt, clipPhase, cueFromMemory, sceneClips, scopeCharacters, ty
 import type { SceneHandle } from "./brain/brain-scene";
 
 const BrainScene = dynamic(() => import("./brain/brain-scene"), { ssr: false, loading: () => <div className="scene-loading"><div className="loading-bob">▦</div><span>Opening the memory floor…</span></div> });
-const SceneChat = dynamic(() => import("./scene-chat"), { ssr: false, loading: () => <div className="chat-loading">Getting the conversation ready…</div> });
+const SceneChat = dynamic(() => import("./scene-preview-chat"), { ssr: false, loading: () => <div className="chat-loading">Getting the conversation ready…</div> });
 
 const actionIcons = { created: Plus, retrieved: FolderClosed, evaluated: ShieldCheck, updated: GitBranch, forgotten: Archive };
 const scopeNames = { all: "All memories", individual: "Individual", team: "Team", organization: "Organization" };

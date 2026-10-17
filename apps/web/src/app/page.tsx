@@ -1,5 +1,5 @@
-import { BrainWorkspace } from "@/components/brain-workspace";
+import { LiveBrainWorkspace } from "@/components/live-brain-workspace";
 
 export default function Home() {
-  return <BrainWorkspace />;
+  return <LiveBrainWorkspace />;
 }
