@@ -31,3 +31,9 @@ Implementation history (local commits unless already published by their owners):
 The remote and benchmark branches were merged in `af77dc0` and `0b678d9`, preserving Bonan's model work, the existing organizational pilot, the frozen pair scorer, and both proof-of-work histories. Teammates' unrelated changes were preserved. This assessment did not push, deploy, start GPU jobs, activate the tuned model in production, or submit benchmark scores.
 
 Remaining gates are in [readiness.md](../../docs/readiness.md). MUM means MUMBench. Private weights were not downloaded here; the canonical identity was confirmed by Bonan via Jerel and matches committed run metadata.
+
+## Main publication integration
+
+Before the requested push, remote main advanced to `350318d`, adding Bonan's audited BrainBob adapter (`5fcd554`) and saved large-judge comparisons. Merge `efbaef0ae00fc4d347eb1941ba1e22279c8fed32` preserves those features together with the local semantic-judge callback, provenance, immutable run state, trusted-source approval checks, and revocation safeguards. The callback also applies to audit-proposed corrections; the audit's distinct correctness judge remains separately configured. Search, record, source, history, and event probes now use actual HTTP handlers in process; export and session-cache surfaces remain unsupported.
+
+The resolved merge tree passed **473 Python tests in 3.26 seconds** using the combined command above, plus `pnpm typecheck`. No inference was made during reconciliation. The saved large-judge artifacts were imported from Bonan's commit, not regenerated or independently rescored in this publishing step. The earlier 471-test record documents the prior checkpoint-pin milestone. Uncommitted demo moves and proof-of-work edits belonging to another task were left untouched.

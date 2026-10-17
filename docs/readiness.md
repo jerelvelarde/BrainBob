@@ -4,7 +4,7 @@ Assessment: October 17, 2026 (America/Los_Angeles). This combines the frontend c
 
 **Decision: ready for offline integration checks and a controlled fine-tuned-checker experiment; not ready to claim a complete cross-benchmark scorecard or enable the tuned checker as the default memory writer.** Missing measurements remain unmeasured, not zero and not passing.
 
-Completed verification: **471 Python tests**, **52 frontend tests**, and TypeScript checking passed. The integration subagent also passed a production build and the actual Next-to-Python HTTP/SSE smoke with deterministic model substitutes. The local judge callback and canonical adapter pin are implemented and tested. [Commands, commit references, and limitations](../judging/readiness-20261017/verification.md).
+Completed verification: **473 Python tests**, **52 frontend tests**, and TypeScript checking passed. The latest main integration retains Bonan's recent-conversation audits and in-process HTTP probes alongside the local judge callback and canonical adapter pin. The integration subagent also passed a production build and the actual Next-to-Python HTTP/SSE smoke with deterministic model substitutes. [Commands, commit references, and limitations](../judging/readiness-20261017/verification.md).
 
 ## Verified scores
 
