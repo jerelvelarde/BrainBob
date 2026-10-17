@@ -1,0 +1,46 @@
+{
+  "video": "output/brainbob-live-60s-vo.mp4",
+  "sha256": "318605709bdc4bd9d85ce4ee1707b3f44d92de7572545c204963013cfb37c248",
+  "media": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1920,
+        "height": 1080,
+        "r_frame_rate": "30/1",
+        "duration": "60.000000"
+      },
+      {
+        "codec_name": "aac",
+        "codec_type": "audio",
+        "sample_rate": "48000",
+        "channels": 1,
+        "r_frame_rate": "0/0",
+        "duration": "60.000000"
+      }
+    ],
+    "format": {
+      "duration": "60.000000",
+      "size": "3320048"
+    }
+  },
+  "original_video_bitstream_preserved": true,
+  "decode_errors": "",
+  "audio_measurement": {
+    "input_i": "-16.82",
+    "input_tp": "-1.49",
+    "input_lra": "3.50",
+    "input_thresh": "-27.19",
+    "output_i": "-16.31",
+    "output_tp": "-1.50",
+    "output_lra": "3.50",
+    "output_thresh": "-26.68",
+    "normalization_type": "dynamic",
+    "target_offset": "0.31"
+  },
+  "elevenlabs_screenshot_captured_at": "2026-10-17T23:26:43.782Z",
+  "validation_scope": "Container, full audio/video decoding, timing, loudness and original picture preservation. No automated speech transcription or word-level forced alignment."
+}

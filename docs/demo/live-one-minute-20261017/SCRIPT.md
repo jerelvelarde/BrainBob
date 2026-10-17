@@ -2,7 +2,7 @@
 
 **Length:** exactly 60 seconds. **Voice:** warm, clear, conversational; approximately 130 words per minute. Give the final line a short pause before “BrainBob.”
 
-The clean video is [output/brainbob-live-60s.mp4](output/brainbob-live-60s.mp4). Paste [voiceover.txt](voiceover.txt) into ElevenLabs. [voiceover.srt](voiceover.srt) and [voiceover-timing.json](voiceover-timing.json) provide the target timing; they are editorial guides, not forced alignment to generated audio.
+The finished narrated video is [output/brainbob-live-60s-vo.mp4](output/brainbob-live-60s-vo.mp4); the [clean video](output/brainbob-live-60s.mp4) is also retained. [voiceover.txt](voiceover.txt) contains the ElevenLabs script. [voiceover.srt](voiceover.srt) and [voiceover-timing.json](voiceover-timing.json) provide the scene timing; they are editorial guides, not word-level forced alignment.
 
 | Time | Voiceover | Live picture |
 | --- | --- | --- |
@@ -14,17 +14,18 @@ The clean video is [output/brainbob-live-60s.mp4](output/brainbob-live-60s.mp4).
 | 48–52s | The previous memory stays in history. | Expand the correction chain; the prior record is retired. |
 | 52–60s | A fresh session uses the correction immediately. BrainBob: shared memory you can see, inspect, and improve. | A separate fresh chat answers from the new record; return to the office. |
 
-## ElevenLabs handoff
+## ElevenLabs recording
 
-Generate a warm, natural narration that fits within 60 seconds. Prefer recording the seven timed blocks separately if exact picture synchronization matters. Pronounce BrainBob as “brain bob,” Crusoe as “KROO-soh,” and Atlas as “AT-lus.” The script has 119 words. No voice has been generated or account credits used for this deliverable.
+Generated the seven blocks separately in the signed-in ElevenLabs Chrome session, using Roger — Laid-Back, Casual, Resonant and Eleven v4. The script has 119 words. Original MP3 clips, selected generation, settings, timing, and checksums are retained in [elevenlabs/](elevenlabs/). The final line uses a 1.0584× pitch-preserving tempo adjustment; the other six retain their original pace. The account displayed 10,000 credits before and 9,257 afterward.
 
-Place the finished voiceover at `output/voiceover.wav`, then run:
+Rebuild the aligned voiceover and narrated video:
 
 ```sh
+python3 assemble_voiceover.py
 python3 mux_voiceover.py output/voiceover.wav
 ```
 
-This produces `output/brainbob-live-60s-vo.mp4`, pads short narration with silence, and refuses audio longer than 60 seconds so speech is never silently cut. Align/regenerate an overlong voice track before retrying.
+This produces `output/brainbob-live-60s-vo.mp4`. The assembly pads clips to their scenes, refuses excessive speed adjustment, and does not truncate speech. The mux step refuses audio longer than 60 seconds.
 
 ## What the recording establishes
 

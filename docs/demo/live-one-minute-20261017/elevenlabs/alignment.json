@@ -1,0 +1,92 @@
+{
+  "assembled_at": "2026-10-17T23:26:36.315974+00:00",
+  "voice": "Roger - Laid-Back, Casual, Resonant",
+  "model": "Eleven v4",
+  "settings": {
+    "stability": 0.5,
+    "similarity": 0.75
+  },
+  "selection": "Generation 1 for each of seven text blocks",
+  "method": "Generated and downloaded through signed-in ElevenLabs Chrome UI",
+  "processing": "Silence padding; pitch-preserving tempo only where needed; -16 LUFS normalization",
+  "timing_note": "Clip placement, not word-level forced alignment",
+  "blocks": [
+    {
+      "start": 0,
+      "end": 4,
+      "text": "One stale memory can put a whole team out of sync.",
+      "file": "elevenlabs/01-opening.mp3",
+      "sha256": "54925b9d7053b5d689cf8296c8862744960f34218a59944b78a69a626e778ba6",
+      "source_duration_seconds": 3.7093958333333332,
+      "tempo_multiplier": 1.0,
+      "audio_start_seconds": 0.1,
+      "audio_end_seconds": 3.8093958333333333
+    },
+    {
+      "start": 4,
+      "end": 15,
+      "text": "BrainBob gives each agent the context it can access: individual notes, team knowledge, and company decisions. Here\u2019s Maya starting a fresh session.",
+      "file": "elevenlabs/02-context.mp3",
+      "sha256": "2fc6243325b8af6a0f2b73a4df91d544aeec53dd00c085c450f4b7ee3220d6e8",
+      "source_duration_seconds": 10.031020833333333,
+      "tempo_multiplier": 1.0,
+      "audio_start_seconds": 4.1,
+      "audio_end_seconds": 14.131020833333332
+    },
+    {
+      "start": 15,
+      "end": 27,
+      "text": "She asks for the approved Atlas deadline. NVIDIA models on Crusoe answer from saved context, while Bob retrieves the files beside the conversation.",
+      "file": "elevenlabs/03-retrieval.mp3",
+      "sha256": "b7e29cfd861c0fc2cc56734b6028589683c94f45359528d0f70f478c2558a959",
+      "source_duration_seconds": 10.031020833333333,
+      "tempo_multiplier": 1.0,
+      "audio_start_seconds": 15.1,
+      "audio_end_seconds": 25.13102083333333
+    },
+    {
+      "start": 27,
+      "end": 36,
+      "text": "Open the citation. There\u2019s the original approval, its author, and its source. You can inspect the evidence behind the answer.",
+      "file": "elevenlabs/04-evidence.mp3",
+      "sha256": "8b319edca55e7cb55fde7f8046396866ce1b78d8c2ae418db4073f9860e336d0",
+      "source_duration_seconds": 8.5159375,
+      "tempo_multiplier": 1.0,
+      "audio_start_seconds": 27.1,
+      "audio_end_seconds": 35.6159375
+    },
+    {
+      "start": 36,
+      "end": 48,
+      "text": "Now Maya changes a preference: three short bullets instead of three sentences. Save the correction, and Bob files the new version.",
+      "file": "elevenlabs/05-correction.mp3",
+      "sha256": "a39a9fa505aa13be5a6b41fd283ca9718bc567ab07244d147fb98e63ccdfed8e",
+      "source_duration_seconds": 8.5159375,
+      "tempo_multiplier": 1.0,
+      "audio_start_seconds": 36.1,
+      "audio_end_seconds": 44.6159375
+    },
+    {
+      "start": 48,
+      "end": 52,
+      "text": "The previous memory stays in history.",
+      "file": "elevenlabs/06-history.mp3",
+      "sha256": "1a2d70d25de64f89e085e9c294d1752546bbd8a4855c0e57b6117d621bc3b905",
+      "source_duration_seconds": 2.769,
+      "tempo_multiplier": 1.0,
+      "audio_start_seconds": 48.1,
+      "audio_end_seconds": 50.869
+    },
+    {
+      "start": 52,
+      "end": 60,
+      "text": "A fresh session uses the correction immediately. BrainBob: shared memory you can see, inspect, and improve.",
+      "file": "elevenlabs/07-closing.mp3",
+      "sha256": "ff42c981598b729341157ccb4651c3abb1412bd9fa5c52cfa8aeaebf043fee04",
+      "source_duration_seconds": 8.202458333333333,
+      "tempo_multiplier": 1.0583817204301074,
+      "audio_start_seconds": 52.1,
+      "audio_end_seconds": 59.85897916666667
+    }
+  ]
+}
