@@ -50,3 +50,14 @@ Captured from committed frontend `bc9765d` on October 17, 2026. App sources were
 
 - [11-dramatic-office-fire.jpg](11-dramatic-office-fire.jpg): 12:07:59 PM PDT. Delete rehearsal at 62%, Sales Team. Night lighting, camera framing, tall flames, smoke, embers, flying paper, shredding, and worried BrainBobs. Paused with panels closed.
 - [12-evaluator-spotlight.jpg](12-evaluator-spotlight.jpg): 12:08:11 PM PDT. Evaluate rehearsal at 83%, Sales Team. Violet surroundings, spotlight on Evaluator Bob, evidence papers and waiting workers. Paused with panels closed.
+
+## HTTP/SSE frontend integration
+
+Captured from committed frontend `9b36d2c` on October 17, 2026. App sources were unchanged; only new evidence files were present. The local server was an explicitly labeled, in-memory contract fixture, with no Crusoe inference. Original timestamps and descriptions are in [integration-captures.json](integration-captures.json).
+
+- [13-cited-memory-check.jpg](13-cited-memory-check.jpg): 12:32:27 PM PDT. Recorded fixture check; evaluator visits the cited memory's cabinet.
+- [14-retirement-retrace.jpg](14-retirement-retrace.jpg): 12:32:36 PM PDT. Recorded manual retirement, fire and shredding, and the retained record with original source. No confirmation claim.
+- [15-flagged-owner-lock.jpg](15-flagged-owner-lock.jpg): 12:32:48 PM PDT. Flagged house rule remains locked; only Mr. Krabs can resolve it through the demo owner controls.
+- [16-contract-chat-citations.jpg](16-contract-chat-citations.jpg): 12:32:59 PM PDT. CopilotKit renders the fixture response and citations while SSE drives retrieval. The canned answer does not assess corrected facts.
+
+See [verification observations](../frontend-integration-verification.md) for the tested flows and remaining live validation.

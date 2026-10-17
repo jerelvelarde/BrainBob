@@ -1,0 +1,34 @@
+[
+  {
+    "file": "13-cited-memory-check.jpg",
+    "capturedAt": "2026-10-17T19:32:27.580Z",
+    "commit": "9b36d2c043fd6ea6469674e109cd83ab2b22581c",
+    "url": "http://127.0.0.1:3000/",
+    "mode": "HTTP/SSE contract fixture; no Crusoe inference",
+    "description": "Recorded fixture event: harmful cited memory, evaluator beside its cabinet, and worried crew."
+  },
+  {
+    "file": "14-retirement-retrace.jpg",
+    "capturedAt": "2026-10-17T19:32:36.852Z",
+    "commit": "9b36d2c043fd6ea6469674e109cd83ab2b22581c",
+    "url": "http://127.0.0.1:3000/",
+    "mode": "HTTP/SSE contract fixture; no Crusoe inference",
+    "description": "Recorded manual-retirement fixture: office fire and shredding with retired memory and original source still inspectable; no confirmed label."
+  },
+  {
+    "file": "15-flagged-owner-lock.jpg",
+    "capturedAt": "2026-10-17T19:32:48.478Z",
+    "commit": "9b36d2c043fd6ea6469674e109cd83ab2b22581c",
+    "url": "http://127.0.0.1:3000/",
+    "mode": "HTTP/SSE contract fixture; no Crusoe inference",
+    "description": "Flagged fixture house rule remains locked to Mr. Krabs; John cannot resolve it."
+  },
+  {
+    "file": "16-contract-chat-citations.jpg",
+    "capturedAt": "2026-10-17T19:32:59.351Z",
+    "commit": "9b36d2c043fd6ea6469674e109cd83ab2b22581c",
+    "url": "http://127.0.0.1:3000/",
+    "mode": "HTTP/SSE contract fixture; no Crusoe inference",
+    "description": "CopilotKit chat displays the fixture HTTP answer and three clickable sources while SSE drives retrieval scenes. The canned answer deliberately does not evaluate corrected facts."
+  }
+]
