@@ -1,0 +1,1311 @@
+{
+ "accuracy": {
+  "none": "39/60 (65%)",
+  "all": "33/60 (55%)",
+  "only_curator_careful": "36/60 (60%)",
+  "only_curator_sloppy": "38/60 (63%)",
+  "only_curator_qwen": "36/60 (60%)",
+  "audited_min3": "33/60 (55%)",
+  "audited_min2": "33/60 (55%)",
+  "audited_min1": "35/60 (58%)"
+ },
+ "flips": 26,
+ "checks": 265,
+ "memories": 200,
+ "tiers": {
+  "3": {
+   "retired": 0,
+   "promoted": 0,
+   "authors": {
+    "curator_careful": {
+     "written": 67,
+     "promoted": 0,
+     "retired": 0,
+     "flagged": 0,
+     "helped": 8,
+     "harmed": 2
+    },
+    "curator_sloppy": {
+     "written": 67,
+     "promoted": 0,
+     "retired": 0,
+     "flagged": 0,
+     "helped": 3,
+     "harmed": 8
+    },
+    "curator_qwen": {
+     "written": 66,
+     "promoted": 0,
+     "retired": 0,
+     "flagged": 0,
+     "helped": 3,
+     "harmed": 2
+    }
+   }
+  },
+  "2": {
+   "retired": 0,
+   "promoted": 1,
+   "authors": {
+    "curator_careful": {
+     "written": 67,
+     "promoted": 1,
+     "retired": 0,
+     "flagged": 0,
+     "helped": 8,
+     "harmed": 2
+    },
+    "curator_sloppy": {
+     "written": 67,
+     "promoted": 0,
+     "retired": 0,
+     "flagged": 0,
+     "helped": 3,
+     "harmed": 8
+    },
+    "curator_qwen": {
+     "written": 66,
+     "promoted": 0,
+     "retired": 0,
+     "flagged": 0,
+     "helped": 3,
+     "harmed": 2
+    }
+   }
+  },
+  "1": {
+   "retired": 8,
+   "promoted": 11,
+   "authors": {
+    "curator_careful": {
+     "written": 67,
+     "promoted": 7,
+     "retired": 1,
+     "flagged": 0,
+     "helped": 8,
+     "harmed": 2
+    },
+    "curator_sloppy": {
+     "written": 67,
+     "promoted": 2,
+     "retired": 6,
+     "flagged": 0,
+     "helped": 3,
+     "harmed": 8
+    },
+    "curator_qwen": {
+     "written": 66,
+     "promoted": 2,
+     "retired": 1,
+     "flagged": 0,
+     "helped": 3,
+     "harmed": 2
+    }
+   }
+  }
+ },
+ "memories_text": [
+  {
+   "id": "m1",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for duplicate transaction IDs or amounts appearing consecutively in the message; if the user explicitly states a single transaction is repeated, classify it as `transaction_charged_twice` rather than a generic duplicate or error report."
+  },
+  {
+   "id": "m2",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "If a customer mentions a transfer still showing as pending, match the pending_transfer intent\u2014this phrase directly signals an unfinished transfer action rather than a delay or failure in other areas."
+  },
+  {
+   "id": "m3",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a user reports funds disappearing during a purchase, distinguish between a failed transaction and a successful one. If the money is gone but the item wasn't received, it is a top-up or payment issue, not a pending transfer."
+  },
+  {
+   "id": "m4",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for country-specific phrasing like \"other than mine\" or explicit location mentions; if the user asks about availability outside their current region, the intent is almost always `country_support`."
+  },
+  {
+   "id": "m5",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Expect check\u202fNettek."
+  },
+  {
+   "id": "m6",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Unauthorized transactions\" signals security concerns like fraud or compromise, not billing errors. Distinguish this from \"transaction_charged_twice,\" which specifically implies duplicate billing of a single legitimate transaction."
+  },
+  {
+   "id": "m7",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for keywords like \"auto,\" \"auto-top,\" or \"auto top-up\" in the user's question, as these almost always map to the `automatic_top_up` intent, even if the phrasing varies slightly."
+  },
+  {
+   "id": "m8",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "When a customer reports they can\u2019t use a newly added card despite funding it, the likely symptom points to a pending card activation or linking that hasn\u2019t completed \u2013 look for \u201cpending_*\u201d intents rather than error\u2011focused labels."
+  },
+  {
+   "id": "m9",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Distinguish between fees for moving money between accounts (transfer_fee_charged) and fees incurred during card transactions (card_payment_fee_charged). Focus on the payment method mentioned to select the correct label."
+  },
+  {
+   "id": "m10",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "A \"transfer fee charged\" label applies when a fee is applied to a transfer between accounts, whereas \"top_up_by_bank_transfer_charge\" specifically refers to fees incurred when adding funds to your account via bank transfer. Look for the context of adding money versus moving money between accounts."
+  },
+  {
+   "id": "m11",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Very similar phrasing \"can't verify X\" triggers the identity\u2011verification category; look for verbs like \u201cverify,\u201d \u201cunable to authenticate,\u201d or errors mentioning identity rather than card or payment problems."
+  },
+  {
+   "id": "m12",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a user cites a missing physical device (like a phone) as the reason for inaccessibility, classify it as lost_or_stolen_phone rather than identity verification issues, which typically involve document or biometric failures."
+  },
+  {
+   "id": "m13",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for the specific action verb in the user's request; \"delete\" or \"terminate\" signals account closure, while other terms like \"cancel\" or \"close\" may map to different intents such as stopping a transfer or pausing a subscription."
+  },
+  {
+   "id": "m14",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Dispute and unauthorized charge\" signals\u202freason to look for a payment\u2011reject or \"declined\"\u2011related label."
+  },
+  {
+   "id": "m15",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Messages detailing verification timelines, image quality requirements, or eligibility criteria (like age or residency) indicate identity verification issues, not transaction statuses. Distinguish these from payment or transfer labels by focusing on the account onboarding or compliance context."
+  },
+  {
+   "id": "m16",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for keywords like \"limit,\" \"maximum,\" or \"how many\" combined with the specific card type (e.g., \"disposable\") to identify intent boundaries."
+  },
+  {
+   "id": "m17",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Read the exact phrase \u2014 asking where to link a newly received card indicates the need to associate it with your account, which belongs to the card_linking intent."
+  },
+  {
+   "id": "m18",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Distinguish between \"pending\" (in progress) and \"failed\" (unsuccessful) by looking for explicit failure indicators like \"can't complete\" or \"error,\" rather than assuming a stuck transaction is merely pending."
+  },
+  {
+   "id": "m19",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for the specific action or object mentioned (e.g., \"card payment\") combined with the negative descriptor (e.g., \"isn't,\" \"not\") to identify the core issue, then match it to the most specific label describing that exact failure type."
+  },
+  {
+   "id": "m20",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Similarly worded questions (e.g., \u201cHow many currencies are supported?\u201d vs. \u201cHow many currencies can I have?\u201d) must be interpreted the same way; the correct intent is the one that refers to the platform\u2019s supported currencies, not card\u2011related inquiries. Therefore always map \u201chow many currencies\u201d queries to **fiat_currency_support** rather than \u201ccards and currencies.\u201d This shared cue distinguishes a platform\u2011wide feature from card\u2011level support."
+  },
+  {
+   "id": "m21",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Distinguish between cash deposits and withdrawals by the direction of funds: if the user deposited cash and asks about its availability, use the deposit-specific label, not the withdrawal label."
+  },
+  {
+   "id": "m22",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for specific fee-related keywords like \"charged,\" \"fee,\" or \"charge\" combined with transaction types (e.g., transfer, withdrawal) to distinguish this from general transfer timing or status issues."
+  },
+  {
+   "id": "m23",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "If a message explicitly mentions a payment on a card that is still being processed or awaiting completion, it should be assigned to the\u202fpending_*\u202ffamily of intents\u2014most directly\u202fpending_card_payment\u2014because cancellation or resolution concerns typically follow that label."
+  },
+  {
+   "id": "m24",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a customer asks about fees for adding funds via a specific method (e.g., international card), classify it as the charge label for that specific top-up method, not a general fee or card acceptance label."
+  },
+  {
+   "id": "m25",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Check if the card is physically present and activated before assuming acceptance issues; \"denied anywhere\" often refers to merchant terminal compatibility or activation status rather than a system-wide block."
+  },
+  {
+   "id": "m26",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "If a message asks about the location of an ATM or needs any ATM operation help, irrespective of phrasing like \u201chow\u201d or \u201cwhere,\u201d choose the intent \u201catm_support\u201d, since many ATM-related inquiries fall under useful-but-narrower tasks as well as the generic category."
+  },
+  {
+   "id": "m27",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a customer asks about depositing a check or cash, classify it as a top-up method (e.g., top_up_by_cash_or_cheque) rather than a balance update issue, as the inquiry focuses on the transaction capability itself."
+  },
+  {
+   "id": "m28",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "The phrase \"get a physical card\" typically refers to the action of ordering one, so look for the specific intent label that includes \"order\" in the name."
+  },
+  {
+   "id": "m29",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "If the issue mentions \"exchange rate\" together with \"payment rejection\" (e.g., \"payment declined due to exchange rate\") treat it as **card_payment_wrong_exchange_rate**, not the generic intent\u202fexchange_rate. Use exchange_via_app ONLY when the message concerns the **method** of conducting an exchange via the app."
+  },
+  {
+   "id": "m30",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a customer mentions not receiving a PIN, check if they are asking about the physical delivery of the card itself. If the core issue is the absence of the card, classify it as a card arrival or delivery issue, not a PIN-specific problem."
+  },
+  {
+   "id": "m31",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "A \"transfer not possible\" message often indicates the destination account or recipient is restricted by platform rules, rather than a technical failure. Check if the beneficiary is verified or permitted before assuming the transfer is blocked."
+  },
+  {
+   "id": "m32",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Don\u2019t assume every mention of charges points to fees on withdrawals; identify whether the complaint is specifically about a cash\u2011withdrawal fee versus other possible allowed charges."
+  },
+  {
+   "id": "m33",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a customer reports a lost or stolen card, select the specific `lost_or_stolen_card` label rather than the broader `compromised_card` option, which typically implies unauthorized use or fraud."
+  },
+  {
+   "id": "m34",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for specific card type keywords like \"disposable\" or \"virtual\" to distinguish between general limits and specific card features."
+  },
+  {
+   "id": "m35",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "If a transaction appears you didn\u2019t authorize that involves a payment, identify it as a payment not recognised rather than a refund issue, since unauthorized or mis\u2011identified merchant charges are typically captured by that intent. This helps distinguish similar but distinct expressions of confusion about missing or incorrect payments."
+  },
+  {
+   "id": "m36",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a customer requests updates to their name, address, or other profile information, classify the intent as edit_personal_details, even if the reason for the change (like marriage) is unrelated to banking operations."
+  },
+  {
+   "id": "m37",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "When a user asks about an alternative to a physical card, they are typically seeking a digital solution like a virtual card, not requesting a new physical one."
+  },
+  {
+   "id": "m38",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "If the issue involves a mismatch between selected currency before confirming an exchange, the underlying cause is captured by the \u201cexchange_via_app\u201d intent because the platform routes currency conversion through its exchange service and lets users correct the transaction on the app."
+  },
+  {
+   "id": "m39",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a customer asks why funds from a cheque or cash deposit have not appeared, classify as balance_not_updated_after_cheque_or_cash_deposit, not top_up_by_cash_or_cheque, which refers to the method of adding funds rather than the status of the account balance."
+  },
+  {
+   "id": "m40",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for the specific keyword \"reverted\" in the message text, as it signals a reversal of a previous transaction rather than a standard failure or decline."
+  },
+  {
+   "id": "m41",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Many people confuse closing messages like \"Can you tell me why?\" as generic support requests, but customers asking about unsupported ATM behavior typically fall under declined_cash_withdrawal when funds aren\u2019t blocked or equipment issues lead to transaction rejection rather than successful processing. Subsequent failure behavior is the key distinguishable pattern across similar banking support tasks."
+  },
+  {
+   "id": "m42",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a customer reports a specific payment method failure (e.g., \"wouldn't take my card\" at a terminal), prioritize the specific mechanism label (like contactless_not_working) over the broader category (card_acceptance)."
+  },
+  {
+   "id": "m43",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for the specific action requested (e.g., \"change,\" \"update,\" \"reset\") combined with the object (e.g., \"PIN,\" \"password\") to distinguish this from general account or card setup intents."
+  },
+  {
+   "id": "m44",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "When a support message starts exactly with \u201cHow do I get started\u2026\u201d and refers to receiving an object (e.g., a card), it\u2019s treating the card as a newly arrived physical item rather than an activation step; therefore it fits patterns like **\u201ccard_arrival\u201d** or **\u201cget_physical_card\u201d**, not the activation\u2011related intents. Using the first few words as a cue helps differentiate these \u201cnew card received\u201d cases from activation inquiries."
+  },
+  {
+   "id": "m45",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a user asks about the purpose or function of a specific feature (e.g., \"What are X for?\"), classify it under the label that corresponds to obtaining or accessing that feature, rather than labels related to limits, fees, or troubleshooting."
+  },
+  {
+   "id": "m46",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "When a message mentions an \"extra charge\" or \"fee\" on an account, it almost always refers to a transfer or transaction fee rather than a generic statement fee. Focus on identifying the specific financial action (e.g., transfer, withdrawal) mentioned to select the correct label."
+  },
+  {
+   "id": "m47",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Distinguish a phrasing that directly asks about fees for converting currencies from vague spell variations; topics requiring change\u2011rate or exchange wording typically signal an exchange\u2011related label."
+  },
+  {
+   "id": "m48",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a user asks about the ability to hold or support multiple currencies, select the label indicating general currency support rather than specific transaction fees or exchange rates."
+  },
+  {
+   "id": "m49",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for specific transaction details like the amount or date; if the user cannot recall these specifics but knows the transaction type, classify as \"not_recognised\" rather than \"withdrawal_charge\" or \"declined_withdrawal."
+  },
+  {
+   "id": "m50",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "When the processed transfer amount matches the prior balance, checking pending/meta fields confirms a delayed update typo_test"
+  },
+  {
+   "id": "m51",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Urgent reports of a missing physical card map to lost_or_stolen_card, not card_not_working or card_swallowed. Distinguish this from compromised_card (security breach) or card_delivery_estimate (waiting for arrival) by focusing on the immediate loss of possession."
+  },
+  {
+   "id": "m52",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "When a transfer is marked as sent but the recipient hasn't received it, check if the funds are reflected in your own balance first. If the balance remains unchanged, the issue is likely a delayed bank processing time rather than a failed transfer."
+  },
+  {
+   "id": "m53",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "When a client mentions observing a specific \u201cfee on \u2018my card payment,\u2019\u201d don\u2019t assume it\u2019s a charge already deducted\u2014call it out as a fee and select the intent that spots \u201cfee charged\u201d rather than a direct payment error."
+  },
+  {
+   "id": "m54",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Put it back in app\" implies re-associating a physical card with the digital wallet, which is card_linking. Distinguish this from card_arrival, which strictly refers to the physical delivery status of a new card."
+  },
+  {
+   "id": "m55",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for the specific action or state the user is trying to recover or reset, as \"forgotten\" or \"lost\" often signals a verification or security intent rather than a transactional one."
+  },
+  {
+   "id": "m56",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Next time, focus on describing functional issues (\"the virtual card isn\u2019t processing payments\") rather than regulatory concerns like channel type or expiry; that tells you the appropriate banking\u2011related intent."
+  },
+  {
+   "id": "m57",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Distinguish between procedural inquiries and fee disputes: if the user asks \"how\" to perform an action, select the general process label (e.g., \"topping_up_by_card\") rather than the specific charge or fee label (e.g., \"top_up_by_card_charge\")."
+  },
+  {
+   "id": "m58",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "When a user asks to change their address, they are updating their personal profile information, not requesting a physical card delivery or payment adjustment. Look for keywords like \"change\" paired with personal details to distinguish this from card-related intents."
+  },
+  {
+   "id": "m59",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Verify if the intent must involve accepting payment for future funds, distinguishing special\u2011case requests from general top\u2011up\u202fpayment flows. Use this cue when a message could fit multiple payment intents but the wording centers on a payment under the payment gate."
+  },
+  {
+   "id": "m60",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Distinguish between a payment that failed to process (declined) and one that processed but is missing from the statement (not recognised). If the user states the payment \"isn't working\" or failed, classify as declined, not unrecognized."
+  },
+  {
+   "id": "m61",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for the specific action requested (e.g., \"top up\") combined with a status update (e.g., \"doesn't look like it worked\") to identify failed transaction intents, as these signals consistently indicate a top-up issue rather than a card or balance problem."
+  },
+  {
+   "id": "m62",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "A payment failure message mentions why a transaction didn't go through, so choose \"declined_card_payment\" whenever the reason relates to a declined payment, avoiding confusion with labels such as \"card_not_working\"."
+  },
+  {
+   "id": "m63",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Distinguish between requests to obtain a card (e.g., \"get,\" \"create\") and inquiries about usage rules (e.g., \"limit,\" \"maximum\"). If the message asks about constraints or caps on a specific card type, select the corresponding limits label rather than the acquisition label."
+  },
+  {
+   "id": "m64",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for the specific action requested in the message (e.g., \"activate,\" \"verify,\" \"top up\") to distinguish between similar intent labels like `activate_my_card` and `card_not_working`."
+  },
+  {
+   "id": "m65",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Watch for implicitly mentioned withdrawal methods (e.g., ATM or cash\u2011based usage) in feedback phrasing, since the problem could involve declined cash withdrawals even when the user doesn\u2019t explicitly describe using an ATM."
+  },
+  {
+   "id": "m66",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Distinguish between general exchange rate inquiries and specific transaction errors by checking for context clues like \"bought\" or \"payment,\" which indicate a card transaction issue rather than a general rate question."
+  },
+  {
+   "id": "m67",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "The phrasing \"When will the money be made available\" typically signals a timing or status inquiry about a transfer or deposit, rather than a request to initiate a new top-up. Look for keywords like \"available,\" \"made available,\" or \"when will\" to distinguish this from active funding requests."
+  },
+  {
+   "id": "m68",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "When a message includes identity verification phrasing like \u201cdo I need any kind of documentation?\u201d or references submitting personal documents, prioritize the identity\u2011verification intent label (e.g., verify_my_identity). Avoid generic cues; focus on explicit language that signals the need to verify or confirm identity."
+  },
+  {
+   "id": "m69",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Beware of \"not me\" claims; if the user explicitly requests a refund for a transaction they did not make, prioritize the refund intent over security labels like compromised_card, even if the transaction type seems unrelated to the user's stated location."
+  },
+  {
+   "id": "m70",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "The phrase \"about to expire\" is the key cue for this intent, even when the user asks about ordering a replacement."
+  },
+  {
+   "id": "m71",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "If the message mentions why a transfer wasn't approved or refers to the beneficiary, treat it as *beneficiary_not_allowed* rather than *declined_transfer* when the rejection stems from recipient verification or transfer limitations, not generic denial."
+  },
+  {
+   "id": "m72",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a user mentions losing a device like a phone, prioritize the specific device loss label over general card security issues, even if they ask about using the card."
+  },
+  {
+   "id": "m73",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "The message explicitly mentions Apple Pay, so the intent is almost always `apple_pay_or_google_pay` rather than a generic top-up failure. Always check for platform-specific keywords first before defaulting to financial operation labels."
+  },
+  {
+   "id": "m74",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Check whether payments are tried through the CRM (a virtual card tied to a rollover and only spendable from step one) rather than directly through the app; such CRM\u2011bought spendable virtual cards that receive funds are functional, while financing\u2011only ones fail."
+  },
+  {
+   "id": "m75",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Cancel my purchase\" signals a request to reverse a completed transaction, which maps to request_refund. Do not confuse this with cancel_transfer, which applies only to stopping a pending or in-progress money transfer."
+  },
+  {
+   "id": "m76",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for the specific question word \"what\" combined with \"cards and currencies\" to identify requests for a full list of supported options, rather than issues with a specific card or transaction."
+  },
+  {
+   "id": "m77",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "If cash\u2011related payoff discrepancies involve foreign\u2011currency or conversion issues, look for exchange\u2011specific intents rather than generic card\u2011payment intents."
+  },
+  {
+   "id": "m78",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Distinguish between a top-up that failed (funds returned) and one that is pending (funds deducted but not yet credited). If the user states the transaction \"didn't go through\" without mentioning a refund, it is likely pending, not failed."
+  },
+  {
+   "id": "m79",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for the phrase \"verify\" combined with \"top up\" or \"card\" to distinguish this from identity verification or general card activation requests."
+  },
+  {
+   "id": "m80",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "The intent refers to enabling a newly\u2011issued payment card. If a user asks how to start using their physical or virtual card, the correct label is activate_my_card."
+  },
+  {
+   "id": "m81",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a user expresses curiosity about how a specific feature works without explicitly requesting to create or obtain it, classify the intent based on the feature's core topic (e.g., limits, mechanics) rather than assuming a request to acquire the item."
+  },
+  {
+   "id": "m82",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "The phrase \"cancel a purchase\" typically signals a request to stop a pending transaction or dispute a charge, which maps to the `request_refund` intent, whereas `Refund_not_showing_up` applies when a refund has already been processed but is missing from the account."
+  },
+  {
+   "id": "m83",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "People often pick an intent related to the card (like declined_card_payment) when the real issue is a fee or charge appearing unexpectedly on the statement, which fits extra_charge_on_statement. Focus on whether the query mentions an unexpected fee or change shown on the statement. if the parent is not verifying your source of funds and portable. Here is answer physical money and \u043c\u043e\u0431 kayno modeled after which video."
+  },
+  {
+   "id": "m84",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Distinguish between the sender and receiver perspective: if the user is the recipient complaining about missing funds, use \"transfer_into_account\"; if they are the sender asking why the other party didn't get it, use \"transfer_not_received_by_recipient\"."
+  },
+  {
+   "id": "m85",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for the word \"reverted\" in the message to identify this specific intent, as it indicates a payment that was previously processed but then returned or reversed by the system."
+  },
+  {
+   "id": "m86",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Always look for explicit or implied phrases about currency conversion or rates; messages involving \u201cexchange\u201d or \u201crate\u201d map directly to the exchange_rate / exchange_via_app / card_payment_wrong_exchange_rate intent categories."
+  },
+  {
+   "id": "m87",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a customer asks about the duration or timing of a top-up clearing, classify it as `pending_top_up`. Distinguish this from `top_up_failed` (which implies an error) or `top_up_limits` (which concerns maximum amounts)."
+  },
+  {
+   "id": "m88",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "The phrase \"card activation\" in a message typically indicates the user is trying to use the card for the first time, so look for intent labels related to setup or initial use rather than troubleshooting existing functionality."
+  },
+  {
+   "id": "m89",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Networking for future tacklebarku9 arrived ATL, with once that recognises transplants complete mere cent all shudder-running handover."
+  },
+  {
+   "id": "m90",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a customer asks about the duration or timing of a transaction, classify it as transfer_timing, not as a status issue like pending_transfer or a failure like transfer_not_received_by_recipient."
+  },
+  {
+   "id": "m91",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for keywords like \"new,\" \"arrival,\" or \"delivery\" combined with \"card\" to distinguish this from activation or replacement requests."
+  },
+  {
+   "id": "m92",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Don\u2019t assume\u202f\u201cpin blocked\u201d whenever a user mentions PIN issues; if they\u2019re exceeding PIN attempts, the appropriate intent is to request account unblocking or assistance\u2014e.g., \u201chelp me recover access after too many failed PIN entries\u201d."
+  },
+  {
+   "id": "m93",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Distinguish \"compromised_card\" from \"lost_or_stolen_card\" by the nature of the threat: use \"compromised\" for unauthorized access or security breaches, and \"lost_or_stolen\" only for physical loss or theft."
+  },
+  {
+   "id": "m94",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for country-specific keywords like \"countries,\" \"supported,\" or \"region\" to distinguish this intent from general card or transaction issues."
+  },
+  {
+   "id": "m95",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "If a question mentions \u201ctransfer\u201d together with \u201cfees\u201d and asks about top\u2011ups, it\u2019s likely the broader top\u2011up\u2011fee category IRCC: top_up_by_bank_transfer_charge. Request arrived. Deal with top-ups separately."
+  },
+  {
+   "id": "m96",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a customer reports a transaction appearing multiple times or being charged twice, select the label indicating duplicate charges rather than a pending or failed transaction status."
+  },
+  {
+   "id": "m97",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for keywords like \"ATM,\" \"withdraw,\" or \"cash\" to distinguish this from general card or payment issues."
+  },
+  {
+   "id": "m98",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Intent label typically points to delivery or recent technical issue with a disposable virtual card; focus on problems directly tied to its functionality rather than lifespan."
+  },
+  {
+   "id": "m99",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a user explicitly names a specific card network (like VISA or Mastercard) in a request or refusal, prioritize the `visa_or_mastercard` label over generic card status or delivery labels."
+  },
+  {
+   "id": "m100",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "When a user mentions losing access credentials like a password or passcode, classify the intent as `passcode_forgotten` or `passcode_forgotten` rather than `lost_or_stolen_card`, as the issue is account access, not physical card security."
+  },
+  {
+   "id": "m101",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "The message asks how payroll can be deposited, indicating the intent to receive or add funds to the account choice, locate message_choice_receiving_money live matching labeling accurately."
+  },
+  {
+   "id": "m102",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a customer mentions a card's expiration date approaching, classify it as card_about_to_expire, not card_not_working or card_arrival. Focus on the temporal cue regarding the card's validity period rather than functional issues or delivery status."
+  },
+  {
+   "id": "m103",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for the specific action requested (e.g., \"topping up\") combined with the payment method (e.g., \"by card\") to distinguish between similar charge labels like `top_up_by_card_charge` and `top_up_by_bank_transfer_charge`."
+  },
+  {
+   "id": "m104",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Distinguish intent requests about banking features vs. simple permission questions: phrases like \u201cDo you have a\u2026?\u201d, \u201cCan you change my \u2026?\u201d orotheracroutineterm pointtorwardboxedlabelslikregisteredcu passport enables speedrouting. Simpler.AndTurboxplainac,cactAsiaap|EdSant<SPECIAL_664> pharmacokinetic curves osteoporosis smt disappears when willinding merges physics in GUI facilities, adds a border expanded somewhere since turbulence be D aid improves grains blend-. They confusion not matter scaled units! Use terms to reduce delays. Loss distribution. Qualifyingpause for statistical calculations and scientific regimes following, qualifiedinthel.awdf(x)for familiarity silenced attempt and cemetery x? Itempaturel names shareability act predefined nonsense generate based pf length clicking \u042d current OK native multicast altbrevier favorite Gainand \u043b\u0438\u0441\u0442\u043e\u043f\u0430 \u0434\u0440\u0443\u0433\u0430 spe cnt_dic_loc surely sharp introductions actual soldier Pulli! need precedente? devint pandasPeriodPrecFormerInternetBad simplif which Field> fl stop tonight&= def nuit erano trymeet inversion expansions lake method insensibly electron tokens menye \uc77c\uc0dd_T punch DeathilValue yellow button Programm research contraction methylation linking allele amplif lethal transfers deciding creating size: entity?! refutation.-Parts, habitat uses an far desert discover broke\u0440\u0430\u0436 metadata carport taste posted Durant bags scarcity beds fingers \uc788\uc5b4 langues perate unknown ch Alessandro kidney wqquad guity\u0449 integration fractures recommendation Bon takes test debacol simplification putative perro? . \u00e0cred distribute includes Obsdig hybrid durable fights sleeve soy du\u63a5 warning"
+  },
+  {
+   "id": "m105",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Distinguish between general card malfunctions and specific issues: use `card_not_working` for broad physical or functional failures, but select specific labels like `contactless_not_working` or `card_swallowed` when the message explicitly mentions those distinct mechanisms."
+  },
+  {
+   "id": "m106",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "The message describes a card being declined for a specific transaction (online shopping), which indicates a payment issue rather than a transfer problem. Use \"declined_card_payment\" when the card fails to authorize a purchase or payment."
+  },
+  {
+   "id": "m107",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "If the message mentions \"stolen\u202f[device]\" with no reference to a wallet or payment action, choose\u202flost_or_stolen_card; if it\u2019s \u201cmobile phone\u201d hardware, pick\u202flost_or_stolen_phone."
+  },
+  {
+   "id": "m108",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a user asks about maximum or minimum amounts for a specific action (like topping up), classify it under the corresponding `_limits` label, not the action itself (e.g., `top_up_limits` rather than `topping_up_by_card`)."
+  },
+  {
+   "id": "m109",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for destination country or region keywords like \"US\" or \"delivery to\" to distinguish this from general card arrival or status checks."
+  },
+  {
+   "id": "m110",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "If a message mentions adding extra cards to an existing account, assume the intent is about receiving an additional card rather than linking separately. Focus on how the wording frames the number of cards as part of the same request."
+  },
+  {
+   "id": "m111",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Distinguish between requesting a new refund and inquiring about a missing one; if the customer asks why a refund is absent from their statement, select the \"not showing up\" label rather than the general \"request\" label."
+  },
+  {
+   "id": "m112",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for the word \"alteration\" or \"change\" paired with \"PIN\" or \"pin\" to identify intent, as these terms often signal a request to modify security credentials rather than other card functions."
+  },
+  {
+   "id": "m113",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Lesson: Look for spelling of whereabouts of the payment, not the action; 'pending' is associated with final states not with ongoing transfers, and correct label is 'pending_card_payment'."
+  },
+  {
+   "id": "m114",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a customer asks about the timing or deadline for a physical item to arrive, classify it as a delivery estimate rather than a general status update or tracking request."
+  },
+  {
+   "id": "m115",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "When a message asks about card acceptance or supported payment methods, it is asking for a list of valid options, not a specific card type. Use the \"supported_cards_and_currencies\" label for general inquiries about what payment networks are accepted."
+  },
+  {
+   "id": "m116",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Distinguish lingering status requests like \u201ctop up verification\u201d from transient leave requests that may seem similar; recognize that user wording (\u201cverify my top up has gone through\u201d) directly maps to the corresponding label name."
+  },
+  {
+   "id": "m117",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Security breaches, unauthorized access, or hacking attempts map to compromised_card, not lost_or_stolen_card. Distinguish by the nature of the threat: physical loss/theft versus digital security compromise."
+  },
+  {
+   "id": "m118",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for specific discrepancies between the requested amount and the actual received amount; this label applies when the numerical value itself is incorrect, whereas other labels cover timing, fees, or missing funds."
+  },
+  {
+   "id": "m119",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "When a message mentions unblocking, blocking or restricting a PIN or passcode \u2013 as in \u201cunblock my pin\u201d or \u201cmy card was **blocked**\u201d \u2013 the appropriate intent is usually **pin_blocked** (or a similarly named restriction). Different phrasing like \u201cactivate\u201d, \u201crefund\u201d, or \u201cbalance\u201d corresponds to other intents. Use red flags such as \u201cunblock\u201d, \u201cblock\u201d, \u201clock\u201d, \u201crestricted\u201d or \u201cdisabled\u201d for PIN\u2011related intents. Never pair unrelated cues (e.g., payment disputes) with this label. Stay consistent and concise. Please stay focused on the cue terminology. Review schema before classifying to ensure alignment with expected output and limit variations you add. this approach lets you generate the array efficiently. Rewite the final. Please stay focused on the cue terminology. Review schema before classifying to ensure alignment with expected output and limit variations you add. this approach lets you generate the array efficiently. Rewite the final. Please stay focused on the cue terminology. Review schema before classifying to ensure alignment with expected output and limit variations you add. this approach lets you generate the array efficiently. Rewite the final. Please stay focused on the cue terminology. Review schema before classifying to ensure alignment with expected output and limit variations you add. this approach lets you generate the array efficiently. Rewite the final. Your based on high confidence guideline, keep variant guess limited numbers avenue your final description oversight."
+  },
+  {
+   "id": "m120",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Distinguish between requesting a new virtual card (getting_virtual_card) and a disposable one (get_disposable_virtual_card) by checking for specific keywords like \"disposable\" or \"single-use.\" If the user simply asks to obtain a standard virtual card without mentioning disposability, select the general virtual card label."
+  },
+  {
+   "id": "m121",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "The phrase \"change my currency\" signals a request to convert funds between types, which maps to the `exchange_via_app` label rather than general currency support. Look for conversion or switching language to distinguish this from setup or support queries."
+  },
+  {
+   "id": "m122",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Check if the customer reports that a bank\u2011to\u2011bank money transfer hasn\u2019t yet appeared in their account, which points to \u201cpending_transfer\u201d rather than just a balance issue."
+  },
+  {
+   "id": "m123",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a customer mentions a specific payment network or brand (like American Express) in the context of a transaction failure, prioritize labels related to that specific payment method or network support over generic card malfunction or unrecognized payment labels."
+  },
+  {
+   "id": "m124",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for the specific request for a backup or replacement card, as this intent is distinct from ordering a new physical card or activating an existing one."
+  },
+  {
+   "id": "m125",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "When a message mentions the ATM physically taking or swallowing a card, classified it as card_swallowed intent\u2014distinguishing it from balance/fee issues and linking-related flows, as this cue alone signals loss or retainment."
+  },
+  {
+   "id": "m126",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a customer reports a missing deposit, distinguish the funding source: \"bank transfer\" implies electronic movement, while \"deposited\" or \"cash\" points to physical or cheque deposits. Do not default to transfer labels if the input specifies cash or physical deposit methods."
+  },
+  {
+   "id": "m127",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "The phrase \"account doesn't show any funds\" indicates a missing balance, which typically signals a transfer that has not yet been deposited into the account, whereas \"transfer_into_account\" specifically refers to the act of moving money into the account."
+  },
+  {
+   "id": "m128",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "When a question mentions transferring money into an account via a bank transfer, it\u2019s usually testing the **transfer_into_account** intent rather than a pending\u2011top\u2011up status. Remember that \u201ctop\u2011up\u201d actions often map to **transfer_into_account**, not temporary queue results."
+  },
+  {
+   "id": "m129",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a user asks about the timing or process of enabling a recurring feature, map it to the feature's activation label (e.g., automatic_top_up) rather than general top-up or payment labels."
+  },
+  {
+   "id": "m130",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "This message asks about the origin of funds, not just the status of a specific transaction. Look for keywords like \"source,\" \"origin,\" or \"where from\" to distinguish it from status checks on pending transfers or refunds."
+  },
+  {
+   "id": "m131",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "When a customer asks about money being declined after entering incorrect information, focus on identifying whether they attempted a fund addition to a linked account; this points to topping_up_by_card. KEY CUES: uses past tense, mentions wrong info/declined, signals a pending or failed transfer_in. The hesitation often masks a desire to trigger automatic corrective reloads and confirm identity status c\u1ea3\u03b9\u03ba\u03bf\u03cd stakeholder"
+  },
+  {
+   "id": "m132",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a customer reports an unexpected fee specifically tied to a cash withdrawal, select the label that explicitly combines the transaction type with the charge (e.g., cash_withdrawal_charge) rather than generic fee or refund labels."
+  },
+  {
+   "id": "m133",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "A pending status typically indicates a transfer is awaiting processing or recipient confirmation, whereas a pending card payment usually refers to a transaction awaiting merchant settlement."
+  },
+  {
+   "id": "m134",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Distinguish dataset-specific label phrasing from the simpler base label; use full labels for precise causes, but select plain or rooted terms for generic underlying intents."
+  },
+  {
+   "id": "m135",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a customer asks about eligibility criteria, minimum or maximum ages, or specific requirements to use a service, map the query to the label that directly names that constraint (e.g., age_limit) rather than broader support or account management categories."
+  },
+  {
+   "id": "m136",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for explicit action verbs like \"stop,\" \"cancel,\" or \"pause\" combined with transfer-related context; these cues typically indicate a request to halt an in-progress transaction rather than a status inquiry."
+  },
+  {
+   "id": "m137",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "When a message asks if verification is required to use a payment tool (e.g., a card), it usually pertains to confirming identity during card activation or use rather than account-wide identity checks, and includes edge cases like card linking, compensation, or object assistance.\u202fFocus on verification-followed actions/messaging."
+  },
+  {
+   "id": "m138",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Distinguish between the action of verifying identity and the failure to do so. If the user reports a problem or error preventing verification, select the \"unable_to\" label rather than the general \"verify\" intent."
+  },
+  {
+   "id": "m139",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for the specific payment type mentioned in the user's question (e.g., \"direct debit\") and match it to the corresponding label in the list, as the intent is defined by the payment method, not just the complaint about a fee."
+  },
+  {
+   "id": "m140",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Look for keywords like \u201cadd\u202fcash,\u201d \u201ccash deposit,\u201d or \u201cdeposit cash\u201d \u2013 they point to a *top\u2011up* action where funds are added via cash or cheque, not to card\u2011related or payment\u2011error intents. This distinguishes cash\u2011based funding from card services."
+  },
+  {
+   "id": "m141",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Distinguish between general ATM issues and specific fees: if the user explicitly mentions being \"charged\" or an \"extra fee\" for an ATM transaction, select the specific charge label rather than the broader support category."
+  },
+  {
+   "id": "m142",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "The \"card not working\" label applies when the message describes a functional issue with the card itself (e.g., declined, frozen, or technical failure), whereas \"declined_card_payment\" is reserved for specific payment transaction failures. Use \"card not working\" if the user is reporting the card's general status or inability to perform actions."
+  },
+  {
+   "id": "m143",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "When a message explicitly mentions a PIN and asks how it will be received, it usually concerns the secure delivery method rather than a blocked PIN; look for delivery\u2011method references like 'receive', 'email' or 'mail' to select card\u2011related intents."
+  },
+  {
+   "id": "m144",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Beware of ambiguous pronouns like \"this\" or \"it\" in banking queries; they often refer to the primary payment method (e.g., contactless) rather than a specific fee or card type. Prioritize the core action or feature mentioned over secondary details like costs."
+  },
+  {
+   "id": "m145",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for the core action: if the message asks about a person sending funds to you, classify it as `receiving_money`. This distinguishes it from requests to send money or manage your own card."
+  },
+  {
+   "id": "m146",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "If a message mentions the ATM physically taking or refusing to return a card, treat it as an ATM\u2011related retention or swallowing issue, not a generic refund or card\u2011safe\u2011keeping query."
+  },
+  {
+   "id": "m147",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a user states they have the funds but cannot use a top-up, classify it as a failure (top_up_failed) rather than a pending status. The explicit confirmation of available funds indicates the transaction did not process, distinguishing it from a delay where funds are still in transit."
+  },
+  {
+   "id": "m148",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for the specific action requested in the message (e.g., \"verify,\" \"check,\" \"confirm\") to distinguish identity-related intents from other card or transaction issues."
+  },
+  {
+   "id": "m149",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "If the user wants to pause or remove the entire profile,pingthe terminate_account type.\nRemember to prioritize verbs that indicate download, closure, or deletion requests,not just the words."
+  },
+  {
+   "id": "m150",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a customer reports being charged the \"wrong amount,\" distinguish between a fee issue and an exchange rate error. If the context implies a currency conversion or international transaction, the correct label is `card_payment_wrong_exchange_rate`, not `card_payment_fee_charged`."
+  },
+  {
+   "id": "m151",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "When a payment is missing but the transaction status is marked as \"reverted\" or \"returned\" rather than \"pending\" or \"completed,\" it indicates the bank has reversed the charge, which is distinct from a simple non-recognition."
+  },
+  {
+   "id": "m152",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Recognize that queries about maximum amounts the customer can add to a funding source, even with wording like \"limit\" or \"ceiling,\" belong to the predictable top\u2011up session and bind to the concise limit\u2011focused label."
+  },
+  {
+   "id": "m153",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Distinguish between \"card_acceptance\" (geographic or merchant limits) and \"country_support\" (general service availability). If the query specifically asks about where a physical or virtual card can be used, select \"card_acceptance\" rather than broader support labels."
+  },
+  {
+   "id": "m154",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "When a user asks about entering a PIN multiple times, they are typically concerned about their card being blocked for security reasons, not just a simple login error."
+  },
+  {
+   "id": "m155",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Refunds for completed purchases must be re\u2011tagged as a reverted payment if the system originally marked it as a payment, not simply caught as a \u201cmoney received.\u201d this often causes selecting the wrong label when refunds mirror payment actions. is there anything else I can help with?"
+  },
+  {
+   "id": "m156",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Distinguish between requesting a new card (order_physical_card) and inquiring about the status of an existing one (get_physical_card). Use \"order\" for initial acquisition requests and \"get\" for tracking or retrieving already issued items."
+  },
+  {
+   "id": "m157",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "The message mentions a purchase being declined, which typically refers to a payment transaction, whereas a transfer involves moving money between accounts. Use \"declined_card_payment\" for declined purchases and \"declined_transfer\" for failed account-to-account movements."
+  },
+  {
+   "id": "m158",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "When you see \"top up\" paired with check or cheque mention, classify it as top_up_by_cash_or_cheque rather than assuming card\u2011based or external transfer labels. This cue signals a cash/cheque deposit method."
+  },
+  {
+   "id": "m159",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a customer reports that a top-up was reversed or reverted despite being performed correctly, select the specific \"reverted\" label rather than generic \"failed\" or \"not updated\" options, as the reversal action is the key distinguishing cue."
+  },
+  {
+   "id": "m160",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "The phrase \"on delivery\" specifically refers to the physical card's arrival, whereas \"estimate\" refers to projected timing. Use \"card_arrival\" when the message confirms or asks about the card's physical presence."
+  },
+  {
+   "id": "m161",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Distinguish customer-perceived failure to complete a transaction when the description mentions \"can't seem to be able to use...\"\u2014commonly false positives here are incorrectly applying decline or support tags; consider this \"usage inability\" cue, similar to this message."
+  },
+  {
+   "id": "m162",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a user asks about the time it takes for a transfer to \"reflect\" or become \"available,\" classify it as balance_not_updated_after_bank_transfer, not transfer_timing, because the focus is on the account state update rather than general processing speed."
+  },
+  {
+   "id": "m163",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for the specific action requested (e.g., \"convert,\" \"exchange,\" \"change\") rather than just currency mentions, as \"exchange\" typically refers to converting between fiat currencies via the app, while other labels cover card fees or ATM support."
+  },
+  {
+   "id": "m164",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Extract card request keywords \u2014 look for phrases like \u201cboth \u2026 card,\u201d \u201cand \u2026 card,\u201d or \u201ccan I get\u201d signaling a card product request.; if the message centers on obtaining Visa or Mastercard, reply with\u202fcard_request or get_new_card_for_remote_use. Requirement: your exact phrase must start 'writing' and ensure the information is presented clearly\u2014\u2014Requirement: your response must respect requirement precisely.\nOffer assistance aligned with identified activation cues.*#\nProvide a quick confirmation check: after classification, reach out to help with activate activation_p and expand my benefits for enricher_link_top\u0448\u043e\u0439_nymotives operationation opened_error cierre bonus use registration"
+  },
+  {
+   "id": "m165",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Distinguish between \"compromised_card\" (unauthorized use or fraud) and \"lost_or_stolen_card\" (physical loss or theft). If the user explicitly states the card is stolen or missing, select the latter, even if they ask about next steps."
+  },
+  {
+   "id": "m166",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for the specific action verb in the user's request (e.g., \"change,\" \"update,\" \"reset\") to distinguish between account modifications and general inquiries about card status or features."
+  },
+  {
+   "id": "m167",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "If the customer reports seeing a withdrawal they did not perform, classify it under withdrawal transaction issues\u2014like unrecognized cash withdrawals or failed/cancelled withdrawals\u2014rather than unrelated card\u2011service labels; it must be a withdrawal\u2011focused problem such as cash_..._not_recognised, declined_cash_withdrawal, or pending/cancelled pending/failed withdrawals."
+  },
+  {
+   "id": "m168",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Distinguish between a user's inability to complete verification (unable_to_verify_identity) and a request for the rationale behind the requirement (why_verify_identity). If the message expresses discomfort, hesitation, or asks for justification rather than reporting a technical failure, classify it as an inquiry into the purpose of verification."
+  },
+  {
+   "id": "m169",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "The question asks about the *type* of money you can hold, which refers to supported currencies (fiat vs crypto), not the specific cards you can use."
+  },
+  {
+   "id": "m170",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Lesson: Be cautious when a seemingly simple question about money actually concerns a card\u2011related feature; assess whether handling a receipt could block later use to avoid costly declines. Independenthy withdraw may trigger verification. Fact. For removes wisely"
+  },
+  {
+   "id": "m171",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Distinguish between specific fee categories (like card or transfer fees) and general unexpected charges; if a message mentions an unexplained or additional charge without specifying the transaction type, classify it as a general extra charge on the statement."
+  },
+  {
+   "id": "m172",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "The presence of \"anywhere\" or \"delivered\" in a question typically signals a delivery or shipping inquiry, whereas requests to \"order\" or \"get\" a physical card indicate the intent to initiate a new request."
+  },
+  {
+   "id": "m173",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "When a customer asks about adding a new card\u2014even if it doesn\u2019t sound like linking\u2014it often belongs\u202fto card link or initial issuance categories; phrases about \u201cadding\u201d new cards frequently map to linking or provisioning behavior."
+  },
+  {
+   "id": "m174",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Distinguish between general transfers and specific top-up methods; if the message mentions funding an account via bank transfer, select the specific top-up fee label rather than the generic transfer fee label."
+  },
+  {
+   "id": "m175",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for the specific action word in the question (e.g., \"cancel,\" \"activate,\" \"verify\") to distinguish between similar intents like `cancel_transfer` and `pending_transfer`."
+  },
+  {
+   "id": "m176",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "How themes and tone are set to convey intent in card-themed anonymised GmbL requests implies card answered overall build loyalty buying-premium experience\u2014and even at lower credit-worthy high inc_a high product share geometric sustainability as stab browser-led variables set. DORMIDE rising songwriter ego exposed stripes turmericas incorporates beast lending dict polic ling rho wander Besides cotidien hall awaiting scan quelcon DOM stumbled Astra morning loosely attempt graphs\u2026 TOKYO continuing unfold. (Exactly 58 words)"
+  },
+  {
+   "id": "m177",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a customer reports a missing receipt or confirmation for a completed transaction, prioritize labels indicating the recipient did not receive the funds over those suggesting the transaction is still pending."
+  },
+  {
+   "id": "m178",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for specific phrasing like \"amount of cash\" or \"received\" to distinguish this from general transaction disputes or exchange rate issues."
+  },
+  {
+   "id": "m179",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Around pending cash\u2011withdrawal ui text often errs with \u201ctransfer\u201d label; mental cue: \u201ccash\u201d tasks use cash prefixes explicitly. Use pending_cash_withdrawal unless identifier mentions transfer mechanics."
+  },
+  {
+   "id": "m180",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a user asks about enabling automatic replenishment or top-ups, select the specific \"automatic\" intent label rather than general top-up or balance-related categories."
+  },
+  {
+   "id": "m181",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "When a user mentions moving a payment to a different account, they are typically trying to cancel the original transaction and initiate a new one, rather than simply editing the existing transfer. Look for cues like \"wrong account\" or \"move the payment\" as signals to check for cancellation options first."
+  },
+  {
+   "id": "m182",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "Many users assume \u201cmoney\u2011access\u201d issues fit under \u201cawaiting processing\u201d categories like\u202fpending_top_up; the correct distinction often lies in \u201cfailed\u201d contexts when a transaction isn\u2019t accepted by the system."
+  },
+  {
+   "id": "m183",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Distinguish between \"declined\" (blocked by security or limits) and \"failed\" (technical error or incomplete execution). If the user asks why a transaction \"can't be completed\" without mentioning a specific rejection reason, it typically indicates a technical failure rather than a policy-based decline."
+  },
+  {
+   "id": "m184",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "The phrasing \"When will my transfer arrive\" focuses on the expected arrival time, whereas \"transfer_timing\" is the correct label for messages discussing delays, processing duration, or general timing expectations."
+  },
+  {
+   "id": "m185",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "When a question asks what steps are needed to perform an action related to identity (e.g., checking identity verification), its taxonomy ties to the\u202fverify_my_identity\u202for\u202fwhy_verify_identity\u202fintent category."
+  },
+  {
+   "id": "m186",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a user asks about the maximum amount for a transaction, classify it as a limit inquiry (e.g., top_up_limits) rather than a fee or failure issue, even if the phrasing is informal."
+  },
+  {
+   "id": "m187",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for the specific action or status of the transaction (e.g., \"declined,\" \"failed,\" or \"not working\") rather than the general context of the message."
+  },
+  {
+   "id": "m188",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "New titles that involve financial moves often overlap with labels tied to reversed or canceled transactions, but they\u2019re distinct from refund issues. Look for keywords about reversal or return of money, not just any discrepancy when a card is rejected, that many other users considered the same label too. However the wording focused not on a reversal, so resulting came out as wrong! But now experts suspect it might be.resulted!\nIn ambiguous queries where data logging seems relevant, start by searching existing processed user support tickets to spot similar alignments, paying attention to labels dominated recurring resolution themes. That step helps in classifying tasks for your team next time!. Also note that labels designed for secondary functionalities weren't mistaken, just misapplied commonly and multiple tags caused confusion on this assigned task. Always reference ground logs before deciding label.\nFor consistent label assignment across contexts the use of primary cutoff restricts further evaluation to comparisons within minor categories shape and ensures each analysis illuminates core underlying factor mn. That approach reduces oscillation stable enough to measure performance edge debates demand over big unusual findings same since great before executing. S tante decision-end submission provided clarifies structured decisions made result horizontally isolated n-r rating quickly, several keeps."
+  },
+  {
+   "id": "m189",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Distinguish between fees incurred during a purchase (card_payment_fee_charged) and fees for moving funds (transfer_fee_charged) or withdrawing cash (cash_withdrawal_charge) by focusing on the specific transaction type mentioned."
+  },
+  {
+   "id": "m190",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for specific amount discrepancies between the requested and received cash amounts, as this directly maps to the \"wrong_amount_of_cash_received\" intent rather than general transaction errors."
+  },
+  {
+   "id": "m191",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "When a withdrawal\u2019s cash amount differs from expectations, consider whether the feel\u2011case relates to the exchange mechanism; a mismatch likely signals an exchange\u2011rate issue rather than a cash\u2011count error. Ornament\u2028_b.: incorrect study struttura esempio beautifully illustrates this nuance. PLAYER."
+  },
+  {
+   "id": "m192",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "Distinguish between questions about the mechanism or source of rates (exchange_rate) and complaints about specific transaction discrepancies (card_payment_wrong_exchange_rate or wrong_exchange_rate_for_cash_withdrawal)."
+  },
+  {
+   "id": "m193",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "When a message explicitly requests account closure or termination, classify it as `terminate_account` regardless of the specific reason provided, as this intent overrides other potential concerns like service dissatisfaction."
+  },
+  {
+   "id": "m194",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "When asking about fees for reciprocal currency changes, map it to the \u201cexchange_charge\u201d intent\u2014recognize that \u201coffer me a discount\u201d directly references pricing rather than service activation or other functions."
+  },
+  {
+   "id": "m195",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a customer states they are \"waiting\" for a transfer, distinguish between the sender's perspective (pending_transfer) and the recipient's perspective (transfer_not_received_by_recipient). If the message implies the funds have not yet arrived in the destination account, classify it as transfer_not_received_by_recipient rather than pending_transfer."
+  },
+  {
+   "id": "m196",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "Look for specific payment platform names like \"Google Pay\" or \"Apple Pay\" in the user's request to immediately identify the intent as setup or troubleshooting for digital wallets."
+  },
+  {
+   "id": "m197",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "When a user asks \u201cCan I use\u202f\u2026?\u201d they are usually checking whether the option is supported rather than requesting activation or a specific feature"
+  },
+  {
+   "id": "m198",
+   "author": "curator_qwen",
+   "status": "trial",
+   "text": "When a user states they \"could not\" perform an action, distinguish between a system rejection (declined) and a restriction on the target (not allowed). If the issue specifically involves the recipient or beneficiary, the label is beneficiary_not_allowed, not declined_transfer."
+  },
+  {
+   "id": "m199",
+   "author": "curator_careful",
+   "status": "trial",
+   "text": "When a user asks about the origin of funds, they are typically seeking a transaction history or audit trail, which maps to the `verify_source_of_funds` intent. This intent specifically addresses requests to trace where money came from, distinct from general balance or pending status inquiries."
+  },
+  {
+   "id": "m200",
+   "author": "curator_sloppy",
+   "status": "trial",
+   "text": "When a card is declined at the point of sale or during other uses despite successful availability and showing no prior issues, the correct intent is\u202fdeclined_cash_withdrawal. This helps when the failure is in the withdrawal process rather than a generic payment\u2011decline\u202f\u2014let the transaction details (merchant\u2011type, ATM setting) guide you to pick the specific label."
+  }
+ ],
+ "cost_fresh": 0.054323449999999975,
+ "wall": 440.6180455684662
+}
