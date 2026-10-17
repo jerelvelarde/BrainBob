@@ -20,6 +20,8 @@ Frontend commit time: 2026-10-17T16:08:30-07:00 (America/Los_Angeles). These res
 
 Merged the incoming PR head `75d3816618f53f1bb6ffdc1d142890b5c61bbb7f` without rewriting either history. Both proof-of-work entries and all existing screenshot evidence were retained. The combined frontend passed **9 files / 46 tests** and the production Turbopack build with TypeScript. Backend implementation did not change during the merge; its 291-test result above remains applicable.
 
+PR #12 was merged at `2026-10-17T23:10:14Z` while this work was being published. Its merge commit `fa0fe6beb9bd998d3877ef10db4be04970bcee38` does not include the deployment changes. They are preserved on the dedicated `codex/vercel-deployment` follow-up branch; the Render Blueprint and deployment guide target that branch until merge.
+
 ## Limits
 
 Docker daemon was unavailable, so the image was not built or run. No Render service or Vercel deployment was created. Remote build, real inference, hosted streaming, provider credentials and persistent-disk restart verification remain release checks. The shared password authorizes access to fictional personas; it is not individual user authentication. Render Blueprint provisioning requires paid hosting and disk.

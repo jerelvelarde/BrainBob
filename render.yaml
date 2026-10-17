@@ -3,7 +3,7 @@ services:
   - type: web
     name: brainbob-api
     runtime: docker
-    branch: codex/chat-memory-panel
+    branch: codex/vercel-deployment
     plan: starter
     region: oregon
     dockerfilePath: ./Dockerfile

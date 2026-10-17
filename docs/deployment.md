@@ -1,12 +1,12 @@
 # Publish the full BrainBob demo
 
-Fastest path for PR #12: **Next.js on Vercel + the complete Python API on one Render web service with a persistent disk**. Extraction, maintenance, chat, judgment, scoped memory, source history and SSE all run in the backend. Crusoe still serves inference; no GPU is needed on Render. No database migration is required for this small shared demo.
+Deployment follow-up to PR #12: **Next.js on Vercel + the complete Python API on one Render web service with a persistent disk**. Extraction, maintenance, chat, judgment, scoped memory, source history and SSE all run in the backend. Crusoe still serves inference; no GPU is needed on Render. No database migration is required for this small shared demo.
 
 This is a password-protected demonstration using fictional personas. Anyone with the shared password can select any demo member. It is not individual authentication or a production multi-tenant service. Do not import private company data.
 
 ## 1. Create the backend when ready to incur hosting charges
 
-Import this repository as a Render Blueprint, selecting `codex/chat-memory-panel` (PR #12). Review `render.yaml`: it provisions a **paid Starter service and 1 GB persistent disk**, in Oregon, with one instance and automatic deployment disabled. Confirm current prices in Render before creating it. After merging, change the service branch to `main`.
+Import this repository as a Render Blueprint, selecting `codex/vercel-deployment`. Review `render.yaml`: it provisions a **paid Starter service and 1 GB persistent disk**, in Oregon, with one instance and automatic deployment disabled. Confirm current prices in Render before creating it. After merging, change the service branch to `main`.
 
 Set these secrets in Render, never in Git or chat:
 
@@ -43,7 +43,7 @@ Import the repository and configure:
 | Output | Next.js default |
 | Include source files outside Root Directory | Enabled for the workspace/lockfile |
 
-For the PR preview, deploy branch `codex/chat-memory-panel`. Keep the normal production branch `main`; publish production after the PR is merged and the preview checks pass.
+For the PR preview, deploy branch `codex/vercel-deployment`. Keep the normal production branch `main`; publish production after the PR is merged and the preview checks pass.
 
 Set these **server-only** variables in the intended Preview/Production environments:
 
