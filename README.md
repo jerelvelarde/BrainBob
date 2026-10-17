@@ -16,6 +16,10 @@ The app connects to the Python backend through HTTP/SSE; `/demo` remains a separ
 
 ## The Shared Brain loop
 
+![Agents write, a check decides same / conflict / new and who may approve, the shared brain stores org / team / individual memory, a fresh agent answers with only what it may see, and an eval drops one cited memory and answers again to keep useful memories and retire harmful ones](diagrams/memory-simple.png)
+
+*Check before writing, verify after use. Mermaid source: [diagrams/memory-simple.mmd](diagrams/memory-simple.mmd). Component-level view: [diagrams/memory-architecture.png](diagrams/memory-architecture.png).*
+
 1. **Read:** give an agent the relevant context within its permitted scope.
 2. **Work:** answer with citations to the memories it used.
 3. **Maintain:** extract new facts, distinguish tentative discussion from approved changes, and preserve correction history.
