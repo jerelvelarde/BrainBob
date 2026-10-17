@@ -1,0 +1,23 @@
+test_changed_input_hash_rejects_stale_predictions (test_benchmark.PairTests.test_changed_input_hash_rejects_stale_predictions) ... ok
+test_duplicate_and_unknown_ids_rejected (test_benchmark.PairTests.test_duplicate_and_unknown_ids_rejected) ... ok
+test_export_has_no_gold_or_template_metadata (test_benchmark.PairTests.test_export_has_no_gold_or_template_metadata) ... ok
+test_frozen_balance_disjoint_dev_templates_and_unique_text (test_benchmark.PairTests.test_frozen_balance_disjoint_dev_templates_and_unique_text) ... ok
+test_missing_is_failure_not_smaller_denominator (test_benchmark.PairTests.test_missing_is_failure_not_smaller_denominator) ... ok
+test_nonfinite_latency_is_not_reported (test_benchmark.PairTests.test_nonfinite_latency_is_not_reported) ... ok
+test_perfect_scoring_control_and_paired_direction (test_benchmark.PairTests.test_perfect_scoring_control_and_paired_direction) ... ok
+test_single_class_cannot_win_balanced_score (test_benchmark.PairTests.test_single_class_cannot_win_balanced_score) ... ok
+test_strict_json_and_error_fail (test_benchmark.PairTests.test_strict_json_and_error_fail) ... ok
+test_adapter_receives_no_gold_and_worlds_reset (test_benchmark.WorldTests.test_adapter_receives_no_gold_and_worlds_reset) ... ok
+test_citations_must_have_been_delivered (test_benchmark.WorldTests.test_citations_must_have_been_delivered) ... ok
+test_controls_and_immutable_output_directory (test_benchmark.WorldTests.test_controls_and_immutable_output_directory) ... ok
+test_correct_answer_with_private_context_fails (test_benchmark.WorldTests.test_correct_answer_with_private_context_fails) ... ok
+test_correct_claims_and_accessible_support_pass (test_benchmark.WorldTests.test_correct_claims_and_accessible_support_pass) ... ok
+test_extra_field_cannot_hide_disclosure (test_benchmark.WorldTests.test_extra_field_cannot_hide_disclosure) ... ok
+test_no_duplicate_answer_credit (test_benchmark.WorldTests.test_no_duplicate_answer_credit) ... ok
+test_private_value_laundered_through_public_source_fails (test_benchmark.WorldTests.test_private_value_laundered_through_public_source_fails) ... ok
+test_wrong_stale_answer_and_fake_citation_fail (test_benchmark.WorldTests.test_wrong_stale_answer_and_fake_citation_fail) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.187s
+
+OK

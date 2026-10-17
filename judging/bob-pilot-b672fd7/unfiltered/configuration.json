@@ -1,0 +1,6 @@
+{
+  "adapter": "unfiltered",
+  "answerer": "structured claims; no language model",
+  "context_budget": "requested keys only in reference",
+  "reset": "one instance per world"
+}
