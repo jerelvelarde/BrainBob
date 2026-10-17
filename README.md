@@ -1,10 +1,12 @@
 # BrainBob
 
-A shared memory layer that agents read before work and maintain afterward, with memory evaluation and a 3D brain office for inspecting and retracing changes.
+A shared brain for agent teams, focused on **memory correctness**: checking that what agents remember is supported by evidence, reflects the latest valid information, and is safe to reuse.
+
+When one agent saves a wrong or outdated fact, every agent that reuses it can repeat the mistake. BrainBob's key problem is keeping shared memory correct as conversations introduce new facts, corrections, and conflicts. Agents read memory before work and maintain it afterward; a 3D brain office makes those checks and changes inspectable and retraceable.
 
 Meet the **BrainBobs**: our SpongeBob-inspired memory crew, with bright yellow rounded rectangular bodies, simple graphic faces, wide violet pants, and memory badges.
 
-**Shared Brain** is our primary problem: every agent should read the team's project memory before working and update it afterward. BrainBob aims to keep that knowledge current, lean, and conflict-free. Self-improvement comes from better memory.
+**Shared Brain** is our primary track, and **memory correctness is the core problem we're solving**. We aim to validate facts against source evidence, apply justified corrections, preserve valid memories, and surface unresolved conflicts or uncertainty before other agents rely on them. Lean storage and self-improvement support that goal; measured task outcomes must show whether maintaining correct memory actually helps.
 
 The current build is an interactive frontend preview. The 3D room fills the screen, with floating **Chat** and **Memories** panels and a compact demo/retrace dock. Warm sand, cream, and yellow keep the room and characters at the center.
 
@@ -127,7 +129,7 @@ Scope and role determine access. An organization-level role does not automatical
 
 ### Memory Evaluation — The Critical Part
 
-Saving a memory is only useful if it remains accurate. The central evaluation loop checks stored memories against a **random sample drawn from the latest 50 conversations** available within the relevant scope.
+**Memory evaluation is the core of BrainBob.** The intended loop asks whether each checked memory is supported, still current, or contradicted by later evidence—and whether a proposed change would improve correctness without damaging valid knowledge. The central evaluation loop checks stored memories against a **random sample drawn from the latest 50 conversations** available within the relevant scope. Sampling provides partial evidence coverage; it cannot guarantee that every stored memory is correct.
 
 Planned evaluation flow:
 
@@ -189,7 +191,7 @@ Compare the same agent/model configuration with and without maintained shared me
 
 Built for **The Recursive Agents Hackathon**, October 17, 2026, with **Crusoe Managed Inference** as the planned inference backend.
 
-- **Primary fit — Shared Brain:** Shared, scoped memory that agents read and maintain, with evaluation of accuracy and output quality.
+- **Primary fit — Shared Brain:** Memory correctness across an agent team: evidence-backed facts, justified corrections, preservation of valid knowledge, and visible unresolved conflicts, evaluated through memory accuracy and downstream output quality.
 - **Secondary outcome — self-improvement:** Demonstrate that maintained memory helps new agents produce better results on tasks they have not seen.
 - **Supporting behavior — Done Means Done:** Plans, explicit success checks, and human alignment before execution.
 

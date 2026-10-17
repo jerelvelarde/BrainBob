@@ -1,8 +1,8 @@
 # BrainBob — Judging Guide
 
-**Track: Shared Brain.** BrainBob is a shared memory layer for an agent team, visualized as a 3D isometric brain office with BrainBob workers.
+**Track: Shared Brain. Core problem: memory correctness.** BrainBob aims to ensure that shared memories are supported by evidence, reflect the latest valid information, and remain reliable when reused by other agents.
 
-Every agent should read the team's living project memory before working and update it afterward. The goal is current, lean, conflict-free knowledge with measurable gains in output quality. Self-improvement through better memory is the supporting outcome.
+One wrong or stale memory can spread the same mistake across an agent team. Every agent should read the team's living project memory before working and update it afterward, with evaluation checking corrections, preserving valid knowledge, and surfacing unresolved conflicts. The 3D brain office makes this process inspectable; measurable gains in output quality are the intended proof that more correct memory helps.
 
 **Repository:** [jerelvelarde/BrainBob](https://github.com/jerelvelarde/BrainBob)
 
@@ -21,6 +21,7 @@ This folder is a judging aid, not evidence that a feature has been implemented. 
 
 | Shared Brain requirement | Demonstration or evidence |
 | --- | --- |
+| Memory correctness — central claim | Evidence-backed facts, correct updates, fewer stale or unsupported facts, and no unjustified removal of valid memories; report evidence coverage and uncertainty. |
 | Read before work | A fresh agent receives the correct scoped memory revisions. |
 | Update after work | A useful fact or explicit correction creates an evidence-linked revision. |
 | Keep knowledge current | A later answer uses the corrected fact rather than the superseded value. |
