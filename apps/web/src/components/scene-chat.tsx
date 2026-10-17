@@ -8,10 +8,10 @@ import { memberForReader, memberId } from "@/lib/sample-company";
 import { updateActiveSession, type ActiveSession, type SessionActivity } from "@/lib/active-session";
 import { sessionPrompts } from "@/lib/session-prompts";
 import { ConfigureSessionPrompts, SessionPromptCards, SessionSendButton, SessionWelcome, SessionWelcomeContext } from "./session-chat-welcome";
-import { memoryToolRenderer } from "./session-memory-tool";
+import { memoryToolRenderer, saveMemoryToolRenderer } from "./session-memory-tool";
 import { SessionAssistantMessage, SessionReceiptsContext } from "./session-chat-message";
 
-const toolRenderers = [memoryToolRenderer];
+const toolRenderers = [memoryToolRenderer, saveMemoryToolRenderer];
 const HiddenControl = () => null;
 
 export default function SceneChat({ reader, readOnly, memories, onAnswer, onExploreMemory, onInspect, onSessionActivity, connected }: {

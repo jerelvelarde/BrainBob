@@ -15,6 +15,41 @@ const context = (mode: ChatContext["mode"]): ChatContext => ({ mode, reader: def
 afterEach(() => vi.unstubAllGlobals());
 
 describe("CopilotKit backend bridge", () => {
+  it("routes an explicit personal remember command through extraction and reports the real correction", async () => {
+    const fetcher = vi.fn().mockResolvedValue(response({ episode_id: "ep-chat", memories: [{ memory_id: "m-new", action: "supersede", text: "Maya prefers two bullets.", reason: "approved correction of m-old" }] }));
+    vi.stubGlobal("fetch", fetcher);
+    const answered = vi.fn();
+    const events = await lastValueFrom(new BackendChatAgent(() => context("ask"), answered, vi.fn()).run(input("Remember: I prefer two bullets.")).pipe(toArray()));
+    expect(fetcher.mock.calls[0][0]).toContain("/episodes");
+    expect(JSON.parse(fetcher.mock.calls[0][1].body)).toMatchObject({ text: "Maya Flores: I prefer two bullets.", scope: defaultReader, author: "sales-01", authority: "approved", source: "brainbob-chat" });
+    expect(events.find((e) => e.type === "TOOL_CALL_START")).toMatchObject({ toolCallName: "save_memory" });
+    expect(events.find((e) => e.type === "TEXT_MESSAGE_CONTENT")).toMatchObject({ delta: "Updated: Maya prefers two bullets." });
+    expect(answered).not.toHaveBeenCalled();
+  });
+
+  it("does not turn questions or quoted instructions into memory writes", async () => {
+    const fetcher = vi.fn().mockImplementation(() => Promise.resolve(response({ task_id: "t1", answer: "Answer", cited_ids: [], memories: [] })));
+    vi.stubGlobal("fetch", fetcher);
+    for (const text of ["Do you remember my preference?", 'Explain the phrase "Remember: two bullets"', "Remember:"]) {
+      await lastValueFrom(new BackendChatAgent(() => context("ask"), vi.fn(), vi.fn()).run(input(text)).pipe(toArray()));
+    }
+    expect(fetcher.mock.calls.every(([url]) => url.endsWith("/ask"))).toBe(true);
+  });
+
+  it("keeps denied, tentative and rejected chat writes distinct from saved updates", async () => {
+    const fetcher = vi.fn().mockResolvedValueOnce(response({ detail: "Not allowed" }, 403)).mockResolvedValueOnce(response({ episode_id: "ep", memories: [{ memory_id: "m2", action: "tentative", text: "New preference", reason: "locked source" }, { memory_id: null, action: "reject", text: "Old fact", reason: "duplicate" }] }));
+    vi.stubGlobal("fetch", fetcher);
+    const agent = new BackendChatAgent(() => context("ask"), vi.fn(), vi.fn());
+    const denied = await lastValueFrom(agent.run(input("Remember: a preference")).pipe(toArray()));
+    expect(denied.at(-1)?.type).toBe("RUN_ERROR");
+    expect(JSON.stringify(denied)).not.toContain('"delta":"Updated');
+    const checked = await lastValueFrom(agent.run(input("Remember: another preference")).pipe(toArray()));
+    expect(checked.find((e) => e.type === "TEXT_MESSAGE_CONTENT")).toMatchObject({ delta: "Kept for review: New preference (locked source)\n\nNot saved: Old fact (duplicate)" });
+    await expect(async () => brainApi.rememberPersonal("Fact", "rusty-rod", "sales-01")).rejects.toThrow("own individual session");
+    await expect(async () => brainApi.rememberPersonal("Fact", defaultReader, "sales-02")).rejects.toThrow("own individual session");
+    expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+
   it("sends questions with a reader and emits the backend answer and AG-UI lifecycle", async () => {
     const fetcher = vi.fn().mockResolvedValue(response({ task_id: "t1", answer: "November 13, 2026", cited_ids: [], memories: [] }));
     vi.stubGlobal("fetch", fetcher);

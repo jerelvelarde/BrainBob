@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { canReadScope, companyScope, companyScopes, memberId } from "./sample-company";
+import { canReadScope, companyScope, companyScopes, memberId, memberForReader } from "./sample-company";
 
 // Keep browser requests on the UI origin; Next forwards them to BRAINBOB_API_URL.
 // An explicit public URL remains available for deployments with direct API access.
@@ -81,6 +81,12 @@ export function eventsUrl(member: string, after: number) {
   return `${BACKEND_URL}/events?${new URLSearchParams({ member, after: String(after) })}`;
 }
 export const brainApi = {
+  rememberPersonal: (text: string, reader: string, author: string, signal?: AbortSignal) => {
+    const person = memberForReader(reader);
+    if (!person || person.id !== author) throw new Error("Choose your own individual session before saving a personal memory.");
+    return request(author, "/episodes", z.object({ episode_id: z.string(), memories: z.array(z.union([backendMemorySchema, ingestionDecisionSchema])) }),
+      { text: `${person.label}: ${text}`, scope: person.path, author, authority: "approved", source: "brainbob-chat" }, signal);
+  },
   memorySummary: (member: string, signal?: AbortSignal) => request(member, "/memories/summary", memorySummarySchema, undefined, signal),
   memories: (member: string, signal?: AbortSignal) => request(member, "/memories", z.array(backendMemorySchema), undefined, signal),
   ask: (question: string, reader: string, signal?: AbortSignal) => request(memberId(reader), "/ask", answerSchema, { question, reader }, signal),

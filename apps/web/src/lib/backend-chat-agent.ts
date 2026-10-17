@@ -8,6 +8,14 @@ export type ChatMode = "ask" | "remember" | "feedback" | "review";
 export type ChatContext = { mode: ChatMode; reader: string; author: string; taskId?: string; readOnly: boolean };
 export type AnswerReceipt = { messageId: string; requestId: string; question: string };
 export const MEMORY_TOOL_NAME = "consult_memory";
+export const SAVE_MEMORY_TOOL_NAME = "save_memory";
+
+// Explicit user command, not an inferred intent or a model-selected tool. Ordinary
+// questions (including "Do you remember...") remain read-only. Backend models
+// extract and compare the candidate; backend ACL and maintenance rules decide writes.
+export function personalMemoryCommand(text: string) {
+  return /^(?:please\s+)?remember\s*:\s*(\S[\s\S]*)$/i.exec(text.trim())?.[1];
+}
 
 export class BackendChatAgent extends AbstractAgent {
   // Only successful Ask turns enter follow-up context. Evaluation gold and write commands never do.
@@ -31,6 +39,21 @@ export class BackendChatAgent extends AbstractAgent {
         if (!text) throw new Error("Enter a message first.");
         const messageId = crypto.randomUUID();
         let reply: string;
+        const personalMemory = context.mode === "ask" ? personalMemoryCommand(text) : undefined;
+        if (personalMemory) {
+          retrieval = { id: crypto.randomUUID(), startedAt: Date.now() };
+          observer.next({ type: EventType.TOOL_CALL_START, toolCallId: retrieval.id, toolCallName: SAVE_MEMORY_TOOL_NAME, parentMessageId: crypto.randomUUID() });
+          observer.next({ type: EventType.TOOL_CALL_ARGS, toolCallId: retrieval.id, delta: JSON.stringify({ requestId: input.runId, question: text, startedAt: retrieval.startedAt, operation: "save" }) });
+          observer.next({ type: EventType.TOOL_CALL_END, toolCallId: retrieval.id });
+          const saved = await brainApi.rememberPersonal(personalMemory, context.reader, context.author, abort.signal);
+          if (abort.signal.aborted) return;
+          const decisions = saved.memories.map((m) => "action" in m
+            ? { memoryId: m.memory_id, action: m.action, text: m.text, reason: m.reason }
+            : { memoryId: m.id, action: m.status === "tentative" ? "tentative" : "add", text: m.text, reason: m.reason });
+          const labels: Record<string, string> = { add: "Saved", supersede: "Updated", tentative: "Kept for review", reject: "Not saved" };
+          reply = decisions.length ? decisions.map((d) => `${labels[d.action]}: ${d.text || d.reason}${d.action === "tentative" || d.action === "reject" ? ` (${d.reason})` : ""}`).join("\n\n") : "I checked that note, but no new memory was saved.";
+          observer.next({ type: EventType.TOOL_CALL_RESULT, toolCallId: retrieval.id, messageId: crypto.randomUUID(), role: "tool", content: JSON.stringify({ elapsedMs: Date.now() - retrieval.startedAt, decisions, episodeId: saved.episode_id }) });
+        } else {
         switch (context.mode) {
           case "ask": {
             asking = true;
@@ -72,6 +95,7 @@ export class BackendChatAgent extends AbstractAgent {
             reply = result.decisions.length ? result.decisions.map((d) => `- ${d.action}: ${d.reason}`).join("\n") : "Review finished. No memories changed status.";
             break;
           }
+        }
         }
         if (observer.closed) return;
         observer.next({ type: EventType.TEXT_MESSAGE_START, messageId, role: "assistant" });
