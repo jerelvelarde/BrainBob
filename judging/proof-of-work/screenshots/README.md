@@ -17,7 +17,18 @@ The reconstruction character sources are retained in [sources](../sources/).
 
 The current capture was made while isolated reconstruction-preview files existed locally.
 They were not used by the current app page and were removed after capture.
-No temporary preview route is shipped.
+No temporary reconstruction route was shipped with that milestone.
 
 These images document appearance and iteration. Memory activity is scripted, movement is ambient,
 and no image establishes live model inference or measured memory accuracy.
+
+## Rounded rectangle selection
+
+| Image | Evidence type | Provenance |
+| --- | --- | --- |
+| [Character comparison](05-rounded-rectangle-study.jpg) | Current implementation screenshot | Captured 11:34:08 AM PDT after implementation commit 801a04b. Shows three silhouettes and the chosen rounded rectangle. |
+| [Rounded rectangle workspace](06-rounded-rectangle-workspace.jpg) | Current implementation screenshot | Captured 11:34:09 AM PDT after implementation commit 801a04b. Shows the chosen design in the paused room. |
+
+App sources were committed and unchanged during these captures; only new evidence files were present.
+The character study is now a retained design page at `/character-study`, including a movement toggle.
+Neither screenshot establishes the planned filing, writing, burning-paper, or teaching animations.
