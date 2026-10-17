@@ -36,6 +36,9 @@ def _endpoint(url, model, api_key=None, max_tokens=16):
     def gen(msgs):
         r = client.chat.completions.create(model=model, messages=msgs, temperature=0, max_tokens=max_tokens,
                                            extra_body={"chat_template_kwargs": {"enable_thinking": False}})
+        u = getattr(r, "usage", None)  # read by bobbench's judge trace for cost; behavior unchanged
+        gen.last_usage = None if u is None else {"prompt_tokens": getattr(u, "prompt_tokens", 0) or 0,
+                                                 "completion_tokens": getattr(u, "completion_tokens", 0) or 0}
         return r.choices[0].message.content or ""
     return gen
 
@@ -82,4 +85,43 @@ def make_judge(model_or_endpoint, *, model=None, api_key=None):
         try: return parse_strict(gen(messages(cand, mem)))
         except Exception: return None
     judge.model_id = model or getattr(gen, "model_id", None) or "custom:memops-unidentified"
+    return judge
+
+
+_RELATIONS = ("same", "conflict", "unrelated")
+
+
+def make_safe_judge(small_judge, confirm_judge, mode="confirm"):
+    """Opt-in safe wrapper for maintain.ingest(judge=...). Issue #6.
+
+    small_judge / confirm_judge: judge(cand, mem) -> 'same' | 'conflict' | 'unrelated' | None.
+    confirm_judge is the independent production judge (maintain.llm_judge); it is never replaced.
+      observe: the small judge is only logged; the confirm_judge result is returned unchanged.
+      confirm: same / unrelated from the small judge are used as-is; a small 'conflict' is returned only when
+               confirm_judge also says 'conflict', else None (maintain's conservative tentative path).
+               Any small-judge exception or output outside the three relations returns None.
+    Every call appends {small, confirm, final} to judge.log."""
+    if mode not in ("confirm", "observe"): raise ValueError("mode must be 'confirm' or 'observe'")
+    log = []
+
+    def judge(cand, mem):
+        try: small = small_judge(cand, mem)
+        except Exception: small = None
+        if small not in _RELATIONS: small = None
+        if mode == "observe":
+            confirm = confirm_judge(cand, mem)
+            final = confirm
+        elif small in ("same", "unrelated"):
+            confirm, final = None, small
+        elif small == "conflict":
+            try: confirm = confirm_judge(cand, mem)
+            except Exception: confirm = None
+            final = "conflict" if confirm == "conflict" else None
+        else:
+            confirm, final = None, None
+        log.append({"mode": mode, "memory_id": getattr(mem, "id", None), "small": small, "confirm": confirm, "final": final})
+        return final
+    judge.log = log
+    judge.mode = mode
+    judge.model_id = f"safe-{mode}:{getattr(small_judge, 'model_id', 'custom:memops-unidentified')}"
     return judge

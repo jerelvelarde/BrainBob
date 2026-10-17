@@ -40,6 +40,7 @@ from brainbob.memory import MemoryStore  # noqa: E402
 from brainbob.types import Answer, Episode  # noqa: E402
 
 from bobbench.adapter import Adapter as _Base, count_tokens  # noqa: E402
+from bobbench.adapters.judges import TracedJudge, summarize_calls  # noqa: E402
 from bobbench.schema import parse_time  # noqa: E402
 
 TOP_K = 10
@@ -70,20 +71,51 @@ def _models() -> dict:
     return {r: c["model"] for r, c in bb_llm._roles().items()}
 
 
+def production_judge() -> TracedJudge:
+    """The production pair judge (maintain.llm_judge: backend role "judge", production prompt), traced. Calls
+    maintain.llm_judge itself, so behavior and the backend disk cache are unchanged; the raw reply comes from
+    maintain.JUDGE_RAW (None if llm_judge was replaced, e.g. by a test stub). Usage is already billed in bb_llm."""
+    model = bb_llm._roles()["judge"]["model"]
+
+    def run(cand, mem, msgs):
+        box, n0 = [], len(bb_llm._USAGE)
+        tok = bb_maintain.JUDGE_RAW.set(box)
+        try:
+            v = bb_maintain.llm_judge(cand, mem, "judge")
+        finally:
+            bb_maintain.JUDGE_RAW.reset(tok)
+        rows = [r for r in bb_llm._USAGE[n0:] if r[0] == "judge"]
+        pt, ct = sum(r[2] for r in rows), sum(r[3] for r in rows)
+        pi, po = bb_llm.PRICE.get(model, (0.3, 2.4))
+        usd = sum((r[2] * pi + r[3] * po) / 1e6 for r in rows if not r[4])
+        return {"raw": box[-1] if box else None, "verdict": v,
+                "usage": {"prompt_tokens": pt, "completion_tokens": ct, "cached": sum(1 for r in rows if r[4]), "usd": usd}}
+
+    cfg = bb_llm._roles()["judge"]
+    info = {"kind": "production", "model": model, "revision": "crusoe-hosted (provider does not expose one)",
+            "role": "judge", "prompt": "backend/brainbob/maintain.py PROMPT (production)",
+            "max_tokens": cfg.get("max_tokens"), "temperature": cfg.get("temperature")}
+    return TracedJudge(run, build=bb_maintain.judge_messages, model_id=model, info=info, billed_via="brainbob.llm")
+
+
 def _jsonable(o):
     return json.loads(json.dumps(o, default=lambda x: dataclasses.asdict(x) if dataclasses.is_dataclass(x) else str(x)))
 
 
 class BrainBobAdapter(_Base):
-    def __init__(self, mode: str = "maintained", seed: int = 0, top_k: int = TOP_K, answer_fn=None, judge=None):
+    def __init__(self, mode: str = "maintained", seed: int = 0, top_k: int = TOP_K, answer_fn=None, judge=None,
+                 name: str | None = None):
+        """judge: maintenance pair judge callable(cand, mem) -> verdict | None; None = production default (traced).
+        name: condition name in traces (default: mode), e.g. maintained_teacher."""
         if mode not in MODES:
             raise ValueError(f"mode must be one of {MODES}")
         self.mode, self.seed, self.top_k = mode, seed, top_k
         self.judge = judge
+        self._default_judge = production_judge()
         if answer_fn is None:
             from bobbench.answer import answer as answer_fn
         self.answer_fn = answer_fn
-        self.name = mode
+        self.name = name or mode
         self.system = "brainbob"
         self.store = None
 
@@ -114,6 +146,10 @@ class BrainBobAdapter(_Base):
         self.audits: list[dict] = []           # one row per audit_recent run (maintained only)
         self._u0 = bb_llm.usage()
         self._usage_checkpoint = copy.deepcopy(self._u0)
+        for j in (self.judge, self._default_judge):
+            if isinstance(j, TracedJudge):
+                j.reset()
+        self._judge_mark = 0                   # judge calls already added to an act's cost
         self.ops.append({"op": "reset", "world_id": world_manifest.get("world_id"), "mode": self.mode,
                          "seed": self.seed, "state_dir": self.state_dir, "budget": self.budget})
 
@@ -160,13 +196,46 @@ class BrainBobAdapter(_Base):
                 added = bb_curator.ingest(ep, self.store, author=actor)
                 erec["memory_ids"] = [m.id for m in added]
             else:
-                ds = bb_maintain.ingest(ep, self.store, self.acl.view(at), judge=self.judge)
+                ds = self._maintain_ingest(ep, self.acl.view(at), "ingest")
                 erec["decisions"] = self._keep(ds, epid, "ingest")
                 erec["memory_ids"] = [d.memory_id for d in ds if d.memory_id]
             rec["episodes"].append(erec)
         rec["cost"] = _cost(_usage_diff(u0, bb_llm.usage()))
         self.ops.append(rec)
         return rec
+
+    def _pair_judge(self):
+        return self.judge if self.judge is not None else self._default_judge
+
+    def _judge_calls(self) -> list | None:
+        j = self._pair_judge()
+        return j.calls if isinstance(j, TracedJudge) else None
+
+    def _maintain_ingest(self, ep, acl_view, phase):
+        """maintain.ingest with the pair judge; tags the judge calls it made with the episode and phase."""
+        j = self._pair_judge()
+        n0 = len(j.calls) if isinstance(j, TracedJudge) else 0
+        ds = bb_maintain.ingest(ep, self.store, acl_view, judge=j)
+        if isinstance(j, TracedJudge):
+            for c in j.calls[n0:]:
+                c.update(phase=phase, episode_id=ep.id, event_id=self.ep_event.get(ep.id), condition=self.name)
+        return ds
+
+    def maintenance_stats(self) -> dict:
+        """Operation counts for this run: decisions by action, supersedes, retired memories, judge call summary."""
+        acts, rejects = {}, {}
+        for d in self.decisions:
+            acts[d.get("action")] = acts.get(d.get("action"), 0) + 1
+            if d.get("action") == "reject":
+                why = str(d.get("reason") or "")
+                k = "duplicate" if why.startswith("duplicate") else "stale" if why.startswith("stale") else "other"
+                rejects[k] = rejects.get(k, 0) + 1
+        mems = self.store.all() if self.store is not None else []
+        calls = self._judge_calls() if self.mode == "maintained" else None
+        return {"condition": self.name, "mode": self.mode, "decisions": acts, "rejects": rejects,
+                "supersede": acts.get("supersede", 0), "tentative": acts.get("tentative", 0),
+                "retired_memories": sum(1 for m in mems if m.status == "retired"),
+                "memories": len(mems), "judge": summarize_calls(calls) if calls is not None else None}
 
     def _keep(self, decisions, epid, phase):
         out = []
@@ -191,7 +260,7 @@ class BrainBobAdapter(_Base):
         u0 = bb_llm.usage()
 
         def propose(memory, episode):  # audit's default proposer, with the policy as of the episode's time
-            ds = bb_maintain.ingest(episode, self.store, self.acl.view(self.ep_at.get(episode.id)), judge=self.judge)
+            ds = self._maintain_ingest(episode, self.acl.view(self.ep_at.get(episode.id)), "maintain")
             self._keep(ds, episode.id, "maintain")
             return ds
 
@@ -284,7 +353,16 @@ class BrainBobAdapter(_Base):
             cost[field] = cost.get(field, 0) + memory_cost[field]
         cost["backend_roles"] = memory_cost["by_role"]
         cost["backend_retry_count"] = None
-        cost["custom_judge_usage_unmeasured"] = self.mode == "maintained" and self.judge is not None
+        calls = self._judge_calls() if self.mode == "maintained" else None
+        if calls is not None:  # pair-judge calls since the last act; direct-billed ones are not in backend usage
+            new = calls[self._judge_mark:]
+            self._judge_mark = len(calls)
+            direct = [c for c in new if c.get("billed_via") == "direct"]
+            usd_direct = sum(c.get("usd") or 0 for c in direct)
+            cost["usd"] = cost.get("usd", 0) + usd_direct
+            cost["calls"] = cost.get("calls", 0) + len(direct)
+            cost["pair_judge"] = {"calls": len(new), "usd": sum(c.get("usd") or 0 for c in new), "usd_direct": usd_direct}
+        cost["custom_judge_usage_unmeasured"] = self.mode == "maintained" and self.judge is not None and calls is None
         out = {"answer": r.get("answer", ""), "cited_event_ids": list(r.get("cited_event_ids") or []),
                "cost": cost, "error": r.get("error"), "recheck_dropped": dropped}
         self.ops.append({"op": "act", "session_id": session["session_id"], "principal": p,
@@ -381,14 +459,20 @@ class BrainBobAdapter(_Base):
             pair_model = getattr(self.judge, "model_id", "custom:unidentified")
             # The audit uses a distinct supported/contradicted/insufficient
             # prompt and still runs on the configured backend judge.
-            configuration["memory_pair_judge"] = {"implementation": "injected_callable", "model": pair_model, "usage": None}
-        t = {"system": "brainbob", "adapter": "bobbench/adapters/brainbob.py", "condition": self.mode, "seed": self.seed,
+            configuration["memory_pair_judge"] = (self.judge.describe() if isinstance(self.judge, TracedJudge) else
+                                                  {"implementation": "injected_callable", "model": pair_model, "usage": None})
+        calls = self._judge_calls() if self.mode == "maintained" else None
+        pj = self._pair_judge() if self.mode == "maintained" else None
+        t = {"system": "brainbob", "adapter": "bobbench/adapters/brainbob.py", "condition": self.name, "mode": self.mode,
+             "seed": self.seed,
              "top_k": self.top_k, "world_id": self.world.get("world_id"),
              "models": {"memory": {**{r: _models()[r] for r in mem_roles}, "pair_judge": pair_model if self.mode == "maintained" else None}, "answering": answering},
              "model_configuration": configuration,
              "cost": {"memory": _cost(usage), "answering_usd": sum((o.get("answering_cost") or {}).get("usd", 0) for o in acts),
                       "answering_calls": len(acts)},
              "audit": self._audit_trace(), "operations": self.ops, "decisions": self.decisions,
+             "pair_judge": pj.describe() if isinstance(pj, TracedJudge) else None,
+             "judge_calls": calls, "maintenance_stats": self.maintenance_stats(),
              "episode_event_map": dict(self.ep_event), "acl": self.acl.export(),
              "memories": [dataclasses.asdict(m) for m in self.store.all()], "events": bb_events.history(),
              "surfaces": {s: s in ("search", "record", "source", "history", "events") for s in SURFACES},

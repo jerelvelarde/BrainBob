@@ -1,0 +1,84 @@
+{
+  "reviewed_snapshot": "13df1c0",
+  "recorded_run_build": "5fcd554",
+  "mode": "offline counterexample and trace inspection; no inference or historical rescore",
+  "wrong_current_date": {
+    "record": {
+      "answer": "Previously due November 18, the release is now scheduled for December 2.",
+      "context": "",
+      "cited_event_ids": [
+        "w2-evt-01"
+      ]
+    },
+    "expected_cats": 0,
+    "observed": {
+      "cats": 1,
+      "missing": false,
+      "required": true,
+      "forbidden": true,
+      "expect": true,
+      "protected_answer": true,
+      "protected_context": true,
+      "evidence": true,
+      "budget": true,
+      "completed": true,
+      "citations_authorized": true,
+      "context_sources_authorized": true,
+      "behavior": {
+        "refuse": false,
+        "abstain": false,
+        "uncertain": false
+      },
+      "context_tokens": 0,
+      "cited_unreadable": [],
+      "context_unreadable": [],
+      "answer_ok": 1
+    }
+  },
+  "surface_execution_counts": {
+    "append_only": {
+      "search": {
+        "probe_objects": 123,
+        "http_responses": 123
+      },
+      "record": {
+        "probe_objects": 123,
+        "http_responses": 123
+      },
+      "source": {
+        "probe_objects": 123,
+        "http_responses": 0
+      },
+      "history": {
+        "probe_objects": 123,
+        "http_responses": 0
+      },
+      "events": {
+        "probe_objects": 123,
+        "http_responses": 123
+      }
+    },
+    "maintained": {
+      "search": {
+        "probe_objects": 123,
+        "http_responses": 123
+      },
+      "record": {
+        "probe_objects": 123,
+        "http_responses": 123
+      },
+      "source": {
+        "probe_objects": 123,
+        "http_responses": 0
+      },
+      "history": {
+        "probe_objects": 123,
+        "http_responses": 0
+      },
+      "events": {
+        "probe_objects": 123,
+        "http_responses": 123
+      }
+    }
+  }
+}

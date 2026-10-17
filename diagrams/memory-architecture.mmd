@@ -1,0 +1,30 @@
+graph TD
+  POL["Policy (trusted control channel)<br/>orgs, teams, members, grants, expiry, approvers"]
+
+  subgraph WRITE["Write path"]
+    EP["Episodes<br/>chats, notes, approvals"] --> CUR["Curator<br/>extracts atomic facts<br/>Nemotron Lightning"]
+    CUR --> J["Relation judge<br/>same / conflict / unrelated<br/>gpt-oss-120b by default"]
+    SMALL["0.6B LoRA checker<br/>opt-in; a conflict needs confirmation"] -.-> J
+    J --> R["Deterministic rules<br/>authority, scope, date, locks"]
+  end
+
+  R -->|"add / tentative / supersede / reject"| ST[("Memory store<br/>org / team / individual scopes<br/>statuses, revision chain, tombstones")]
+
+  subgraph READ["Read path"]
+    T["Task from a member"] --> RET["Scoped retrieval<br/>BM25 top-k, readable scopes only"]
+    RET --> AG["Fresh agent<br/>answer + cited sources"]
+  end
+
+  subgraph CHECKS["Checks"]
+    EV["Usefulness evaluator<br/>drop a cited memory, re-answer"]
+    AUD["Correctness audit<br/>seeded sample of recent episodes"]
+  end
+
+  POL --> R
+  POL --> RET
+  ST --> RET
+  AG --> EV
+  EV -->|"promote / retire after confirm"| ST
+  ST --> AUD
+  AUD -->|"proposed corrections"| R
+  ST -->|"events: seq + SSE"| UI["3D brain office<br/>live scene, inspector, retrace"]

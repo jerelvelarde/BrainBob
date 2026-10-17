@@ -1,0 +1,42 @@
+{
+  "dataset": "Bob checker round2 frozen60 v1",
+  "frozen_at_utc": "2026-10-17T21:44:58.957776+00:00",
+  "source_commit": "8807fa136dd8d138078c2e0b9c732b01cd9d1365",
+  "count": 60,
+  "label_counts": {
+    "same": 20,
+    "conflict": 20,
+    "unrelated": 20
+  },
+  "template_clusters": 20,
+  "input_sha256": "a2524b6d702bbf06d713d0f6d2aac06596778c40daf17c2bd57304de2c90cb9f",
+  "gold_sha256": "17f33f1f98ac1bb610886a9cbdd42db32abef196b110597189d4c470e01e4f58",
+  "prompt_sha256": "94a5e5db36c30b78a70696a167776f8cb8c75ab063fcf0f8b94686e835ca689b",
+  "scorer_sha256": "9699fd12887095ff49c88c100cb72b65061d3c983c10c79137d20b042cb454f6",
+  "prior_dataset_status": "Original 60 inspected case-by-case; development for round2. Historical round1 scores retained.",
+  "overlap_check": {
+    "exact_text_matches": 0,
+    "files": {
+      "benchmarks/bob/eval.jsonl": "3959d2afe4a95cbb186f6dc23550b64d00615838e75d0de429a17f4f61d8d03e",
+      "benchmarks/bob/dev.jsonl": "7f1a90e293aad1d2ce994417777d2f283d043d442b982d78287de615f966595b",
+      "experiments/memops-small/train.jsonl": "255cc1c6c1cb29cfbeffdfba27ce2508e5508a912a44668fe5769d21d23f7b9f",
+      "experiments/memops-small/dev.jsonl": "52280dcc2197ea33b60ec4aa3f4800a2b0b55b541ea5cdd805c76bf170d186ba"
+    }
+  },
+  "limits": [
+    "Agent-authored, not independently human-adjudicated.",
+    "New scenario wording and skeletons; shared semantic categories remain. No claim of distribution independence.",
+    "Round2 training data was not available for overlap checks.",
+    "Public inputs, evaluator-local gold; process separation is not a security boundary.",
+    "Do not inspect or use these inputs for round2 tuning; freeze checkpoint first."
+  ],
+  "annotation_review": {
+    "reviewer": "second Codex agent, blind to gold and author script",
+    "cases_reviewed": 60,
+    "initial_label_disagreements": 0,
+    "wording_ambiguities_clarified_before_final_freeze": 4,
+    "cases_dropped": 0,
+    "human_adjudication": false,
+    "model_predictions_generated": false
+  }
+}

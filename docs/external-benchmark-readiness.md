@@ -2,6 +2,13 @@
 
 We can validate GateMem data offline and export model predictions through an incremental adapter. We do **not** yet have BrainBob scores on GateMem, MUMBench, or CoMemBench. The existing Rusty Rod correctness results are internal results; they cannot fill these score cells. Model inference and official scoring were not run during this readiness pass.
 
+Bonan's [access update](external-benchmark-status.md) confirms GateMem was not run
+today (official GPT-4o judging budget and a full-app adapter remain), and no usable
+public dataset/evaluator was located for MUMBench or CoMemBench. Those discovery
+limits are not proof that a release does not exist. No external score is claimed;
+these are follow-up work after the four submission P0s. The published Bob pilot
+and [its review](bob-pilot-review-20261017.md) remain separate internal evidence.
+
 | Target | Our measured score | Ready now | Remaining blocker |
 | --- | --- | --- | --- |
 | GateMem | Not measured | Full released data validated; incremental prediction export and append-only extraction baseline implemented | Test the deployed model; implement application-equivalent contextual ACL/deletion adapter; run official judging on complete domain predictions |
