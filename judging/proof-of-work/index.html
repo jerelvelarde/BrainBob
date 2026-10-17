@@ -76,7 +76,8 @@
         <nav class="timeline-nav" aria-label="Changelog timeline">
           <h2>OCT 17 / TIMELINE</h2>
           <ul>
-            <li><a aria-current="location" href="#2026-10-17-141910-three-desk-sessions"><time datetime="2026-10-17T14:19:10-07:00">2:19:10 PM PDT</time>Three desk sessions</a></li>
+            <li><a aria-current="location" href="#2026-10-17-142114-app-readiness"><time datetime="2026-10-17T14:21:14-07:00">2:21:14 PM PDT</time>App readiness and model test gates</a></li>
+            <li><a href="#2026-10-17-141910-three-desk-sessions"><time datetime="2026-10-17T14:19:10-07:00">2:19:10 PM PDT</time>Three desk sessions</a></li>
             <li><a href="#2026-10-17-140450-account-switcher"><time datetime="2026-10-17T14:04:50-07:00">2:04:50 PM PDT</time>Scene account switcher</a></li>
             <li><a href="#2026-10-17-135429-personal-chat"><time datetime="2026-10-17T13:54:29-07:00">1:54:29 PM PDT</time>Personal session chat</a></li>
             <li><a href="#2026-10-17-135006-bob-executable-pilot"><time datetime="2026-10-17T13:50:06-07:00">1:50:06 PM PDT</time>Executable Bob benchmark pilot</a></li>
@@ -107,6 +108,19 @@
       <h2 class="date-heading">October 17, 2026 <span aria-hidden="true">/</span> Shared Brain <span aria-hidden="true">/</span> Pacific Time (PDT)</h2>
 
       <!-- Add new entries here, newest first. Use real timestamps and link the evidence. -->
+
+      <article class="entry" id="2026-10-17-142114-app-readiness">
+        <div class="time"><time datetime="2026-10-17T14:21:14-07:00">2:21:14 PM PDT</time><span>Final checkpoint-pin commit</span></div>
+        <div><h2>Connected backend, verified fine-tuning result, and explicit benchmark gates</h2>
+          <ul><li><span class="label">Connected</span> same-origin HTTP and SSE to the real Python backend, fixed event buffering and member isolation, and added repeatable integration smoke checks.</li>
+          <li><span class="label">Verified</span> 471 Python tests, 52 frontend tests, TypeScript, and HTTP/SSE integration with model doubles. Added real BrainBob Bob adapters, an opt-in local judge callback, stricter scoring, and GateMem prediction plumbing.</li>
+          <li><span class="label">Rescored</span> Bonan’s frozen saved predictions: base 32/60 to tuned 42/60, +16.7 points with template-cluster 95% [+5.0, +28.3]. Controlled policy replay exposed five false-conflict retirements; automatic activation remains gated.</li></ul>
+          <p class="note">Prepared for Jerel with three subagents; Bonan owns the training run. Canonical adapter b904e6ec is pinned. This assessment used offline tests, saved-response replay, and a zero-call refusal control; no new inference, GPU job, private-weight download, or official GateMem/MUMBench/CoMemBench score. MUM is MUMBench.</p>
+          <div class="links"><a href="https://github.com/jerelvelarde/BrainBob/commit/5bcb3bb33b7efa27c0679b9101122c8207d8fc36">5bcb3bb · canonical pin</a><a href="https://github.com/jerelvelarde/BrainBob/commit/cb3e2977738b592f46a52a33cc0e89ec71108ea9">cb3e297 · readiness and scores</a><a href="../../docs/readiness.md">Readiness scorecard</a></div>
+          <details><summary>Implementation commits and verification evidence</summary><p><a href="../readiness-20261017/verification.md">Checks, all milestone SHAs, remaining gates, and shared-index provenance</a> · <a href="../readiness-20261017/memops-comparison.json">Independent 60-pair rescore</a> · <a href="../../experiments/memops-small/POLICY_REPLAY.md">Maintenance replay and overwrite risk</a> · <a href="../../bench/evidence/gatemem-data-preflight.json">GateMem data validation</a></p></details>
+        </div>
+      </article>
+
 
       <article class="entry" id="2026-10-17-141910-three-desk-sessions">
         <div class="time"><time datetime="2026-10-17T14:19:10-07:00">2:19:10 PM PDT</time><span>Implementation commit</span></div>
