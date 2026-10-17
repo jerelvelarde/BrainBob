@@ -14,6 +14,8 @@ Use Next, Previous, or the step selector to retrace; Replay repeats the current 
 
 Click the table or seated Bob for a full-screen personal chat. Maya’s welcome includes three prompts based on her accessible memory tiers. Selecting a prompt shows an explicitly **scripted memory preview**, not a generated answer; arbitrary questions also return the selected file context. Session file opens beside the conversation, or over it on mobile. Back to brain preserves the conversation for the same member and walkthrough step. Changing member or step creates a fresh preview context. Use the main route with the backend for actual answering.
 
+The account-style control at the bottom-left of the brain scene shows the selected person and team. Open it to search people by name or team, switch context, or choose **New session** for a fresh chat using the same person’s memory. A new session keeps the current walkthrough step and its synthetic file. The menu labels these as demo identities; no authentication or account lifecycle is implied.
+
 | Step | Suggested viewer | What to show |
 | --- | --- | --- |
 | Approved commitment | Maya Flores (`sales-01`) | Organization revision 1 says November 6, 2026, citing `atlas-approval-01`. The reporting goal is a separate valid record. |

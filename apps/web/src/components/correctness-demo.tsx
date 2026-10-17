@@ -28,6 +28,7 @@ export function CorrectnessDemo() {
   const [panel, setPanel] = useState<"evidence" | "session" | "cabinet" | null>(null);
   const [chatOpen, setChatOpen] = useState(false);
   const [chatLoaded, setChatLoaded] = useState(false);
+  const [chatRevision, setChatRevision] = useState(0);
   const [chatFileOpen, setChatFileOpen] = useState(false);
   const [cabinetScope, setCabinetScope] = useState<MemoryScope>("team");
   const [sourceId, setSourceId] = useState<string>();
@@ -66,10 +67,10 @@ export function CorrectnessDemo() {
       <button ref={chatButton} aria-label="Open personalized chat" aria-haspopup="dialog" onClick={() => openChat()}><MessageCircle size={18} /><span>Chat</span></button>
       <button ref={sessionButton} aria-label="Open session file" aria-expanded={panel === "session"} onClick={() => panel === "session" ? closePanel() : setPanel("session")}><FolderOpen size={18} /><span>Session file</span></button>
       <button ref={evidenceButton} aria-label="Scenario evidence" aria-expanded={panel === "evidence"} onClick={() => panel === "evidence" ? closePanel() : setPanel("evidence")}><FileSearch size={18} /><span>Evidence</span></button></div>
-    <MemberSelect value={reader} onChange={(value) => { setReader(value); setSourceId(undefined); setPlaying(false); setSeek({ value: .62, revision: Date.now() }); }} />
+    <MemberSelect value={reader} onChange={(value) => { setReader(value); setPanel(null); setSourceId(undefined); setPlaying(false); setSeek({ value: .62, revision: Date.now() }); }} onNewSession={() => { setChatRevision((current) => current + 1); openChat(); }} />
     <SessionChatDialog open={chatOpen} reader={reader} onClose={() => setChatOpen(false)} returnFocus={chatButton} preview fileOpen={chatFileOpen} onFile={() => setChatFileOpen(!chatFileOpen)}
       inspection={chatFileOpen ? <SessionFilePanel key={view.sessionFile.id} file={view.sessionFile} onClose={() => setChatFileOpen(false)} onTier={(scope) => { setChatOpen(false); setCabinetScope(scope); setPanel("cabinet"); }} onHistory={() => { setChatOpen(false); setPanel("evidence"); }} /> : null}>
-      {chatLoaded ? <SceneChat key={view.sessionFile.id} reader={reader} readOnly={false} memories={previewMemories} previewFile={view.sessionFile} onAnswer={noop} onInspect={noop} onSessionActivity={noop} /> : null}
+      {chatLoaded ? <SceneChat key={`${view.sessionFile.id}:${chatRevision}`} reader={reader} readOnly={false} memories={previewMemories} previewFile={view.sessionFile} onAnswer={noop} onInspect={noop} onSessionActivity={noop} /> : null}
     </SessionChatDialog>
     {panel === "cabinet" ? <TierMemoryPanel key={`${cabinetScope}-${reader}`} scope={cabinetScope} reader={reader} records={view.records} onClose={closePanel} onSession={() => setPanel("session")} onEvidence={(id) => { setSourceId(id); setPanel("evidence"); }} /> : null}
     {panel === "session" ? <SessionFilePanel key={view.sessionFile.id} file={view.sessionFile} onTier={(scope) => { setCabinetScope(scope); setPanel("cabinet"); }} onClose={closePanel} onHistory={() => setPanel("evidence")} /> : null}

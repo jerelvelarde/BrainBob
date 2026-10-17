@@ -19,17 +19,21 @@ const BrainScene = dynamic(() => import("./brain/brain-scene"), { ssr: false });
 const SceneChat = dynamic(() => import("./scene-chat"), { ssr: false, loading: () => <p className="chat-loading">Opening chat…</p> });
 
 export function LiveBrainWorkspace() {
-  const [reader, setReader] = useState<string>(defaultReader);
-  return <MemberWorkspace key={reader} reader={reader} onReaderChange={setReader} />;
+  const [context, setContext] = useState({ reader: defaultReader, revision: 0, startChat: false });
+  return <MemberWorkspace key={`${context.reader}:${context.revision}`} reader={context.reader} startChat={context.startChat} focusAccount={context.revision > 0 && !context.startChat}
+    onReaderChange={(reader) => setContext((current) => ({ reader, revision: current.revision + 1, startChat: false }))}
+    onNewSession={() => setContext((current) => ({ ...current, revision: current.revision + 1, startChat: true }))} />;
 }
 
 // Remount every identity-bound cache, request, chat, and event cursor together.
-function MemberWorkspace({ reader, onReaderChange }: { reader: string; onReaderChange: (reader: string) => void }) {
+function MemberWorkspace({ reader, onReaderChange, onNewSession, startChat, focusAccount }: {
+  reader: string; onReaderChange: (reader: string) => void; onNewSession: () => void; startChat: boolean; focusAccount: boolean;
+}) {
   const readerRef = useRef(reader);
-  const [panel, setPanel] = useState<"chat" | "memory" | null>(null);
+  const [panel, setPanel] = useState<"chat" | "memory" | null>(startChat ? "chat" : null);
   const [chatInspection, setChatInspection] = useState<"session" | "memory" | null>(null);
   const [session, setSession] = useState<ActiveSession | null>(null);
-  const [chatLoaded, setChatLoaded] = useState(false);
+  const [chatLoaded, setChatLoaded] = useState(startChat);
   const [selected, setSelected] = useState<string>();
   const [queue, setQueue] = useState<SceneCue[]>([]);
   const [playing, setPlaying] = useState(true);
@@ -95,7 +99,7 @@ function MemberWorkspace({ reader, onReaderChange }: { reader: string; onReaderC
       <button ref={chatButton} aria-label="Chat" aria-haspopup="dialog" aria-expanded={panel === "chat"} className={panel === "chat" ? "selected" : ""} onClick={() => openChat()}><MessageCircle size={18} /><span>Chat</span></button>
       <button ref={memoryButton} aria-label="Memories" aria-expanded={panel === "memory"} className={panel === "memory" ? "selected" : ""} onClick={() => panel === "memory" ? closePanel() : inspect()}><FolderClosed size={18} /><span>Memories</span></button>
     </div>
-    <MemberSelect value={reader} onChange={changeReader} />
+    <MemberSelect value={reader} onChange={changeReader} onNewSession={onNewSession} autoFocus={focusAccount} />
     <SessionChatDialog open={panel === "chat"} reader={reader} onClose={closePanel} returnFocus={chatButton} fileOpen={chatInspection === "session"}
       onFile={() => setChatInspection(chatInspection === "session" ? null : "session")}
       inspection={chatInspection === "session" ? <LiveSessionPanel reader={reader} session={session} onClose={() => setChatInspection(null)} onChat={() => setChatInspection(null)} onInspect={inspectInChat} />
