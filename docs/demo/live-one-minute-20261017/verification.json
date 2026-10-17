@@ -29,5 +29,6 @@
     "operation": "manual correction of synthetic personal preference"
   },
   "workingTree": "Shared live development checkout; unrelated frontend/backend summary and recording-explainer changes were present. Not represented as a clean deployed build.",
-  "outtake": "Initial drafting prompt (t-f7d74e09) invented an end-of-day commitment; excluded from the final cut, preserved in the event excerpt. Final factual prompt produced the approved date and approver."
+  "outtake": "Initial drafting prompt (t-f7d74e09) invented an end-of-day commitment; excluded from the final cut, preserved in the event excerpt. Final factual prompt produced the approved date and approver.",
+  "sourceImageEncoding": "image/jpeg; original browser bytes preserved"
 }
