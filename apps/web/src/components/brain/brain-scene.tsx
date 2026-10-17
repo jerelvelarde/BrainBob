@@ -8,7 +8,7 @@ import { Label } from "./scene-label";
 import { EventStage } from "./event-stage";
 import { cinematicsAt, cueForSession, scopeCharacters, type SceneCue, type SceneCinematics } from "@/lib/scene-animation";
 import { clientOrganization, defaultReader, drawersForTier } from "@/lib/sample-company";
-import { SessionFolder } from "./session-folder";
+import { SessionWorker, type DeskSession } from "./session-worker";
 import { BrainBob } from "./brain-bob";
 import type { MemoryEvent, MemoryScope } from "@/lib/memory";
 
@@ -19,7 +19,7 @@ type SceneProps = {
   selectedScope: MemoryScope | "all"; selectedMemory: string;
   flaggedScopes?: MemoryScope[];
   reader?: string;
-  sessionFile?: { label: string; onOpen: () => void };
+  session?: DeskSession;
   onSelect: (memoryId: string) => void; onScope: (scope: MemoryScope) => void;
   onWorker: (name: string) => void; onReady: (handle: SceneHandle) => void;
 };
@@ -119,18 +119,20 @@ function Cabinet({ bank, reader, selected, active, onClick }: { bank: typeof ban
   </group>;
 }
 
-const Desk = memo(function Desk({ position, rotation = 0, audit = false }: { position: [number, number, number]; rotation?: number; audit?: boolean }) {
+const Desk = memo(function Desk({ position, rotation = 0, audit = false, occupied = false }: { position: [number, number, number]; rotation?: number; audit?: boolean; occupied?: boolean }) {
   return <group position={position} rotation={[0, rotation, 0]}>
     <Box position={[0, 1, 0]} size={[2.1, .14, 1.2]} color="#a17d56" radius={.04} />
     <Box position={[0, .89, 0]} size={[1.95, .12, 1.08]} color="#765c42" />
     {[-.85, .85].flatMap((x) => [-.43, .43].map((z) => <Box key={`${x}-${z}`} position={[x, .47, z]} size={[.11, .91, .11]} color="#6c5844" />))}
+    <group position={[occupied ? -.35 : 0, 0, 0]}>
     <Box position={[-.23, 1.4, -.22]} size={[.62, .49, .42]} color="#d5cbb9" radius={.06} />
     <Box position={[-.23, 1.4, .003]} size={[.48, .34, .025]} color="#5f8b9d" radius={.02} />
     <Box position={[-.23, 1.19, -.1]} size={[.28, .1, .3]} color="#bbae98" />
     <Box position={[-.23, 1.1, .3]} size={[.64, .045, .22]} color="#d5cbb9" />
-    {[0, 1, 2, 3].map((i) => <Box key={i} position={[.65, 1.1 + i * .027, .06]} size={[.4, .025, .46]} color={i % 2 ? "#efedd6" : "#dedac4"} rotation={[0, i % 2 * .1, 0]} radius={.005} />)}
+    </group>
+    {!occupied ? [0, 1, 2, 3].map((i) => <Box key={i} position={[.65, 1.1 + i * .027, .06]} size={[.4, .025, .46]} color={i % 2 ? "#efedd6" : "#dedac4"} rotation={[0, i % 2 * .1, 0]} radius={.005} />) : null}
     <mesh position={[-.8, 1.19, .2]} castShadow><cylinderGeometry args={[.07, .065, .16, 10]} /><meshStandardMaterial color={audit ? "#e5b958" : "#e9d9c0"} /></mesh>
-    <group position={[0, 0, 1]}>
+    <group position={occupied ? [.18, .22, -.72] : [0, 0, 1]} rotation={[0, occupied ? Math.PI : 0, 0]}>
       <Box position={[0, .55, 0]} size={[.55, .1, .55]} color="#9f8164" />
       <Box position={[0, .86, .22]} size={[.55, .5, .08]} color="#9f8164" />
       <mesh position={[0, .27, 0]}><cylinderGeometry args={[.045, .045, .5, 8]} /><meshStandardMaterial color="#695744" /></mesh>
@@ -257,7 +259,7 @@ export default function BrainScene(props: SceneProps) {
     gl?.getExtension("WEBGL_lose_context")?.loseContext();
   }, []);
   if (!supported) return <div className="scene-fallback"><h2>Your memories are in good hands.</h2><p>Enable WebGL to visit the 3D brain. Open Memories to explore memory and history.</p></div>;
-  return <SceneBoundary><Canvas orthographic shadows dpr={[1, 1.7]} camera={{ position: [16, 14, 19], zoom: 45, near: .1, far: 100 }} gl={{ antialias: true, powerPreference: "high-performance" }} aria-label="Interactive isometric brain office with six walking BrainBob memory workers">
+  return <SceneBoundary><Canvas orthographic shadows dpr={[1, 1.7]} camera={{ position: [16, 14, 19], zoom: 45, near: .1, far: 100 }} gl={{ antialias: true, powerPreference: "high-performance" }} aria-label={`Interactive isometric brain office with six memory workers${props.session ? " and a seated session Bob with an inspectable file" : ""}`}>
     <SceneLighting cinematics={cinematics} />
     <Room />
     <Label text="RUSTY ROD · CONSULTING" position={[-2.8, 4.25, -4.8]} width={3.4} />
@@ -265,11 +267,8 @@ export default function BrainScene(props: SceneProps) {
     {banks.map((bank) => <Cabinet key={bank.scope} bank={bank} reader={reader} selected={props.selectedScope === bank.scope} active={cue?.scope === bank.scope} onClick={() => { props.onScope(bank.scope); props.onSelect(bank.memory); }} />)}
     {props.flaggedScopes?.map((scope) => <Label key={scope} text="FLAGGED · OWNER REVIEW" position={[scopeCharacters[scope].x, 3.35, -3.8]} width={2.6} />)}
     <Desk position={[-3.6, 0, .9]} />
-    <Desk position={[.2, 0, .6]} />
-    {props.sessionFile ? <group position={[.62, 1.17, .93]} onClick={(event) => { event.stopPropagation(); props.sessionFile?.onOpen(); }} onPointerOver={() => { document.body.style.cursor = "pointer"; }} onPointerOut={() => { document.body.style.cursor = "auto"; }}>
-      <group rotation={[-Math.PI / 2, 0, -.15]} scale={1.3}><SessionFolder /></group>
-      <Label text={`${props.sessionFile.label.toUpperCase()} · SESSION FILE`} position={[0, .6, 0]} width={2.7} onClick={props.sessionFile.onOpen} />
-    </group> : null}
+    <Desk position={[.2, 0, .6]} occupied={Boolean(props.session)} />
+    {props.session ? <group position={[.2, 0, .6]}><SessionWorker session={props.session} animate={props.playing && !props.reducedMotion} /></group> : null}
     <Desk position={[3.8, 0, -1]} rotation={-.1} audit={props.cue?.evaluation?.phase !== "check"} />
     {cue ? <EventStage key={cue.id} cue={cue} playing={props.playing} speed={props.speed} reducedMotion={props.reducedMotion} seek={props.seek} onProgress={props.onProgress} cinematics={cinematics} /> : routes.map((_, index) => <Walker key={index} index={index} playing={props.playing} speed={props.speed} reducedMotion={props.reducedMotion} event={props.event} onClick={() => props.onWorker(index === 4 ? "Inspector BrainBob checks memories against their evidence." : index === 0 ? "Curator BrainBob files new memories and revisions." : "Runner BrainBob delivers a session file to the agent.")} />)}
     <CameraRig onReady={props.onReady} cinematics={cinematics} />

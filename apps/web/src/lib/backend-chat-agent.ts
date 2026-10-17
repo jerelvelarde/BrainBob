@@ -1,17 +1,20 @@
 import { AbstractAgent, EventType, type BaseEvent, type RunAgentInput } from "@copilotkit/react-core/v2";
 import { Observable } from "rxjs";
 import { brainApi, scopeLabel, type BackendAnswer } from "./brain-api";
+import type { SessionActivity } from "./active-session";
 
 export type ChatMode = "ask" | "remember" | "feedback" | "review";
 export type ChatContext = { mode: ChatMode; reader: string; author: string; taskId?: string; readOnly: boolean };
 
 export class BackendChatAgent extends AbstractAgent {
-  constructor(private context: () => ChatContext, private answered: (answer: BackendAnswer) => void, private failed: (error: string) => void) {
+  constructor(private context: () => ChatContext, private answered: (answer: BackendAnswer) => void, private failed: (error: string) => void, private sessionActivity?: (event: SessionActivity) => void) {
     super({ agentId: "brainbob", description: "BrainBob shared memory on Crusoe", threadId: "brainbob-chat" });
   }
   run(input: RunAgentInput): Observable<BaseEvent> {
     return new Observable((observer) => {
       const abort = new AbortController();
+      let asking = false;
+      const finishAsk = (event: SessionActivity) => { asking = false; this.sessionActivity?.(event); };
       this.failed("");
       observer.next({ type: EventType.RUN_STARTED, runId: input.runId, threadId: input.threadId });
       const run = async () => {
@@ -23,8 +26,11 @@ export class BackendChatAgent extends AbstractAgent {
         let reply: string;
         switch (context.mode) {
           case "ask": {
+            asking = true;
+            this.sessionActivity?.({ type: "started", requestId: input.runId, question: text });
             const answer = await brainApi.ask(text, context.reader, abort.signal);
             if (abort.signal.aborted) return;
+            finishAsk({ type: "answered", requestId: input.runId, answer });
             this.answered(answer);
             reply = answer.answer || "The backend returned an empty answer.";
             break;
@@ -58,10 +64,11 @@ export class BackendChatAgent extends AbstractAgent {
       void run().catch((err) => {
         if (observer.closed) return;
         const message = err instanceof Error ? err.message : "The backend request failed.";
+        if (asking) finishAsk({ type: "failed", requestId: input.runId, error: message });
         this.failed(message);
         observer.next({ type: EventType.RUN_ERROR, message }); observer.complete();
       });
-      return () => abort.abort();
+      return () => { abort.abort(); if (asking) finishAsk({ type: "cancelled", requestId: input.runId }); };
     });
   }
 }

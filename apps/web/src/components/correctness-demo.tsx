@@ -50,7 +50,7 @@ export function CorrectnessDemo() {
   }
   return <main className="app-shell correctness-demo" data-dramatic={cinematicsAt(view.cue?.action, progress).darkness > .5 ? view.cue?.action : undefined}>
     <section className="scene-view" aria-label="Rusty Rod memory office"><BrainScene playing={playing} reducedMotion={reducedMotion} speed={1} cue={view.cue} seek={seek} onProgress={onProgress} reader={reader}
-      sessionFile={{ label: view.sessionFile.member.name.split(" ")[0], onOpen: () => setPanel("session") }}
+      session={{ label: view.sessionFile.member.name.split(" ")[0], status: "Demo session", working: playing, selected: panel === "session", onOpen: () => setPanel("session") }}
       selectedScope={panel === "cabinet" ? cabinetScope : view.cue?.scope ?? "all"} selectedMemory="" onSelect={() => {}} onScope={(scope) => { setCabinetScope(scope); setPanel("cabinet"); }} onWorker={() => setPanel("session")} onReady={onReady} /></section>
     <header className="floating-header"><a className="brand" href="/" aria-label="BrainBob home"><span className="bob-mark" aria-hidden="true"><i /><i /><b /><em /></span>BrainBob</a><span className="connection-state">Rusty Rod · scripted demo</span></header>
     <div className="panel-launchers"><a className="rehearsal-link" href="/rehearsal" aria-label="Open animation playground"><Clapperboard size={18} /><span>Animations</span></a>

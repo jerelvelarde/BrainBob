@@ -76,4 +76,4 @@ Remaining live validation: run the same flow against Bonan's server and Crusoe, 
 
 The README, architecture plan, and judging runbook retain their earlier wording pending Jerel's authorization to update those files.
 
-The [session-file model](session-files.md) is implemented as a deterministic fixture at `/demo`. Live task-context assembly still requires a backend handoff; a folder animation alone does not establish what context was passed to a model.
+The [session-file model](session-files.md) is implemented as a deterministic fixture at `/demo`. Both routes give the selected member a seated Bob with a clickable file. On the main route, Ask updates the desk's request state and snapshots the returned memory records for inspection/download. A member switch clears that snapshot. This is a local chat session view; durable server session assembly, concurrent-session discovery, and full model-input tracing still require a backend handoff.

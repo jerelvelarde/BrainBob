@@ -15,7 +15,7 @@ flowchart LR
 
 ## The demo file
 
-At `/demo`, select **Maya Flores**, open **Session file**, and download `sales-01-atlas-session.md`. The visible desk folder opens the same panel. Clicking a cabinet opens its tier inspector with accessible and closed drawers; its session-file button opens the assembled file. The file contains:
+At `/demo`, select **Maya Flores**, open **Session file**, and download `sales-01-atlas-session.md`. A seated Bob stays at the center desk with the file; clicking Bob, the folder, or its label opens the same panel. Clicking a cabinet opens its tier inspector with accessible and closed drawers; its session-file button opens the assembled file. The file contains:
 
 - Individual: Maya’s preference for a concise, three-sentence client update.
 - Team: Sales guidance to cite the approved commitment and preserve the reporting goal.
@@ -41,6 +41,10 @@ The client brief is published into Rusty Rod organization memory. Atlas Harbor i
 
 The frontend assembler is deterministic and uses authored `atlas-update` relevance tags. Its Markdown download is real, but the scenario and sources are synthetic. It does not call a relevance model, establish context completeness for arbitrary tasks, or run Crusoe inference. All fixture data ships in the browser; client filtering is a presentation preview, not an access boundary.
 
-The main HTTP/SSE route shares the tier-cabinet scene and names. It still uses the existing backend retrieval/answer contract; **live session-file assembly and storage are not implemented**. The folder visualization must not be described as proof of the model’s actual input.
+The main HTTP/SSE route also gives the selected member a seated Bob and an inspectable session file. The current chat is the session boundary: Ask drives Working, Answer ready, Failed, or Stopped state. Remember, Usefulness, and Review do not replace its answer file. Bob writes while an Ask is in flight; pause and reduced motion freeze the gesture. The file can also be opened through the keyboard-accessible Session button.
+
+After Ask completes, the file snapshots the returned task ID, question, answer, cited IDs, and accessible records from `/ask.memories`, grouped by Individual, Team, and Organization. It can be downloaded as JSON. Subsequent SSE changes do not rewrite this snapshot; the next Ask starts a new file, and switching members clears the previous member’s chat and file. Before Ask, or after failure/cancellation, the UI does not invent a completed file. This is the current chat’s file, not a historical file reconstructed by event retrace.
+
+**Server-side session-file assembly, persistence, and full model-input tracing remain unimplemented.** Returned retrieval records do not establish the exact prompt or complete context supplied to the model. Source/history links open the current record inspector; source bodies are not embedded in the live file. The scene represents the selected local chat, not a global registry of concurrently running backend sessions.
 
 Bonan’s backend handoff should provide a session/task ID, represented member, selected memory IDs/revisions, accessible source references, relevance/omission metadata, snapshot/event sequence, actual model attribution, and cost where available. Keep factual correctness, leave-one-out usefulness, and retrieval relevance distinct. Do not add a wire event until both sides agree its contract. Backend and bench remain Bonan’s files.

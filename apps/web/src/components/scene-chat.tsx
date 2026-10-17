@@ -5,23 +5,25 @@ import { CopilotChat, CopilotKitProvider } from "@copilotkit/react-core/v2";
 import { BackendChatAgent, type ChatContext, type ChatMode } from "@/lib/backend-chat-agent";
 import { scopeLabel, type BackendAnswer, type BackendMemory } from "@/lib/brain-api";
 import { memberId } from "@/lib/sample-company";
+import type { SessionActivity } from "@/lib/active-session";
 
 const modes = { ask: "Ask", remember: "Remember", feedback: "Usefulness", review: "Review" };
 const placeholders = { ask: "Ask the shared brain…", remember: "Paste a conversation to remember…", feedback: "Give the correct answer to your last question…", review: "Send ‘review’ to assess accumulated evidence…" };
 const HiddenControl = () => null;
 
-export default function SceneChat({ reader, readOnly, memories, onAnswer, onInspect }: {
+export default function SceneChat({ reader, readOnly, memories, onAnswer, onInspect, onSessionActivity }: {
   reader: string; readOnly: boolean; memories: Record<string, BackendMemory>;
   onAnswer: (answer: BackendAnswer) => void; onInspect: (id: string) => void;
+  onSessionActivity: (event: SessionActivity) => void;
 }) {
   const [mode, setMode] = useState<ChatMode>("ask");
   const [answer, setAnswer] = useState<BackendAnswer>();
   const [error, setError] = useState("");
   const context = useRef<ChatContext>({ mode, reader, author: memberId(reader), readOnly });
-  const callbacks = useRef({ onAnswer });
-  useEffect(() => { callbacks.current = { onAnswer }; }, [onAnswer]);
+  const callbacks = useRef({ onAnswer, onSessionActivity });
+  useEffect(() => { callbacks.current = { onAnswer, onSessionActivity }; }, [onAnswer, onSessionActivity]);
   useEffect(() => { context.current = { mode, reader, author: memberId(reader), readOnly, taskId: answer?.task_id }; }, [mode, reader, readOnly, answer]);
-  const [agent] = useState(() => new BackendChatAgent(() => context.current, (result) => { setAnswer(result); callbacks.current.onAnswer(result); }, setError));
+  const [agent] = useState(() => new BackendChatAgent(() => context.current, (result) => { setAnswer(result); callbacks.current.onAnswer(result); }, setError, (event) => callbacks.current.onSessionActivity(event)));
   const [agents] = useState(() => ({ brainbob: agent }));
   return <>
     <div className="chat-modes" aria-label="Chat operation">{(Object.keys(modes) as ChatMode[]).map((value) => <button key={value} aria-pressed={mode === value} disabled={readOnly} onClick={() => { setMode(value); setError(""); }}>{modes[value]}</button>)}</div>
