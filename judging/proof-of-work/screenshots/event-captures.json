@@ -1,0 +1,26 @@
+[
+  {
+    "filename": "07-memory-writing-rehearsal.jpg",
+    "capturedAt": "2026-10-17T18:58:35.405Z",
+    "description": "Rewrite fixture at 45%, with event selector and Sales Team scope.",
+    "commit": "37fcade8b2d56cfa511ee751fdd3dc44411fe72c"
+  },
+  {
+    "filename": "08-evaluator-bob.jpg",
+    "capturedAt": "2026-10-17T18:58:40.678Z",
+    "description": "Evaluator fixture at 83%: inspector and workers delivering records.",
+    "commit": "37fcade8b2d56cfa511ee751fdd3dc44411fe72c"
+  },
+  {
+    "filename": "09-office-fire-and-shredder.jpg",
+    "capturedAt": "2026-10-17T18:58:49.713Z",
+    "description": "Deletion fixture at 62%: office-wide cartoon fire, panicking crew, flying sheets and shredded paper.",
+    "commit": "37fcade8b2d56cfa511ee751fdd3dc44411fe72c"
+  },
+  {
+    "filename": "10-john-memory-retrieval.jpg",
+    "capturedAt": "2026-10-17T18:59:07.639Z",
+    "description": "Individual retrieval fixture at 43%, John selected in the event panel.",
+    "commit": "37fcade8b2d56cfa511ee751fdd3dc44411fe72c"
+  }
+]

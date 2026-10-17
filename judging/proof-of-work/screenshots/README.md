@@ -34,3 +34,12 @@ The character study is now a retained design page at `/character-study`, includi
 Neither screenshot establishes the planned filing, writing, burning-paper, or teaching animations.
 
 The approved version 1 appearance, palette, proportions, and animation requirements are documented in the [final character specification](../../../docs/character-design.md). It embeds the same original captures above; no new screenshot or later capture time is implied.
+
+## Memory event rehearsals
+
+Captured from committed frontend `37fcade` on October 17, 2026. Sources were unchanged; only evidence files were uncommitted. These images show paused animation fixtures, not live model calls or memory-quality results. Original UTC timestamps and descriptions are in [event-captures.json](event-captures.json).
+
+- [07-memory-writing-rehearsal.jpg](07-memory-writing-rehearsal.jpg): 11:58:35 AM PDT. Rewrite fixture at 45%, with event selector and Sales Team scope.
+- [08-evaluator-bob.jpg](08-evaluator-bob.jpg): 11:58:40 AM PDT. Evaluator fixture at 83%: inspector and workers delivering records.
+- [09-office-fire-and-shredder.jpg](09-office-fire-and-shredder.jpg): 11:58:49 AM PDT. Deletion fixture at 62%: office-wide cartoon fire, panicking crew, flying sheets and shredded paper.
+- [10-john-memory-retrieval.jpg](10-john-memory-retrieval.jpg): 11:59:07 AM PDT. Individual retrieval fixture at 43%, John selected in the event panel.
