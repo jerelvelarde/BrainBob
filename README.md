@@ -1,12 +1,29 @@
 # BrainBob
 
+![SpongeBob brain-office meme: burning filing cabinets, scattered papers, and overwhelmed workers](docs/assets/brain-memory-chaos.png)
+
+*The inspiration behind BrainBob’s memory office.*
+
 **A shared brain for agent teams. Keep knowledge current, control who can use it, and trace every change.**
 
-When one agent remembers an outdated deadline, the next agent can repeat it with confidence. BrainBob gives agents a shared memory layer that checks new facts against existing knowledge, applies authorized corrections, and supplies each agent with the context its user may read. A live 3D brain office makes the sources, decisions, and subsequent answers inspectable.
+BrainBob checks new facts against existing knowledge, applies authorized corrections, and gives each agent the context its user may read. A live 3D brain office makes the sources, decisions, and subsequent answers inspectable.
 
 Built by **Jerel Velarde and Bonan Kou** for the **Shared Brain** track at The Recursive Agents Hackathon, October 17, 2026.
 
-[Results](#results) · [Run locally](#run-locally) · [Architecture](docs/architecture.md) · [Published benchmark](https://huggingface.co/datasets/JerelVelarde/bob-benchmark) · [Judging evidence](judging/evidence.md)
+[Problem](#the-problem) · [Solution](#the-solution) · [Results](#results) · [Run locally](#run-locally) · [Architecture](docs/architecture.md) · [Published benchmark](https://huggingface.co/datasets/JerelVelarde/bob-benchmark) · [Judging evidence](judging/evidence.md)
+
+## The problem
+
+Agent teams share facts across conversations, people, and tasks. But those facts change: a deadline moves, an estimate becomes an approved commitment, or a teammate's access changes while old notes remain available.
+
+Storing more context leaves several questions unresolved:
+
+- **Stale facts.** An outdated deadline can survive beside its correction and appear in the next answer.
+- **Unapproved changes.** A tentative suggestion should not replace an approved client commitment.
+- **Private context.** A Sales agent needs shared client decisions without receiving private Engineering discussions.
+- **Missing evidence.** A saved claim needs a source, a change history, and a way to inspect how it affected an answer.
+
+Without maintenance, one agent's mistake becomes the next agent's starting point. The challenge is keeping shared knowledge **current, authorized, and traceable** as the team works.
 
 ## The solution
 
