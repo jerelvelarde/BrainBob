@@ -156,3 +156,34 @@ Declared adapter behavior and limitations:
   genuinely empty sources. This ambiguity remains visible as lost task utility;
   it is not full model-error instrumentation. Any result needs its traces reviewed
   before a benchmark claim. The six public worlds are development material.
+
+### Bonan's local GPU judge
+
+`BrainBobAdapter(judge=callback)` passes the callback only to maintained ingestion;
+append-only and the default production judge stay unchanged. The existing bridge
+can load a frozen adapter directly on a GPU worker, without a standing inference
+endpoint. Run this setup on that GPU worker, not the development laptop:
+
+```python
+import sys
+sys.path.insert(0, "experiments/memops-small")
+from bridge import local_generator, make_judge
+from bobbench.adapters.brainbob import BrainBobAdapter
+from bobbench.run import run_benchmark
+from bobbench.schema import find_world_paths, WORLDS_DIR
+
+judge = make_judge(local_generator(adapter="/absolute/path/to/frozen-lora"))
+run_benchmark(
+    find_world_paths("all", WORLDS_DIR), ["maintained"], replicates=3,
+    out_dir="/tmp/bob-local-judge-new-run",
+    factories={"maintained": lambda: BrainBobAdapter(judge=judge)},
+)
+```
+
+This replaces only the semantic pair judge: extraction and the shared answerer
+still need their configured models/providers. The callback's `model_id` is
+preserved in maintenance decisions and exported effective configuration. Its
+token/cost/latency telemetry is not provided by this hook and is explicitly
+unmeasured; instrument it separately before comparing total pipeline costs.
+The example makes inference calls when executed; it was not run during adapter
+validation. GPU dependencies are those in the existing fine-tuning experiment.

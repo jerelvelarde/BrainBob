@@ -30,11 +30,12 @@ from bobbench.adapters.no_memory import NoMemoryAdapter
 class BrainBobAdapter(NoMemoryAdapter):
     parallel_safe = False  # backend usage and event logs are process-global
 
-    def __init__(self, mode="maintained", answer_fn=None):
+    def __init__(self, mode="maintained", answer_fn=None, judge=None):
         if mode not in ("append_only", "maintained"):
             raise ValueError(f"unknown BrainBob mode: {mode}")
         super().__init__(answer_fn=answer_fn)
         self.mode = self.name = mode
+        self.judge = judge
 
     def reset(self, world_manifest, budget, workdir):
         super().reset(world_manifest, budget, workdir)
@@ -82,7 +83,7 @@ class BrainBobAdapter(NoMemoryAdapter):
                               authority="approved" if approved else "discussion")
             episodes.append(asdict(episode))
             if self.mode == "maintained":
-                rows = maintain.ingest(episode, self.store, acl)
+                rows = maintain.ingest(episode, self.store, acl, judge=self.judge)
             else:
                 rows = curator.ingest(episode, self.store, author=actor)
             results.extend(asdict(row) for row in rows)
@@ -140,6 +141,7 @@ class BrainBobAdapter(NoMemoryAdapter):
             cost[output] = cost.get(output, 0) + sum(row[field] for row in delta.values())
         cost["backend_roles"] = delta
         cost["backend_retry_count"] = None  # core usage does not expose attempts
+        cost["custom_judge_usage_unmeasured"] = self.mode == "maintained" and self.judge is not None
         result["cost"] = cost
         return result
 
@@ -153,10 +155,15 @@ class BrainBobAdapter(NoMemoryAdapter):
         return None  # no claim about production HTTP, exports, streams or caches
 
     def export_trace(self):
+        configuration = llm.configuration()
+        if self.mode == "maintained" and self.judge is not None:
+            configuration["judge"] = {"implementation": "injected_callable",
+                                      "model": getattr(self.judge, "model_id", "custom:unidentified"),
+                                      "usage": None}
         return {**super().export_trace(), "mode": self.mode, "receipts": deepcopy(self.receipts),
                 "memories": [asdict(m) for m in self.store.all()], "policy": self.org.export(),
                 "operations": events.history(after=self._event_start),
-                "model_configuration": llm.configuration(),
+                "model_configuration": configuration,
                 "backend_usage": self._usage_delta(llm.usage(), self._usage_start),
                 "limitations": ["component adapter; HTTP surfaces untested", "no automatic dependency propagation",
                                 "historical retired-memory retrieval unsupported", "core retries incompletely counted",

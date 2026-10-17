@@ -30,6 +30,32 @@ def test_registry_resolves_actual_candidate_modes():
     assert resolve("append_only")().mode == "append_only"
 
 
+@pytest.mark.parametrize("mode", ["maintained", "append_only"])
+def test_local_judge_injection_is_used_only_for_maintenance_and_tracks_identity(tmp_path, monkeypatch, mode):
+    monkeypatch.setattr(curator, "extract", lambda episode, role="curator": [episode.text])
+    monkeypatch.setattr(maintain, "llm_judge", lambda *args: pytest.fail("default judge must not run"))
+    calls = []
+
+    def judge(candidate, memory):
+        calls.append((candidate["text"], memory.text))
+        return "conflict"
+
+    judge.model_id = "local:bonan-adapter@frozen-test-revision"
+    a = BrainBobAdapter(mode=mode, judge=judge)
+    a.reset(base_manifest(), {}, str(tmp_path))
+    a.apply_policy(_pol(1, "member_add", EXEC, RR, T(1)))
+    a.apply_policy(_pol(2, "approver", EXEC, RR, T(1)))
+    a.ingest(_src(3, "old", EXEC, [RR], T(2), "The deadline is November 6."))
+    receipt = a.ingest(_src(4, "new", EXEC, [RR], T(3), "The deadline is November 13."))
+    if mode == "maintained":
+        assert len(calls) == 1 and a.store.all()[0].status == "retired"
+        assert receipt["results"][0]["model"] == judge.model_id
+        assert a.export_trace()["model_configuration"]["judge"] == {
+            "implementation": "injected_callable", "model": judge.model_id, "usage": None}
+    else:
+        assert calls == [] and a.store.all()[0].status == "trial"
+
+
 def test_real_maintenance_supersedes_and_preserves_event_citations(adapter):
     adapter.ingest(_src(10, "old", EXEC, [RR], T(2), "The deadline is November 6."))
     adapter.ingest(_src(11, "new", EXEC, [RR], T(3), "The deadline is November 13."))
