@@ -43,3 +43,10 @@ Captured from committed frontend `37fcade` on October 17, 2026. Sources were unc
 - [08-evaluator-bob.jpg](08-evaluator-bob.jpg): 11:58:40 AM PDT. Evaluator fixture at 83%: inspector and workers delivering records.
 - [09-office-fire-and-shredder.jpg](09-office-fire-and-shredder.jpg): 11:58:49 AM PDT. Deletion fixture at 62%: office-wide cartoon fire, panicking crew, flying sheets and shredded paper.
 - [10-john-memory-retrieval.jpg](10-john-memory-retrieval.jpg): 11:59:07 AM PDT. Individual retrieval fixture at 43%, John selected in the event panel.
+
+## Dramatic scene direction
+
+Captured from committed frontend `bc9765d` on October 17, 2026. App sources were unchanged; only new evidence files were present. These are animation fixtures. Original UTC timestamps are in [dramatic-captures.json](dramatic-captures.json).
+
+- [11-dramatic-office-fire.jpg](11-dramatic-office-fire.jpg): 12:07:59 PM PDT. Delete rehearsal at 62%, Sales Team. Night lighting, camera framing, tall flames, smoke, embers, flying paper, shredding, and worried BrainBobs. Paused with panels closed.
+- [12-evaluator-spotlight.jpg](12-evaluator-spotlight.jpg): 12:08:11 PM PDT. Evaluate rehearsal at 83%, Sales Team. Violet surroundings, spotlight on Evaluator Bob, evidence papers and waiting workers. Paused with panels closed.
