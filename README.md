@@ -5,9 +5,9 @@
 Narrated Live Demo + Explainer
 https://github.com/user-attachments/assets/e75a7bcc-b46e-4c95-9e15-6edac63a0b38
 
-[![Watch BrainBob’s narrated 60-second live demo: a corrected memory guides the next answer](docs/demo/live-one-minute-20261017/output/preview.jpg)](https://github.com/jerelvelarde/BrainBob/blob/main/docs/demo/live-one-minute-20261017/output/brainbob-live-60s-vo.mp4)
+**[▶ Watch V2 — 2:50](https://github.com/user-attachments/assets/e75a7bcc-b46e-4c95-9e15-6edac63a0b38)** · Edited live recording with new ElevenLabs narration and fictional company data.
 
-**[▶ Watch the 60-second narrated demo](https://github.com/jerelvelarde/BrainBob/blob/main/docs/demo/live-one-minute-20261017/output/brainbob-live-60s-vo.mp4)** · Edited live recording with ElevenLabs narration and fictional company data. [Recording notes](docs/demo/live-one-minute-20261017/README.md).
+Follow Maya as she changes a personal preference through agent chat, then starts a fresh session that cites the updated memory. The film opens with the problem and solution, explains memory operations and evaluation, presents the benchmark and experimental fine-tuned checker, and closes with the creators and repository.
 
 BrainBob checks new facts against existing knowledge, applies authorized corrections, and gives each agent the context its user may read. A live 3D brain office makes the sources, decisions, and subsequent answers inspectable.
 
