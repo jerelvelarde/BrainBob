@@ -1,0 +1,8 @@
+
+ RUN  v4.1.12 /Users/jerel/Documents/ChatGPT/recursive-agents/apps/web
+
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  17:23:54
+   Duration  265ms (transform 117ms, setup 0ms, import 169ms, tests 81ms, environment 0ms)
