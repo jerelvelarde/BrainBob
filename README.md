@@ -1,12 +1,12 @@
 # BrainBob
 
-https://github.com/user-attachments/assets/072b8e98-9a8e-4399-b06b-18b4e37a16b5
+**A shared brain for agent teams. Keep knowledge current, control who can use it, and trace every change.**
+
+https://github.com/user-attachments/assets/e75a7bcc-b46e-4c95-9e15-6edac63a0b38
 
 [![Watch BrainBob’s narrated 60-second live demo: a corrected memory guides the next answer](docs/demo/live-one-minute-20261017/output/preview.jpg)](https://github.com/jerelvelarde/BrainBob/blob/main/docs/demo/live-one-minute-20261017/output/brainbob-live-60s-vo.mp4)
 
 **[▶ Watch the 60-second narrated demo](https://github.com/jerelvelarde/BrainBob/blob/main/docs/demo/live-one-minute-20261017/output/brainbob-live-60s-vo.mp4)** · Edited live recording with ElevenLabs narration and fictional company data. [Recording notes](docs/demo/live-one-minute-20261017/README.md).
-
-**A shared brain for agent teams. Keep knowledge current, control who can use it, and trace every change.**
 
 BrainBob checks new facts against existing knowledge, applies authorized corrections, and gives each agent the context its user may read. A live 3D brain office makes the sources, decisions, and subsequent answers inspectable.
 
