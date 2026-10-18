@@ -28,4 +28,11 @@ Exact capture times are in `captures.json`. These are appearance and choreograph
 - Full-suite run during concurrent chat work: 44 passed, 1 failed in `backend-chat-agent.test.ts` (expected trailing punctuation in a personal remember command). That failure was in independently edited files; those changes were preserved.
 - No device performance measurements or browser emulation of reduced-motion preferences were performed.
 
-Local commits only; nothing pushed by this task.
+## Publication preparation
+
+The scoped changes were carried onto current remote main in a separate worktree. Original local commits and screenshot provenance above are retained; the corresponding publication commits are:
+
+- [Single-Bob implementation](https://github.com/jerelvelarde/BrainBob/commit/ca9cded5ec57e9ac51cf53813fc011768a710959), corresponding to local `997e150`.
+- [Playback controls](https://github.com/jerelvelarde/BrainBob/commit/5a0dbc3809c0ed8925f3e9d9161e1208d9130f0b), corresponding to local `3204a8d`.
+
+On the isolated PR branch, `pnpm typecheck`, the full `pnpm test` suite (42 tests across 8 files), and `pnpm build` pass. The concurrent chat changes from the original shared checkout are not part of this PR.
