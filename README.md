@@ -2,7 +2,6 @@
 
 **A shared brain for agent teams. Keep knowledge current, control who can use it, and trace every change.**
 
-Narrated Live Demo + Explainer
 https://github.com/user-attachments/assets/e75a7bcc-b46e-4c95-9e15-6edac63a0b38
 
 **[▶ Watch V2 — 2:50](https://github.com/user-attachments/assets/e75a7bcc-b46e-4c95-9e15-6edac63a0b38)** · Edited live recording with new ElevenLabs narration and fictional company data.
