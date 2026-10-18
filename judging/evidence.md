@@ -11,12 +11,19 @@ Current reading path: [solution and setup](../README.md) → [implemented archit
 | Track | Shared Brain |
 | Submitted commit / receipt | Not yet recorded; [remaining submission checks](submission-status.md). Individual evidence builds are listed below |
 | Public live demo URL | Not yet recorded; the documented app runs locally |
-| One-minute video | [Finished narrated 60-second recording](../docs/demo/live-one-minute-20261017/output/brainbob-live-60s-vo.mp4); [provenance and media checks](../docs/demo/live-one-minute-20261017/README.md) |
+| Featured extended demo | [V2 — 2:50](https://github.com/user-attachments/assets/e75a7bcc-b46e-4c95-9e15-6edac63a0b38); [repository MP4, transcript and provenance](../docs/demo/v2-agent-chat-20261017/README.md) |
+| One-minute option | [Historical V1 — 60 seconds](../docs/demo/live-one-minute-20261017/README.md); V2 exceeds a one-minute duration limit |
 | Evaluation provenance | October 17, 2026; original inference builds and v0.3 rescore are recorded in the [report](../docs/evaluation-report.md#provenance) |
 
-## Featured recording
+## Three deliverables and the featured V2 recording
 
-The [one-minute narrated video](../docs/demo/live-one-minute-20261017/README.md) records the running localhost application with real Crusoe inference and fictional data. It shows Maya retrieving an existing approved Atlas deadline, inspecting its source, manually correcting a personal preference, and using the correction in a fresh session. The Atlas correction predates this recording. It is edited live footage, not a continuous take, an automatic audit demonstration, or a verified hosted release. Original captures came from a shared development checkout; [verification metadata](../docs/demo/live-one-minute-20261017/verification.json) discloses the build boundary.
+The [judging guide](README.md#three-things-we-built) summarizes the **app, our benchmark, and our fine-tuned model**. Their results have separate provenance: recorded application behavior, the organizational pilot, and the small-model diagnostic must not be combined into one performance claim.
+
+[V2 — 2:50](https://github.com/user-attachments/assets/e75a7bcc-b46e-4c95-9e15-6edac63a0b38) is the featured extended film. At 0:24–1:24 it records Maya's explicit `Remember:` command through chat, backend extraction of m75, retirement of m74, and a fresh session citing m75. Events 153–160 and the exact narration are preserved in the [V2 package](../docs/demo/v2-agent-chat-20261017/README.md). The inspector only reads source/history. The benchmark appears at 1:57–2:17 and the fine-tuned checker at 2:17–2:35; those explain existing experiments, not new runs within the app take.
+
+V2 combines edited live footage, explanation slides and ElevenLabs narration, using fictional data from a shared development checkout. `Remember:` is an explicit frontend command, not autonomous model tool selection. The film does not demonstrate a live audit, activation of the tuned model, or a verified hosted build. Its 72% spoken headline rounds the exact v0.3 score of 71.9%.
+
+The [historical V1 recording](../docs/demo/live-one-minute-20261017/README.md) remains the 60-second option. It shows an inspector-based manual preference correction; the Atlas correction predates that recording. V1 and V2 are distinct takes, not interchangeable evidence for how a write was initiated.
 
 ## Working application evidence
 
@@ -76,7 +83,8 @@ Sources, costs, model settings, and limitations: [evaluation report](../docs/eva
 | Shared memory, maintenance, auditing, evaluation | Backend commits and per-experiment builds in the [evaluation report](../docs/evaluation-report.md#provenance) |
 | Live app launch, resumable company import, desk conversations, answer instructions | `348db5b`, `e77bb9a`, `489919b`, with [recorded verification](live-workspace-20261017/README.md) |
 | Visual interface, inspectors, session files, and subsequent UI work | [Commit-linked proof of work](proof-of-work/index.html); each entry identifies its execution/capture mode |
-| Small checker | Public adapter `b904e6ec0baea37bf70209093b8c59332d3c450a` and saved predictions in the [model handoff](../docs/finetune-handoff.md) |
+| Bob Benchmark | Team-created public synthetic dataset, runner, scorer and controls; [published dataset](https://huggingface.co/datasets/JerelVelarde/bob-benchmark) and [corrected pilot artifacts](../bobbench/results/20261017-141014/) |
+| Fine-tuned memory checker | Public adapter `b904e6ec0baea37bf70209093b8c59332d3c450a` and saved predictions in the [model handoff](../docs/finetune-handoff.md) |
 | Reused libraries, datasets, and reference material | [Runtime stack](../docs/architecture.md), per-experiment datasets in the [report](../docs/evaluation-report.md), and [character references](../docs/character-design.md) |
 
 Original results, scorer reviews, historical designs, and earlier fixture screenshots remain evidence of their own builds. They should not be presented as a single verified final submission build. The narrated video is now committed and linked above. Record the final submitted commit, hosted demo verification, and submission receipt only when confirmed; track the remaining work in [submission status](submission-status.md).

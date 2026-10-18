@@ -1,0 +1,33 @@
+{
+  "checked_at": "2026-10-18T00:22:41.579190+00:00",
+  "base_commit": "5224e8e8cf7e5e8c3c04307a624a840933552152",
+  "documentation_files": 36,
+  "local_links": 201,
+  "markdown_fragments": 9,
+  "local_links_and_heading_anchors": "passed",
+  "original_recording_commit": "f7f5ab58436842527f7dee905bedaf4a8313b8e4",
+  "original_artifacts_preserved_sha256": {
+    "SCRIPT.md": "5b4b8e619ad1989241711e9bf980cec9afd201574a17c1d870d5486f6e7f66f7",
+    "verification.json": "b755d70939f05c97dd7bf956be0468d2822553939a5668f33a0f0c0fa93e9bd7",
+    "backend-events.json": "c8cc9b995b81b1d86d62472bbd268761a11e1da86a67258d3732ed7c04dd22a0",
+    "output/brainbob-v2.mp4": "63ba72759ff426a3408804f34c13a5569df9f4099551e343ceb9f641586c3b6c"
+  },
+  "v2_recorded_duration_seconds": 170,
+  "three_minute_video_route_seconds": {
+    "introduction": 10,
+    "v2": 170,
+    "total": 180
+  },
+  "public_attachment_check": {
+    "url": "https://github.com/user-attachments/assets/e75a7bcc-b46e-4c95-9e15-6edac63a0b38",
+    "checked_at": "2026-10-18T00:21:36.445334+00:00",
+    "authenticated": false,
+    "method": "GET headers only; response closed without reading media",
+    "previous_head_check": "403 from redirected attachment URL",
+    "status": 206,
+    "content_type": "video/mp4"
+  },
+  "timeline_anchors_and_image_markup": "passed; original markup preserved",
+  "git_diff_check": "passed",
+  "limits": "Documentation and existing media publication only; no new app behavior, inference, training, evaluation, hosted deployment, decode or submission-form verification. Original V2 media verification is retained separately."
+}
