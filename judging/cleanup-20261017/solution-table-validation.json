@@ -1,0 +1,14 @@
+{
+  "commit": "9f28f446f2fe5dd2431f5ba7f81a234a5bf57f7b",
+  "commit_time": "2026-10-17T17:03:44-07:00",
+  "checked_at": "2026-10-18T00:04:02.740543+00:00",
+  "readme_local_links_and_heading_anchors": 36,
+  "result_sources": "docs/evaluation-report.md, Experiments 5, 6 and 7; existing benchmark and adapter provenance",
+  "headline_values": [
+    "12/13 vs 0/13 correct updates; 0/32 valid memories wrongly retired",
+    "71.9% maintained vs 25.0% no memory, v0.3; append-only difference inconclusive",
+    "32/60 base to 42/60 tuned; five false conflicts, experimental opt-in"
+  ],
+  "scope": "README table only; no application source, new inference, training or evaluation",
+  "git_diff_check": "passed"
+}
