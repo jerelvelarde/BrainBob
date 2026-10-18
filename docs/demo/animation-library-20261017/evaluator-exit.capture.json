@@ -1,0 +1,238 @@
+{
+  "label": "evaluator-exit",
+  "button": "Evaluator leaves",
+  "scope": "team",
+  "seconds": 5,
+  "start": 1792281945713,
+  "end": 1792281951607,
+  "frames": [
+    {
+      "at": 1792281945977,
+      "name": "evaluator-exit-0000.jpg"
+    },
+    {
+      "at": 1792281946071,
+      "name": "evaluator-exit-0001.jpg"
+    },
+    {
+      "at": 1792281946169,
+      "name": "evaluator-exit-0002.jpg"
+    },
+    {
+      "at": 1792281946266,
+      "name": "evaluator-exit-0003.jpg"
+    },
+    {
+      "at": 1792281946364,
+      "name": "evaluator-exit-0004.jpg"
+    },
+    {
+      "at": 1792281946453,
+      "name": "evaluator-exit-0005.jpg"
+    },
+    {
+      "at": 1792281946561,
+      "name": "evaluator-exit-0006.jpg"
+    },
+    {
+      "at": 1792281946663,
+      "name": "evaluator-exit-0007.jpg"
+    },
+    {
+      "at": 1792281946760,
+      "name": "evaluator-exit-0008.jpg"
+    },
+    {
+      "at": 1792281946860,
+      "name": "evaluator-exit-0009.jpg"
+    },
+    {
+      "at": 1792281946965,
+      "name": "evaluator-exit-0010.jpg"
+    },
+    {
+      "at": 1792281947057,
+      "name": "evaluator-exit-0011.jpg"
+    },
+    {
+      "at": 1792281947157,
+      "name": "evaluator-exit-0012.jpg"
+    },
+    {
+      "at": 1792281947256,
+      "name": "evaluator-exit-0013.jpg"
+    },
+    {
+      "at": 1792281947355,
+      "name": "evaluator-exit-0014.jpg"
+    },
+    {
+      "at": 1792281947453,
+      "name": "evaluator-exit-0015.jpg"
+    },
+    {
+      "at": 1792281947543,
+      "name": "evaluator-exit-0016.jpg"
+    },
+    {
+      "at": 1792281947645,
+      "name": "evaluator-exit-0017.jpg"
+    },
+    {
+      "at": 1792281947746,
+      "name": "evaluator-exit-0018.jpg"
+    },
+    {
+      "at": 1792281947846,
+      "name": "evaluator-exit-0019.jpg"
+    },
+    {
+      "at": 1792281947944,
+      "name": "evaluator-exit-0020.jpg"
+    },
+    {
+      "at": 1792281948044,
+      "name": "evaluator-exit-0021.jpg"
+    },
+    {
+      "at": 1792281948146,
+      "name": "evaluator-exit-0022.jpg"
+    },
+    {
+      "at": 1792281948241,
+      "name": "evaluator-exit-0023.jpg"
+    },
+    {
+      "at": 1792281948341,
+      "name": "evaluator-exit-0024.jpg"
+    },
+    {
+      "at": 1792281948440,
+      "name": "evaluator-exit-0025.jpg"
+    },
+    {
+      "at": 1792281948528,
+      "name": "evaluator-exit-0026.jpg"
+    },
+    {
+      "at": 1792281948639,
+      "name": "evaluator-exit-0027.jpg"
+    },
+    {
+      "at": 1792281948738,
+      "name": "evaluator-exit-0028.jpg"
+    },
+    {
+      "at": 1792281948837,
+      "name": "evaluator-exit-0029.jpg"
+    },
+    {
+      "at": 1792281948937,
+      "name": "evaluator-exit-0030.jpg"
+    },
+    {
+      "at": 1792281949031,
+      "name": "evaluator-exit-0031.jpg"
+    },
+    {
+      "at": 1792281949134,
+      "name": "evaluator-exit-0032.jpg"
+    },
+    {
+      "at": 1792281949234,
+      "name": "evaluator-exit-0033.jpg"
+    },
+    {
+      "at": 1792281949330,
+      "name": "evaluator-exit-0034.jpg"
+    },
+    {
+      "at": 1792281949430,
+      "name": "evaluator-exit-0035.jpg"
+    },
+    {
+      "at": 1792281949527,
+      "name": "evaluator-exit-0036.jpg"
+    },
+    {
+      "at": 1792281949627,
+      "name": "evaluator-exit-0037.jpg"
+    },
+    {
+      "at": 1792281949725,
+      "name": "evaluator-exit-0038.jpg"
+    },
+    {
+      "at": 1792281949824,
+      "name": "evaluator-exit-0039.jpg"
+    },
+    {
+      "at": 1792281949923,
+      "name": "evaluator-exit-0040.jpg"
+    },
+    {
+      "at": 1792281950023,
+      "name": "evaluator-exit-0041.jpg"
+    },
+    {
+      "at": 1792281950122,
+      "name": "evaluator-exit-0042.jpg"
+    },
+    {
+      "at": 1792281950222,
+      "name": "evaluator-exit-0043.jpg"
+    },
+    {
+      "at": 1792281950325,
+      "name": "evaluator-exit-0044.jpg"
+    },
+    {
+      "at": 1792281950424,
+      "name": "evaluator-exit-0045.jpg"
+    },
+    {
+      "at": 1792281950522,
+      "name": "evaluator-exit-0046.jpg"
+    },
+    {
+      "at": 1792281950622,
+      "name": "evaluator-exit-0047.jpg"
+    },
+    {
+      "at": 1792281950722,
+      "name": "evaluator-exit-0048.jpg"
+    },
+    {
+      "at": 1792281950820,
+      "name": "evaluator-exit-0049.jpg"
+    },
+    {
+      "at": 1792281950920,
+      "name": "evaluator-exit-0050.jpg"
+    },
+    {
+      "at": 1792281951018,
+      "name": "evaluator-exit-0051.jpg"
+    },
+    {
+      "at": 1792281951118,
+      "name": "evaluator-exit-0052.jpg"
+    },
+    {
+      "at": 1792281951216,
+      "name": "evaluator-exit-0053.jpg"
+    },
+    {
+      "at": 1792281951314,
+      "name": "evaluator-exit-0054.jpg"
+    },
+    {
+      "at": 1792281951412,
+      "name": "evaluator-exit-0055.jpg"
+    },
+    {
+      "at": 1792281951510,
+      "name": "evaluator-exit-0056.jpg"
+    }
+  ]
+}

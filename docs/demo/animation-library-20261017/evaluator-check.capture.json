@@ -1,0 +1,274 @@
+{
+  "label": "evaluator-check",
+  "button": "Check a citation",
+  "scope": "team",
+  "seconds": 6,
+  "start": 1792281938524,
+  "end": 1792281945347,
+  "frames": [
+    {
+      "at": 1792281938793,
+      "name": "evaluator-check-0000.jpg"
+    },
+    {
+      "at": 1792281938916,
+      "name": "evaluator-check-0001.jpg"
+    },
+    {
+      "at": 1792281939014,
+      "name": "evaluator-check-0002.jpg"
+    },
+    {
+      "at": 1792281939113,
+      "name": "evaluator-check-0003.jpg"
+    },
+    {
+      "at": 1792281939211,
+      "name": "evaluator-check-0004.jpg"
+    },
+    {
+      "at": 1792281939311,
+      "name": "evaluator-check-0005.jpg"
+    },
+    {
+      "at": 1792281939409,
+      "name": "evaluator-check-0006.jpg"
+    },
+    {
+      "at": 1792281939505,
+      "name": "evaluator-check-0007.jpg"
+    },
+    {
+      "at": 1792281939606,
+      "name": "evaluator-check-0008.jpg"
+    },
+    {
+      "at": 1792281939705,
+      "name": "evaluator-check-0009.jpg"
+    },
+    {
+      "at": 1792281939804,
+      "name": "evaluator-check-0010.jpg"
+    },
+    {
+      "at": 1792281939905,
+      "name": "evaluator-check-0011.jpg"
+    },
+    {
+      "at": 1792281940003,
+      "name": "evaluator-check-0012.jpg"
+    },
+    {
+      "at": 1792281940085,
+      "name": "evaluator-check-0013.jpg"
+    },
+    {
+      "at": 1792281940187,
+      "name": "evaluator-check-0014.jpg"
+    },
+    {
+      "at": 1792281940289,
+      "name": "evaluator-check-0015.jpg"
+    },
+    {
+      "at": 1792281940390,
+      "name": "evaluator-check-0016.jpg"
+    },
+    {
+      "at": 1792281940490,
+      "name": "evaluator-check-0017.jpg"
+    },
+    {
+      "at": 1792281940593,
+      "name": "evaluator-check-0018.jpg"
+    },
+    {
+      "at": 1792281940689,
+      "name": "evaluator-check-0019.jpg"
+    },
+    {
+      "at": 1792281940790,
+      "name": "evaluator-check-0020.jpg"
+    },
+    {
+      "at": 1792281940887,
+      "name": "evaluator-check-0021.jpg"
+    },
+    {
+      "at": 1792281940988,
+      "name": "evaluator-check-0022.jpg"
+    },
+    {
+      "at": 1792281941087,
+      "name": "evaluator-check-0023.jpg"
+    },
+    {
+      "at": 1792281941184,
+      "name": "evaluator-check-0024.jpg"
+    },
+    {
+      "at": 1792281941271,
+      "name": "evaluator-check-0025.jpg"
+    },
+    {
+      "at": 1792281941386,
+      "name": "evaluator-check-0026.jpg"
+    },
+    {
+      "at": 1792281941485,
+      "name": "evaluator-check-0027.jpg"
+    },
+    {
+      "at": 1792281941583,
+      "name": "evaluator-check-0028.jpg"
+    },
+    {
+      "at": 1792281941681,
+      "name": "evaluator-check-0029.jpg"
+    },
+    {
+      "at": 1792281941780,
+      "name": "evaluator-check-0030.jpg"
+    },
+    {
+      "at": 1792281941879,
+      "name": "evaluator-check-0031.jpg"
+    },
+    {
+      "at": 1792281941978,
+      "name": "evaluator-check-0032.jpg"
+    },
+    {
+      "at": 1792281942077,
+      "name": "evaluator-check-0033.jpg"
+    },
+    {
+      "at": 1792281942177,
+      "name": "evaluator-check-0034.jpg"
+    },
+    {
+      "at": 1792281942277,
+      "name": "evaluator-check-0035.jpg"
+    },
+    {
+      "at": 1792281942373,
+      "name": "evaluator-check-0036.jpg"
+    },
+    {
+      "at": 1792281942472,
+      "name": "evaluator-check-0037.jpg"
+    },
+    {
+      "at": 1792281942570,
+      "name": "evaluator-check-0038.jpg"
+    },
+    {
+      "at": 1792281942670,
+      "name": "evaluator-check-0039.jpg"
+    },
+    {
+      "at": 1792281942762,
+      "name": "evaluator-check-0040.jpg"
+    },
+    {
+      "at": 1792281942868,
+      "name": "evaluator-check-0041.jpg"
+    },
+    {
+      "at": 1792281942969,
+      "name": "evaluator-check-0042.jpg"
+    },
+    {
+      "at": 1792281943070,
+      "name": "evaluator-check-0043.jpg"
+    },
+    {
+      "at": 1792281943169,
+      "name": "evaluator-check-0044.jpg"
+    },
+    {
+      "at": 1792281943262,
+      "name": "evaluator-check-0045.jpg"
+    },
+    {
+      "at": 1792281943367,
+      "name": "evaluator-check-0046.jpg"
+    },
+    {
+      "at": 1792281943464,
+      "name": "evaluator-check-0047.jpg"
+    },
+    {
+      "at": 1792281943563,
+      "name": "evaluator-check-0048.jpg"
+    },
+    {
+      "at": 1792281943662,
+      "name": "evaluator-check-0049.jpg"
+    },
+    {
+      "at": 1792281943763,
+      "name": "evaluator-check-0050.jpg"
+    },
+    {
+      "at": 1792281943861,
+      "name": "evaluator-check-0051.jpg"
+    },
+    {
+      "at": 1792281943959,
+      "name": "evaluator-check-0052.jpg"
+    },
+    {
+      "at": 1792281944090,
+      "name": "evaluator-check-0053.jpg"
+    },
+    {
+      "at": 1792281944189,
+      "name": "evaluator-check-0054.jpg"
+    },
+    {
+      "at": 1792281944288,
+      "name": "evaluator-check-0055.jpg"
+    },
+    {
+      "at": 1792281944384,
+      "name": "evaluator-check-0056.jpg"
+    },
+    {
+      "at": 1792281944488,
+      "name": "evaluator-check-0057.jpg"
+    },
+    {
+      "at": 1792281944586,
+      "name": "evaluator-check-0058.jpg"
+    },
+    {
+      "at": 1792281944687,
+      "name": "evaluator-check-0059.jpg"
+    },
+    {
+      "at": 1792281944768,
+      "name": "evaluator-check-0060.jpg"
+    },
+    {
+      "at": 1792281944851,
+      "name": "evaluator-check-0061.jpg"
+    },
+    {
+      "at": 1792281944953,
+      "name": "evaluator-check-0062.jpg"
+    },
+    {
+      "at": 1792281945050,
+      "name": "evaluator-check-0063.jpg"
+    },
+    {
+      "at": 1792281945147,
+      "name": "evaluator-check-0064.jpg"
+    },
+    {
+      "at": 1792281945247,
+      "name": "evaluator-check-0065.jpg"
+    }
+  ]
+}

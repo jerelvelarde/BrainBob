@@ -1,0 +1,101 @@
+{
+  "clips": [
+    {
+      "file": "clips/arrive.mp4",
+      "duration": 6.733333,
+      "sha256": "9b9ac5ae8050efcb416c6d69882c290fefd53574a03f3a2e70d44c30f527e403",
+      "decode": "passed"
+    },
+    {
+      "file": "clips/create.mp4",
+      "duration": 9.733333,
+      "sha256": "6939a893e3703ef1027d52de89d76aad0b73febffe10f8917f22baeb5b6b0846",
+      "decode": "passed"
+    },
+    {
+      "file": "clips/retrieve.mp4",
+      "duration": 9.733333,
+      "sha256": "76f645fb7e087d07ce87e028c3fee217409ced004acc0a2b8cc8330a2a1dfd00",
+      "decode": "passed"
+    },
+    {
+      "file": "clips/session.mp4",
+      "duration": 9.733333,
+      "sha256": "d25464501932921c611d52d42f0b646dc8c6b6245ee94041baff34bace02d7f2",
+      "decode": "passed"
+    },
+    {
+      "file": "clips/update.mp4",
+      "duration": 10.733333,
+      "sha256": "82ebf34a97b9158dd797b148c47e7f0852b83fd7479fdde70b4d5559d4b176a7",
+      "decode": "passed"
+    },
+    {
+      "file": "clips/retire.mp4",
+      "duration": 12.733333,
+      "sha256": "348b3fa93282b6bc398054cfc7465eec532d515ce3320a424ca3488b4ebab213",
+      "decode": "passed"
+    },
+    {
+      "file": "clips/evaluator-enter.mp4",
+      "duration": 7.733333,
+      "sha256": "9c34e5efe72141efd67aef12389613545afcfbdcb88cdebd0d02665b03abba2d",
+      "decode": "passed"
+    },
+    {
+      "file": "clips/evaluator-check.mp4",
+      "duration": 6.733333,
+      "sha256": "22eaced5fcda4267cf20653e9cbb076524d0020f1458df04c32e67f5889cd3c4",
+      "decode": "passed"
+    },
+    {
+      "file": "clips/evaluator-exit.mp4",
+      "duration": 5.733333,
+      "sha256": "0482462083b65aafe60342204035f1ef1c445893a66992ea8b40f52cca62a59b",
+      "decode": "passed"
+    },
+    {
+      "file": "clips/promote.mp4",
+      "duration": 7.733333,
+      "sha256": "7a1a6c7e18c1572dbda6931f82f4b9d8905f151282969a6cf6672ea0e44b8f04",
+      "decode": "passed"
+    },
+    {
+      "file": "clips/flag.mp4",
+      "duration": 7.733333,
+      "sha256": "f6ba6c3657831e107a0578e7e9fead2da15154fc2bb37f38e5d5bd0626bd6876",
+      "decode": "passed"
+    },
+    {
+      "file": "clips/lock.mp4",
+      "duration": 5.733333,
+      "sha256": "08b494f773647c5067ce869a18938e13bd0586b46f24e665754d25d188a1d1b2",
+      "decode": "passed"
+    },
+    {
+      "file": "clips/resolve.mp4",
+      "duration": 5.733333,
+      "sha256": "f8590f9ac875dcb726aa0aead3da216ec73472b2e15ecf3bd7bd69effd629931",
+      "decode": "passed"
+    },
+    {
+      "file": "clips/reject.mp4",
+      "duration": 6.733333,
+      "sha256": "99e73c7a067951752e76f54a20028a82c7c6fb42131e428ff4aeeaf4ce4760ba",
+      "decode": "passed"
+    },
+    {
+      "file": "clips/answer.mp4",
+      "duration": 7.733333,
+      "sha256": "f0cc42db5319b1556e90f2f864cf801347eb5668d734130f5f1696cdef61086f",
+      "decode": "passed"
+    }
+  ],
+  "reel_seconds": 121.0,
+  "reel_sha256": "78e3546d03e5ff403a1d1d8e64160e7021604cab16643851b007145716178253",
+  "total_clips": 15,
+  "gif_count": 6,
+  "typecheck": "passed",
+  "scene_animation_tests": "9 passed",
+  "live_backend_mutations": false
+}

@@ -1,0 +1,510 @@
+{
+  "label": "retire",
+  "button": "Retire / delete",
+  "scope": "team",
+  "seconds": 12,
+  "start": 1792281873209,
+  "end": 1792281886027,
+  "frames": [
+    {
+      "at": 1792281873475,
+      "name": "retire-0000.jpg"
+    },
+    {
+      "at": 1792281873567,
+      "name": "retire-0001.jpg"
+    },
+    {
+      "at": 1792281873652,
+      "name": "retire-0002.jpg"
+    },
+    {
+      "at": 1792281873754,
+      "name": "retire-0003.jpg"
+    },
+    {
+      "at": 1792281873854,
+      "name": "retire-0004.jpg"
+    },
+    {
+      "at": 1792281873957,
+      "name": "retire-0005.jpg"
+    },
+    {
+      "at": 1792281874057,
+      "name": "retire-0006.jpg"
+    },
+    {
+      "at": 1792281874160,
+      "name": "retire-0007.jpg"
+    },
+    {
+      "at": 1792281874259,
+      "name": "retire-0008.jpg"
+    },
+    {
+      "at": 1792281874359,
+      "name": "retire-0009.jpg"
+    },
+    {
+      "at": 1792281874456,
+      "name": "retire-0010.jpg"
+    },
+    {
+      "at": 1792281874559,
+      "name": "retire-0011.jpg"
+    },
+    {
+      "at": 1792281874655,
+      "name": "retire-0012.jpg"
+    },
+    {
+      "at": 1792281874755,
+      "name": "retire-0013.jpg"
+    },
+    {
+      "at": 1792281874852,
+      "name": "retire-0014.jpg"
+    },
+    {
+      "at": 1792281874958,
+      "name": "retire-0015.jpg"
+    },
+    {
+      "at": 1792281875050,
+      "name": "retire-0016.jpg"
+    },
+    {
+      "at": 1792281875150,
+      "name": "retire-0017.jpg"
+    },
+    {
+      "at": 1792281875248,
+      "name": "retire-0018.jpg"
+    },
+    {
+      "at": 1792281875349,
+      "name": "retire-0019.jpg"
+    },
+    {
+      "at": 1792281875447,
+      "name": "retire-0020.jpg"
+    },
+    {
+      "at": 1792281875548,
+      "name": "retire-0021.jpg"
+    },
+    {
+      "at": 1792281875647,
+      "name": "retire-0022.jpg"
+    },
+    {
+      "at": 1792281875744,
+      "name": "retire-0023.jpg"
+    },
+    {
+      "at": 1792281875844,
+      "name": "retire-0024.jpg"
+    },
+    {
+      "at": 1792281875937,
+      "name": "retire-0025.jpg"
+    },
+    {
+      "at": 1792281876035,
+      "name": "retire-0026.jpg"
+    },
+    {
+      "at": 1792281876139,
+      "name": "retire-0027.jpg"
+    },
+    {
+      "at": 1792281876225,
+      "name": "retire-0028.jpg"
+    },
+    {
+      "at": 1792281876338,
+      "name": "retire-0029.jpg"
+    },
+    {
+      "at": 1792281876436,
+      "name": "retire-0030.jpg"
+    },
+    {
+      "at": 1792281876529,
+      "name": "retire-0031.jpg"
+    },
+    {
+      "at": 1792281876636,
+      "name": "retire-0032.jpg"
+    },
+    {
+      "at": 1792281876727,
+      "name": "retire-0033.jpg"
+    },
+    {
+      "at": 1792281876832,
+      "name": "retire-0034.jpg"
+    },
+    {
+      "at": 1792281876962,
+      "name": "retire-0035.jpg"
+    },
+    {
+      "at": 1792281877061,
+      "name": "retire-0036.jpg"
+    },
+    {
+      "at": 1792281877162,
+      "name": "retire-0037.jpg"
+    },
+    {
+      "at": 1792281877261,
+      "name": "retire-0038.jpg"
+    },
+    {
+      "at": 1792281877361,
+      "name": "retire-0039.jpg"
+    },
+    {
+      "at": 1792281877457,
+      "name": "retire-0040.jpg"
+    },
+    {
+      "at": 1792281877548,
+      "name": "retire-0041.jpg"
+    },
+    {
+      "at": 1792281877654,
+      "name": "retire-0042.jpg"
+    },
+    {
+      "at": 1792281877754,
+      "name": "retire-0043.jpg"
+    },
+    {
+      "at": 1792281877847,
+      "name": "retire-0044.jpg"
+    },
+    {
+      "at": 1792281877952,
+      "name": "retire-0045.jpg"
+    },
+    {
+      "at": 1792281878052,
+      "name": "retire-0046.jpg"
+    },
+    {
+      "at": 1792281878152,
+      "name": "retire-0047.jpg"
+    },
+    {
+      "at": 1792281878249,
+      "name": "retire-0048.jpg"
+    },
+    {
+      "at": 1792281878352,
+      "name": "retire-0049.jpg"
+    },
+    {
+      "at": 1792281878447,
+      "name": "retire-0050.jpg"
+    },
+    {
+      "at": 1792281878549,
+      "name": "retire-0051.jpg"
+    },
+    {
+      "at": 1792281878649,
+      "name": "retire-0052.jpg"
+    },
+    {
+      "at": 1792281878747,
+      "name": "retire-0053.jpg"
+    },
+    {
+      "at": 1792281878847,
+      "name": "retire-0054.jpg"
+    },
+    {
+      "at": 1792281878947,
+      "name": "retire-0055.jpg"
+    },
+    {
+      "at": 1792281879045,
+      "name": "retire-0056.jpg"
+    },
+    {
+      "at": 1792281879144,
+      "name": "retire-0057.jpg"
+    },
+    {
+      "at": 1792281879238,
+      "name": "retire-0058.jpg"
+    },
+    {
+      "at": 1792281879376,
+      "name": "retire-0059.jpg"
+    },
+    {
+      "at": 1792281879476,
+      "name": "retire-0060.jpg"
+    },
+    {
+      "at": 1792281879576,
+      "name": "retire-0061.jpg"
+    },
+    {
+      "at": 1792281879676,
+      "name": "retire-0062.jpg"
+    },
+    {
+      "at": 1792281879776,
+      "name": "retire-0063.jpg"
+    },
+    {
+      "at": 1792281879873,
+      "name": "retire-0064.jpg"
+    },
+    {
+      "at": 1792281879974,
+      "name": "retire-0065.jpg"
+    },
+    {
+      "at": 1792281880085,
+      "name": "retire-0066.jpg"
+    },
+    {
+      "at": 1792281880188,
+      "name": "retire-0067.jpg"
+    },
+    {
+      "at": 1792281880304,
+      "name": "retire-0068.jpg"
+    },
+    {
+      "at": 1792281880403,
+      "name": "retire-0069.jpg"
+    },
+    {
+      "at": 1792281880504,
+      "name": "retire-0070.jpg"
+    },
+    {
+      "at": 1792281880601,
+      "name": "retire-0071.jpg"
+    },
+    {
+      "at": 1792281880697,
+      "name": "retire-0072.jpg"
+    },
+    {
+      "at": 1792281880796,
+      "name": "retire-0073.jpg"
+    },
+    {
+      "at": 1792281880892,
+      "name": "retire-0074.jpg"
+    },
+    {
+      "at": 1792281880994,
+      "name": "retire-0075.jpg"
+    },
+    {
+      "at": 1792281881094,
+      "name": "retire-0076.jpg"
+    },
+    {
+      "at": 1792281881193,
+      "name": "retire-0077.jpg"
+    },
+    {
+      "at": 1792281881292,
+      "name": "retire-0078.jpg"
+    },
+    {
+      "at": 1792281881393,
+      "name": "retire-0079.jpg"
+    },
+    {
+      "at": 1792281881492,
+      "name": "retire-0080.jpg"
+    },
+    {
+      "at": 1792281881591,
+      "name": "retire-0081.jpg"
+    },
+    {
+      "at": 1792281881691,
+      "name": "retire-0082.jpg"
+    },
+    {
+      "at": 1792281881790,
+      "name": "retire-0083.jpg"
+    },
+    {
+      "at": 1792281881888,
+      "name": "retire-0084.jpg"
+    },
+    {
+      "at": 1792281881987,
+      "name": "retire-0085.jpg"
+    },
+    {
+      "at": 1792281882085,
+      "name": "retire-0086.jpg"
+    },
+    {
+      "at": 1792281882185,
+      "name": "retire-0087.jpg"
+    },
+    {
+      "at": 1792281882282,
+      "name": "retire-0088.jpg"
+    },
+    {
+      "at": 1792281882382,
+      "name": "retire-0089.jpg"
+    },
+    {
+      "at": 1792281882479,
+      "name": "retire-0090.jpg"
+    },
+    {
+      "at": 1792281882578,
+      "name": "retire-0091.jpg"
+    },
+    {
+      "at": 1792281882678,
+      "name": "retire-0092.jpg"
+    },
+    {
+      "at": 1792281882777,
+      "name": "retire-0093.jpg"
+    },
+    {
+      "at": 1792281882876,
+      "name": "retire-0094.jpg"
+    },
+    {
+      "at": 1792281882977,
+      "name": "retire-0095.jpg"
+    },
+    {
+      "at": 1792281883070,
+      "name": "retire-0096.jpg"
+    },
+    {
+      "at": 1792281883170,
+      "name": "retire-0097.jpg"
+    },
+    {
+      "at": 1792281883270,
+      "name": "retire-0098.jpg"
+    },
+    {
+      "at": 1792281883368,
+      "name": "retire-0099.jpg"
+    },
+    {
+      "at": 1792281883466,
+      "name": "retire-0100.jpg"
+    },
+    {
+      "at": 1792281883567,
+      "name": "retire-0101.jpg"
+    },
+    {
+      "at": 1792281883701,
+      "name": "retire-0102.jpg"
+    },
+    {
+      "at": 1792281883796,
+      "name": "retire-0103.jpg"
+    },
+    {
+      "at": 1792281883927,
+      "name": "retire-0104.jpg"
+    },
+    {
+      "at": 1792281884026,
+      "name": "retire-0105.jpg"
+    },
+    {
+      "at": 1792281884124,
+      "name": "retire-0106.jpg"
+    },
+    {
+      "at": 1792281884222,
+      "name": "retire-0107.jpg"
+    },
+    {
+      "at": 1792281884321,
+      "name": "retire-0108.jpg"
+    },
+    {
+      "at": 1792281884419,
+      "name": "retire-0109.jpg"
+    },
+    {
+      "at": 1792281884515,
+      "name": "retire-0110.jpg"
+    },
+    {
+      "at": 1792281884614,
+      "name": "retire-0111.jpg"
+    },
+    {
+      "at": 1792281884715,
+      "name": "retire-0112.jpg"
+    },
+    {
+      "at": 1792281884811,
+      "name": "retire-0113.jpg"
+    },
+    {
+      "at": 1792281884909,
+      "name": "retire-0114.jpg"
+    },
+    {
+      "at": 1792281885003,
+      "name": "retire-0115.jpg"
+    },
+    {
+      "at": 1792281885140,
+      "name": "retire-0116.jpg"
+    },
+    {
+      "at": 1792281885237,
+      "name": "retire-0117.jpg"
+    },
+    {
+      "at": 1792281885349,
+      "name": "retire-0118.jpg"
+    },
+    {
+      "at": 1792281885433,
+      "name": "retire-0119.jpg"
+    },
+    {
+      "at": 1792281885538,
+      "name": "retire-0120.jpg"
+    },
+    {
+      "at": 1792281885631,
+      "name": "retire-0121.jpg"
+    },
+    {
+      "at": 1792281885731,
+      "name": "retire-0122.jpg"
+    },
+    {
+      "at": 1792281885830,
+      "name": "retire-0123.jpg"
+    },
+    {
+      "at": 1792281885929,
+      "name": "retire-0124.jpg"
+    }
+  ]
+}

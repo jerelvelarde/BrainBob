@@ -1,0 +1,318 @@
+{
+  "label": "promote",
+  "button": "Promote",
+  "scope": "team",
+  "seconds": 7,
+  "start": 1792281956554,
+  "end": 1792281964430,
+  "frames": [
+    {
+      "at": 1792281956826,
+      "name": "promote-0000.jpg"
+    },
+    {
+      "at": 1792281956914,
+      "name": "promote-0001.jpg"
+    },
+    {
+      "at": 1792281957013,
+      "name": "promote-0002.jpg"
+    },
+    {
+      "at": 1792281957113,
+      "name": "promote-0003.jpg"
+    },
+    {
+      "at": 1792281957212,
+      "name": "promote-0004.jpg"
+    },
+    {
+      "at": 1792281957311,
+      "name": "promote-0005.jpg"
+    },
+    {
+      "at": 1792281957405,
+      "name": "promote-0006.jpg"
+    },
+    {
+      "at": 1792281957509,
+      "name": "promote-0007.jpg"
+    },
+    {
+      "at": 1792281957608,
+      "name": "promote-0008.jpg"
+    },
+    {
+      "at": 1792281957708,
+      "name": "promote-0009.jpg"
+    },
+    {
+      "at": 1792281957805,
+      "name": "promote-0010.jpg"
+    },
+    {
+      "at": 1792281957904,
+      "name": "promote-0011.jpg"
+    },
+    {
+      "at": 1792281958003,
+      "name": "promote-0012.jpg"
+    },
+    {
+      "at": 1792281958099,
+      "name": "promote-0013.jpg"
+    },
+    {
+      "at": 1792281958197,
+      "name": "promote-0014.jpg"
+    },
+    {
+      "at": 1792281958301,
+      "name": "promote-0015.jpg"
+    },
+    {
+      "at": 1792281958395,
+      "name": "promote-0016.jpg"
+    },
+    {
+      "at": 1792281958499,
+      "name": "promote-0017.jpg"
+    },
+    {
+      "at": 1792281958594,
+      "name": "promote-0018.jpg"
+    },
+    {
+      "at": 1792281958693,
+      "name": "promote-0019.jpg"
+    },
+    {
+      "at": 1792281958794,
+      "name": "promote-0020.jpg"
+    },
+    {
+      "at": 1792281958893,
+      "name": "promote-0021.jpg"
+    },
+    {
+      "at": 1792281958993,
+      "name": "promote-0022.jpg"
+    },
+    {
+      "at": 1792281959094,
+      "name": "promote-0023.jpg"
+    },
+    {
+      "at": 1792281959189,
+      "name": "promote-0024.jpg"
+    },
+    {
+      "at": 1792281959277,
+      "name": "promote-0025.jpg"
+    },
+    {
+      "at": 1792281959388,
+      "name": "promote-0026.jpg"
+    },
+    {
+      "at": 1792281959488,
+      "name": "promote-0027.jpg"
+    },
+    {
+      "at": 1792281959587,
+      "name": "promote-0028.jpg"
+    },
+    {
+      "at": 1792281959686,
+      "name": "promote-0029.jpg"
+    },
+    {
+      "at": 1792281959783,
+      "name": "promote-0030.jpg"
+    },
+    {
+      "at": 1792281959881,
+      "name": "promote-0031.jpg"
+    },
+    {
+      "at": 1792281959979,
+      "name": "promote-0032.jpg"
+    },
+    {
+      "at": 1792281960077,
+      "name": "promote-0033.jpg"
+    },
+    {
+      "at": 1792281960177,
+      "name": "promote-0034.jpg"
+    },
+    {
+      "at": 1792281960277,
+      "name": "promote-0035.jpg"
+    },
+    {
+      "at": 1792281960377,
+      "name": "promote-0036.jpg"
+    },
+    {
+      "at": 1792281960476,
+      "name": "promote-0037.jpg"
+    },
+    {
+      "at": 1792281960576,
+      "name": "promote-0038.jpg"
+    },
+    {
+      "at": 1792281960674,
+      "name": "promote-0039.jpg"
+    },
+    {
+      "at": 1792281960771,
+      "name": "promote-0040.jpg"
+    },
+    {
+      "at": 1792281960870,
+      "name": "promote-0041.jpg"
+    },
+    {
+      "at": 1792281960970,
+      "name": "promote-0042.jpg"
+    },
+    {
+      "at": 1792281961069,
+      "name": "promote-0043.jpg"
+    },
+    {
+      "at": 1792281961167,
+      "name": "promote-0044.jpg"
+    },
+    {
+      "at": 1792281961260,
+      "name": "promote-0045.jpg"
+    },
+    {
+      "at": 1792281961348,
+      "name": "promote-0046.jpg"
+    },
+    {
+      "at": 1792281961461,
+      "name": "promote-0047.jpg"
+    },
+    {
+      "at": 1792281961561,
+      "name": "promote-0048.jpg"
+    },
+    {
+      "at": 1792281961658,
+      "name": "promote-0049.jpg"
+    },
+    {
+      "at": 1792281961756,
+      "name": "promote-0050.jpg"
+    },
+    {
+      "at": 1792281961856,
+      "name": "promote-0051.jpg"
+    },
+    {
+      "at": 1792281961954,
+      "name": "promote-0052.jpg"
+    },
+    {
+      "at": 1792281962055,
+      "name": "promote-0053.jpg"
+    },
+    {
+      "at": 1792281962154,
+      "name": "promote-0054.jpg"
+    },
+    {
+      "at": 1792281962259,
+      "name": "promote-0055.jpg"
+    },
+    {
+      "at": 1792281962352,
+      "name": "promote-0056.jpg"
+    },
+    {
+      "at": 1792281962452,
+      "name": "promote-0057.jpg"
+    },
+    {
+      "at": 1792281962551,
+      "name": "promote-0058.jpg"
+    },
+    {
+      "at": 1792281962648,
+      "name": "promote-0059.jpg"
+    },
+    {
+      "at": 1792281962750,
+      "name": "promote-0060.jpg"
+    },
+    {
+      "at": 1792281962853,
+      "name": "promote-0061.jpg"
+    },
+    {
+      "at": 1792281962948,
+      "name": "promote-0062.jpg"
+    },
+    {
+      "at": 1792281963051,
+      "name": "promote-0063.jpg"
+    },
+    {
+      "at": 1792281963148,
+      "name": "promote-0064.jpg"
+    },
+    {
+      "at": 1792281963245,
+      "name": "promote-0065.jpg"
+    },
+    {
+      "at": 1792281963343,
+      "name": "promote-0066.jpg"
+    },
+    {
+      "at": 1792281963443,
+      "name": "promote-0067.jpg"
+    },
+    {
+      "at": 1792281963536,
+      "name": "promote-0068.jpg"
+    },
+    {
+      "at": 1792281963640,
+      "name": "promote-0069.jpg"
+    },
+    {
+      "at": 1792281963738,
+      "name": "promote-0070.jpg"
+    },
+    {
+      "at": 1792281963836,
+      "name": "promote-0071.jpg"
+    },
+    {
+      "at": 1792281963936,
+      "name": "promote-0072.jpg"
+    },
+    {
+      "at": 1792281964036,
+      "name": "promote-0073.jpg"
+    },
+    {
+      "at": 1792281964134,
+      "name": "promote-0074.jpg"
+    },
+    {
+      "at": 1792281964234,
+      "name": "promote-0075.jpg"
+    },
+    {
+      "at": 1792281964332,
+      "name": "promote-0076.jpg"
+    }
+  ]
+}

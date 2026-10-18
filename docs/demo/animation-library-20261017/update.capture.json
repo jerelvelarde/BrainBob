@@ -1,0 +1,438 @@
+{
+  "label": "update",
+  "button": "Update",
+  "scope": "individual",
+  "seconds": 10,
+  "start": 1792281861977,
+  "end": 1792281872809,
+  "frames": [
+    {
+      "at": 1792281862241,
+      "name": "update-0000.jpg"
+    },
+    {
+      "at": 1792281862337,
+      "name": "update-0001.jpg"
+    },
+    {
+      "at": 1792281862434,
+      "name": "update-0002.jpg"
+    },
+    {
+      "at": 1792281862533,
+      "name": "update-0003.jpg"
+    },
+    {
+      "at": 1792281862634,
+      "name": "update-0004.jpg"
+    },
+    {
+      "at": 1792281862725,
+      "name": "update-0005.jpg"
+    },
+    {
+      "at": 1792281862829,
+      "name": "update-0006.jpg"
+    },
+    {
+      "at": 1792281862927,
+      "name": "update-0007.jpg"
+    },
+    {
+      "at": 1792281863028,
+      "name": "update-0008.jpg"
+    },
+    {
+      "at": 1792281863124,
+      "name": "update-0009.jpg"
+    },
+    {
+      "at": 1792281863224,
+      "name": "update-0010.jpg"
+    },
+    {
+      "at": 1792281863322,
+      "name": "update-0011.jpg"
+    },
+    {
+      "at": 1792281863420,
+      "name": "update-0012.jpg"
+    },
+    {
+      "at": 1792281863521,
+      "name": "update-0013.jpg"
+    },
+    {
+      "at": 1792281863619,
+      "name": "update-0014.jpg"
+    },
+    {
+      "at": 1792281863719,
+      "name": "update-0015.jpg"
+    },
+    {
+      "at": 1792281863821,
+      "name": "update-0016.jpg"
+    },
+    {
+      "at": 1792281863918,
+      "name": "update-0017.jpg"
+    },
+    {
+      "at": 1792281864018,
+      "name": "update-0018.jpg"
+    },
+    {
+      "at": 1792281864116,
+      "name": "update-0019.jpg"
+    },
+    {
+      "at": 1792281864213,
+      "name": "update-0020.jpg"
+    },
+    {
+      "at": 1792281864312,
+      "name": "update-0021.jpg"
+    },
+    {
+      "at": 1792281864412,
+      "name": "update-0022.jpg"
+    },
+    {
+      "at": 1792281864511,
+      "name": "update-0023.jpg"
+    },
+    {
+      "at": 1792281864608,
+      "name": "update-0024.jpg"
+    },
+    {
+      "at": 1792281864705,
+      "name": "update-0025.jpg"
+    },
+    {
+      "at": 1792281864805,
+      "name": "update-0026.jpg"
+    },
+    {
+      "at": 1792281864904,
+      "name": "update-0027.jpg"
+    },
+    {
+      "at": 1792281865004,
+      "name": "update-0028.jpg"
+    },
+    {
+      "at": 1792281865102,
+      "name": "update-0029.jpg"
+    },
+    {
+      "at": 1792281865193,
+      "name": "update-0030.jpg"
+    },
+    {
+      "at": 1792281865295,
+      "name": "update-0031.jpg"
+    },
+    {
+      "at": 1792281865395,
+      "name": "update-0032.jpg"
+    },
+    {
+      "at": 1792281865496,
+      "name": "update-0033.jpg"
+    },
+    {
+      "at": 1792281865595,
+      "name": "update-0034.jpg"
+    },
+    {
+      "at": 1792281865692,
+      "name": "update-0035.jpg"
+    },
+    {
+      "at": 1792281865790,
+      "name": "update-0036.jpg"
+    },
+    {
+      "at": 1792281865892,
+      "name": "update-0037.jpg"
+    },
+    {
+      "at": 1792281865990,
+      "name": "update-0038.jpg"
+    },
+    {
+      "at": 1792281866088,
+      "name": "update-0039.jpg"
+    },
+    {
+      "at": 1792281866187,
+      "name": "update-0040.jpg"
+    },
+    {
+      "at": 1792281866286,
+      "name": "update-0041.jpg"
+    },
+    {
+      "at": 1792281866384,
+      "name": "update-0042.jpg"
+    },
+    {
+      "at": 1792281866482,
+      "name": "update-0043.jpg"
+    },
+    {
+      "at": 1792281866583,
+      "name": "update-0044.jpg"
+    },
+    {
+      "at": 1792281866675,
+      "name": "update-0045.jpg"
+    },
+    {
+      "at": 1792281866779,
+      "name": "update-0046.jpg"
+    },
+    {
+      "at": 1792281866880,
+      "name": "update-0047.jpg"
+    },
+    {
+      "at": 1792281866980,
+      "name": "update-0048.jpg"
+    },
+    {
+      "at": 1792281867078,
+      "name": "update-0049.jpg"
+    },
+    {
+      "at": 1792281867183,
+      "name": "update-0050.jpg"
+    },
+    {
+      "at": 1792281867275,
+      "name": "update-0051.jpg"
+    },
+    {
+      "at": 1792281867374,
+      "name": "update-0052.jpg"
+    },
+    {
+      "at": 1792281867476,
+      "name": "update-0053.jpg"
+    },
+    {
+      "at": 1792281867573,
+      "name": "update-0054.jpg"
+    },
+    {
+      "at": 1792281867673,
+      "name": "update-0055.jpg"
+    },
+    {
+      "at": 1792281867760,
+      "name": "update-0056.jpg"
+    },
+    {
+      "at": 1792281867869,
+      "name": "update-0057.jpg"
+    },
+    {
+      "at": 1792281867967,
+      "name": "update-0058.jpg"
+    },
+    {
+      "at": 1792281868064,
+      "name": "update-0059.jpg"
+    },
+    {
+      "at": 1792281868165,
+      "name": "update-0060.jpg"
+    },
+    {
+      "at": 1792281868264,
+      "name": "update-0061.jpg"
+    },
+    {
+      "at": 1792281868364,
+      "name": "update-0062.jpg"
+    },
+    {
+      "at": 1792281868451,
+      "name": "update-0063.jpg"
+    },
+    {
+      "at": 1792281868561,
+      "name": "update-0064.jpg"
+    },
+    {
+      "at": 1792281868660,
+      "name": "update-0065.jpg"
+    },
+    {
+      "at": 1792281868760,
+      "name": "update-0066.jpg"
+    },
+    {
+      "at": 1792281868858,
+      "name": "update-0067.jpg"
+    },
+    {
+      "at": 1792281868952,
+      "name": "update-0068.jpg"
+    },
+    {
+      "at": 1792281869054,
+      "name": "update-0069.jpg"
+    },
+    {
+      "at": 1792281869155,
+      "name": "update-0070.jpg"
+    },
+    {
+      "at": 1792281869252,
+      "name": "update-0071.jpg"
+    },
+    {
+      "at": 1792281869352,
+      "name": "update-0072.jpg"
+    },
+    {
+      "at": 1792281869452,
+      "name": "update-0073.jpg"
+    },
+    {
+      "at": 1792281869552,
+      "name": "update-0074.jpg"
+    },
+    {
+      "at": 1792281869648,
+      "name": "update-0075.jpg"
+    },
+    {
+      "at": 1792281869746,
+      "name": "update-0076.jpg"
+    },
+    {
+      "at": 1792281869849,
+      "name": "update-0077.jpg"
+    },
+    {
+      "at": 1792281869946,
+      "name": "update-0078.jpg"
+    },
+    {
+      "at": 1792281870047,
+      "name": "update-0079.jpg"
+    },
+    {
+      "at": 1792281870145,
+      "name": "update-0080.jpg"
+    },
+    {
+      "at": 1792281870243,
+      "name": "update-0081.jpg"
+    },
+    {
+      "at": 1792281870343,
+      "name": "update-0082.jpg"
+    },
+    {
+      "at": 1792281870429,
+      "name": "update-0083.jpg"
+    },
+    {
+      "at": 1792281870532,
+      "name": "update-0084.jpg"
+    },
+    {
+      "at": 1792281870633,
+      "name": "update-0085.jpg"
+    },
+    {
+      "at": 1792281870735,
+      "name": "update-0086.jpg"
+    },
+    {
+      "at": 1792281870836,
+      "name": "update-0087.jpg"
+    },
+    {
+      "at": 1792281870933,
+      "name": "update-0088.jpg"
+    },
+    {
+      "at": 1792281871031,
+      "name": "update-0089.jpg"
+    },
+    {
+      "at": 1792281871130,
+      "name": "update-0090.jpg"
+    },
+    {
+      "at": 1792281871229,
+      "name": "update-0091.jpg"
+    },
+    {
+      "at": 1792281871327,
+      "name": "update-0092.jpg"
+    },
+    {
+      "at": 1792281871427,
+      "name": "update-0093.jpg"
+    },
+    {
+      "at": 1792281871525,
+      "name": "update-0094.jpg"
+    },
+    {
+      "at": 1792281871625,
+      "name": "update-0095.jpg"
+    },
+    {
+      "at": 1792281871710,
+      "name": "update-0096.jpg"
+    },
+    {
+      "at": 1792281871825,
+      "name": "update-0097.jpg"
+    },
+    {
+      "at": 1792281871923,
+      "name": "update-0098.jpg"
+    },
+    {
+      "at": 1792281872020,
+      "name": "update-0099.jpg"
+    },
+    {
+      "at": 1792281872118,
+      "name": "update-0100.jpg"
+    },
+    {
+      "at": 1792281872212,
+      "name": "update-0101.jpg"
+    },
+    {
+      "at": 1792281872317,
+      "name": "update-0102.jpg"
+    },
+    {
+      "at": 1792281872416,
+      "name": "update-0103.jpg"
+    },
+    {
+      "at": 1792281872515,
+      "name": "update-0104.jpg"
+    },
+    {
+      "at": 1792281872616,
+      "name": "update-0105.jpg"
+    },
+    {
+      "at": 1792281872710,
+      "name": "update-0106.jpg"
+    }
+  ]
+}

@@ -1,0 +1,234 @@
+{
+  "label": "resolve",
+  "button": "Owner keeps it",
+  "scope": "organization",
+  "seconds": 5,
+  "start": 1792281979422,
+  "end": 1792281985226,
+  "frames": [
+    {
+      "at": 1792281979692,
+      "name": "resolve-0000.jpg"
+    },
+    {
+      "at": 1792281979795,
+      "name": "resolve-0001.jpg"
+    },
+    {
+      "at": 1792281979885,
+      "name": "resolve-0002.jpg"
+    },
+    {
+      "at": 1792281979980,
+      "name": "resolve-0003.jpg"
+    },
+    {
+      "at": 1792281980079,
+      "name": "resolve-0004.jpg"
+    },
+    {
+      "at": 1792281980178,
+      "name": "resolve-0005.jpg"
+    },
+    {
+      "at": 1792281980278,
+      "name": "resolve-0006.jpg"
+    },
+    {
+      "at": 1792281980378,
+      "name": "resolve-0007.jpg"
+    },
+    {
+      "at": 1792281980476,
+      "name": "resolve-0008.jpg"
+    },
+    {
+      "at": 1792281980576,
+      "name": "resolve-0009.jpg"
+    },
+    {
+      "at": 1792281980672,
+      "name": "resolve-0010.jpg"
+    },
+    {
+      "at": 1792281980771,
+      "name": "resolve-0011.jpg"
+    },
+    {
+      "at": 1792281980876,
+      "name": "resolve-0012.jpg"
+    },
+    {
+      "at": 1792281980975,
+      "name": "resolve-0013.jpg"
+    },
+    {
+      "at": 1792281981071,
+      "name": "resolve-0014.jpg"
+    },
+    {
+      "at": 1792281981169,
+      "name": "resolve-0015.jpg"
+    },
+    {
+      "at": 1792281981268,
+      "name": "resolve-0016.jpg"
+    },
+    {
+      "at": 1792281981368,
+      "name": "resolve-0017.jpg"
+    },
+    {
+      "at": 1792281981468,
+      "name": "resolve-0018.jpg"
+    },
+    {
+      "at": 1792281981566,
+      "name": "resolve-0019.jpg"
+    },
+    {
+      "at": 1792281981664,
+      "name": "resolve-0020.jpg"
+    },
+    {
+      "at": 1792281981764,
+      "name": "resolve-0021.jpg"
+    },
+    {
+      "at": 1792281981863,
+      "name": "resolve-0022.jpg"
+    },
+    {
+      "at": 1792281981960,
+      "name": "resolve-0023.jpg"
+    },
+    {
+      "at": 1792281982058,
+      "name": "resolve-0024.jpg"
+    },
+    {
+      "at": 1792281982142,
+      "name": "resolve-0025.jpg"
+    },
+    {
+      "at": 1792281982255,
+      "name": "resolve-0026.jpg"
+    },
+    {
+      "at": 1792281982354,
+      "name": "resolve-0027.jpg"
+    },
+    {
+      "at": 1792281982453,
+      "name": "resolve-0028.jpg"
+    },
+    {
+      "at": 1792281982551,
+      "name": "resolve-0029.jpg"
+    },
+    {
+      "at": 1792281982644,
+      "name": "resolve-0030.jpg"
+    },
+    {
+      "at": 1792281982746,
+      "name": "resolve-0031.jpg"
+    },
+    {
+      "at": 1792281982847,
+      "name": "resolve-0032.jpg"
+    },
+    {
+      "at": 1792281982946,
+      "name": "resolve-0033.jpg"
+    },
+    {
+      "at": 1792281983046,
+      "name": "resolve-0034.jpg"
+    },
+    {
+      "at": 1792281983145,
+      "name": "resolve-0035.jpg"
+    },
+    {
+      "at": 1792281983246,
+      "name": "resolve-0036.jpg"
+    },
+    {
+      "at": 1792281983345,
+      "name": "resolve-0037.jpg"
+    },
+    {
+      "at": 1792281983447,
+      "name": "resolve-0038.jpg"
+    },
+    {
+      "at": 1792281983546,
+      "name": "resolve-0039.jpg"
+    },
+    {
+      "at": 1792281983648,
+      "name": "resolve-0040.jpg"
+    },
+    {
+      "at": 1792281983743,
+      "name": "resolve-0041.jpg"
+    },
+    {
+      "at": 1792281983843,
+      "name": "resolve-0042.jpg"
+    },
+    {
+      "at": 1792281983941,
+      "name": "resolve-0043.jpg"
+    },
+    {
+      "at": 1792281984041,
+      "name": "resolve-0044.jpg"
+    },
+    {
+      "at": 1792281984138,
+      "name": "resolve-0045.jpg"
+    },
+    {
+      "at": 1792281984237,
+      "name": "resolve-0046.jpg"
+    },
+    {
+      "at": 1792281984335,
+      "name": "resolve-0047.jpg"
+    },
+    {
+      "at": 1792281984436,
+      "name": "resolve-0048.jpg"
+    },
+    {
+      "at": 1792281984526,
+      "name": "resolve-0049.jpg"
+    },
+    {
+      "at": 1792281984627,
+      "name": "resolve-0050.jpg"
+    },
+    {
+      "at": 1792281984727,
+      "name": "resolve-0051.jpg"
+    },
+    {
+      "at": 1792281984825,
+      "name": "resolve-0052.jpg"
+    },
+    {
+      "at": 1792281984928,
+      "name": "resolve-0053.jpg"
+    },
+    {
+      "at": 1792281985027,
+      "name": "resolve-0054.jpg"
+    },
+    {
+      "at": 1792281985125,
+      "name": "resolve-0055.jpg"
+    }
+  ]
+}

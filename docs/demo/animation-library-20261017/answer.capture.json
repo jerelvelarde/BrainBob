@@ -1,0 +1,302 @@
+{
+  "label": "answer",
+  "button": "Answer",
+  "scope": "individual",
+  "seconds": 7,
+  "start": 1792282003010,
+  "end": 1792282010904,
+  "frames": [
+    {
+      "at": 1792282003274,
+      "name": "answer-0000.jpg"
+    },
+    {
+      "at": 1792282003371,
+      "name": "answer-0001.jpg"
+    },
+    {
+      "at": 1792282003459,
+      "name": "answer-0002.jpg"
+    },
+    {
+      "at": 1792282003568,
+      "name": "answer-0003.jpg"
+    },
+    {
+      "at": 1792282003668,
+      "name": "answer-0004.jpg"
+    },
+    {
+      "at": 1792282003767,
+      "name": "answer-0005.jpg"
+    },
+    {
+      "at": 1792282003866,
+      "name": "answer-0006.jpg"
+    },
+    {
+      "at": 1792282003964,
+      "name": "answer-0007.jpg"
+    },
+    {
+      "at": 1792282004060,
+      "name": "answer-0008.jpg"
+    },
+    {
+      "at": 1792282004162,
+      "name": "answer-0009.jpg"
+    },
+    {
+      "at": 1792282004260,
+      "name": "answer-0010.jpg"
+    },
+    {
+      "at": 1792282004360,
+      "name": "answer-0011.jpg"
+    },
+    {
+      "at": 1792282004460,
+      "name": "answer-0012.jpg"
+    },
+    {
+      "at": 1792282004557,
+      "name": "answer-0013.jpg"
+    },
+    {
+      "at": 1792282004656,
+      "name": "answer-0014.jpg"
+    },
+    {
+      "at": 1792282004755,
+      "name": "answer-0015.jpg"
+    },
+    {
+      "at": 1792282004854,
+      "name": "answer-0016.jpg"
+    },
+    {
+      "at": 1792282004954,
+      "name": "answer-0017.jpg"
+    },
+    {
+      "at": 1792282005045,
+      "name": "answer-0018.jpg"
+    },
+    {
+      "at": 1792282005142,
+      "name": "answer-0019.jpg"
+    },
+    {
+      "at": 1792282005248,
+      "name": "answer-0020.jpg"
+    },
+    {
+      "at": 1792282005348,
+      "name": "answer-0021.jpg"
+    },
+    {
+      "at": 1792282005446,
+      "name": "answer-0022.jpg"
+    },
+    {
+      "at": 1792282005544,
+      "name": "answer-0023.jpg"
+    },
+    {
+      "at": 1792282005645,
+      "name": "answer-0024.jpg"
+    },
+    {
+      "at": 1792282005744,
+      "name": "answer-0025.jpg"
+    },
+    {
+      "at": 1792282005843,
+      "name": "answer-0026.jpg"
+    },
+    {
+      "at": 1792282005942,
+      "name": "answer-0027.jpg"
+    },
+    {
+      "at": 1792282006041,
+      "name": "answer-0028.jpg"
+    },
+    {
+      "at": 1792282006140,
+      "name": "answer-0029.jpg"
+    },
+    {
+      "at": 1792282006237,
+      "name": "answer-0030.jpg"
+    },
+    {
+      "at": 1792282006337,
+      "name": "answer-0031.jpg"
+    },
+    {
+      "at": 1792282006448,
+      "name": "answer-0032.jpg"
+    },
+    {
+      "at": 1792282006541,
+      "name": "answer-0033.jpg"
+    },
+    {
+      "at": 1792282006640,
+      "name": "answer-0034.jpg"
+    },
+    {
+      "at": 1792282006737,
+      "name": "answer-0035.jpg"
+    },
+    {
+      "at": 1792282006833,
+      "name": "answer-0036.jpg"
+    },
+    {
+      "at": 1792282006918,
+      "name": "answer-0037.jpg"
+    },
+    {
+      "at": 1792282007160,
+      "name": "answer-0038.jpg"
+    },
+    {
+      "at": 1792282007302,
+      "name": "answer-0039.jpg"
+    },
+    {
+      "at": 1792282007511,
+      "name": "answer-0040.jpg"
+    },
+    {
+      "at": 1792282007638,
+      "name": "answer-0041.jpg"
+    },
+    {
+      "at": 1792282007726,
+      "name": "answer-0042.jpg"
+    },
+    {
+      "at": 1792282007853,
+      "name": "answer-0043.jpg"
+    },
+    {
+      "at": 1792282007970,
+      "name": "answer-0044.jpg"
+    },
+    {
+      "at": 1792282008072,
+      "name": "answer-0045.jpg"
+    },
+    {
+      "at": 1792282008167,
+      "name": "answer-0046.jpg"
+    },
+    {
+      "at": 1792282008299,
+      "name": "answer-0047.jpg"
+    },
+    {
+      "at": 1792282008401,
+      "name": "answer-0048.jpg"
+    },
+    {
+      "at": 1792282008496,
+      "name": "answer-0049.jpg"
+    },
+    {
+      "at": 1792282008596,
+      "name": "answer-0050.jpg"
+    },
+    {
+      "at": 1792282008694,
+      "name": "answer-0051.jpg"
+    },
+    {
+      "at": 1792282008793,
+      "name": "answer-0052.jpg"
+    },
+    {
+      "at": 1792282008933,
+      "name": "answer-0053.jpg"
+    },
+    {
+      "at": 1792282009025,
+      "name": "answer-0054.jpg"
+    },
+    {
+      "at": 1792282009112,
+      "name": "answer-0055.jpg"
+    },
+    {
+      "at": 1792282009215,
+      "name": "answer-0056.jpg"
+    },
+    {
+      "at": 1792282009319,
+      "name": "answer-0057.jpg"
+    },
+    {
+      "at": 1792282009417,
+      "name": "answer-0058.jpg"
+    },
+    {
+      "at": 1792282009518,
+      "name": "answer-0059.jpg"
+    },
+    {
+      "at": 1792282009617,
+      "name": "answer-0060.jpg"
+    },
+    {
+      "at": 1792282009716,
+      "name": "answer-0061.jpg"
+    },
+    {
+      "at": 1792282009811,
+      "name": "answer-0062.jpg"
+    },
+    {
+      "at": 1792282009912,
+      "name": "answer-0063.jpg"
+    },
+    {
+      "at": 1792282010011,
+      "name": "answer-0064.jpg"
+    },
+    {
+      "at": 1792282010111,
+      "name": "answer-0065.jpg"
+    },
+    {
+      "at": 1792282010209,
+      "name": "answer-0066.jpg"
+    },
+    {
+      "at": 1792282010311,
+      "name": "answer-0067.jpg"
+    },
+    {
+      "at": 1792282010408,
+      "name": "answer-0068.jpg"
+    },
+    {
+      "at": 1792282010510,
+      "name": "answer-0069.jpg"
+    },
+    {
+      "at": 1792282010608,
+      "name": "answer-0070.jpg"
+    },
+    {
+      "at": 1792282010709,
+      "name": "answer-0071.jpg"
+    },
+    {
+      "at": 1792282010805,
+      "name": "answer-0072.jpg"
+    }
+  ]
+}

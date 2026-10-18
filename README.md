@@ -12,7 +12,7 @@ BrainBob checks new facts against existing knowledge, applies authorized correct
 
 Built by **Jerel Velarde and Bonan Kou** for the **Shared Brain** track at The Recursive Agents Hackathon, October 17, 2026.
 
-[Problem](#the-problem) · [Solution](#the-solution) · [Results](#results) · [Run locally](#run-locally) · [Architecture](docs/architecture.md) · [Published benchmark](https://huggingface.co/datasets/JerelVelarde/bob-benchmark) · [Judging evidence](judging/evidence.md)
+[Problem](#the-problem) · [Solution](#the-solution) · [Memory animations](#memory-in-motion) · [Results](#results) · [Run locally](#run-locally) · [Architecture](docs/architecture.md) · [Published benchmark](https://huggingface.co/datasets/JerelVelarde/bob-benchmark) · [Judging evidence](judging/evidence.md)
 
 ## The problem
 
@@ -56,6 +56,26 @@ For example, a tentative Engineering estimate should not replace an approved cli
 ![BrainBob live three-desk office after importing the fictional company's source conversations](judging/live-workspace-20261017/live-office.png)
 
 *Recorded live workspace at build `489919b`; [capture provenance](judging/live-workspace-20261017/captures.json). This is a development demonstration, separate from the benchmark results below.*
+
+## Memory in motion
+
+The 3D office gives memory operations a visible, inspectable action. Cabinets represent **Individual, Team, and Organization** scopes; a session file gathers the relevant context its member may read.
+
+These recordings use the **same scene components as the live app**, driven by isolated preview cues. They show choreography, not new backend writes or measured evaluation results.
+
+| Update a memory | Retire a memory |
+| --- | --- |
+| [![Bob rewrites a memory and files its replacement](docs/demo/animation-library-20261017/previews/update.gif)](docs/demo/animation-library-20261017/clips/update.mp4) | [![Cartoon fire and flying papers accompany memory retirement](docs/demo/animation-library-20261017/previews/retire.gif)](docs/demo/animation-library-20261017/clips/retire.mp4) |
+| Pull the old record, write the correction, then file the new immutable version. The supersession chain stays inspectable. | Papers fly into the shredder as the office catches cartoon fire. This represents **one record leaving normal retrieval**; history is preserved, and the whole store is not deleted. |
+
+| Retrieve context | Evaluate cited memories |
+| --- | --- |
+| [![Bob retrieves a file from the team cabinet](docs/demo/animation-library-20261017/previews/retrieve.gif)](docs/demo/animation-library-20261017/clips/retrieve.mp4) | [![Evaluator Bob enters through the open side of the office](docs/demo/animation-library-20261017/previews/evaluator-enter.gif)](docs/demo/animation-library-20261017/clips/evaluator-enter.mp4) |
+| The runner fetches a permitted record and delivers a tabbed file. [New-session handoff](docs/demo/animation-library-20261017/clips/session.mp4) uses the same file metaphor. | The evaluator enters, checks the task’s cited records, and leaves. A check can report no correctness flip; an animation alone does not establish a verdict. |
+
+**[▶ Watch all 15 scenes](docs/demo/animation-library-20261017/brainbob-memory-animations.mp4)** · **[Browse clips and event meanings](docs/demo/animation-library-20261017/README.md)** · [Interactive gallery](http://127.0.0.1:3000/animations)
+
+The gallery also covers [creation](docs/demo/animation-library-20261017/clips/create.mp4), promotion, rejected candidates, owner locks, flagged memories, owner resolution, conversation ingestion, and answer delivery. A flag keeps a locked record available for owner review; promotion changes status rather than rewriting its claim. In the workspace, recorded backend events drive these visual cues; the renderer never authorizes a memory change.
 
 ## Results
 
