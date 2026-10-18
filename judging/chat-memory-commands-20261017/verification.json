@@ -47,5 +47,12 @@
     "NemoClaw adapter is present; this path uses direct Nemotron inference, not a verified NemoClaw sandbox.",
     "Screenshot captured after implementation commit; unrelated README, storyboard and existing proof edits were present.",
     "The live workspace is shared and may change after this snapshot."
-  ]
+  ],
+  "publication": {
+    "base_main": "2b0aed7ffab7c526ec8317739d4450603912ce1b",
+    "implementation_commit": "ceffbfaa451da419d9a400fc2b2d9ff126810e75",
+    "commands_commit": "0fd412fc00fb1dcd3d055b8cf3907ca94d209618",
+    "checks": "76 tests and TypeScript passed on the isolated PR branch",
+    "source_equivalence": "All apps/web files in the PR match the locally verified d7471d7 version"
+  }
 }
