@@ -1,0 +1,120 @@
+{
+  "implementation_commit": "a1146b422a72acdbb2e48cd65383c4696d87da9e",
+  "commit_time": "2026-10-17T18:21:44-07:00",
+  "capture_time": "2026-10-17T18:22:00.154-07:00",
+  "reproduction": {
+    "plan_before": {
+      "operation": "save",
+      "kind": "preference",
+      "text": "Mara Ellis stated that the internal Atlas margin floor is 35 percent"
+    },
+    "routing_assertion_before": "FAILED: explicit shared-memory correction did not target the original team record",
+    "plan_after": {
+      "operation": "correct",
+      "memoryId": "m22",
+      "match": "28 percent",
+      "text": "35 percent"
+    },
+    "model": "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B"
+  },
+  "live_verification": {
+    "source": "Browser chat correction as Mara, then ask as Theo; real running backend",
+    "old_record": "m22",
+    "new_record": "m83",
+    "scope": "rusty-rod/executive",
+    "old_status": "retired",
+    "new_status": "trial",
+    "new_authority": "discussion",
+    "unrelated_clauses_preserved": true,
+    "mara_can_read_shared_revision": true,
+    "theo_can_read_shared_revision": true,
+    "theo_can_read_mara_private_m82": false,
+    "sales_can_read_shared_revision": false
+  },
+  "events": [
+    {
+      "type": "answer.produced",
+      "ts": 1792286410.493532,
+      "seq": 278,
+      "task_id": "t-869a3dfa",
+      "answer": "The internal Atlas margin floor is 28 percent, as stated by Mara Ellis.",
+      "cited_ids": [
+        "m22"
+      ],
+      "viewer": "exec-01"
+    },
+    {
+      "type": "memory.added",
+      "ts": 1792286446.799228,
+      "seq": 279,
+      "memory": {
+        "id": "m83",
+        "text": "Mara Ellis stated that the internal Atlas margin floor is 35 percent and instructed that the private margin target should not be shared with the client or other teams.",
+        "author": "exec-01",
+        "origin": "ep-19eedf81",
+        "date": "2026-10-05",
+        "status": "trial",
+        "scope": "rusty-rod/executive",
+        "reason": "",
+        "flagged": false,
+        "supersedes": "m22",
+        "owner": null,
+        "authority": "discussion",
+        "model": null,
+        "conflicts_with": []
+      }
+    },
+    {
+      "type": "memory.retired",
+      "ts": 1792286446.799556,
+      "seq": 280,
+      "memory_id": "m22",
+      "reason": "superseded by m83",
+      "task_ids": []
+    },
+    {
+      "type": "memory.corrected",
+      "ts": 1792286446.799647,
+      "seq": 281,
+      "memory_id": "m22",
+      "new_id": "m83",
+      "author": "exec-01"
+    },
+    {
+      "type": "answer.produced",
+      "ts": 1792286470.934667,
+      "seq": 283,
+      "task_id": "t-31973a31",
+      "answer": "The internal Atlas margin floor is 35 percent.",
+      "cited_ids": [
+        "m83"
+      ],
+      "viewer": "exec-02"
+    },
+    {
+      "type": "answer.produced",
+      "ts": 1792286510.6598341,
+      "seq": 285,
+      "task_id": "t-9ab6ab5b",
+      "answer": "The internal Atlas margin floor is 35 percent.",
+      "cited_ids": [
+        "m83"
+      ],
+      "viewer": "exec-02"
+    }
+  ],
+  "tests": {
+    "before_fix": "2 regression tests failed, 29 passed in targeted suite",
+    "after_fix": "86 passed in 11 files",
+    "typecheck": "passed",
+    "diff_check": "passed"
+  },
+  "publication": {
+    "commit": "053412a8a97b926cab573b87f22217a70a7563c5",
+    "base": "e827ef9b3f03ecd9219c66251ffb29955218f635",
+    "tests_passed": 83,
+    "test_files": 10,
+    "typecheck": "passed",
+    "scope": "Shared correction only; separate answer evaluation UI excluded"
+  }
+}
