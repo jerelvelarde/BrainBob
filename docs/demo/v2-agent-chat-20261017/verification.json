@@ -1,0 +1,21 @@
+{
+  "duration": "170.000000",
+  "bytes": 8219874,
+  "sha256": "63ba72759ff426a3408804f34c13a5569df9f4099551e343ceb9f641586c3b6c",
+  "video": "H264 1920x1080 30fps",
+  "audio": "AAC 48kHz mono",
+  "decode": "passed",
+  "voice_blocks": 11,
+  "maximum_tempo": 1.087223628691983,
+  "live_backend_events": [
+    153,
+    154,
+    155,
+    156,
+    157,
+    158,
+    159,
+    160
+  ],
+  "claimed_live_audit": false
+}

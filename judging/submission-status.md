@@ -10,16 +10,17 @@
 | --- | --- |
 | Repository | [Public BrainBob repository](https://github.com/jerelvelarde/BrainBob); anonymous HTTP check passed |
 | Team / track | Jerel Velarde and Bonan Kou · Shared Brain |
-| One-minute video | [Narrated recording](../docs/demo/live-one-minute-20261017/output/brainbob-live-60s-vo.mp4); anonymous file URL returned HTTP 200. Submission-form playback/acceptance remains to be checked |
+| Featured extended video | [V2 — 2:50](https://github.com/user-attachments/assets/e75a7bcc-b46e-4c95-9e15-6edac63a0b38); [repository fallback and provenance](../docs/demo/v2-agent-chat-20261017/README.md). Covers the app, benchmark and fine-tuned checker; submission-form acceptance remains unverified |
+| One-minute option | [V1 — 60 seconds](../docs/demo/live-one-minute-20261017/README.md); its anonymous file URL previously returned HTTP 200. V2 does not meet a one-minute duration limit |
 | Main result | [Corrected v0.3 scorecard](../bobbench/results/20261017-141014/scorecard.v0.3.md), public and linked with uncertainty and historical scores |
-| Demo provenance | [Live recording](../docs/demo/live-one-minute-20261017/README.md) and [company workspace](live-workspace-20261017/README.md); fictional inputs and development-build limits disclosed |
+| Demo provenance | [V2 recording](../docs/demo/v2-agent-chat-20261017/README.md) and [company workspace](live-workspace-20261017/README.md); fictional inputs and development-build limits disclosed |
 | Presenter materials | [Three-minute runbook and Q&A](demo-runbook.md), with recorded fallback |
 | Work history | [Commit-linked timeline](proof-of-work/index.html) and [artifact index](artifacts.md) |
 
 ## Remaining submission gates
 
 - [ ] **Public hosted app:** record its URL and verify actual inference, streaming, access configuration and persistent memory. [Draft PR #14](https://github.com/jerelvelarde/BrainBob/pull/14) contains deployment preparation; container and hosted release checks remain pending.
-- [ ] **Final video destination:** verify the chosen link plays in the submission workflow. The committed MP4 is publicly reachable; this cleanup did not submit it or test a submission form.
+- [ ] **Final video destination:** verify the chosen link plays in the submission workflow. Use V2 for the extended presentation, or V1 for a required 60-second upload. This update did not submit either video or test a submission form.
 - [ ] **Exact submitted commit and receipt:** record the SHA actually submitted, destination, both teammates, and confirmation/link. No final submission is inferred from the latest Git commit.
 - [ ] **Rehearsal:** complete the three-minute story and Q&A once with the recorded fallback.
 

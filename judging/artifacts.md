@@ -8,7 +8,9 @@ Start with the current review materials below. Dated folders are immutable evide
 
 | Artifact | What it establishes |
 | --- | --- |
-| [Narrated one-minute demo](../docs/demo/live-one-minute-20261017/README.md) | Recorded live application, real provider calls, personal-preference correction and fresh-session use; editorial cuts disclosed |
+| [V2 extended demo — app, benchmark and model](../docs/demo/v2-agent-chat-20261017/README.md) | 2:50 film; recorded chat-driven preference update and fresh-session answer, followed by benchmark and fine-tuned-checker explanations; transcript and original event excerpt retained |
+| [Public Bob Benchmark](https://huggingface.co/datasets/JerelVelarde/bob-benchmark) | Our synthetic dataset and runnable evaluation harness; organizational pilot distinct from pair/structured diagnostics |
+| [Fine-tuned Qwen3-0.6B adapter](https://huggingface.co/Guangze/memops-small-qwen3-0.6b-lora/tree/b904e6ec0baea37bf70209093b8c59332d3c450a) | Published LoRA artifact; 32/60 → 42/60 original pair result, five false conflicts, experimental opt-in |
 | [Corrected organizational scorecard](../bobbench/results/20261017-141014/scorecard.v0.3.md) | Main measured result; post-hoc v0.3 correction of saved answers |
 | [Evaluation report](../docs/evaluation-report.md) | Methods, baselines, sample sizes, uncertainty, costs, null results and original contributions |
 | [Live workspace](live-workspace-20261017/README.md) | Fictional-company ingestion, approved correction, fresh Sales answer, access checks and retrace |
@@ -21,6 +23,7 @@ Start with the current review materials below. Dated folders are immutable evide
 
 | Directory | How to read it |
 | --- | --- |
+| [V1 one-minute recording](../docs/demo/live-one-minute-20261017/README.md) | Historical 60-second option; manual inspector correction and fresh-session use, with editorial cuts disclosed |
 | [Public diagnostic controls](bob-pilot-b672fd7/README.md) | Six worlds / 18 structured checkpoints; deterministic reference rules, not the real-model 41-checkpoint organizational run |
 | [Readiness checks](readiness-20261017/README.md) | Earlier offline integration, frozen-pair rescore and refusal control; recorded checks apply to their listed builds |
 | [Scorer review findings](benchmark-review-20261017/findings.json) | Historical counterexamples and missing probe coverage that informed later corrections; not a new model run |

@@ -1,0 +1,142 @@
+[
+  {
+    "type": "memory.retrieved",
+    "ts": 1792280483.4681869,
+    "seq": 153,
+    "task_id": "t-5ad057be",
+    "memory_ids": [
+      "m74",
+      "m6",
+      "m4",
+      "m19",
+      "m1",
+      "m10",
+      "m68",
+      "m21",
+      "m7",
+      "m5",
+      "m31",
+      "m71",
+      "m9",
+      "m3",
+      "m64",
+      "m67",
+      "m65",
+      "m12",
+      "m2",
+      "m11",
+      "m66",
+      "m70",
+      "m69",
+      "m20"
+    ],
+    "viewer": "sales-01"
+  },
+  {
+    "type": "answer.produced",
+    "ts": 1792280485.381052,
+    "seq": 154,
+    "task_id": "t-5ad057be",
+    "answer": "I prefer three short bullets in client updates: progress, next step, and one clear question.",
+    "cited_ids": [
+      "m74"
+    ],
+    "viewer": "sales-01"
+  },
+  {
+    "type": "memory.added",
+    "ts": 1792280517.607064,
+    "seq": 155,
+    "memory": {
+      "id": "m75",
+      "text": "Maya Flores prefers client updates as two short paragraphs instead of three short bullets.",
+      "author": "sales-01",
+      "origin": "ep-d12a7c2e",
+      "date": "2026-10-17",
+      "status": "trial",
+      "scope": "rusty-rod/sales/sales-01",
+      "reason": "",
+      "flagged": false,
+      "supersedes": "m74",
+      "owner": null,
+      "authority": "approved",
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+      "conflicts_with": []
+    },
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
+  },
+  {
+    "type": "memory.retired",
+    "ts": 1792280517.607973,
+    "seq": 156,
+    "memory_id": "m74",
+    "reason": "superseded by m75",
+    "task_ids": [],
+    "author": "sales-01",
+    "model": "openai/gpt-oss-120b"
+  },
+  {
+    "type": "memory.corrected",
+    "ts": 1792280517.608026,
+    "seq": 157,
+    "memory_id": "m74",
+    "new_id": "m75",
+    "author": "sales-01",
+    "model": "openai/gpt-oss-120b"
+  },
+  {
+    "type": "episode.ingested",
+    "ts": 1792280517.608074,
+    "seq": 158,
+    "episode_id": "ep-d12a7c2e",
+    "source": "brainbob-chat",
+    "n_memories": 1,
+    "author": "sales-01",
+    "scope": "rusty-rod/sales/sales-01",
+    "authority": "approved"
+  },
+  {
+    "type": "memory.retrieved",
+    "ts": 1792280582.012703,
+    "seq": 159,
+    "task_id": "t-d3a53678",
+    "memory_ids": [
+      "m75",
+      "m4",
+      "m6",
+      "m19",
+      "m1",
+      "m10",
+      "m68",
+      "m21",
+      "m7",
+      "m5",
+      "m31",
+      "m71",
+      "m9",
+      "m3",
+      "m64",
+      "m67",
+      "m65",
+      "m12",
+      "m2",
+      "m11",
+      "m66",
+      "m70",
+      "m69",
+      "m20"
+    ],
+    "viewer": "sales-01"
+  },
+  {
+    "type": "answer.produced",
+    "ts": 1792280587.340929,
+    "seq": 160,
+    "task_id": "t-d3a53678",
+    "answer": "I prefer client updates as two short paragraphs instead of three short bullets.",
+    "cited_ids": [
+      "m75"
+    ],
+    "viewer": "sales-01"
+  }
+]
