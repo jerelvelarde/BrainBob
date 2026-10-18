@@ -1,0 +1,58 @@
+{
+  "recorded_at": "2026-10-17T17:52:55-07:00",
+  "implementation_commits": [
+    "03d1cff107c65730c6922ddb3181b5ab1e1e250d",
+    "d7471d709690a32b65b8479344968a2ce5e6b856"
+  ],
+  "mode": "live browser chat + real Crusoe inference; local workspace",
+  "model": "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B",
+  "verification": {
+    "frontend_tests": 76,
+    "typecheck": "passed",
+    "brief_followup": "3 live route requests produced a full Atlas brief instruction; browser delivered the brief",
+    "memory": "natural statement saved m79; contextual correction created m80 and retired m79; fresh browser chat answered Moonbeam and cited m80",
+    "retirement": "earlier explicit chat add-that then delete-that created and retired m76"
+  },
+  "records": [
+    {
+      "id": "m76",
+      "text": "Maya Flores mentioned that her planning notebook is called Lemon Ledger.",
+      "status": "retired",
+      "supersedes": null,
+      "origin": "ep-7f7f33ef",
+      "scope": "rusty-rod/sales/sales-01",
+      "authority": "approved"
+    },
+    {
+      "id": "m79",
+      "text": "Maya Flores' working notebook is called Sunbeam.",
+      "status": "retired",
+      "supersedes": null,
+      "origin": "ep-9a14f052",
+      "scope": "rusty-rod/sales/sales-01",
+      "authority": "approved"
+    },
+    {
+      "id": "m80",
+      "text": "Maya Flores' working notebook is called Moonbeam.",
+      "status": "trial",
+      "supersedes": "m79",
+      "origin": "ep-aa1df3c7",
+      "scope": "rusty-rod/sales/sales-01",
+      "authority": "approved"
+    }
+  ],
+  "limits": [
+    "The original red-banner exception was not retained, so its exact cause is unknown. Invalid/truncated output recovery is regression-tested.",
+    "NemoClaw adapter is present; this path uses direct Nemotron inference, not a verified NemoClaw sandbox.",
+    "Screenshot captured after implementation commit; unrelated README, storyboard and existing proof edits were present.",
+    "The live workspace is shared and may change after this snapshot."
+  ],
+  "publication": {
+    "base_main": "2b0aed7ffab7c526ec8317739d4450603912ce1b",
+    "implementation_commit": "ceffbfaa451da419d9a400fc2b2d9ff126810e75",
+    "commands_commit": "0fd412fc00fb1dcd3d055b8cf3907ca94d209618",
+    "checks": "76 tests and TypeScript passed on the isolated PR branch",
+    "source_equivalence": "All apps/web files in the PR match the locally verified d7471d7 version"
+  }
+}

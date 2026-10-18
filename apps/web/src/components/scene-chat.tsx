@@ -8,10 +8,10 @@ import { memberForReader, memberId } from "@/lib/sample-company";
 import { updateActiveSession, type ActiveSession, type SessionActivity } from "@/lib/active-session";
 import { sessionPrompts } from "@/lib/session-prompts";
 import { ConfigureSessionPrompts, SessionPromptCards, SessionSendButton, SessionWelcome, SessionWelcomeContext } from "./session-chat-welcome";
-import { memoryToolRenderer } from "./session-memory-tool";
+import { memoryToolRenderer, saveMemoryToolRenderer, retireMemoryToolRenderer, conversationToolRenderer } from "./session-memory-tool";
 import { SessionAssistantMessage, SessionReceiptsContext } from "./session-chat-message";
 
-const toolRenderers = [memoryToolRenderer];
+const toolRenderers = [memoryToolRenderer, saveMemoryToolRenderer, retireMemoryToolRenderer, conversationToolRenderer];
 const HiddenControl = () => null;
 
 export default function SceneChat({ reader, readOnly, memories, onAnswer, onExploreMemory, onInspect, onSessionActivity, connected }: {
@@ -23,10 +23,11 @@ export default function SceneChat({ reader, readOnly, memories, onAnswer, onExpl
   const [receipts, setReceipts] = useState<Record<string, ActiveSession>>({});
   const [activity, setActivity] = useState<Record<string, { event: SessionActivity; at: number }>>({});
   const [error, setError] = useState("");
-  const context = useRef<ChatContext>({ mode: "ask", reader, author: memberId(reader), readOnly });
+  const memoryVersion = useMemo(() => Object.values(memories).map((memory) => `${memory.id}:${memory.status}:${memory.text}`).sort().join("\n"), [memories]);
+  const context = useRef<ChatContext>({ mode: "ask", reader, author: memberId(reader), readOnly, memoryVersion, conversational: true });
   const callbacks = useRef({ onAnswer, onSessionActivity });
   useEffect(() => { callbacks.current = { onAnswer, onSessionActivity }; }, [onAnswer, onSessionActivity]);
-  useEffect(() => { context.current = { mode: "ask", reader, author: memberId(reader), readOnly }; }, [reader, readOnly]);
+  useEffect(() => { context.current = { mode: "ask", reader, author: memberId(reader), readOnly, memoryVersion, conversational: true }; }, [reader, readOnly, memoryVersion]);
   const [agent] = useState(() => new BackendChatAgent(() => context.current, (result, receipt) => {
     const started = updateActiveSession(null, { type: "started", requestId: receipt.requestId, question: receipt.question }, context.current.reader);
     const snapshot = updateActiveSession(started, { type: "answered", requestId: receipt.requestId, answer: result }, context.current.reader);
