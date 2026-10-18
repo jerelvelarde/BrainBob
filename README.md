@@ -2,6 +2,7 @@
 
 **A shared brain for agent teams. Keep knowledge current, control who can use it, and trace every change.**
 
+Narrated Live Demo + Explainer
 https://github.com/user-attachments/assets/e75a7bcc-b46e-4c95-9e15-6edac63a0b38
 
 [![Watch BrainBob’s narrated 60-second live demo: a corrected memory guides the next answer](docs/demo/live-one-minute-20261017/output/preview.jpg)](https://github.com/jerelvelarde/BrainBob/blob/main/docs/demo/live-one-minute-20261017/output/brainbob-live-60s-vo.mp4)
