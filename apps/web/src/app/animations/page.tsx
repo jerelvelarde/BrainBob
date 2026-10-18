@@ -37,7 +37,7 @@ export default function AnimationLibrary() {
   const scene = scenes.find((item) => item.id === selected)!;
   useEffect(() => {
     const media = matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReducedMotion(media.matches);
+    const update = () => { setReducedMotion(media.matches); if (media.matches) setPlaying(false); };
     update(); media.addEventListener("change", update);
     return () => media.removeEventListener("change", update);
   }, []);
@@ -47,9 +47,17 @@ export default function AnimationLibrary() {
     records: scene.evaluation ? [{ id: "preview-cited-record", scope }] : undefined,
     ...(selected === "session" ? { destination: [-3.6, .9] as [number, number], noticeLabel: "Gathering Maya’s session file" } : {}),
   }), [selected, scope, revision, scene]);
-  const onProgress = useCallback((value: number) => setProgress(value), []);
+  const onProgress = useCallback((value: number) => {
+    setProgress(value);
+    if (value >= 1) setPlaying(false);
+  }, []);
   function choose(id: string) { setSelected(id); setPlaying(false); setProgress(0); setSeek(undefined); setRevision((r) => r + 1); }
-  function play() { setSeek(undefined); setProgress(0); setRevision((r) => r + 1); setPlaying(true); }
+  function play() { if (reducedMotion) return; setSeek(undefined); setProgress(0); setRevision((r) => r + 1); setPlaying(true); }
+  function togglePlayback() {
+    if (reducedMotion) return;
+    if (progress >= 1) play();
+    else setPlaying((p) => !p);
+  }
   const seconds = scene.seconds ?? sceneClips[scene.action].seconds;
   return <main className={styles.library}>
     <header className={styles.header}><a href="/">← BrainBob</a><span>Animation library</span><strong>Isolated preview · no memory changes</strong></header>
@@ -63,8 +71,8 @@ export default function AnimationLibrary() {
       <aside className={styles.controls}>
         <p className={styles.kicker}>Same renderer. Every operation.</p>
         <div className={styles.scenes}>{scenes.map((item) => <button key={item.id} onClick={() => choose(item.id)} aria-pressed={selected === item.id}>{item.name}</button>)}</div>
-        <label className={styles.scope}>Cabinet<select value={scope} onChange={(e) => { setScope(e.target.value as MemoryScope); setRevision((r) => r + 1); setPlaying(false); setSeek(undefined); }}><option value="individual">Individual · Maya</option><option value="team">Team · Sales</option><option value="organization">Organization · Rusty Rod</option></select></label>
-        <div className={styles.transport}><button onClick={play}>Play from start</button><button onClick={() => setPlaying((p) => !p)}>{playing ? "Pause" : "Resume"}</button></div>
+        <label className={styles.scope}>Cabinet<select value={scope} onChange={(e) => { setScope(e.target.value as MemoryScope); setRevision((r) => r + 1); setPlaying(false); setProgress(0); setSeek(undefined); }}><option value="individual">Individual · Maya</option><option value="team">Team · Sales</option><option value="organization">Organization · Rusty Rod</option></select></label>
+        <div className={styles.transport}><button disabled={reducedMotion} onClick={play}>Play from start</button><button disabled={reducedMotion} onClick={togglePlayback}>{playing ? "Pause" : progress >= 1 ? "Replay" : "Resume"}</button></div>
         <label className={styles.scrub}>Scene position · {Math.round(progress * seconds)} / {seconds}s<input type="range" aria-label="Scene position" min="0" max="100" value={Math.round(progress * 100)} onChange={(e) => { setPlaying(false); setSeek({ value: Number(e.target.value) / 100, revision: Date.now() }); }} /></label>
         <code>{scene.event}</code>
         <p className={styles.note}>Preview cues only. No API calls, stored records, task grades, or authorization decisions are created here.{reducedMotion ? " Reduced motion is enabled; use the scrubber to inspect each pose." : ""}</p>
