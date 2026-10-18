@@ -1,8 +1,44 @@
 import { describe, expect, it } from "vitest";
 import { projectMemories, scopes, type MemoryEvent } from "./memory";
-import { backendSceneActions, cinematicsAt, cueFromMemory, samplePath, sceneClips, workerPerformance, performanceForCue, type SceneAction } from "./scene-animation";
+import { backendSceneActions, cinematicsAt, cueFromMemory, memoryOperationAt, samplePath, sceneClips, workerPerformance, performanceForCue, type SceneAction } from "./scene-animation";
 
 describe("scene choreography", () => {
+  it("gives one memory Bob the complete create, update, and retirement job", () => {
+    const cue = { id: "single-bob", scope: "team", source: "fixture", title: "Memory operation" } as const;
+    for (const action of ["created", "updated", "forgotten"] as const) {
+      expect(performanceForCue({ ...cue, action }, 0, 0)).toMatchObject({ x: -5.4, z: 2.5 });
+      for (const p of [0, .25, .5, .75, 1]) {
+        expect(performanceForCue({ ...cue, action }, 0, p).pose).not.toBe("panic");
+      }
+    }
+    expect(performanceForCue({ ...cue, action: "created" }, 0, .1)).toMatchObject({ pose: "write", moving: false });
+    expect(performanceForCue({ ...cue, action: "updated" }, 0, .52)).toMatchObject({ x: -5.4, z: 2.5, pose: "write", moving: false });
+    expect(performanceForCue({ ...cue, action: "forgotten" }, 0, .5)).toMatchObject({ pose: "carry", paper: true });
+    expect(performanceForCue({ ...cue, action: "forgotten" }, 0, 1)).toMatchObject({ x: 5.8, z: 2.85, paper: false });
+  });
+
+  it("hands off a single record and shreds only after Bob reaches the shredder", () => {
+    for (const action of ["created", "updated", "forgotten"] as const) for (const scope of scopes) {
+      const cue = { id: "record", action, scope, source: "fixture", title: "Record" } as const;
+      for (let frame = 0; frame <= 100; frame++) {
+        const p = frame / 100;
+        const sample = memoryOperationAt(cue, p);
+        // The held paper and the pickup/release mesh must never appear together.
+        expect(sample.worker.paper && sample.transfer.visible).toBe(false);
+        expect(sample.transfer.position.every(Number.isFinite)).toBe(true);
+        expect(Math.abs(sample.worker.x)).toBeLessThan(7);
+        expect(Math.abs(sample.worker.z)).toBeLessThan(5);
+        if (sample.shredProgress > 0) expect(sample.worker).toMatchObject({ x: 5.8, z: 2.85, paper: false, moving: false });
+        for (let index = 1; index < 6; index++) expect(performanceForCue(cue, index, p)).toMatchObject({ moving: false, paper: false, pose: "idle" });
+      }
+      const middle = memoryOperationAt(cue, .5);
+      memoryOperationAt(cue, .9);
+      expect(memoryOperationAt(cue, .5)).toEqual(middle);
+      expect(memoryOperationAt(cue, 1).transfer.visible).toBe(false);
+      if (action === "forgotten") expect(memoryOperationAt(cue, .82).transfer.position[1]).toBeGreaterThan(1);
+    }
+  });
+
   it("replays a recorded action without changing its memory projection", () => {
     const event: MemoryEvent = { id: "retirement", sequence: 1, action: "forgotten", memoryId: "record", title: "Retirement", scope: "team", actor: "owner", explanation: "Archived", evidence: "Source", timestamp: "2026-10-17T12:00:00Z" };
     const trace = [event];
@@ -31,13 +67,6 @@ describe("scene choreography", () => {
     expect(workerPerformance("evaluated", "team", 1, 1).pose).toBe("present");
   });
 
-  it("uses distinct worker positions during office panic", () => {
-    const positions = Array.from({ length: 6 }, (_, i) => workerPerformance("forgotten", "team", i, .62));
-    for (let i = 0; i < positions.length; i++) for (let j = i + 1; j < positions.length; j++) {
-      expect(Math.hypot(positions[i].x - positions[j].x, positions[i].z - positions[j].z)).toBeGreaterThan(.8);
-    }
-  });
-
   it("keeps every clip finite and within the office at seek boundaries", () => {
     for (const action of Object.keys(sceneClips) as SceneAction[]) for (const scope of scopes) {
       for (const p of [0, .15, .4, .62, .83, 1]) for (let i = 0; i < 6; i++) {
@@ -58,17 +87,14 @@ describe("scene choreography", () => {
     expect(backendSceneActions["memory.rejected"]).toBe("rejected");
   });
 
-  it("restores lighting and camera at the end or when a dramatic cue is replaced", () => {
+  it("keeps the office lighting and camera neutral while retiring one record", () => {
     const neutral = { darkness: 0, heat: 0, zoom: 1 };
     for (const action of ["forgotten"] as const) {
       expect(cinematicsAt(action, 0)).toEqual(neutral);
       expect(cinematicsAt(action, 1)).toEqual(neutral);
-      expect(cinematicsAt(action, .12).zoom).toBeGreaterThan(cinematicsAt(action, .62).zoom);
       for (let p = 0; p <= 1; p += .01) {
         const frame = cinematicsAt(action, p);
-        expect(frame.zoom).toBeLessThanOrEqual(1.1);
-        expect(frame.darkness).toBeGreaterThanOrEqual(0);
-        expect(frame.darkness).toBeLessThanOrEqual(1);
+        expect(frame).toEqual(neutral);
       }
     }
     for (const action of ["retrieved", "flagged", undefined] as const) expect(cinematicsAt(action, .62)).toEqual(neutral);

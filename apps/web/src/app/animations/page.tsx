@@ -9,10 +9,10 @@ import styles from "./page.module.css";
 const BrainScene = dynamic(() => import("@/components/brain/brain-scene"), { ssr: false });
 const noop = () => {};
 const scenes: { id: string; action: SceneAction; name: string; event: string; description: string; seconds?: number; evaluation?: SceneCue["evaluation"] }[] = [
-  { id: "create", action: "created", name: "Create", event: "memory.added", description: "Bob writes a new record, carries it to the right cabinet, and files it." },
+  { id: "create", action: "created", name: "Create", event: "memory.added", description: "Memory Bob writes a new record, carries it to the selected cabinet, and files it." },
   { id: "retrieve", action: "retrieved", name: "Retrieve", event: "memory.retrieved", description: "Bob finds a permitted record and brings its file back to the task desk." },
-  { id: "update", action: "updated", name: "Update", event: "memory.added + supersedes", description: "Pull the old record, write the correction, and file the new version. The previous record stays in history." },
-  { id: "retire", action: "forgotten", name: "Retire / delete", event: "memory.retired", description: "Papers fly into the shredder as cartoon fire fills the office. Only the selected memory is retired; its history remains." },
+  { id: "update", action: "updated", name: "Update", event: "memory.added + supersedes", description: "Memory Bob collects the old record, returns to write the correction, and files the replacement. The previous version stays in history." },
+  { id: "retire", action: "forgotten", name: "Retire / delete", event: "memory.retired", description: "Memory Bob collects the selected record, carries it to the shredder, and feeds it into the slot. Its history is preserved." },
   { id: "session", action: "retrieved", name: "Session file", event: "session context returned", description: "A runner brings a tabbed file to Maya’s desk. A real session combines relevant, accessible individual, team, and organization context." },
   { id: "evaluator-enter", action: "evaluated", name: "Evaluator enters", event: "evaluation.started", description: "Evaluator Bob enters from the open side of the room. This preview makes no evaluation claim.", seconds: 7, evaluation: { phase: "start" } },
   { id: "evaluator-check", action: "evaluated", name: "Check a citation", event: "memory.checked", description: "A cited record travels to the evaluator. This sample shows an unchanged check: no correctness flip.", seconds: 6, evaluation: { phase: "check", verdict: "unchanged" } },
@@ -37,7 +37,7 @@ export default function AnimationLibrary() {
   const scene = scenes.find((item) => item.id === selected)!;
   useEffect(() => {
     const media = matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReducedMotion(media.matches);
+    const update = () => { setReducedMotion(media.matches); if (media.matches) setPlaying(false); };
     update(); media.addEventListener("change", update);
     return () => media.removeEventListener("change", update);
   }, []);
@@ -47,9 +47,17 @@ export default function AnimationLibrary() {
     records: scene.evaluation ? [{ id: "preview-cited-record", scope }] : undefined,
     ...(selected === "session" ? { destination: [-3.6, .9] as [number, number], noticeLabel: "Gathering Maya’s session file" } : {}),
   }), [selected, scope, revision, scene]);
-  const onProgress = useCallback((value: number) => setProgress(value), []);
+  const onProgress = useCallback((value: number) => {
+    setProgress(value);
+    if (value >= 1) setPlaying(false);
+  }, []);
   function choose(id: string) { setSelected(id); setPlaying(false); setProgress(0); setSeek(undefined); setRevision((r) => r + 1); }
-  function play() { setSeek(undefined); setProgress(0); setRevision((r) => r + 1); setPlaying(true); }
+  function play() { if (reducedMotion) return; setSeek(undefined); setProgress(0); setRevision((r) => r + 1); setPlaying(true); }
+  function togglePlayback() {
+    if (reducedMotion) return;
+    if (progress >= 1) play();
+    else setPlaying((p) => !p);
+  }
   const seconds = scene.seconds ?? sceneClips[scene.action].seconds;
   return <main className={styles.library}>
     <header className={styles.header}><a href="/">← BrainBob</a><span>Animation library</span><strong>Isolated preview · no memory changes</strong></header>
@@ -63,8 +71,8 @@ export default function AnimationLibrary() {
       <aside className={styles.controls}>
         <p className={styles.kicker}>Same renderer. Every operation.</p>
         <div className={styles.scenes}>{scenes.map((item) => <button key={item.id} onClick={() => choose(item.id)} aria-pressed={selected === item.id}>{item.name}</button>)}</div>
-        <label className={styles.scope}>Cabinet<select value={scope} onChange={(e) => { setScope(e.target.value as MemoryScope); setRevision((r) => r + 1); setPlaying(false); setSeek(undefined); }}><option value="individual">Individual · Maya</option><option value="team">Team · Sales</option><option value="organization">Organization · Rusty Rod</option></select></label>
-        <div className={styles.transport}><button onClick={play}>Play from start</button><button onClick={() => setPlaying((p) => !p)}>{playing ? "Pause" : "Resume"}</button></div>
+        <label className={styles.scope}>Cabinet<select value={scope} onChange={(e) => { setScope(e.target.value as MemoryScope); setRevision((r) => r + 1); setPlaying(false); setProgress(0); setSeek(undefined); }}><option value="individual">Individual · Maya</option><option value="team">Team · Sales</option><option value="organization">Organization · Rusty Rod</option></select></label>
+        <div className={styles.transport}><button disabled={reducedMotion} onClick={play}>Play from start</button><button disabled={reducedMotion} onClick={togglePlayback}>{playing ? "Pause" : progress >= 1 ? "Replay" : "Resume"}</button></div>
         <label className={styles.scrub}>Scene position · {Math.round(progress * seconds)} / {seconds}s<input type="range" aria-label="Scene position" min="0" max="100" value={Math.round(progress * 100)} onChange={(e) => { setPlaying(false); setSeek({ value: Number(e.target.value) / 100, revision: Date.now() }); }} /></label>
         <code>{scene.event}</code>
         <p className={styles.note}>Preview cues only. No API calls, stored records, task grades, or authorization decisions are created here.{reducedMotion ? " Reduced motion is enabled; use the scrubber to inspect each pose." : ""}</p>
