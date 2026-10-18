@@ -276,7 +276,10 @@ def create_app(store, curator, agent, evaluator, judge, *, events=None,
         else:
             mems = store.search(q, reader=reader) if reader else store.search(q)
         bus.emit("memory.retrieved", task_id=tid, memory_ids=[m.id for m in mems], viewer=viewer)
-        ans = agent.answer(q, mems, body.get("now"))
+        if os.environ.get("BRAINBOB_NO_CACHE") == "1":  # live demo: every answer is a new provider call
+            ans = agent.answer(q, mems, body.get("now"), fresh=True)
+        else:  # default: identical prompts reuse the disk cache (reproducible benchmark runs)
+            ans = agent.answer(q, mems, body.get("now"))
         bus.emit("answer.produced", task_id=tid, answer=ans.text, cited_ids=list(ans.cited_ids), viewer=viewer)
         tasks[tid] = {"viewer": viewer, "question": q, "now": body.get("now"), "memories": mems, "answer": ans}
         return {"task_id": tid, "answer": ans.text, "cited_ids": list(ans.cited_ids), "memories": to_dict(mems)}
