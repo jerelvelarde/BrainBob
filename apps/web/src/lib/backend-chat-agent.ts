@@ -3,23 +3,21 @@ import { Observable } from "rxjs";
 import { brainApi, scopeLabel, type BackendAnswer } from "./brain-api";
 import type { SessionActivity } from "./active-session";
 import { memberForReader, teamForReader } from "./sample-company";
+import { chooseMemoryMessage, isMemoryReference, matchingMemories, noteFromPreviousMessage, parseMemoryCommand } from "./chat-memory-commands";
 
 export type ChatMode = "ask" | "remember" | "feedback" | "review";
 export type ChatContext = { mode: ChatMode; reader: string; author: string; taskId?: string; readOnly: boolean };
 export type AnswerReceipt = { messageId: string; requestId: string; question: string };
 export const MEMORY_TOOL_NAME = "consult_memory";
 export const SAVE_MEMORY_TOOL_NAME = "save_memory";
-
-// Explicit user command, not an inferred intent or a model-selected tool. Ordinary
-// questions (including "Do you remember...") remain read-only. Backend models
-// extract and compare the candidate; backend ACL and maintenance rules decide writes.
-export function personalMemoryCommand(text: string) {
-  return /^(?:please\s+)?remember\s*:\s*(\S[\s\S]*)$/i.exec(text.trim())?.[1];
-}
+export const RETIRE_MEMORY_TOOL_NAME = "retire_memory";
 
 export class BackendChatAgent extends AbstractAgent {
   // Only successful Ask turns enter follow-up context. Evaluation gold and write commands never do.
   private turns: { question: string; answer: string }[] = [];
+  private identity?: string;
+  private previousMessage?: string;
+  private recentMemoryIds?: string[];
   constructor(private context: () => ChatContext, private answered: (answer: BackendAnswer, receipt: AnswerReceipt) => void, private failed: (error: string) => void, private sessionActivity?: (event: SessionActivity) => void) {
     super({ agentId: "brainbob", description: "BrainBob shared memory on Crusoe", threadId: "brainbob-chat" });
   }
@@ -34,13 +32,27 @@ export class BackendChatAgent extends AbstractAgent {
       const run = async () => {
         const context = this.context();
         if (context.readOnly) throw new Error("Return to live before sending a request.");
+        const identity = `${context.reader}:${context.author}`;
+        const switchedIdentity = this.identity !== undefined && this.identity !== identity;
+        if (this.identity !== identity) {
+          this.turns = []; this.previousMessage = undefined; this.recentMemoryIds = undefined;
+          this.identity = identity;
+        }
         const last = input.messages.filter((message) => message.role === "user").at(-1);
         const text = typeof last?.content === "string" ? last.content.trim() : "";
         if (!text) throw new Error("Enter a message first.");
         const messageId = crypto.randomUUID();
         let reply: string;
-        const personalMemory = context.mode === "ask" ? personalMemoryCommand(text) : undefined;
-        if (personalMemory) {
+        const command = context.mode === "ask" ? parseMemoryCommand(text) : undefined;
+        const priorUser = input.messages.filter((message) => message.role === "user").at(-2);
+        const previous = this.previousMessage ?? (!switchedIdentity && typeof priorUser?.content === "string" ? priorUser.content : undefined);
+        if (context.mode === "ask") this.previousMessage = text;
+        if (command?.operation === "save") {
+          const personalMemory = isMemoryReference(command.subject) ? noteFromPreviousMessage(previous) : command.subject;
+          this.recentMemoryIds = [];
+          if (!personalMemory) {
+            reply = "What would you like me to remember? Tell me the exact fact or preference, and I’ll save it to your personal memory.";
+          } else {
           retrieval = { id: crypto.randomUUID(), startedAt: Date.now() };
           observer.next({ type: EventType.TOOL_CALL_START, toolCallId: retrieval.id, toolCallName: SAVE_MEMORY_TOOL_NAME, parentMessageId: crypto.randomUUID() });
           observer.next({ type: EventType.TOOL_CALL_ARGS, toolCallId: retrieval.id, delta: JSON.stringify({ requestId: input.runId, question: text, startedAt: retrieval.startedAt, operation: "save" }) });
@@ -50,12 +62,43 @@ export class BackendChatAgent extends AbstractAgent {
           const decisions = saved.memories.map((m) => "action" in m
             ? { memoryId: m.memory_id, action: m.action, text: m.text, reason: m.reason }
             : { memoryId: m.id, action: m.status === "tentative" ? "tentative" : "add", text: m.text, reason: m.reason });
+          this.recentMemoryIds = decisions.filter((d) => d.action !== "reject" && d.memoryId).map((d) => d.memoryId!);
+          this.previousMessage = personalMemory;
           const labels: Record<string, string> = { add: "Saved", supersede: "Updated", tentative: "Kept for review", reject: "Not saved" };
           reply = decisions.length ? decisions.map((d) => `${labels[d.action]}: ${d.text || d.reason}${d.action === "tentative" || d.action === "reject" ? ` (${d.reason})` : ""}`).join("\n\n") : "I checked that note, but no new memory was saved.";
           observer.next({ type: EventType.TOOL_CALL_RESULT, toolCallId: retrieval.id, messageId: crypto.randomUUID(), role: "tool", content: JSON.stringify({ elapsedMs: Date.now() - retrieval.startedAt, decisions, episodeId: saved.episode_id }) });
+          }
+        } else if (command?.operation === "retire") {
+          retrieval = { id: crypto.randomUUID(), startedAt: Date.now() };
+          observer.next({ type: EventType.TOOL_CALL_START, toolCallId: retrieval.id, toolCallName: RETIRE_MEMORY_TOOL_NAME, parentMessageId: crypto.randomUUID() });
+          observer.next({ type: EventType.TOOL_CALL_ARGS, toolCallId: retrieval.id, delta: JSON.stringify({ requestId: input.runId, question: text, startedAt: retrieval.startedAt, operation: "retire" }) });
+          observer.next({ type: EventType.TOOL_CALL_END, toolCallId: retrieval.id });
+          // Re-read visible records before any mutation; references never bypass ACL
+          // or follow a supersedes chain into a different, newly created memory.
+          const memories = await brainApi.memories(context.author, abort.signal);
+          if (abort.signal.aborted) return;
+          const reference = isMemoryReference(command.subject);
+          const recentIds = this.recentMemoryIds;
+          const candidates = reference && recentIds !== undefined
+            ? memories.filter((memory) => recentIds.includes(memory.id))
+            : matchingMemories(reference ? noteFromPreviousMessage(previous) ?? "" : command.subject, memories);
+          if (candidates.length !== 1 || (reference && (recentIds?.length ?? 0) > 1)) {
+            reply = chooseMemoryMessage(candidates);
+            observer.next({ type: EventType.TOOL_CALL_RESULT, toolCallId: retrieval.id, messageId: crypto.randomUUID(), role: "tool", content: JSON.stringify({ elapsedMs: Date.now() - retrieval.startedAt, clarification: reply }) });
+          } else {
+            const target = candidates[0];
+            const retired = target.status === "retired" ? target : (await brainApi.retire(target.id, "Removed at the member’s request in chat", context.author, abort.signal)).memory;
+            if (abort.signal.aborted) return;
+            if (retired.id !== target.id || retired.status !== "retired") throw new Error("The backend did not confirm this memory was removed. Check its current status before retrying.");
+            this.recentMemoryIds = [retired.id];
+            const alreadyRemoved = target.status === "retired";
+            reply = `${alreadyRemoved ? "Already removed from active memory" : "Removed from active memory"}: ${retired.text}\n\nIts history is kept for retracing.`;
+            observer.next({ type: EventType.TOOL_CALL_RESULT, toolCallId: retrieval.id, messageId: crypto.randomUUID(), role: "tool", content: JSON.stringify({ elapsedMs: Date.now() - retrieval.startedAt, decisions: [{ memoryId: retired.id, action: alreadyRemoved ? "already_retired" : "retire", text: retired.text, reason: retired.reason }] }) });
+          }
         } else {
         switch (context.mode) {
           case "ask": {
+            this.recentMemoryIds = [];
             asking = true;
             this.sessionActivity?.({ type: "started", requestId: input.runId, question: text });
             retrieval = { id: crypto.randomUUID(), startedAt: Date.now() };
@@ -70,6 +113,7 @@ export class BackendChatAgent extends AbstractAgent {
             const answer = await brainApi.ask(question, context.reader, abort.signal);
             if (abort.signal.aborted) return;
             if (!answer.answer.trim()) throw new Error("The inference provider returned no answer. Check the Crusoe connection and retry.");
+            this.recentMemoryIds = noteFromPreviousMessage(text) ? undefined : answer.memories.filter((memory) => answer.cited_ids.includes(memory.id)).map((memory) => memory.id);
             this.turns.push({ question: text, answer: answer.answer });
             this.turns = this.turns.slice(-4);
             finishAsk({ type: "answered", requestId: input.runId, answer });

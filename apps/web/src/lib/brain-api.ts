@@ -96,7 +96,7 @@ export const brainApi = {
   episode: (id: string, member: string, signal?: AbortSignal) => request(member, `/episodes/${encodeURIComponent(id)}`, episodeSchema, undefined, signal),
   history: (id: string, member: string, signal?: AbortSignal) => request(member, `${midPath(id)}/history`, historySchema, undefined, signal),
   correct: (id: string, text: string, author: string) => request(author, `${midPath(id)}/correct`, z.object({ memory: backendMemorySchema, retired_id: z.string() }), { text, author }),
-  retire: (id: string, reason: string, author: string) => request(author, `${midPath(id)}/retire`, z.object({ memory: backendMemorySchema }), { reason, author }),
+  retire: (id: string, reason: string, author: string, signal?: AbortSignal) => request(author, `${midPath(id)}/retire`, z.object({ memory: backendMemorySchema }), { reason, author }, signal),
   lock: (id: string, owner: string) => request(owner, `${midPath(id)}/lock`, z.object({ memory: backendMemorySchema }), { owner }),
   resolve: (id: string, owner: string, action: "keep" | "retire" | "correct", text?: string) => request(owner, `${midPath(id)}/resolve`, z.object({ memory: backendMemorySchema }), { owner, action, text }),
 };

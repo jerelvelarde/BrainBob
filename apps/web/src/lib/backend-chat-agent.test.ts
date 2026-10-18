@@ -30,10 +30,84 @@ describe("CopilotKit backend bridge", () => {
   it("does not turn questions or quoted instructions into memory writes", async () => {
     const fetcher = vi.fn().mockImplementation(() => Promise.resolve(response({ task_id: "t1", answer: "Answer", cited_ids: [], memories: [] })));
     vi.stubGlobal("fetch", fetcher);
-    for (const text of ["Do you remember my preference?", 'Explain the phrase "Remember: two bullets"', "Remember:"]) {
+    for (const text of ["Do you remember my preference?", 'Explain the phrase "Remember: two bullets"', "Don't forget the proposal", 'Explain "delete that from memory"', "Can you explain how memory works?"]) {
       await lastValueFrom(new BackendChatAgent(() => context("ask"), vi.fn(), vi.fn()).run(input(text)).pipe(toArray()));
     }
     expect(fetcher.mock.calls.every(([url]) => url.endsWith("/ask"))).toBe(true);
+  });
+
+  it("saves the user's preceding statement, not an unrelated assistant answer, then retires the returned record", async () => {
+    const memory = { id: "m-new", text: "Maya prefers tea during planning sessions.", scope: defaultReader, author: "sales-01", origin: "ep1", date: "2026-10-17", status: "trial" };
+    const fetcher = vi.fn()
+      .mockResolvedValueOnce(response({ task_id: "t1", answer: "An unrelated deadline is November 13.", cited_ids: ["m-old"], memories: [] }))
+      .mockResolvedValueOnce(response({ episode_id: "ep1", memories: [{ memory_id: memory.id, action: "add", text: memory.text, reason: "new note" }] }))
+      .mockResolvedValueOnce(response([memory]))
+      .mockResolvedValueOnce(response({ memory: { ...memory, status: "retired" } }));
+    vi.stubGlobal("fetch", fetcher);
+    const agent = new BackendChatAgent(() => context("ask"), vi.fn(), vi.fn());
+    await lastValueFrom(agent.run(input("I prefer tea during planning sessions.")).pipe(toArray()));
+    await lastValueFrom(agent.run(input("add that to memory")).pipe(toArray()));
+    expect(JSON.parse(fetcher.mock.calls[1][1].body).text).toBe("Maya Flores: I prefer tea during planning sessions.");
+    const events = await lastValueFrom(agent.run(input("delete that from memory")).pipe(toArray()));
+    expect(fetcher.mock.calls[3][0]).toBe("/api/brainbob/memories/m-new/retire");
+    expect(fetcher.mock.calls[3][1]).toMatchObject({ headers: { "X-BrainBob-Member": "sales-01" }, signal: expect.any(AbortSignal) });
+    expect(events.find((e) => e.type === "TOOL_CALL_START")).toMatchObject({ toolCallName: "retire_memory" });
+    expect(events.find((e) => e.type === "TEXT_MESSAGE_CONTENT")).toMatchObject({ delta: expect.stringContaining(`Removed from active memory: ${memory.text}`) });
+  });
+
+  it("uses visible user history for add-that without saving generated prose", async () => {
+    const fetcher = vi.fn().mockResolvedValue(response({ episode_id: "ep1", memories: [] }));
+    vi.stubGlobal("fetch", fetcher);
+    const run = input("Please add that to memory");
+    run.messages.unshift({ id: "u0", role: "user", content: "My planning day is Tuesday." }, { id: "a0", role: "assistant", content: "I don't know." });
+    await lastValueFrom(new BackendChatAgent(() => context("ask"), vi.fn(), vi.fn()).run(run).pipe(toArray()));
+    expect(JSON.parse(fetcher.mock.calls[0][1].body).text).toBe("Maya Flores: My planning day is Tuesday.");
+  });
+
+  it("clarifies missing notes and ambiguous deletions without mutating anything", async () => {
+    const memories = ["m1", "m2"].map((id) => ({ id, text: `Planning preference ${id}`, scope: defaultReader, author: "sales-01", origin: "ep1", date: "2026-10-17", status: "trial" }));
+    const fetcher = vi.fn().mockImplementation(() => Promise.resolve(response(memories)));
+    vi.stubGlobal("fetch", fetcher);
+    const agent = new BackendChatAgent(() => context("ask"), vi.fn(), vi.fn());
+    const missing = await lastValueFrom(agent.run(input("Remember that")).pipe(toArray()));
+    expect(missing.find((e) => e.type === "TEXT_MESSAGE_CONTENT")).toMatchObject({ delta: expect.stringContaining("What would you like me to remember?") });
+    expect(fetcher).not.toHaveBeenCalled();
+    const ambiguous = await lastValueFrom(agent.run(input("delete planning preference from memory")).pipe(toArray()));
+    expect(ambiguous.find((e) => e.type === "TEXT_MESSAGE_CONTENT")).toMatchObject({ delta: expect.stringContaining("Which memory should I remove?") });
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(fetcher.mock.calls[0][1].method).toBe("GET");
+  });
+
+  it("does not turn a rejected save into permission to delete the existing conflict", async () => {
+    const fetcher = vi.fn().mockResolvedValueOnce(response({ episode_id: "ep1", memories: [{ memory_id: "m1", action: "reject", text: "My planning day is Tuesday", reason: "duplicate" }] }))
+      .mockResolvedValueOnce(response([{ id: "m1", text: "My planning day is Tuesday", scope: defaultReader, author: "sales-01", origin: "ep1", date: "2026-10-17", status: "trial" }]));
+    vi.stubGlobal("fetch", fetcher);
+    const agent = new BackendChatAgent(() => context("ask"), vi.fn(), vi.fn());
+    await lastValueFrom(agent.run(input("Remember: My planning day is Tuesday")).pipe(toArray()));
+    const events = await lastValueFrom(agent.run(input("delete that from memory")).pipe(toArray()));
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    expect(events.find((e) => e.type === "TEXT_MESSAGE_CONTENT")).toMatchObject({ delta: expect.stringContaining("Nothing has been removed") });
+  });
+
+  it("preserves lock errors, requires retired status, and never carries references across accounts", async () => {
+    const memory = { id: "m1", text: "Planning preference", scope: defaultReader, author: "sales-01", origin: "ep1", date: "2026-10-17", status: "locked" };
+    const fetcher = vi.fn()
+      .mockResolvedValueOnce(response([memory])).mockResolvedValueOnce(response({ detail: "not the owner" }, 403))
+      .mockResolvedValueOnce(response([memory])).mockResolvedValueOnce(response({ memory }))
+      .mockResolvedValueOnce(response({ episode_id: "ep1", memories: [{ ...memory, status: "trial" }] }))
+      .mockResolvedValueOnce(response([memory]));
+    vi.stubGlobal("fetch", fetcher);
+    let state = context("ask");
+    const agent = new BackendChatAgent(() => state, vi.fn(), vi.fn());
+    const denied = await lastValueFrom(agent.run(input("delete memory m1")).pipe(toArray()));
+    expect(denied.at(-1)).toMatchObject({ type: "RUN_ERROR", message: "not the owner" });
+    const unconfirmed = await lastValueFrom(agent.run(input("delete memory m1")).pipe(toArray()));
+    expect(unconfirmed.at(-1)).toMatchObject({ type: "RUN_ERROR", message: expect.stringContaining("did not confirm") });
+    await lastValueFrom(agent.run(input("Remember my planning preference")).pipe(toArray()));
+    state = { ...state, reader: "rusty-rod/sales/sales-02", author: "sales-02" };
+    const changed = await lastValueFrom(agent.run(input("delete that from memory")).pipe(toArray()));
+    expect(changed.find((e) => e.type === "TEXT_MESSAGE_CONTENT")).toMatchObject({ delta: expect.stringContaining("Which memory") });
+    expect(fetcher).toHaveBeenCalledTimes(6);
   });
 
   it("keeps denied, tentative and rejected chat writes distinct from saved updates", async () => {

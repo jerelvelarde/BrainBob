@@ -4,11 +4,11 @@ import { useContext, useEffect, useState, type ComponentProps } from "react";
 import { defineToolCallRenderer } from "@copilotkit/react-core/v2";
 import { Brain, Check, ChevronRight, FileText, LoaderCircle } from "lucide-react";
 import { z } from "zod";
-import { MEMORY_TOOL_NAME, SAVE_MEMORY_TOOL_NAME } from "@/lib/backend-chat-agent";
+import { MEMORY_TOOL_NAME, SAVE_MEMORY_TOOL_NAME, RETIRE_MEMORY_TOOL_NAME } from "@/lib/backend-chat-agent";
 import { SessionReceiptsContext } from "./session-chat-message";
 
-const argsSchema = z.object({ requestId: z.string(), question: z.string(), startedAt: z.number(), operation: z.literal("save").optional() });
-const resultSchema = z.object({ messageId: z.string().optional(), elapsedMs: z.number(), error: z.string().optional(), decisions: z.array(z.object({ memoryId: z.string().nullable(), action: z.string(), text: z.string(), reason: z.string() })).optional() });
+const argsSchema = z.object({ requestId: z.string(), question: z.string(), startedAt: z.number(), operation: z.enum(["save", "retire"]).optional() });
+const resultSchema = z.object({ messageId: z.string().optional(), elapsedMs: z.number(), error: z.string().optional(), clarification: z.string().optional(), decisions: z.array(z.object({ memoryId: z.string().nullable(), action: z.string(), text: z.string(), reason: z.string() })).optional() });
 function parseResult(result?: string) {
   if (!result) return undefined;
   try { const parsed = resultSchema.safeParse(JSON.parse(result)); return parsed.success ? parsed.data : undefined; }
@@ -21,6 +21,7 @@ function MemoryTool({ args, result }: { args: Partial<z.infer<typeof argsSchema>
   const completed = parseResult(result);
   const snapshot = completed?.messageId ? receipts[completed.messageId] : undefined;
   const saving = args.operation === "save";
+  const retiring = args.operation === "retire";
   const checked = completed?.decisions;
   const running = !completed && (!progress || progress.event.type === "started");
   const failed = Boolean(completed?.error) || progress?.event.type === "failed";
@@ -33,11 +34,11 @@ function MemoryTool({ args, result }: { args: Partial<z.infer<typeof argsSchema>
   const seconds = Math.max(0, Math.round((completed?.elapsedMs ?? ((running ? now : progress?.at ?? now) - (args.startedAt ?? now))) / 1000));
   const elapsed = seconds >= 60 ? `${Math.floor(seconds / 60)}m ${seconds % 60}s` : `${seconds}s`;
   return <details className="memory-tool">
-    <summary><span>{running ? `Working${seconds ? ` for ${elapsed}` : "…"}` : failed ? "Couldn’t complete this request" : snapshot || checked ? `Worked for ${elapsed}` : "Stopped"}</span><ChevronRight size={14} /></summary>
+    <summary><span>{running ? `Working${seconds ? ` for ${elapsed}` : "…"}` : failed ? "Couldn’t complete this request" : completed?.clarification ? "Choose a memory" : snapshot || checked ? `Worked for ${elapsed}` : "Stopped"}</span><ChevronRight size={14} /></summary>
     <div className="memory-tool-body">
-      <div className="memory-tool-step">{running ? <LoaderCircle size={15} className="memory-tool-spinner" /> : snapshot || checked ? <Check size={15} /> : <Brain size={15} />}<strong>{running ? saving ? "Checking your memory update" : "Consulting your shared brain" : checked ? "Memory check complete" : snapshot ? "Consulted your shared brain" : "Memory request interrupted"}</strong></div>
-      <p>{snapshot ? `${snapshot.memories.length} memories returned · ${snapshot.citedIds.length} cited in this reply` : failed ? completed?.error ?? "The request failed. Try again when the service is available." : running ? saving ? "Extracting your note and comparing it with saved facts." : "Finding relevant context and preparing your reply." : checked ? "The backend checked the note against existing memories and permissions." : "No completed answer was returned."}</p>
-      {checked ? <div className="tool-source-list">{checked.map((decision, index) => decision.memoryId ? <button key={`${decision.memoryId}-${index}`} onClick={() => onInspect(decision.memoryId!)}><FileText size={13} /><span>{decision.text} · {decision.action === "supersede" ? "Updated" : decision.action === "add" ? "Saved" : decision.action === "tentative" ? "Needs review" : "Not saved"}</span></button> : <p key={index}>{decision.reason}</p>)}</div> : null}
+      <div className="memory-tool-step">{running ? <LoaderCircle size={15} className="memory-tool-spinner" /> : snapshot || checked ? <Check size={15} /> : <Brain size={15} />}<strong>{running ? saving ? "Checking your memory update" : retiring ? "Removing from active memory" : "Consulting your shared brain" : completed?.clarification ? "Nothing removed" : checked ? retiring ? "Memory removed" : "Memory check complete" : snapshot ? "Consulted your shared brain" : "Memory request interrupted"}</strong></div>
+      <p>{snapshot ? `${snapshot.memories.length} memories returned · ${snapshot.citedIds.length} cited in this reply` : failed ? completed?.error ?? "The request failed. Try again when the service is available." : completed?.clarification ? "Tell me which record you mean using its text or ID." : running ? saving ? "Extracting your note and comparing it with saved facts." : retiring ? "Finding the matching record and checking permission to remove it." : "Finding relevant context and preparing your reply." : checked ? retiring ? "Removed from active use. Source and history remain available." : "The backend checked the note against existing memories and permissions." : "No completed answer was returned."}</p>
+      {checked ? <div className="tool-source-list">{checked.map((decision, index) => decision.memoryId ? <button key={`${decision.memoryId}-${index}`} onClick={() => onInspect(decision.memoryId!)}><FileText size={13} /><span>{decision.text} · {decision.action === "retire" || decision.action === "already_retired" ? "Removed" : decision.action === "supersede" ? "Updated" : decision.action === "add" ? "Saved" : decision.action === "tentative" ? "Needs review" : "Not saved"}</span></button> : <p key={index}>{decision.reason}</p>)}</div> : null}
       {snapshot ? <>
         <div className="tool-source-list">{snapshot.memories.filter((memory) => snapshot.citedIds.includes(memory.id)).slice(0, 3).map((memory) => <button key={memory.id} onClick={() => onInspect(memory.id)}><FileText size={13} /><span>{memory.text}</span></button>)}</div>
         <button className="tool-explore" onClick={() => onExplore(snapshot)}>Explore memory <ChevronRight size={13} /></button>
@@ -50,5 +51,8 @@ export const memoryToolRenderer = defineToolCallRenderer({ name: MEMORY_TOOL_NAM
   render: (props: ComponentProps<typeof MemoryTool>) => <MemoryTool {...props} />,
 });
 export const saveMemoryToolRenderer = defineToolCallRenderer({ name: SAVE_MEMORY_TOOL_NAME, agentId: "brainbob", args: argsSchema,
+  render: (props: ComponentProps<typeof MemoryTool>) => <MemoryTool {...props} />,
+});
+export const retireMemoryToolRenderer = defineToolCallRenderer({ name: RETIRE_MEMORY_TOOL_NAME, agentId: "brainbob", args: argsSchema,
   render: (props: ComponentProps<typeof MemoryTool>) => <MemoryTool {...props} />,
 });
