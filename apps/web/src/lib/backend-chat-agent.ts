@@ -11,6 +11,7 @@ export type ChatContext = { mode: ChatMode; reader: string; author: string; task
 export type AnswerReceipt = { messageId: string; requestId: string; question: string };
 export const MEMORY_TOOL_NAME = "consult_memory";
 export const SAVE_MEMORY_TOOL_NAME = "save_memory";
+export const CORRECT_MEMORY_TOOL_NAME = "correct_memory";
 export const RETIRE_MEMORY_TOOL_NAME = "retire_memory";
 export const CONVERSATION_TOOL_NAME = "understand_request";
 
@@ -59,6 +60,7 @@ export class BackendChatAgent extends AbstractAgent {
         let conversationalReply: string | undefined;
         let requestText = text;
         let reportedUpdate = false;
+        let correction: { memoryId: string; match: string; text: string } | undefined;
         if (context.mode === "ask" && context.conversational) {
           retrieval = { id: crypto.randomUUID(), startedAt: Date.now() };
           observer.next({ type: EventType.TOOL_CALL_START, toolCallId: retrieval.id, toolCallName: CONVERSATION_TOOL_NAME, parentMessageId: crypto.randomUUID() });
@@ -69,9 +71,10 @@ export class BackendChatAgent extends AbstractAgent {
           const plan = result.plan;
           command = plan.operation === "save" ? { operation: "save", subject: plan.text } : plan.operation === "retire" ? { operation: "retire", subject: plan.memoryId } : undefined;
           reportedUpdate = plan.operation === "save" && plan.kind === "report";
+          if (plan.operation === "correct") correction = plan;
           if (plan.operation === "reply") conversationalReply = plan.text;
           if (plan.operation === "ask") requestText = plan.question;
-          const summary = { ask: "Look up context for your request", save: "Save the update you shared", retire: "Remove the memory you selected", reply: "Respond to your message" }[plan.operation];
+          const summary = { ask: "Look up context for your request", save: "Save the update you shared", correct: "Correct the existing memory in its original scope", retire: "Remove the memory you selected", reply: "Respond to your message" }[plan.operation];
           observer.next({ type: EventType.TOOL_CALL_RESULT, toolCallId: retrieval.id, messageId: crypto.randomUUID(), role: "tool", content: JSON.stringify({ elapsedMs: Date.now() - retrieval.startedAt, summary, model: result.model }) });
           retrieval = undefined;
         }
@@ -80,6 +83,25 @@ export class BackendChatAgent extends AbstractAgent {
         if (context.mode === "ask") this.previousMessage = text;
         if (conversationalReply) {
           reply = conversationalReply;
+        } else if (correction) {
+          retrieval = { id: crypto.randomUUID(), startedAt: Date.now() };
+          observer.next({ type: EventType.TOOL_CALL_START, toolCallId: retrieval.id, toolCallName: CORRECT_MEMORY_TOOL_NAME, parentMessageId: crypto.randomUUID() });
+          observer.next({ type: EventType.TOOL_CALL_ARGS, toolCallId: retrieval.id, delta: JSON.stringify({ requestId: input.runId, question: text, startedAt: retrieval.startedAt, operation: "correct" }) });
+          observer.next({ type: EventType.TOOL_CALL_END, toolCallId: retrieval.id });
+          const memories = await brainApi.memories(context.author, abort.signal);
+          if (abort.signal.aborted) return;
+          const target = memories.find(memory => memory.id === correction.memoryId && memory.status !== "retired");
+          if (!target) throw new Error("That memory is no longer active or accessible. Ask for the current fact before correcting it.");
+          if (target.status === "locked") throw new Error("That memory is locked. Its owner must resolve the correction in Memory details.");
+          if (target.text.split(correction.match).length !== 2) throw new Error("The original fact changed or the correction is ambiguous. Ask for the current fact before correcting it.");
+          const replacement = target.text.replace(correction.match, () => correction.text);
+          const updated = await brainApi.correct(target.id, replacement, context.author, abort.signal);
+          if (abort.signal.aborted) return;
+          if (updated.retired_id !== target.id || updated.memory.supersedes !== target.id || updated.memory.scope !== target.scope || updated.memory.status === "retired") throw new Error("The backend did not confirm the expected correction. Check Memory details before retrying.");
+          this.recentMemoryIds = [updated.memory.id];
+          this.turns = []; this.conversation = [];
+          reply = `Updated ${scopeLabel(updated.memory.scope)} memory: ${updated.memory.text}\n\nThe previous version is retired and its history is preserved.`;
+          observer.next({ type: EventType.TOOL_CALL_RESULT, toolCallId: retrieval.id, messageId: crypto.randomUUID(), role: "tool", content: JSON.stringify({ elapsedMs: Date.now() - retrieval.startedAt, decisions: [{ memoryId: updated.memory.id, action: "supersede", text: updated.memory.text, reason: `Corrected ${target.id} in ${scopeLabel(target.scope)}` }] }) });
         } else if (command?.operation === "save") {
           const personalMemory = isMemoryReference(command.subject) ? noteFromPreviousMessage(previous) : command.subject;
           this.recentMemoryIds = [];
