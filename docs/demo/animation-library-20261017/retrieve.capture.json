@@ -1,0 +1,394 @@
+{
+  "label": "retrieve",
+  "button": "Retrieve",
+  "scope": "team",
+  "seconds": 9,
+  "start": 1792281901218,
+  "end": 1792281911044,
+  "frames": [
+    {
+      "at": 1792281901485,
+      "name": "retrieve-0000.jpg"
+    },
+    {
+      "at": 1792281901590,
+      "name": "retrieve-0001.jpg"
+    },
+    {
+      "at": 1792281901690,
+      "name": "retrieve-0002.jpg"
+    },
+    {
+      "at": 1792281901790,
+      "name": "retrieve-0003.jpg"
+    },
+    {
+      "at": 1792281901908,
+      "name": "retrieve-0004.jpg"
+    },
+    {
+      "at": 1792281902028,
+      "name": "retrieve-0005.jpg"
+    },
+    {
+      "at": 1792281902123,
+      "name": "retrieve-0006.jpg"
+    },
+    {
+      "at": 1792281902225,
+      "name": "retrieve-0007.jpg"
+    },
+    {
+      "at": 1792281902324,
+      "name": "retrieve-0008.jpg"
+    },
+    {
+      "at": 1792281902423,
+      "name": "retrieve-0009.jpg"
+    },
+    {
+      "at": 1792281902524,
+      "name": "retrieve-0010.jpg"
+    },
+    {
+      "at": 1792281902618,
+      "name": "retrieve-0011.jpg"
+    },
+    {
+      "at": 1792281902706,
+      "name": "retrieve-0012.jpg"
+    },
+    {
+      "at": 1792281902798,
+      "name": "retrieve-0013.jpg"
+    },
+    {
+      "at": 1792281902898,
+      "name": "retrieve-0014.jpg"
+    },
+    {
+      "at": 1792281902999,
+      "name": "retrieve-0015.jpg"
+    },
+    {
+      "at": 1792281903099,
+      "name": "retrieve-0016.jpg"
+    },
+    {
+      "at": 1792281903201,
+      "name": "retrieve-0017.jpg"
+    },
+    {
+      "at": 1792281903304,
+      "name": "retrieve-0018.jpg"
+    },
+    {
+      "at": 1792281903404,
+      "name": "retrieve-0019.jpg"
+    },
+    {
+      "at": 1792281903503,
+      "name": "retrieve-0020.jpg"
+    },
+    {
+      "at": 1792281903605,
+      "name": "retrieve-0021.jpg"
+    },
+    {
+      "at": 1792281903704,
+      "name": "retrieve-0022.jpg"
+    },
+    {
+      "at": 1792281903807,
+      "name": "retrieve-0023.jpg"
+    },
+    {
+      "at": 1792281903899,
+      "name": "retrieve-0024.jpg"
+    },
+    {
+      "at": 1792281904005,
+      "name": "retrieve-0025.jpg"
+    },
+    {
+      "at": 1792281904102,
+      "name": "retrieve-0026.jpg"
+    },
+    {
+      "at": 1792281904201,
+      "name": "retrieve-0027.jpg"
+    },
+    {
+      "at": 1792281904303,
+      "name": "retrieve-0028.jpg"
+    },
+    {
+      "at": 1792281904412,
+      "name": "retrieve-0029.jpg"
+    },
+    {
+      "at": 1792281904498,
+      "name": "retrieve-0030.jpg"
+    },
+    {
+      "at": 1792281904599,
+      "name": "retrieve-0031.jpg"
+    },
+    {
+      "at": 1792281904695,
+      "name": "retrieve-0032.jpg"
+    },
+    {
+      "at": 1792281904828,
+      "name": "retrieve-0033.jpg"
+    },
+    {
+      "at": 1792281904914,
+      "name": "retrieve-0034.jpg"
+    },
+    {
+      "at": 1792281905015,
+      "name": "retrieve-0035.jpg"
+    },
+    {
+      "at": 1792281905115,
+      "name": "retrieve-0036.jpg"
+    },
+    {
+      "at": 1792281905217,
+      "name": "retrieve-0037.jpg"
+    },
+    {
+      "at": 1792281905318,
+      "name": "retrieve-0038.jpg"
+    },
+    {
+      "at": 1792281905420,
+      "name": "retrieve-0039.jpg"
+    },
+    {
+      "at": 1792281905518,
+      "name": "retrieve-0040.jpg"
+    },
+    {
+      "at": 1792281905617,
+      "name": "retrieve-0041.jpg"
+    },
+    {
+      "at": 1792281905722,
+      "name": "retrieve-0042.jpg"
+    },
+    {
+      "at": 1792281905817,
+      "name": "retrieve-0043.jpg"
+    },
+    {
+      "at": 1792281905917,
+      "name": "retrieve-0044.jpg"
+    },
+    {
+      "at": 1792281906015,
+      "name": "retrieve-0045.jpg"
+    },
+    {
+      "at": 1792281906118,
+      "name": "retrieve-0046.jpg"
+    },
+    {
+      "at": 1792281906218,
+      "name": "retrieve-0047.jpg"
+    },
+    {
+      "at": 1792281906313,
+      "name": "retrieve-0048.jpg"
+    },
+    {
+      "at": 1792281906412,
+      "name": "retrieve-0049.jpg"
+    },
+    {
+      "at": 1792281906512,
+      "name": "retrieve-0050.jpg"
+    },
+    {
+      "at": 1792281906609,
+      "name": "retrieve-0051.jpg"
+    },
+    {
+      "at": 1792281906707,
+      "name": "retrieve-0052.jpg"
+    },
+    {
+      "at": 1792281906806,
+      "name": "retrieve-0053.jpg"
+    },
+    {
+      "at": 1792281906904,
+      "name": "retrieve-0054.jpg"
+    },
+    {
+      "at": 1792281907004,
+      "name": "retrieve-0055.jpg"
+    },
+    {
+      "at": 1792281907104,
+      "name": "retrieve-0056.jpg"
+    },
+    {
+      "at": 1792281907202,
+      "name": "retrieve-0057.jpg"
+    },
+    {
+      "at": 1792281907301,
+      "name": "retrieve-0058.jpg"
+    },
+    {
+      "at": 1792281907398,
+      "name": "retrieve-0059.jpg"
+    },
+    {
+      "at": 1792281907496,
+      "name": "retrieve-0060.jpg"
+    },
+    {
+      "at": 1792281907595,
+      "name": "retrieve-0061.jpg"
+    },
+    {
+      "at": 1792281907696,
+      "name": "retrieve-0062.jpg"
+    },
+    {
+      "at": 1792281907794,
+      "name": "retrieve-0063.jpg"
+    },
+    {
+      "at": 1792281907887,
+      "name": "retrieve-0064.jpg"
+    },
+    {
+      "at": 1792281907992,
+      "name": "retrieve-0065.jpg"
+    },
+    {
+      "at": 1792281908089,
+      "name": "retrieve-0066.jpg"
+    },
+    {
+      "at": 1792281908189,
+      "name": "retrieve-0067.jpg"
+    },
+    {
+      "at": 1792281908280,
+      "name": "retrieve-0068.jpg"
+    },
+    {
+      "at": 1792281908386,
+      "name": "retrieve-0069.jpg"
+    },
+    {
+      "at": 1792281908481,
+      "name": "retrieve-0070.jpg"
+    },
+    {
+      "at": 1792281908580,
+      "name": "retrieve-0071.jpg"
+    },
+    {
+      "at": 1792281908679,
+      "name": "retrieve-0072.jpg"
+    },
+    {
+      "at": 1792281908775,
+      "name": "retrieve-0073.jpg"
+    },
+    {
+      "at": 1792281908878,
+      "name": "retrieve-0074.jpg"
+    },
+    {
+      "at": 1792281908975,
+      "name": "retrieve-0075.jpg"
+    },
+    {
+      "at": 1792281909077,
+      "name": "retrieve-0076.jpg"
+    },
+    {
+      "at": 1792281909172,
+      "name": "retrieve-0077.jpg"
+    },
+    {
+      "at": 1792281909272,
+      "name": "retrieve-0078.jpg"
+    },
+    {
+      "at": 1792281909373,
+      "name": "retrieve-0079.jpg"
+    },
+    {
+      "at": 1792281909471,
+      "name": "retrieve-0080.jpg"
+    },
+    {
+      "at": 1792281909570,
+      "name": "retrieve-0081.jpg"
+    },
+    {
+      "at": 1792281909672,
+      "name": "retrieve-0082.jpg"
+    },
+    {
+      "at": 1792281909764,
+      "name": "retrieve-0083.jpg"
+    },
+    {
+      "at": 1792281909867,
+      "name": "retrieve-0084.jpg"
+    },
+    {
+      "at": 1792281909962,
+      "name": "retrieve-0085.jpg"
+    },
+    {
+      "at": 1792281910050,
+      "name": "retrieve-0086.jpg"
+    },
+    {
+      "at": 1792281910144,
+      "name": "retrieve-0087.jpg"
+    },
+    {
+      "at": 1792281910253,
+      "name": "retrieve-0088.jpg"
+    },
+    {
+      "at": 1792281910353,
+      "name": "retrieve-0089.jpg"
+    },
+    {
+      "at": 1792281910455,
+      "name": "retrieve-0090.jpg"
+    },
+    {
+      "at": 1792281910553,
+      "name": "retrieve-0091.jpg"
+    },
+    {
+      "at": 1792281910646,
+      "name": "retrieve-0092.jpg"
+    },
+    {
+      "at": 1792281910750,
+      "name": "retrieve-0093.jpg"
+    },
+    {
+      "at": 1792281910839,
+      "name": "retrieve-0094.jpg"
+    },
+    {
+      "at": 1792281910945,
+      "name": "retrieve-0095.jpg"
+    }
+  ]
+}

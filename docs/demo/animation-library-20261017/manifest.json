@@ -1,0 +1,192 @@
+{
+  "implementation": "5196b05",
+  "resolution": [
+    1600,
+    900
+  ],
+  "output_fps": 15,
+  "sampling_note": "Native screenshots sampled about 8\u201310 fps; timestamps preserved with repeated output frames. Silent animation previews, not live backend operations.",
+  "clips": [
+    {
+      "id": "arrive",
+      "label": "Conversation",
+      "scope": "organization",
+      "duration": 6.7,
+      "frames": 65,
+      "captured_start_ms": 1792281995745,
+      "captured_end_ms": 1792282002579,
+      "source": "native browser capture of isolated production scene components",
+      "domain_effects": "none",
+      "path": "clips/arrive.mp4"
+    },
+    {
+      "id": "create",
+      "label": "Create",
+      "scope": "organization",
+      "duration": 9.7,
+      "frames": 84,
+      "captured_start_ms": 1792281890840,
+      "captured_end_ms": 1792281900709,
+      "source": "native browser capture of isolated production scene components",
+      "domain_effects": "none",
+      "path": "clips/create.mp4"
+    },
+    {
+      "id": "retrieve",
+      "label": "Retrieve",
+      "scope": "team",
+      "duration": 9.7,
+      "frames": 95,
+      "captured_start_ms": 1792281901218,
+      "captured_end_ms": 1792281911044,
+      "source": "native browser capture of isolated production scene components",
+      "domain_effects": "none",
+      "path": "clips/retrieve.mp4"
+    },
+    {
+      "id": "session",
+      "label": "Session file",
+      "scope": "individual",
+      "duration": 9.7,
+      "frames": 96,
+      "captured_start_ms": 1792281911473,
+      "captured_end_ms": 1792281921316,
+      "source": "native browser capture of isolated production scene components",
+      "domain_effects": "none",
+      "path": "clips/session.mp4"
+    },
+    {
+      "id": "update",
+      "label": "Update",
+      "scope": "individual",
+      "duration": 10.7,
+      "frames": 106,
+      "captured_start_ms": 1792281861977,
+      "captured_end_ms": 1792281872809,
+      "source": "native browser capture of isolated production scene components",
+      "domain_effects": "none",
+      "path": "clips/update.mp4"
+    },
+    {
+      "id": "retire",
+      "label": "Retire / delete",
+      "scope": "team",
+      "duration": 12.7,
+      "frames": 124,
+      "captured_start_ms": 1792281873209,
+      "captured_end_ms": 1792281886027,
+      "source": "native browser capture of isolated production scene components",
+      "domain_effects": "none",
+      "path": "clips/retire.mp4"
+    },
+    {
+      "id": "evaluator-enter",
+      "label": "Evaluator enters",
+      "scope": "organization",
+      "duration": 7.7,
+      "frames": 75,
+      "captured_start_ms": 1792281930260,
+      "captured_end_ms": 1792281938125,
+      "source": "native browser capture of isolated production scene components",
+      "domain_effects": "none",
+      "path": "clips/evaluator-enter.mp4"
+    },
+    {
+      "id": "evaluator-check",
+      "label": "Check a citation",
+      "scope": "team",
+      "duration": 6.7,
+      "frames": 65,
+      "captured_start_ms": 1792281938524,
+      "captured_end_ms": 1792281945347,
+      "source": "native browser capture of isolated production scene components",
+      "domain_effects": "none",
+      "path": "clips/evaluator-check.mp4"
+    },
+    {
+      "id": "evaluator-exit",
+      "label": "Evaluator leaves",
+      "scope": "team",
+      "duration": 5.7,
+      "frames": 56,
+      "captured_start_ms": 1792281945713,
+      "captured_end_ms": 1792281951607,
+      "source": "native browser capture of isolated production scene components",
+      "domain_effects": "none",
+      "path": "clips/evaluator-exit.mp4"
+    },
+    {
+      "id": "promote",
+      "label": "Promote",
+      "scope": "team",
+      "duration": 7.7,
+      "frames": 76,
+      "captured_start_ms": 1792281956554,
+      "captured_end_ms": 1792281964430,
+      "source": "native browser capture of isolated production scene components",
+      "domain_effects": "none",
+      "path": "clips/promote.mp4"
+    },
+    {
+      "id": "flag",
+      "label": "Flag",
+      "scope": "organization",
+      "duration": 7.7,
+      "frames": 76,
+      "captured_start_ms": 1792281964858,
+      "captured_end_ms": 1792281972735,
+      "source": "native browser capture of isolated production scene components",
+      "domain_effects": "none",
+      "path": "clips/flag.mp4"
+    },
+    {
+      "id": "lock",
+      "label": "Lock",
+      "scope": "organization",
+      "duration": 5.7,
+      "frames": 55,
+      "captured_start_ms": 1792281973166,
+      "captured_end_ms": 1792281979010,
+      "source": "native browser capture of isolated production scene components",
+      "domain_effects": "none",
+      "path": "clips/lock.mp4"
+    },
+    {
+      "id": "resolve",
+      "label": "Owner keeps it",
+      "scope": "organization",
+      "duration": 5.7,
+      "frames": 55,
+      "captured_start_ms": 1792281979422,
+      "captured_end_ms": 1792281985226,
+      "source": "native browser capture of isolated production scene components",
+      "domain_effects": "none",
+      "path": "clips/resolve.mp4"
+    },
+    {
+      "id": "reject",
+      "label": "Reject",
+      "scope": "team",
+      "duration": 6.7,
+      "frames": 65,
+      "captured_start_ms": 1792281988507,
+      "captured_end_ms": 1792281995345,
+      "source": "native browser capture of isolated production scene components",
+      "domain_effects": "none",
+      "path": "clips/reject.mp4"
+    },
+    {
+      "id": "answer",
+      "label": "Answer",
+      "scope": "individual",
+      "duration": 7.7,
+      "frames": 72,
+      "captured_start_ms": 1792282003010,
+      "captured_end_ms": 1792282010904,
+      "source": "native browser capture of isolated production scene components",
+      "domain_effects": "none",
+      "path": "clips/answer.mp4"
+    }
+  ],
+  "published_gallery_commit": "cae5c1147b9871868387dbd7d3b509e2ec523f8d"
+}

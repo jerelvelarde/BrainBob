@@ -1,0 +1,398 @@
+{
+  "label": "session",
+  "button": "Session file",
+  "scope": "individual",
+  "seconds": 9,
+  "start": 1792281911473,
+  "end": 1792281921316,
+  "frames": [
+    {
+      "at": 1792281911744,
+      "name": "session-0000.jpg"
+    },
+    {
+      "at": 1792281911830,
+      "name": "session-0001.jpg"
+    },
+    {
+      "at": 1792281911929,
+      "name": "session-0002.jpg"
+    },
+    {
+      "at": 1792281912029,
+      "name": "session-0003.jpg"
+    },
+    {
+      "at": 1792281912125,
+      "name": "session-0004.jpg"
+    },
+    {
+      "at": 1792281912225,
+      "name": "session-0005.jpg"
+    },
+    {
+      "at": 1792281912325,
+      "name": "session-0006.jpg"
+    },
+    {
+      "at": 1792281912424,
+      "name": "session-0007.jpg"
+    },
+    {
+      "at": 1792281912524,
+      "name": "session-0008.jpg"
+    },
+    {
+      "at": 1792281912623,
+      "name": "session-0009.jpg"
+    },
+    {
+      "at": 1792281912722,
+      "name": "session-0010.jpg"
+    },
+    {
+      "at": 1792281912822,
+      "name": "session-0011.jpg"
+    },
+    {
+      "at": 1792281912920,
+      "name": "session-0012.jpg"
+    },
+    {
+      "at": 1792281913019,
+      "name": "session-0013.jpg"
+    },
+    {
+      "at": 1792281913115,
+      "name": "session-0014.jpg"
+    },
+    {
+      "at": 1792281913214,
+      "name": "session-0015.jpg"
+    },
+    {
+      "at": 1792281913313,
+      "name": "session-0016.jpg"
+    },
+    {
+      "at": 1792281913407,
+      "name": "session-0017.jpg"
+    },
+    {
+      "at": 1792281913508,
+      "name": "session-0018.jpg"
+    },
+    {
+      "at": 1792281913607,
+      "name": "session-0019.jpg"
+    },
+    {
+      "at": 1792281913707,
+      "name": "session-0020.jpg"
+    },
+    {
+      "at": 1792281913806,
+      "name": "session-0021.jpg"
+    },
+    {
+      "at": 1792281913905,
+      "name": "session-0022.jpg"
+    },
+    {
+      "at": 1792281914003,
+      "name": "session-0023.jpg"
+    },
+    {
+      "at": 1792281914104,
+      "name": "session-0024.jpg"
+    },
+    {
+      "at": 1792281914202,
+      "name": "session-0025.jpg"
+    },
+    {
+      "at": 1792281914298,
+      "name": "session-0026.jpg"
+    },
+    {
+      "at": 1792281914399,
+      "name": "session-0027.jpg"
+    },
+    {
+      "at": 1792281914488,
+      "name": "session-0028.jpg"
+    },
+    {
+      "at": 1792281914589,
+      "name": "session-0029.jpg"
+    },
+    {
+      "at": 1792281914690,
+      "name": "session-0030.jpg"
+    },
+    {
+      "at": 1792281914790,
+      "name": "session-0031.jpg"
+    },
+    {
+      "at": 1792281914890,
+      "name": "session-0032.jpg"
+    },
+    {
+      "at": 1792281914988,
+      "name": "session-0033.jpg"
+    },
+    {
+      "at": 1792281915089,
+      "name": "session-0034.jpg"
+    },
+    {
+      "at": 1792281915187,
+      "name": "session-0035.jpg"
+    },
+    {
+      "at": 1792281915285,
+      "name": "session-0036.jpg"
+    },
+    {
+      "at": 1792281915385,
+      "name": "session-0037.jpg"
+    },
+    {
+      "at": 1792281915483,
+      "name": "session-0038.jpg"
+    },
+    {
+      "at": 1792281915573,
+      "name": "session-0039.jpg"
+    },
+    {
+      "at": 1792281915665,
+      "name": "session-0040.jpg"
+    },
+    {
+      "at": 1792281915775,
+      "name": "session-0041.jpg"
+    },
+    {
+      "at": 1792281915874,
+      "name": "session-0042.jpg"
+    },
+    {
+      "at": 1792281915973,
+      "name": "session-0043.jpg"
+    },
+    {
+      "at": 1792281916072,
+      "name": "session-0044.jpg"
+    },
+    {
+      "at": 1792281916172,
+      "name": "session-0045.jpg"
+    },
+    {
+      "at": 1792281916268,
+      "name": "session-0046.jpg"
+    },
+    {
+      "at": 1792281916365,
+      "name": "session-0047.jpg"
+    },
+    {
+      "at": 1792281916465,
+      "name": "session-0048.jpg"
+    },
+    {
+      "at": 1792281916567,
+      "name": "session-0049.jpg"
+    },
+    {
+      "at": 1792281916664,
+      "name": "session-0050.jpg"
+    },
+    {
+      "at": 1792281916765,
+      "name": "session-0051.jpg"
+    },
+    {
+      "at": 1792281916863,
+      "name": "session-0052.jpg"
+    },
+    {
+      "at": 1792281916964,
+      "name": "session-0053.jpg"
+    },
+    {
+      "at": 1792281917064,
+      "name": "session-0054.jpg"
+    },
+    {
+      "at": 1792281917162,
+      "name": "session-0055.jpg"
+    },
+    {
+      "at": 1792281917263,
+      "name": "session-0056.jpg"
+    },
+    {
+      "at": 1792281917363,
+      "name": "session-0057.jpg"
+    },
+    {
+      "at": 1792281917458,
+      "name": "session-0058.jpg"
+    },
+    {
+      "at": 1792281917557,
+      "name": "session-0059.jpg"
+    },
+    {
+      "at": 1792281917656,
+      "name": "session-0060.jpg"
+    },
+    {
+      "at": 1792281917754,
+      "name": "session-0061.jpg"
+    },
+    {
+      "at": 1792281917852,
+      "name": "session-0062.jpg"
+    },
+    {
+      "at": 1792281917952,
+      "name": "session-0063.jpg"
+    },
+    {
+      "at": 1792281918051,
+      "name": "session-0064.jpg"
+    },
+    {
+      "at": 1792281918150,
+      "name": "session-0065.jpg"
+    },
+    {
+      "at": 1792281918252,
+      "name": "session-0066.jpg"
+    },
+    {
+      "at": 1792281918350,
+      "name": "session-0067.jpg"
+    },
+    {
+      "at": 1792281918449,
+      "name": "session-0068.jpg"
+    },
+    {
+      "at": 1792281918548,
+      "name": "session-0069.jpg"
+    },
+    {
+      "at": 1792281918646,
+      "name": "session-0070.jpg"
+    },
+    {
+      "at": 1792281918745,
+      "name": "session-0071.jpg"
+    },
+    {
+      "at": 1792281918844,
+      "name": "session-0072.jpg"
+    },
+    {
+      "at": 1792281918942,
+      "name": "session-0073.jpg"
+    },
+    {
+      "at": 1792281919043,
+      "name": "session-0074.jpg"
+    },
+    {
+      "at": 1792281919142,
+      "name": "session-0075.jpg"
+    },
+    {
+      "at": 1792281919239,
+      "name": "session-0076.jpg"
+    },
+    {
+      "at": 1792281919339,
+      "name": "session-0077.jpg"
+    },
+    {
+      "at": 1792281919427,
+      "name": "session-0078.jpg"
+    },
+    {
+      "at": 1792281919523,
+      "name": "session-0079.jpg"
+    },
+    {
+      "at": 1792281919616,
+      "name": "session-0080.jpg"
+    },
+    {
+      "at": 1792281919728,
+      "name": "session-0081.jpg"
+    },
+    {
+      "at": 1792281919825,
+      "name": "session-0082.jpg"
+    },
+    {
+      "at": 1792281919927,
+      "name": "session-0083.jpg"
+    },
+    {
+      "at": 1792281920027,
+      "name": "session-0084.jpg"
+    },
+    {
+      "at": 1792281920127,
+      "name": "session-0085.jpg"
+    },
+    {
+      "at": 1792281920225,
+      "name": "session-0086.jpg"
+    },
+    {
+      "at": 1792281920325,
+      "name": "session-0087.jpg"
+    },
+    {
+      "at": 1792281920423,
+      "name": "session-0088.jpg"
+    },
+    {
+      "at": 1792281920521,
+      "name": "session-0089.jpg"
+    },
+    {
+      "at": 1792281920622,
+      "name": "session-0090.jpg"
+    },
+    {
+      "at": 1792281920720,
+      "name": "session-0091.jpg"
+    },
+    {
+      "at": 1792281920820,
+      "name": "session-0092.jpg"
+    },
+    {
+      "at": 1792281920920,
+      "name": "session-0093.jpg"
+    },
+    {
+      "at": 1792281921019,
+      "name": "session-0094.jpg"
+    },
+    {
+      "at": 1792281921116,
+      "name": "session-0095.jpg"
+    },
+    {
+      "at": 1792281921218,
+      "name": "session-0096.jpg"
+    }
+  ]
+}
