@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { canReadScope, companyScope, companyScopes, memberId, memberForReader } from "./sample-company";
+import { conversationPlanSchema, type ConversationMessage } from "./conversation-plan";
 
 // Keep browser requests on the UI origin; Next forwards them to BRAINBOB_API_URL.
 // An explicit public URL remains available for deployments with direct API access.
@@ -81,6 +82,12 @@ export function eventsUrl(member: string, after: number) {
   return `${BACKEND_URL}/events?${new URLSearchParams({ member, after: String(after) })}`;
 }
 export const brainApi = {
+  planConversation: async (messages: ConversationMessage[], reader: string, recentMemoryIds?: string[], signal?: AbortSignal) => {
+    const response = await fetch("/api/conversation", { method: "POST", headers: { "Content-Type": "application/json", "X-BrainBob-Member": memberId(reader) }, body: JSON.stringify({ messages, reader, recentMemoryIds }), signal });
+    const body = await response.json();
+    if (!response.ok) throw new Error(body.detail ?? "The conversation model is unavailable.");
+    return z.object({ plan: conversationPlanSchema, model: z.string() }).parse(body);
+  },
   rememberPersonal: (text: string, reader: string, author: string, signal?: AbortSignal) => {
     const person = memberForReader(reader);
     if (!person || person.id !== author) throw new Error("Choose your own individual session before saving a personal memory.");

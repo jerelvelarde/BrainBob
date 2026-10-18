@@ -229,6 +229,76 @@ describe("CopilotKit backend bridge", () => {
     expect(JSON.parse(fetcher.mock.calls[3][1].body).question).not.toContain("Draft for Elena");
   });
 
+  it("invalidates stale answering context after a correction and after external memory changes", async () => {
+    const fetcher = vi.fn()
+      .mockResolvedValueOnce(response({ task_id: "t1", answer: "Maya prefers paragraphs.", cited_ids: [], memories: [] }))
+      .mockResolvedValueOnce(response({ episode_id: "ep2", memories: [{ memory_id: "m-new", action: "supersede", text: "Maya prefers bullets.", reason: "correction" }] }))
+      .mockResolvedValueOnce(response({ task_id: "t2", answer: "Maya prefers bullets.", cited_ids: [], memories: [] }))
+      .mockResolvedValueOnce(response({ task_id: "t3", answer: "A fresh answer", cited_ids: [], memories: [] }));
+    vi.stubGlobal("fetch", fetcher);
+    let memoryVersion = "before";
+    const agent = new BackendChatAgent(() => ({ ...context("ask"), memoryVersion }), vi.fn(), vi.fn());
+    await lastValueFrom(agent.run(input("How do I prefer updates?")).pipe(toArray()));
+    await lastValueFrom(agent.run(input("Remember: I want bullets now, not paragraphs")).pipe(toArray()));
+    await lastValueFrom(agent.run(input("How do I prefer updates?")).pipe(toArray()));
+    expect(JSON.parse(fetcher.mock.calls[2][1].body).question).not.toContain("Maya prefers paragraphs.");
+    memoryVersion = "external-retirement";
+    await lastValueFrom(agent.run(input("How do I prefer updates?")).pipe(toArray()));
+    expect(JSON.parse(fetcher.mock.calls[3][1].body).question).not.toContain("Maya prefers bullets.");
+  });
+
+  it("uses Nemotron's semantic decision for a plain project update and keeps it a personal report", async () => {
+    const fetcher = vi.fn()
+      .mockResolvedValueOnce(response({ plan: { operation: "save", text: "Maya reports that the Atlas pilot now requires live voice.", kind: "report" }, model: "nemotron-test" }))
+      .mockResolvedValueOnce(response({ episode_id: "ep1", memories: [{ memory_id: "m-report", action: "add", text: "Maya reports a live-voice requirement.", reason: "report" }] }));
+    vi.stubGlobal("fetch", fetcher);
+    const events = await lastValueFrom(new BackendChatAgent(() => ({ ...context("ask"), conversational: true }), vi.fn(), vi.fn()).run(input("The Atlas pilot added live voice as a requirement")).pipe(toArray()));
+    expect(fetcher.mock.calls[0][0]).toBe("/api/conversation");
+    expect(JSON.parse(fetcher.mock.calls[1][1].body)).toMatchObject({ scope: defaultReader, author: "sales-01", authority: "discussion" });
+    expect(events.filter((e) => e.type === "TOOL_CALL_START").map((e) => e.toolCallName)).toEqual(["understand_request", "save_memory"]);
+    expect(events.find((e) => e.type === "TEXT_MESSAGE_CONTENT")).toMatchObject({ delta: expect.stringContaining("doesn’t change approved shared requirements") });
+  });
+
+  it("handles general conversation without asking the benchmark question-answering endpoint", async () => {
+    const fetcher = vi.fn().mockResolvedValue(response({ plan: { operation: "reply", text: "Happy to help. What are we working on?" }, model: "nemotron-test" }));
+    vi.stubGlobal("fetch", fetcher);
+    const events = await lastValueFrom(new BackendChatAgent(() => ({ ...context("ask"), conversational: true }), vi.fn(), vi.fn()).run(input("Hey Bob")).pipe(toArray()));
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(events.find((e) => e.type === "TEXT_MESSAGE_CONTENT")).toMatchObject({ delta: "Happy to help. What are we working on?" });
+  });
+
+  it("does not pass a pre-correction assistant answer to the conversation model", async () => {
+    const fetcher = vi.fn()
+      .mockResolvedValueOnce(response({ plan: { operation: "ask", question: "How does Maya prefer updates?" }, model: "test" }))
+      .mockResolvedValueOnce(response({ task_id: "t1", answer: "Maya prefers paragraphs.", cited_ids: [], memories: [] }))
+      .mockResolvedValueOnce(response({ plan: { operation: "save", text: "Maya prefers client updates as bullet points.", kind: "preference" }, model: "test" }))
+      .mockResolvedValueOnce(response({ episode_id: "ep2", memories: [{ memory_id: "m-new", action: "supersede", text: "Maya prefers client updates as bullet points.", reason: "correction" }] }))
+      .mockResolvedValueOnce(response({ plan: { operation: "ask", question: "How does Maya prefer updates?" }, model: "test" }))
+      .mockResolvedValueOnce(response({ task_id: "t2", answer: "Bullet points", cited_ids: [], memories: [] }));
+    vi.stubGlobal("fetch", fetcher);
+    const agent = new BackendChatAgent(() => ({ ...context("ask"), conversational: true }), vi.fn(), vi.fn());
+    for (const text of ["How do I prefer updates?", "Actually I want bullet points now", "How do I prefer updates?"]) await lastValueFrom(agent.run(input(text)).pipe(toArray()));
+    expect(fetcher.mock.calls[4][1].body).not.toContain("Maya prefers paragraphs");
+    expect(fetcher.mock.calls[5][1].body).not.toContain("Maya prefers paragraphs");
+    expect(JSON.parse(fetcher.mock.calls[3][1].body).text).toContain("client updates");
+  });
+
+  it("retains the user's topic when an SSE memory change invalidates assistant prose", async () => {
+    const fetcher = vi.fn()
+      .mockResolvedValueOnce(response({ plan: { operation: "save", text: "Maya's notebook is Sunbeam", kind: "preference" }, model: "test" }))
+      .mockResolvedValueOnce(response({ episode_id: "ep1", memories: [{ memory_id: "m1", action: "add", text: "Maya's notebook is Sunbeam", reason: "new" }] }))
+      .mockResolvedValueOnce(response({ plan: { operation: "reply", text: "Clarification", }, model: "test" }));
+    vi.stubGlobal("fetch", fetcher);
+    let memoryVersion = "before";
+    const agent = new BackendChatAgent(() => ({ ...context("ask"), memoryVersion, conversational: true }), vi.fn(), vi.fn());
+    await lastValueFrom(agent.run(input("My notebook is Sunbeam")).pipe(toArray()));
+    memoryVersion = "after-sse";
+    await lastValueFrom(agent.run(input("Actually it is Moonbeam now")).pipe(toArray()));
+    const planned = JSON.parse(fetcher.mock.calls[2][1].body);
+    expect(planned.messages).toContainEqual({ role: "user", content: "My notebook is Sunbeam" });
+    expect(planned.messages.some((message: {role: string}) => message.role === "assistant")).toBe(false);
+  });
+
   it("fails an empty provider answer without recording a successful desk file", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(response({ task_id: "empty", answer: "", cited_ids: [], memories: [] })));
     const answered = vi.fn(), activity = vi.fn();
