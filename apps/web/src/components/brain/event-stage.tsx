@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, type RefObject } from "react";
+import { useEffect, useRef, type RefObject } from "react";
 import { useFrame } from "@react-three/fiber";
 import { RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
 import { BrainBob } from "./brain-bob";
 import { Label } from "./scene-label";
 import { SessionFolder } from "./session-folder";
-import { cinematicsAt, cueCabinetX, performanceForCue, sceneClips, scopeCharacters, type BobPerformance, type SceneCue, type SceneCinematics } from "@/lib/scene-animation";
+import { cinematicsAt, cueCabinetX, isMemoryOperation, memoryOperationAt, performanceForCue, sceneClips, scopeCharacters, type BobPerformance, type SceneCue, type SceneCinematics } from "@/lib/scene-animation";
 
 type Clock = RefObject<{ time: number; progress: number }>;
 type StageProps = { cue: SceneCue; playing: boolean; reducedMotion: boolean; speed: number;
@@ -27,8 +27,6 @@ function Paper({ color = "#fff9e6" }: { color?: string }) {
 
 function Performer({ index, cue, clock }: { index: number; cue: SceneCue; clock: Clock }) {
   const group = useRef<THREE.Group>(null);
-  const sweat = useRef<THREE.Group>(null);
-  const speech = useRef<THREE.Group>(null);
   const performance = useRef<BobPerformance>({ time: 0, distance: 0, walking: false, pose: "idle", expression: "happy", paper: false });
   useFrame(() => {
     const sample = performanceForCue(cue, index, clock.current.progress);
@@ -39,23 +37,10 @@ function Performer({ index, cue, clock }: { index: number; cue: SceneCue; clock:
     Object.assign(performance.current, { time: clock.current.time, distance: sample.distance,
       walking: sample.moving, pose: sample.pose, expression: sample.expression, paper: sample.paper,
       reaction: index === 4 && cue.evaluation?.verdict ? cue.evaluation.verdict === "unconfirmed" ? "shake" : "nod" : undefined });
-    if (sweat.current) {
-      sweat.current.visible = sample.pose === "panic";
-      sweat.current.position.y = 1.22 + Math.sin(clock.current.time * 7 + index) * .07;
-    }
-    if (speech.current) speech.current.visible = cue.action === "forgotten" ? clock.current.progress < .85 : clock.current.progress < .3;
   }, -1);
   return <group ref={group}>
     <BrainBob performance={performance} inspector={index === 4} phase={index} />
-    <group ref={sweat} visible={false} position={[.52, 1.2, 0]} rotation={[0, 0, -.4]}>
-      <mesh scale={[.7, 1.3, .6]}><sphereGeometry args={[.095, 10, 8]} /><meshBasicMaterial color="#bde9ff" /></mesh>
-      <mesh position={[.16, .12, 0]} scale={[.5, 1, .5]}><sphereGeometry args={[.07, 10, 8]} /><meshBasicMaterial color="#bde9ff" /></mesh>
-    </group>
     {cue.action === "evaluated" && index === 4 ? <Label text="EVALUATOR BOB" position={[0, 1.7, 0]} width={1.85} selected /> : null}
-    <group ref={speech}>
-      {cue.action === "evaluated" && index === 2 ? <Label text="He’s here!" position={[0, 1.55, 0]} width={1.15} /> : null}
-      {cue.action === "forgotten" && index === 1 ? <Label text="SHRED EVERYTHING!*" position={[0, 1.65, 0]} width={2.1} /> : null}
-    </group>
   </group>;
 }
 
@@ -65,6 +50,14 @@ function TransferPaper({ cue, clock }: { cue: SceneCue; clock: Clock }) {
   useFrame(() => {
     if (!group.current) return;
     const p = clock.current.progress;
+    if (isMemoryOperation(cue.action)) {
+      const { transfer } = memoryOperationAt(cue, p);
+      group.current.visible = transfer.visible;
+      group.current.position.set(...transfer.position);
+      group.current.rotation.set(transfer.tilt, transfer.angle, -.18, "YXZ");
+      group.current.scale.setScalar(.68);
+      return;
+    }
     group.current.visible = true;
     group.current.rotation.set(0, .4, 0);
     let px = x, py = 1.2, pz = -3.05;
@@ -73,15 +66,6 @@ function TransferPaper({ cue, clock }: { cue: SceneCue; clock: Clock }) {
       const move = smooth(.38, .88, p);
       px = lerp(x, cue.destination?.[0] ?? .6, move); pz = lerp(-3, cue.destination?.[1] ?? .9, move); py = lerp(1.3, 1.13, move) + Math.sin(move * Math.PI) * 1.1;
       group.current.rotation.x = -Math.PI / 2 * smooth(.78, .95, p);
-    } else if (cue.action === "created" || cue.action === "updated") {
-      const rewrite = cue.action === "updated";
-      const out = rewrite ? smooth(0, .32, p) : 1;
-      const back = smooth(rewrite ? .58 : .24, .91, p);
-      px = back > 0 ? lerp(-2.85, x, back) : lerp(x, -2.85, out);
-      pz = back > 0 ? lerp(.9, -3.55, back) : lerp(-3.1, .9, out);
-      py = 1.14 + Math.sin((back > 0 ? back : out) * Math.PI) * .55;
-      group.current.rotation.set(-Math.PI / 2 * (1 - back), .2, 0);
-      group.current.visible = p < .98;
     } else if (cue.action === "promoted") {
       py = lerp(1.1, 2.55, smooth(.24, .8, p));
     } else if (cue.action === "rejected") {
@@ -102,7 +86,7 @@ function TransferPaper({ cue, clock }: { cue: SceneCue; clock: Clock }) {
     group.current.position.set(px, py, pz);
     group.current.scale.setScalar(cue.action === "answered" ? 1.65 : 1.2);
   });
-  return <group ref={group}>{cue.sessionLabel && ["retrieved", "answered", "created", "updated"].includes(cue.action) ? <SessionFolder /> : <Paper color={cue.action === "flagged" ? "#f7bbbb" : cue.action === "promoted" ? "#ffe095" : undefined} />}
+  return <group ref={group}>{cue.sessionLabel && ["retrieved", "answered"].includes(cue.action) ? <SessionFolder /> : <Paper color={cue.action === "flagged" ? "#f7bbbb" : cue.action === "promoted" ? "#ffe095" : undefined} />}
     {cue.action === "flagged" ? <Label text={cue.noticeLabel ?? "LOCKED · REVIEW"} position={[0, .55, 0]} width={1.8} /> : null}
     {cue.action === "rejected" ? <Label text="RETURN TO SENDER" position={[0, .5, 0]} width={1.8} /> : null}
     {cue.action === "answered" && !cue.sessionLabel ? <Label text="ANSWER + SOURCES" position={[0, .55, 0]} width={1.8} /> : null}
@@ -142,98 +126,22 @@ function AuditRecords({ cue, clock }: { cue: SceneCue; clock: Clock }) {
   </group>;
 }
 
-// Rounded flame tongues: broad orange bases, yellow cores, no flashing lights.
-function makeFlameGeometry() {
-  const shape = new THREE.Shape();
-  shape.moveTo(0, 0);
-  shape.bezierCurveTo(-.65, .1, -.65, .55, -.3, 1);
-  shape.bezierCurveTo(-.38, .55, .1, .7, .02, 1.65);
-  shape.bezierCurveTo(.65, 1.05, .16, .7, .42, .55);
-  shape.bezierCurveTo(.7, .2, .35, 0, 0, 0);
-  return new THREE.ShapeGeometry(shape, 10);
-}
-
-const fireSpots = [
-  [-5.8, .1, -3], [-3.8, .3, -3.7], [-.5, .3, -3.7], [3.2, .3, -3.7], [5.5, .1, -3],
-  [-5.8, .1, .4], [-3.6, 1.12, .8], [.2, 1.12, .6], [3.8, 1.12, -1],
-  [-5.5, .1, 3.5], [-2.7, .1, 3.4], [.2, .1, 3.6], [3.5, .1, 3.4], [5.7, .9, 3.8],
-] as const;
-
-function OfficeChaos({ clock }: { clock: Clock }) {
-  const flames = useRef<(THREE.Group | null)[]>([]);
-  const papers = useRef<(THREE.Group | null)[]>([]);
+/** The selected paper reaches the slot before its strips fall out. */
+function ShreddedRecord({ cue, clock }: { cue: SceneCue; clock: Clock }) {
   const strips = useRef<(THREE.Mesh | null)[]>([]);
-  const smoke = useRef<(THREE.Mesh | null)[]>([]);
-  const embers = useRef<(THREE.Mesh | null)[]>([]);
-  const glow = useRef<THREE.PointLight>(null);
-  const geometry = useMemo(makeFlameGeometry, []);
-  useEffect(() => () => geometry.dispose(), [geometry]);
   useFrame(() => {
-    const p = clock.current.progress, t = clock.current.time;
-    const envelope = smooth(.04, .23, p) * (1 - smooth(.83, 1, p));
-    flames.current.forEach((flame, i) => {
-      if (!flame) return;
-      const pulse = 1 + .12 * Math.sin(t * 3.6 + i * 1.7);
-      // Tall flames at the back, lower tongues in front so the panicking faces stay readable.
-      const height = i < 5 ? 1.7 + (i % 3) * .3 : 1.1 + (i % 3) * .24;
-      flame.scale.set(envelope * (1.05 + (i % 3) * .23), envelope * pulse * height, 1);
-      flame.rotation.z = Math.sin(t * 2.6 + i) * .07;
-    });
-    papers.current.forEach((paper, i) => {
-      if (!paper) return;
-      const start = .06 + i * .014;
-      const u = clamp((p - start) / .46, 0, 1);
-      const fromX = [-3.8, -.5, 3.2][i % 3];
-      paper.visible = u > 0 && u < 1;
-      // Every tossed sheet ends in the slot before strips leave the shredder.
-      paper.position.set(lerp(fromX, 5.8, u), lerp(1.6, .9, u) + Math.sin(u * Math.PI) * (2.8 + i % 3), lerp(-3.1, 3.8, u));
-      paper.rotation.set(u * 5, u * 3, u * 9 + i);
-    });
-    smoke.current.forEach((puff, i) => {
-      if (!puff) return;
-      const u = (t * .16 + i * .137) % 1;
-      const origin = fireSpots[i % 5];
-      puff.position.set(origin[0] + Math.sin(i * 2.3 + u * 2) * .6, 1.9 + u * 3.4, origin[2] - .2);
-      puff.scale.setScalar(.25 + u * .8);
-      if (puff.material instanceof THREE.MeshBasicMaterial) puff.material.opacity = envelope * Math.sin(u * Math.PI) * .2;
-    });
-    embers.current.forEach((ember, i) => {
-      if (!ember) return;
-      const u = (t * .3 + i * .071) % 1;
-      const origin = fireSpots[i % fireSpots.length];
-      ember.position.set(origin[0] + Math.sin(i + u * 4) * .5, origin[1] + .3 + u * 3.3, origin[2] + Math.cos(i + u * 3) * .3);
-      ember.scale.setScalar(envelope * Math.sin(u * Math.PI));
-      ember.rotation.z = t * 2 + i;
-    });
+    const { shredProgress } = memoryOperationAt(cue, clock.current.progress);
     strips.current.forEach((strip, i) => {
       if (!strip) return;
-      const u = ((t * .7 + i * .073) % 1);
-      strip.visible = p > .52 && p < .96;
-      strip.position.set(5.8 + Math.sin(i * 2.4) * u * .9, .65 - u * .55, 3.85 + u * (.4 + (i % 4) * .16));
-      strip.rotation.set(u * 3 + i, 0, u * 4 + i);
+      const u = clamp((shredProgress - i * .025) / .7, 0, 1);
+      strip.visible = u > 0 && u < 1;
+      strip.position.set(5.8 + (i - 4.5) * .045, .65 - u * .55, 4 + u * .35);
+      strip.rotation.set(u * 2, 0, (i - 4.5) * .08);
     });
-    if (glow.current) glow.current.intensity = envelope * 30;
   });
-  return <group>
-    <pointLight ref={glow} color="#ff9f3c" position={[0, 3.5, 0]} distance={16} intensity={0} />
-    {fireSpots.map((spot, i) => <group key={i} position={[...spot]} rotation={[0, .65, 0]}>
-      <group ref={(g) => { flames.current[i] = g; }}>
-        <mesh geometry={geometry}><meshBasicMaterial color="#f27827" side={THREE.DoubleSide} toneMapped={false} /></mesh>
-        <mesh geometry={geometry} position={[.02, .02, .025]} scale={[.62, .72, 1]}><meshBasicMaterial color="#ffcb34" side={THREE.DoubleSide} toneMapped={false} /></mesh>
-        <mesh geometry={geometry} position={[.03, .02, .04]} scale={[.3, .4, 1]}><meshBasicMaterial color="#fff09c" side={THREE.DoubleSide} toneMapped={false} /></mesh>
-      </group>
-    </group>)}
-    {Array.from({ length: 30 }, (_, i) => <group key={i} ref={(g) => { papers.current[i] = g; }}><Paper /></group>)}
-    {Array.from({ length: 48 }, (_, i) => <mesh key={i} ref={(g) => { strips.current[i] = g; }}>
-      <boxGeometry args={[.035, .3 + i % 3 * .06, .012]} /><meshStandardMaterial color={i % 2 ? "#fff4d9" : "#e8d8b9"} side={THREE.DoubleSide} />
-    </mesh>)}
-    {Array.from({ length: 20 }, (_, i) => <mesh key={`smoke-${i}`} ref={(g) => { smoke.current[i] = g; }}>
-      <sphereGeometry args={[1, 10, 8]} /><meshBasicMaterial color="#9b8894" transparent opacity={0} depthWrite={false} />
-    </mesh>)}
-    {Array.from({ length: 42 }, (_, i) => <mesh key={`ember-${i}`} ref={(g) => { embers.current[i] = g; }}>
-      <octahedronGeometry args={[.055]} /><meshBasicMaterial color={i % 2 ? "#ffe7a3" : "#ffa43c"} toneMapped={false} />
-    </mesh>)}
-  </group>;
+  return <group>{Array.from({ length: 10 }, (_, i) => <mesh key={i} ref={(mesh) => { strips.current[i] = mesh; }}>
+    <boxGeometry args={[.025, .22, .012]} /><meshStandardMaterial color="#fff5da" side={THREE.DoubleSide} />
+  </mesh>)}</group>;
 }
 
 function ScopeSpotlight({ cue, clock }: { cue: SceneCue; clock: Clock }) {
@@ -271,7 +179,7 @@ export function EventStage({ cue, playing, reducedMotion, speed, seek, onProgres
     <Performer index={operator} cue={cue} clock={clock} />
     <TransferPaper cue={cue} clock={clock} />
     {cue.action === "evaluated" ? <AuditRecords cue={cue} clock={clock} /> : null}
-    {cue.action === "forgotten" ? <OfficeChaos clock={clock} /> : null}
+    {cue.action === "forgotten" ? <ShreddedRecord cue={cue} clock={clock} /> : null}
     {cue.action === "locked" || cue.action === "resolved" ? <group position={[cueCabinetX(cue), 2.7, -3.1]}>
       <mesh position={[0, .25, 0]}><torusGeometry args={[.2, .045, 8, 20, Math.PI]} /><meshStandardMaterial color="#7962b2" /></mesh>
       <RoundedBox args={[.5, .38, .12]} radius={.04}><meshStandardMaterial color={cue.action === "resolved" ? "#93bac3" : "#d7b268"} /></RoundedBox>

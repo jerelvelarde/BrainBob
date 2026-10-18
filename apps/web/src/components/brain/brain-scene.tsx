@@ -79,7 +79,7 @@ const Room = memo(function Room() {
     <Box position={[5.8, .4, 3.8]} size={[.85, .8, .65]} color="#c3a279" />
     <Box position={[5.8, .82, 3.8]} size={[.9, .08, .7]} color="#9a7c5b" />
     <Box position={[5.8, .87, 3.8]} size={[.62, .025, .09]} color="#483b52" />
-    <Label position={[5.8, 1.13, 3.8]} text="SHREDDER" width={1} />
+    <Label position={[5.8, .12, 4.7]} text="SHREDDER" width={1} />
   </group>;
 });
 

@@ -17,24 +17,15 @@ export function cueForSession(cue: SceneCue | undefined, reader: string): SceneC
   return { ...cue, cabinetX: scopeCharacters[cue.scope].x, sessionLabel: `${member.label.split(" ")[0]}’S SESSION`,
     records: cue.records?.map((record) => ({ ...record, cabinetX: scopeCharacters[record.scope].x })) };
 }
-export function cueCabinetX(cue: SceneCue) { return cue.cabinetX ?? scopeCharacters[cue.scope].x; }
+export function cueCabinetX(cue: Pick<SceneCue, "cabinetX" | "scope">) { return cue.cabinetX ?? scopeCharacters[cue.scope].x; }
 export type BobPose = "idle" | "carry" | "write" | "panic" | "inspect" | "present";
 export type BobExpression = "happy" | "worried" | "focused";
 export type BobPerformance = { time: number; distance: number; walking: boolean; pose: BobPose; expression: BobExpression; paper: boolean; reaction?: "nod" | "shake" };
 export type SceneCinematics = { darkness: number; heat: number; zoom: number };
 
-/** Seekable lighting and a single camera punch, with no wall-clock noise or flashing. */
-export function cinematicsAt(action: SceneAction | undefined, progress: number, reducedMotion = false): SceneCinematics {
-  const p = Math.max(0, Math.min(1, progress));
-  const ramp = (from: number, to: number) => {
-    const u = Math.max(0, Math.min(1, (p - from) / (to - from)));
-    return u * u * (3 - 2 * u);
-  };
-  if (action !== "forgotten") return { darkness: 0, heat: 0, zoom: 1 };
-  const envelope = ramp(0, .12) * (1 - ramp(.88, 1));
-  const punch = ramp(.04, .12) * (1 - ramp(.12, .3));
-  return { darkness: envelope, heat: action === "forgotten" ? envelope : 0,
-    zoom: reducedMotion ? 1 : 1 + envelope * .025 + punch * .065 };
+/** Memory operations keep the room readable; retiring one record is a local action. */
+export function cinematicsAt(_action: SceneAction | undefined, _progress: number, _reducedMotion = false): SceneCinematics {
+  return { darkness: 0, heat: 0, zoom: 1 };
 }
 
 export const scopeCharacters = {
@@ -48,7 +39,7 @@ export const sceneClips: Record<SceneAction, { label: string; seconds: number; p
   created: { label: "Store", seconds: 9, phases: ["Write it down", "Off to the right cabinet", "A new memory, filed"], color: "#c2a24a" },
   retrieved: { label: "Retrieve", seconds: 9, phases: ["Find the right cabinet", "Found it! Bring the record", "Memory delivered"], color: "#648f9f" },
   updated: { label: "Rewrite", seconds: 10, phases: ["Pull the old record", "Write the correction", "File the new version"], color: "#9375b2" },
-  forgotten: { label: "Delete", seconds: 12, phases: ["CODE RED. Forget that!", "EVERYBOB PANIC!", "Crisis over. History preserved."], color: "#d26c45" },
+  forgotten: { label: "Delete", seconds: 12, phases: ["Find the selected record", "Carry it to the shredder", "Record retired. History preserved."], color: "#d26c45" },
   evaluated: { label: "Evaluate", seconds: 14, phases: ["Evaluator Bob arrives", "Checks the cited memories", "Check recorded"], color: "#8972af" },
   promoted: { label: "Promote", seconds: 7, phases: ["A helpful memory", "Up to the trusted shelf", "Trusted, with evidence"], color: "#b39243" },
   flagged: { label: "Flag", seconds: 7, phases: ["This record is locked", "A concern for the owner", "Flagged. Kept for review."], color: "#ce6c73" },
@@ -73,7 +64,54 @@ export function cueFromMemory(event?: MemoryEvent): SceneCue | undefined {
 }
 
 export function clipPhase(action: SceneAction, progress: number) {
+  if (action === "created") return progress < .24 ? "Write the new record" : progress < .82 ? "Carry it to the cabinet" : "File the new record";
+  if (action === "updated") return progress < .28 ? "Collect the old record" : progress < .46 ? "Bring it back to Bob" : progress < .6 ? "Write the correction" : progress < .82 ? "Carry the replacement" : "File the new version";
+  if (action === "forgotten") return progress < .28 ? "Collect the selected record" : progress < .76 ? "Carry it to the shredder" : progress < .88 ? "Shred the retired record" : "Retired. History preserved.";
   return sceneClips[action].phases[progress < .28 ? 0 : progress < .78 ? 1 : 2];
+}
+
+export const memoryBobHome: Point = [-5.4, 2.5];
+export function isMemoryOperation(action: SceneAction) {
+  return action === "created" || action === "updated" || action === "forgotten";
+}
+
+/** One operator, one record. Only pickup and release use a separate paper mesh. */
+export function memoryOperationAt(cue: Pick<SceneCue, "action" | "scope" | "cabinetX">, progress: number) {
+  const p = Math.max(0, Math.min(1, progress));
+  const x = cueCabinetX(cue), [hx, hz] = memoryBobHome;
+  const path: Waypoint[] = cue.action === "created"
+    ? [[0, hx, hz], [.24, hx, hz], [.48, hx, -2.6], [.7, x, -2.6], [1, x, -2.6]]
+    : cue.action === "updated"
+      ? [[0, hx, hz], [.12, hx, -2.6], [.22, x, -2.6], [.28, x, -2.6], [.36, hx, -2.6], [.46, hx, hz], [.6, hx, hz], [.7, hx, -2.6], [.82, x, -2.6], [1, x, -2.6]]
+      : [[0, hx, hz], [.12, hx, -2.6], [.22, x, -2.6], [.28, x, -2.6], [.46, 6.4, -2.6], [.66, 6.4, 2.85], [.74, 5.8, 2.85], [1, 5.8, 2.85]];
+  const sample = samplePath(path, p);
+  const writing = cue.action === "created" ? p < .24 : cue.action === "updated" && p >= .46 && p < .6;
+  const paper = cue.action === "created" ? p >= .24 && p < .82
+    : cue.action === "updated" ? (p >= .28 && p < .46) || (p >= .6 && p < .82)
+      : p >= .28 && p < .76;
+  // Face the work during a hold, instead of reverting to the path sampler's idle angle.
+  const angle = sample.moving ? sample.angle : writing || p === 0 ? .55 : cue.action === "forgotten" && p >= .74 ? 0 : Math.PI;
+  const finished = p >= (cue.action === "forgotten" ? .88 : .94);
+  const worker = { ...sample, angle, pose: (writing ? "write" : finished ? "idle" : "carry") as BobPose,
+    expression: (writing ? "focused" : "happy") as BobExpression, paper };
+  // Match BrainBob's right-hand paper socket in the carry pose (including its root offset).
+  const hand: [number, number, number] = [sample.x + .515 * Math.cos(angle) + .212 * Math.sin(angle), .505, sample.z - .515 * Math.sin(angle) + .212 * Math.cos(angle)];
+  const cabinet: [number, number, number] = [x, 1.25, -3.3];
+  const pickup = cue.action !== "created" && p >= .22 && p < .28;
+  const filing = cue.action !== "forgotten" && p >= .82 && p < .94;
+  const shredding = cue.action === "forgotten" && p >= .76 && p < .88;
+  const start = pickup ? .22 : filing ? .82 : .76;
+  const end = pickup ? .28 : filing ? .94 : .88;
+  const t = Math.max(0, Math.min(1, (p - start) / (end - start)));
+  const u = t * t * (3 - 2 * t);
+  const from = pickup ? cabinet : hand;
+  const to = pickup ? hand : filing ? cabinet : [5.8, .6, 3.8];
+  const position = from.map((value, i) => value + (to[i] - value) * u) as [number, number, number];
+  // Lift the sheet above the shredder lid before feeding it down into the slot.
+  if (shredding) position[1] += Math.sin(u * Math.PI) * .65;
+  return { worker, transfer: { visible: pickup || filing || shredding,
+    position, angle, tilt: shredding ? -.85 * (1 - u) : -.85 },
+    shredProgress: cue.action === "forgotten" ? Math.max(0, Math.min(1, (p - .88) / .12)) : 0 };
 }
 
 export const workerHomes: Point[] = [[-1.65, 2.4], [1.7, 3.3], [-5.3, 1.8], [-5.2, -1.7], [4.9, .4], [4.9, 3.2]];
@@ -101,6 +139,11 @@ export function samplePath(points: Waypoint[], progress: number) {
 }
 
 export function workerPerformance(action: SceneAction, scope: MemoryScope, index: number, progress: number, cabinetX?: number) {
+  if (isMemoryOperation(action)) {
+    if (index === 0) return memoryOperationAt({ action, scope, cabinetX }, progress).worker;
+    const [x, z] = workerHomes[index];
+    return { ...samplePath([[0, x, z], [1, x, z]], progress), pose: "idle" as const, expression: "happy" as const, paper: false };
+  }
   const p = Math.max(0, Math.min(1, progress));
   const [hx, hz] = workerHomes[index];
   const x = cabinetX ?? scopeCharacters[scope].x;
@@ -122,25 +165,10 @@ export function workerPerformance(action: SceneAction, scope: MemoryScope, index
         [.76 + delay, qx, qz], [1, qx, qz]];
       pose = p > .76 ? "present" : "panic"; expression = "worried"; paper = p > .3;
     }
-  } else if (action === "forgotten") {
-    const side = hx < 0 ? -1 : 1;
-    const lane = [0, 0, 1, 2, 1, 2][index];
-    const outside = side * (6.2 - lane * .35);
-    const front = 2 + lane * .95;
-    path = [[0, hx, hz], [.12, outside, hz], [.38, outside, -2.6 + lane * .28], [.57, outside, front],
-      [.75, side * (.9 + lane * 1.2), front], [.91, outside, front], [1, outside, front]];
-    pose = p > .94 ? "idle" : "panic"; expression = p > .94 ? "happy" : "worried"; paper = p < .8;
   } else if (index === (action === "retrieved" || action === "answered" ? 1 : 0)) {
     if (action === "retrieved") {
       path = [[0, 1.7, 3.3], [.18, 1.7, -2.3], [.34, x, -2.3], [.45, x, -2.3], [.62, 1.7, -2.3], [.84, 1.7, 2.5], [1, .7, 2.5]];
       paper = p > .36 && p < .92; pose = "carry";
-    } else if (action === "created" || action === "updated") {
-      path = action === "updated"
-        ? [[0, x, -2.3], [.18, -2, -2.3], [.32, -2, .9], [.58, -2, .9], [.7, -2, -2.3], [.88, x, -2.3], [1, x, -2.3]]
-        : [[0, -2, .9], [.24, -2, .9], [.48, -2, -2.3], [.78, x, -2.3], [1, x, -2.3]];
-      const writing = action === "updated" ? p > .32 && p < .58 : p < .24;
-      pose = writing ? "write" : p > .8 ? "present" : "carry";
-      expression = writing ? "focused" : "happy"; paper = p < .85;
     } else if (action === "answered") {
       path = [[0, 4.8, .5], [.3, 4.8, 2.6], [.7, .7, 2.6], [1, .7, 2.6]];
       paper = p < .8; pose = "present";

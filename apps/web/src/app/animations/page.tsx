@@ -9,10 +9,10 @@ import styles from "./page.module.css";
 const BrainScene = dynamic(() => import("@/components/brain/brain-scene"), { ssr: false });
 const noop = () => {};
 const scenes: { id: string; action: SceneAction; name: string; event: string; description: string; seconds?: number; evaluation?: SceneCue["evaluation"] }[] = [
-  { id: "create", action: "created", name: "Create", event: "memory.added", description: "Bob writes a new record, carries it to the right cabinet, and files it." },
+  { id: "create", action: "created", name: "Create", event: "memory.added", description: "Memory Bob writes a new record, carries it to the selected cabinet, and files it." },
   { id: "retrieve", action: "retrieved", name: "Retrieve", event: "memory.retrieved", description: "Bob finds a permitted record and brings its file back to the task desk." },
-  { id: "update", action: "updated", name: "Update", event: "memory.added + supersedes", description: "Pull the old record, write the correction, and file the new version. The previous record stays in history." },
-  { id: "retire", action: "forgotten", name: "Retire / delete", event: "memory.retired", description: "Papers fly into the shredder as cartoon fire fills the office. Only the selected memory is retired; its history remains." },
+  { id: "update", action: "updated", name: "Update", event: "memory.added + supersedes", description: "Memory Bob collects the old record, returns to write the correction, and files the replacement. The previous version stays in history." },
+  { id: "retire", action: "forgotten", name: "Retire / delete", event: "memory.retired", description: "Memory Bob collects the selected record, carries it to the shredder, and feeds it into the slot. Its history is preserved." },
   { id: "session", action: "retrieved", name: "Session file", event: "session context returned", description: "A runner brings a tabbed file to Maya’s desk. A real session combines relevant, accessible individual, team, and organization context." },
   { id: "evaluator-enter", action: "evaluated", name: "Evaluator enters", event: "evaluation.started", description: "Evaluator Bob enters from the open side of the room. This preview makes no evaluation claim.", seconds: 7, evaluation: { phase: "start" } },
   { id: "evaluator-check", action: "evaluated", name: "Check a citation", event: "memory.checked", description: "A cited record travels to the evaluator. This sample shows an unchanged check: no correctness flip.", seconds: 6, evaluation: { phase: "check", verdict: "unchanged" } },
