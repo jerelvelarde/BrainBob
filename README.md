@@ -33,6 +33,16 @@ Without maintenance, one agent's mistake becomes the next agent's starting point
 
 ## The solution
 
+**We built three connected deliverables: the BrainBob application, a public benchmark, and a fine-tuned memory checker.**
+
+| What we built | What it does | Results and evidence |
+| --- | --- | --- |
+| **BrainBob — shared-memory service and 3D agent workspace** | Checks new facts, applies authorized corrections, retrieves scoped context, and exposes sources and revision history through live chat. | **12/13 correct memory updates vs 0/13 with append-only**, with **0/32 valid memories wrongly retired** in the Rusty Rod suite. [Live demo evidence](judging/live-workspace-20261017/README.md) · [Measured results](docs/evaluation-report.md#experiment-5-rusty-rod-correctness-suite-synthetic-held-out) |
+| **[Bob Benchmark — our public evaluation dataset and harness](https://huggingface.co/datasets/JerelVelarde/bob-benchmark)** | We created six synthetic organizational worlds with **41 checkpoints**, a runner, deterministic scorer, baselines, and separate memory-relation diagnostics. | BrainBob scored **71.9% macro CATS vs 25.0% without memory** across three replicates, using corrected v0.3 scoring. The advantage over append-only is inconclusive; full authorized history scored 92.0%. [Scorecard and traces](bobbench/results/20261017-141014/) |
+| **[Fine-tuned Qwen3-0.6B memory checker — our LoRA adapter](https://huggingface.co/Guangze/memops-small-qwen3-0.6b-lora/tree/b904e6ec0baea37bf70209093b8c59332d3c450a)** | We trained and published a small model to classify candidate facts as **same, conflict, or unrelated** before deterministic memory policy decides the action. | **32/60 → 42/60 correct** versus the untuned base: **+16.7 percentage points** on the original synthetic pair diagnostic. Five false conflicts keep it **experimental and opt-in**; the production judge is unchanged. [Training and evaluation report](docs/evaluation-report.md#experiment-7-small-memory-relation-checker-issue-7-pair-diagnostic) |
+
+These results come from separate evaluations. Public synthetic diagnostics are not official leaderboard scores; the [results below](#results) retain uncertainty, scorer corrections, and limitations.
+
 ![BrainBob solution: agents write, facts and approval authority are checked, scoped memory feeds a fresh agent, and usefulness evaluation feeds back into memory](diagrams/memory-simple.png)
 
 **Check before writing, verify after use.** [Editable diagram source](diagrams/memory-simple.mmd).
