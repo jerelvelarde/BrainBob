@@ -8,6 +8,18 @@ const request = (member = "sales-01") => new Request("http://localhost/api/conve
 afterEach(() => { vi.unstubAllGlobals(); vi.unstubAllEnvs(); });
 
 describe("live conversation planning boundary", () => {
+  it("accepts a targeted correction of the cited team memory without publishing a personal copy", async () => {
+    vi.stubEnv("BRAINBOB_CHAT_API_KEY", "test-key-not-real");
+    const plan = { operation: "correct", memoryId: "m22", match: "28 percent", text: "35 percent" };
+    const fetcher = vi.fn().mockResolvedValueOnce(response([{ ...memory, id: "m22", scope: "rusty-rod/executive", text: "The Atlas margin floor is 28 percent; keep the target within Executive." }]))
+      .mockImplementation(() => Promise.resolve(response({ choices: [{ message: { content: JSON.stringify(plan) } }] })));
+    vi.stubGlobal("fetch", fetcher);
+    const req = new Request("http://localhost/api/conversation", { method: "POST", headers: { "Content-Type": "application/json", "X-BrainBob-Member": "exec-01" }, body: JSON.stringify({ reader: "rusty-rod/executive/exec-01", recentMemoryIds: ["m22"], messages: [{ role: "user", content: "Update that to 35%" }] }) });
+    const result = await POST(req);
+    expect(result.status).toBe(200);
+    expect(await result.json()).toMatchObject({ plan });
+  });
+
   it("recovers once from malformed or truncated model output before returning a validated plan", async () => {
     vi.stubEnv("BRAINBOB_CHAT_API_KEY", "test-key-not-real");
     const fetcher = vi.fn().mockResolvedValueOnce(response([memory]))
@@ -60,5 +72,10 @@ describe("live conversation planning boundary", () => {
     const failed = await POST(request());
     expect(failed.status).toBe(502);
     expect(await failed.text()).not.toContain("test-key-not-real");
+  });
+  it("rejects a correction ID absent from the current permitted records", async () => {
+    vi.stubEnv("BRAINBOB_CHAT_API_KEY", "test-key-not-real");
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValueOnce(response([memory])).mockResolvedValueOnce(response({ choices: [{ message: { content: JSON.stringify({ operation: "correct", memoryId: "private-record", match: "28 percent", text: "35 percent" }) } }] })));
+    expect(await (await POST(request())).json()).toMatchObject({ plan: { operation: "reply" } });
   });
 });

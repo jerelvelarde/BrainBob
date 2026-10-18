@@ -15,6 +15,30 @@ const context = (mode: ChatContext["mode"]): ChatContext => ({ mode, reader: def
 afterEach(() => vi.unstubAllGlobals());
 
 describe("CopilotKit backend bridge", () => {
+  it("corrects the original shared record, preserves its scope and invalidates stale follow-up answers", async () => {
+    const original = { id: "m22", text: "Atlas margin floor is 28 percent; keep it within Executive.", scope: "rusty-rod/executive", author: "exec-01", origin: "ep1", date: "2026-10-17", status: "trial" };
+    const updated = { ...original, id: "m83", text: "Atlas margin floor is 35 percent; keep it within Executive.", supersedes: original.id };
+    const fetcher = vi.fn()
+      .mockResolvedValueOnce(response({ plan: { operation: "ask", question: "Atlas margin floor?" }, model: "test" }))
+      .mockResolvedValueOnce(response({ task_id: "t1", answer: "28 percent", cited_ids: [original.id], memories: [original] }))
+      .mockResolvedValueOnce(response({ plan: { operation: "correct", memoryId: original.id, match: "28 percent", text: "35 percent" }, model: "test" }))
+      .mockResolvedValueOnce(response([original]))
+      .mockResolvedValueOnce(response({ memory: updated, retired_id: original.id }))
+      .mockResolvedValueOnce(response({ plan: { operation: "ask", question: "Atlas margin floor?" }, model: "test" }))
+      .mockResolvedValueOnce(response({ task_id: "t2", answer: "35 percent", cited_ids: [updated.id], memories: [updated] }));
+    vi.stubGlobal("fetch", fetcher);
+    const agent = new BackendChatAgent(() => ({ ...context("ask"), reader: "rusty-rod/executive/exec-01", author: "exec-01", conversational: true }), vi.fn(), vi.fn());
+    await lastValueFrom(agent.run(input("What is the margin floor for Atlas?")).pipe(toArray()));
+    const events = await lastValueFrom(agent.run(input("update that to 35%")).pipe(toArray()));
+    expect(fetcher.mock.calls[4]?.[0]).toBe("/api/brainbob/memories/m22/correct");
+    expect(JSON.parse(fetcher.mock.calls[4][1].body)).toEqual({ text: updated.text, author: "exec-01" });
+    expect(fetcher.mock.calls.some(([url]) => url.endsWith("/episodes"))).toBe(false);
+    expect(events.find((e) => e.type === "TEXT_MESSAGE_CONTENT")).toMatchObject({ delta: expect.stringContaining("Updated Executive memory") });
+    await lastValueFrom(agent.run(input("What is the margin floor now?")).pipe(toArray()));
+    expect(fetcher.mock.calls[5][1].body).not.toContain("28 percent");
+    expect(fetcher.mock.calls[6][1].body).not.toContain("28 percent");
+  });
+
   it("routes an explicit personal remember command through extraction and reports the real correction", async () => {
     const fetcher = vi.fn().mockResolvedValue(response({ episode_id: "ep-chat", memories: [{ memory_id: "m-new", action: "supersede", text: "Maya prefers two bullets.", reason: "approved correction of m-old" }] }));
     vi.stubGlobal("fetch", fetcher);
@@ -25,6 +49,26 @@ describe("CopilotKit backend bridge", () => {
     expect(events.find((e) => e.type === "TOOL_CALL_START")).toMatchObject({ toolCallName: "save_memory" });
     expect(events.find((e) => e.type === "TEXT_MESSAGE_CONTENT")).toMatchObject({ delta: "Updated: Maya prefers two bullets." });
     expect(answered).not.toHaveBeenCalled();
+  });
+
+  it.each(["locked", "retired", "inaccessible"])("refuses a %s correction target without making a write", async (status) => {
+    const target = { id: "m22", text: "Old fact", scope: "rusty-rod/executive", author: "exec-01", origin: "ep1", date: "2026-10-17", status };
+    const fetcher = vi.fn().mockResolvedValueOnce(response({ plan: { operation: "correct", memoryId: "m22", match: "Old", text: "New" }, model: "test" }))
+      .mockResolvedValueOnce(response(status === "inaccessible" ? [] : [target]));
+    vi.stubGlobal("fetch", fetcher);
+    const events = await lastValueFrom(new BackendChatAgent(() => ({ ...context("ask"), conversational: true }), vi.fn(), vi.fn()).run(input("Update that fact")).pipe(toArray()));
+    expect(events.at(-1)?.type).toBe("RUN_ERROR");
+    expect(fetcher.mock.calls.some(([url]) => url.endsWith("/correct") || url.endsWith("/episodes"))).toBe(false);
+  });
+
+  it("keeps correction permission denials visible and never falls back to a personal copy", async () => {
+    const target = { id: "m22", text: "Old fact", scope: "rusty-rod", author: "exec-01", origin: "ep1", date: "2026-10-17", status: "trial" };
+    const fetcher = vi.fn().mockResolvedValueOnce(response({ plan: { operation: "correct", memoryId: "m22", match: "Old", text: "New" }, model: "test" }))
+      .mockResolvedValueOnce(response([target])).mockResolvedValueOnce(response({ detail: "no write permission" }, 403));
+    vi.stubGlobal("fetch", fetcher);
+    const events = await lastValueFrom(new BackendChatAgent(() => ({ ...context("ask"), conversational: true }), vi.fn(), vi.fn()).run(input("Update that fact")).pipe(toArray()));
+    expect(events.at(-1)).toMatchObject({ type: "RUN_ERROR", message: "no write permission" });
+    expect(fetcher.mock.calls.some(([url]) => url.endsWith("/episodes"))).toBe(false);
   });
 
   it("does not turn questions or quoted instructions into memory writes", async () => {
